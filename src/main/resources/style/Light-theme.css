@@ -13,7 +13,7 @@
 @font-face {
     font-family: 'Noto Sans Thai Looped';
     src: url('../fonts/NotoSansThaiLooped-Regular.ttf') format('truetype');
-    font-weight: bold;
+    font-weight: normal;
 }
 
 @font-face {
@@ -25,7 +25,7 @@
 @font-face {
     font-family: 'Bai Jamjuree';
     src: url('../fonts/BaiJamjuree-Regular.ttf') format('truetype');
-    font-weight: bold;
+    font-weight: normal;
 }
 
 @font-face {
@@ -35,9 +35,9 @@
 }
 
 * {
-    -fx-primary-color: #5B5427;
-    -fx-secondary-color: #F6CD62;
-    -fx-tertiary-color: #A69056;
+    -fx-primary-color: #006664;
+    -fx-secondary-color: white;
+    -fx-tertiary-color: #eaeaea;
     -fx-contrast-color: black;
     -fx-middle-color: #6b6b6b;
     -fx-red-color: #be0000;
@@ -296,7 +296,7 @@
 }
 .date-picker-popup > .month-year-pane {
     -fx-base: -fx-primary-color ;
-    -fx-mark-highlight-color: -fx-contrast-color;
+    -fx-mark-highlight-color: -fx-contrast-color ;
 }
 .date-picker .selected {
     -fx-background-color: -fx-primary-color;

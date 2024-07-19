@@ -1,310 +1,325 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1024.0" prefWidth="1440.0" stylesheets="@../../../style/style.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.AdminController">
-   <left>
-      <VBox prefHeight="200.0" prefWidth="108.0" spacing="30.0" BorderPane.alignment="TOP_CENTER">
-         <children>
-            <HBox alignment="CENTER" prefHeight="60.0" prefWidth="200.0">
-               <children>
-                  <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../images/dashboard-admin.png" />
-                     </image>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                  </ImageView>
-               </children>
-               <padding>
-                  <Insets bottom="10.0" top="10.0" />
-               </padding>
-               <VBox.margin>
-                  <Insets bottom="10.0" top="200.0" />
-               </VBox.margin>
-            </HBox>
-            <HBox alignment="CENTER" prefHeight="60.0" prefWidth="200.0">
-               <children>
-                  <ImageView fitHeight="50.0" fitWidth="50.0" onMouseClicked="#onUserClick" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../images/users-admin.png" />
-                     </image>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                  </ImageView>
-               </children>
-               <VBox.margin>
-                  <Insets bottom="10.0" top="10.0" />
-               </VBox.margin>
-               <padding>
-                  <Insets bottom="10.0" top="10.0" />
-               </padding>
-            </HBox>
-            <HBox alignment="CENTER" prefHeight="60.0" prefWidth="200.0">
-               <children>
-                  <ImageView fitHeight="60.0" fitWidth="60.0" onMouseClicked="#onDepartmentAndFacultyClick" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../images/building-admin.png" />
-                     </image>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                  </ImageView>
-               </children>
-               <padding>
-                  <Insets bottom="10.0" top="10.0" />
-               </padding>
-            </HBox>
-            <HBox alignment="CENTER" prefHeight="60.0" prefWidth="200.0">
-               <children>
-                  <ImageView fitHeight="55.0" fitWidth="55.0" onMouseClicked="#onStaffClick" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../images/teacher-admin.png" />
-                     </image>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                  </ImageView>
-               </children>
-               <padding>
-                  <Insets bottom="10.0" top="10.0" />
-               </padding>
-            </HBox>
-            <HBox alignment="CENTER" prefHeight="60.0" prefWidth="200.0">
-               <children>
-                  <ImageView fitHeight="55.0" fitWidth="55.0" onMouseClicked="#onLogoutClick" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../images/exit.png" />
-                     </image>
-                     <HBox.margin>
-                        <Insets bottom="10.0" top="20.0" />
-                     </HBox.margin>
-                  </ImageView>
-               </children>
-               <padding>
-                  <Insets bottom="10.0" top="20.0" />
-               </padding>
-               <VBox.margin>
-                  <Insets top="100.0" />
-               </VBox.margin>
-            </HBox>
-         </children>
-      </VBox>
-   </left>
+<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1024.0" prefWidth="1440.0" styleClass="canvas" stylesheets="@../../../style/Light-theme.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.AdminController">
    <top>
-      <HBox prefHeight="100.0" prefWidth="200.0" spacing="900.0" BorderPane.alignment="CENTER">
+      <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Label text="ผู้ดูแลระบบ">
-               <font>
-                  <Font size="36.0" />
-               </font>
+            <Label  prefHeight="54.0" prefWidth="1000.0" styleClass="header" text="ผู้ดูแลระบบ">
                <HBox.margin>
-                  <Insets left="150.0" top="30.0" />
+                  <Insets left="120.0" />
                </HBox.margin>
             </Label>
-            <Button mnemonicParsing="false" prefHeight="53.0" prefWidth="117.0" text="Setting">
+            <HBox prefHeight="80.0" HBox.hgrow="ALWAYS" />
+            <Group />
+            <Circle fx:id="profilePictureDisplay" fill="#eaeaea" radius="27.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
                <HBox.margin>
-                  <Insets top="20.0" />
+                  <Insets left="20.0" />
                </HBox.margin>
-            </Button>
+            </Circle>
+            <ImageView fx:id="onSettingButtonClick" fitHeight="40.0" fitWidth="40.0" onMouseClicked="#onSettingButtonClick" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../images/arrow-down.png" />
+               </image>
+               <HBox.margin>
+                  <Insets right="30.0" />
+               </HBox.margin>
+            </ImageView>
          </children>
       </HBox>
    </top>
-   <center>
-      <AnchorPane prefHeight="639.0" prefWidth="1332.0" styleClass="dash-board-background" BorderPane.alignment="CENTER">
+   <left>
+      <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" prefHeight="200.0" prefWidth="100.0" spacing="30.0" BorderPane.alignment="CENTER">
          <children>
-            <Label layoutX="98.0" layoutY="73.0" text="สรุปข้อมูล">
-               <font>
-                  <Font name="System Bold" size="48.0" />
-               </font>
-            </Label>
-            <AnchorPane layoutX="54.0" layoutY="177.0" prefHeight="166.0" prefWidth="366.0" style="-fx-background-color: white; -fx-background-radius: 30;">
+            <VBox prefWidth="80.0" VBox.vgrow="ALWAYS" />
+            <VBox fx:id="navigation" spacing="30.0">
                <children>
-                  <ImageView fitHeight="150.0" fitWidth="100.0" layoutX="19.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../images/user-rounded-dashbord.png" />
-                     </image>
-                  </ImageView>
-                  <Label layoutX="146.0" layoutY="35.0" text="บัญชีผู้ใช้">
-                     <font>
-                        <Font size="30.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="userLabel" layoutX="146.0" layoutY="74.0" prefHeight="58.0" prefWidth="170.0" text="userLabel">
-                     <font>
-                        <Font size="24.0" />
-                     </font>
-                  </Label>
-               </children>
-            </AnchorPane>
-            <AnchorPane layoutX="474.0" layoutY="177.0" onMouseClicked="#onAllRequestClick" prefHeight="166.0" prefWidth="366.0" style="-fx-background-color: white; -fx-background-radius: 30;">
-               <children>
-                  <ImageView fitHeight="150.0" fitWidth="100.0" layoutX="19.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../images/book-dashbord.png" />
-                     </image>
-                  </ImageView>
-                  <Label layoutX="146.0" layoutY="35.0" text="คำร้องทั้งหมด">
-                     <font>
-                        <Font size="30.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="allRequestLabel" layoutX="146.0" layoutY="74.0" prefHeight="58.0" prefWidth="182.0" text="allRequestLabel">
-                     <font>
-                        <Font size="24.0" />
-                     </font>
-                  </Label>
-               </children>
-            </AnchorPane>
-            <AnchorPane layoutX="894.0" layoutY="177.0" onMouseClicked="#onApprovedClick" prefHeight="166.0" prefWidth="366.0" style="-fx-background-color: white; -fx-background-radius: 30;">
-               <children>
-                  <ImageView fitHeight="150.0" fitWidth="100.0" layoutX="19.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../images/book-check-dashbord.png" />
-                     </image>
-                  </ImageView>
-                  <Label layoutX="146.0" layoutY="35.0" text="คำร้องอนุมัติแล้ว">
-                     <font>
-                        <Font size="30.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="approvedLabel" layoutX="146.0" layoutY="74.0" prefHeight="58.0" prefWidth="201.0" text="approvedLabel">
-                     <font>
-                        <Font size="24.0" />
-                     </font>
-                  </Label>
-               </children>
-            </AnchorPane>
-            <AnchorPane layoutX="62.0" layoutY="407.0" prefHeight="519.0" prefWidth="1198.0" style="-fx-background-color: white; -fx-background-radius: 30;">
-               <children>
-                  <Label layoutX="61.0" layoutY="35.0" prefHeight="79.0" prefWidth="379.0" text="บัญชีผู้ใช้ทั้งหมด">
-                     <font>
-                        <Font name="System Bold" size="48.0" />
-                     </font>
-                  </Label>
-                  <ChoiceBox fx:id="selectedChoiceBox" layoutX="820.0" layoutY="49.0" prefHeight="51.0" prefWidth="291.0" />
-                  <Label layoutX="680.0" layoutY="65.0" prefHeight="35.0" prefWidth="121.0" text="จำแนกตาม :">
-                     <font>
-                        <Font size="24.0" />
-                     </font>
-                  </Label>
-                  <StackPane fx:id="roleStackPane" layoutX="78.0" layoutY="141.0" prefHeight="372.0" prefWidth="1043.0" visible="false">
+                  <StackPane>
                      <children>
-                        <Pane prefHeight="200.0" prefWidth="200.0">
-                           <children>
-                              <Label layoutX="242.0" layoutY="14.0" prefHeight="35.0" prefWidth="70.0" text="บทบาท">
-                                 <font>
-                                    <Font size="24.0" />
-                                 </font>
-                              </Label>
-                              <Label layoutX="691.0" layoutY="14.0" prefHeight="35.0" prefWidth="176.0" text="จำนวนบัญชีผู้ใช้">
-                                 <font>
-                                    <Font size="24.0" />
-                                 </font>
-                              </Label>
-                              <Label layoutX="253.0" layoutY="88.0" prefHeight="35.0" prefWidth="49.0" text="นิสิต">
-                                 <font>
-                                    <Font size="24.0" />
-                                 </font>
-                              </Label>
-                              <Label layoutX="196.0" layoutY="149.0" prefHeight="35.0" prefWidth="164.0" text="อาจารย์ที่ปรึกษา">
-                                 <font>
-                                    <Font size="24.0" />
-                                 </font>
-                              </Label>
-                              <Label layoutX="212.0" layoutY="211.0" prefHeight="35.0" prefWidth="131.0" text="เจ้าหน้าที่คณะ">
-                                 <font>
-                                    <Font size="24.0" />
-                                 </font>
-                              </Label>
-                              <Label layoutX="196.0" layoutY="272.0" prefHeight="35.0" prefWidth="164.0" text="เจ้าหน้าที่ภาควิชา">
-                                 <font>
-                                    <Font size="24.0" />
-                                 </font>
-                              </Label>
-                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f5f5f5" height="6.0" layoutY="68.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1044.0" />
-                              <Label fx:id="countStudent" layoutX="755.0" layoutY="88.0" prefHeight="35.0" prefWidth="186.0" text="countStudent">
-                                 <font>
-                                    <Font size="24.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="countAdvisor" layoutX="755.0" layoutY="149.0" prefHeight="35.0" prefWidth="186.0" text="countAdvisor">
-                                 <font>
-                                    <Font size="24.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="countFacOff" layoutX="755.0" layoutY="211.0" prefHeight="35.0" prefWidth="186.0" text="countFacOff">
-                                 <font>
-                                    <Font size="24.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="countDepOff" layoutX="755.0" layoutY="272.0" prefHeight="35.0" prefWidth="186.0" text="countDepOff">
-                                 <font>
-                                    <Font size="24.0" />
-                                 </font>
-                              </Label>
-                           </children>
+                        <Pane fx:id="currentMenu1" prefHeight="75.0" prefWidth="95.0" styleClass="selected-menu">
+                           <StackPane.margin>
+                              <Insets bottom="5.0" left="15.0" top="5.0" />
+                           </StackPane.margin>
                         </Pane>
+                        <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../images/dashboard-admin.png" />
+                           </image>
+                        </ImageView>
                      </children>
                   </StackPane>
-                  <StackPane fx:id="facDepStackPane" layoutX="76.0" layoutY="141.0" prefHeight="382.0" prefWidth="1051.0">
+                  <StackPane>
                      <children>
-                        <Pane prefHeight="200.0" prefWidth="200.0">
-                           <children>
-                              <Label layoutX="327.0" layoutY="105.0" prefHeight="35.0" prefWidth="76.0" text="คณะ :">
-                                 <font>
-                                    <Font size="24.0" />
-                                 </font>
-                              </Label>
-                              <Label layoutX="327.0" layoutY="183.0" prefHeight="35.0" prefWidth="104.0" text="ภาควิชา :">
-                                 <font>
-                                    <Font size="24.0" />
-                                 </font>
-                              </Label>
-                              <Label layoutX="330.0" layoutY="264.0" prefHeight="35.0" prefWidth="177.0" text="จำนวนบัญชีผู้ใช้ :">
-                                 <font>
-                                    <Font size="24.0" />
-                                 </font>
-                              </Label>
-                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f5f5f5" height="6.0" layoutY="68.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1044.0" />
-                              <Label fx:id="facultyLabel" layoutX="592.0" layoutY="105.0" prefHeight="35.0" prefWidth="186.0" text="facultyLabel">
-                                 <font>
-                                    <Font size="24.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="departmentLabel" layoutX="592.0" layoutY="183.0" prefHeight="39.0" prefWidth="239.0" text="departmentLabel">
-                                 <font>
-                                    <Font size="24.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="totalLabel" layoutX="593.0" layoutY="264.0" prefHeight="35.0" prefWidth="186.0" text="totalLabel">
-                                 <font>
-                                    <Font size="24.0" />
-                                 </font>
-                              </Label>
-                              <ChoiceBox fx:id="selectedFaculty" layoutX="265.0" prefHeight="48.0" prefWidth="231.0" />
-                              <ChoiceBox fx:id="selectedDepartment" layoutX="549.0" prefHeight="48.0" prefWidth="231.0" />
-                           </children>
+                        <Pane fx:id="currentMenu2" prefHeight="75.0" prefWidth="95.0" styleClass="selected-menu" visible="false">
+                           <StackPane.margin>
+                              <Insets bottom="5.0" left="15.0" top="5.0" />
+                           </StackPane.margin>
                         </Pane>
+                        <ImageView fitHeight="50.0" fitWidth="50.0" onMouseClicked="#onUserClick" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../images/users-admin.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </StackPane>
+                  <StackPane>
+                     <children>
+                        <Pane fx:id="currentMenu21" prefHeight="75.0" prefWidth="95.0" styleClass="selected-menu" visible="false">
+                           <StackPane.margin>
+                              <Insets bottom="5.0" left="15.0" top="5.0" />
+                           </StackPane.margin>
+                        </Pane>
+                        <ImageView fitHeight="50.0" fitWidth="50.0" onMouseClicked="#onDepartmentAndFacultyClick" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../images/building-admin.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </StackPane>
+                  <StackPane>
+                     <children>
+                        <Pane fx:id="currentMenu22" prefHeight="75.0" prefWidth="95.0" styleClass="selected-menu" visible="false">
+                           <StackPane.margin>
+                              <Insets bottom="5.0" left="15.0" top="5.0" />
+                           </StackPane.margin>
+                        </Pane>
+                        <ImageView fitHeight="50.0" fitWidth="50.0" onMouseClicked="#onStaffClick" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../images/teacher-admin.png" />
+                           </image>
+                        </ImageView>
                      </children>
                   </StackPane>
                </children>
-            </AnchorPane>
-         </children></AnchorPane>
+            </VBox>
+            <VBox prefWidth="80.0" VBox.vgrow="ALWAYS" />
+            <ImageView fx:id="onLogutClick" fitHeight="50.0" fitWidth="50.0" onMouseClicked="#onLogoutClick" pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
+               <image>
+                  <Image url="@../../../images/exit.png" />
+               </image>
+               <VBox.margin>
+                  <Insets left="25.0" right="25.0" />
+               </VBox.margin>
+            </ImageView>
+            <VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="80.0" prefWidth="80.0" VBox.vgrow="ALWAYS" />
+         </children>
+      </VBox>
+   </left>
+   <center>
+      <VBox prefHeight="200.0" prefWidth="100.0" styleClass="outer-pane" BorderPane.alignment="CENTER">
+         <children>
+            <VBox prefHeight="200.0" prefWidth="100.0" spacing="30.0">
+               <children>
+                  <Label styleClass="title-label" text=" สรุปข้อมูล">
+                     <font>
+                        <Font name="System Bold" size="36.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </Label>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <HBox prefHeight="100.0" spacing="20.0" styleClass="inner-pane">
+                           <children>
+                              <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../images/user-rounded-dashbord.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </ImageView>
+                              <VBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <Label text="บัญชีผู้ใช้">
+                                    </Label>
+                                    <Label fx:id="userLabel" text="userLabel">
+                                    </Label>
+                                 </children>
+                              </VBox>
+                           </children>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                           <padding>
+                              <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                           </padding>
+                        </HBox>
+                        <VBox HBox.hgrow="ALWAYS" />
+                        <HBox prefHeight="100.0" spacing="20.0" styleClass="inner-pane">
+                           <children>
+                              <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../images/book-dashbord.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </ImageView>
+                              <VBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <Label text="คำร้องทั้งหมด">
+                                    </Label>
+                                    <Label fx:id="allRequestLabel" text="allRequestLabel">
+                                    </Label>
+                                 </children>
+                              </VBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                           </padding>
+                        </HBox>
+                        <VBox HBox.hgrow="ALWAYS" />
+                        <HBox prefHeight="100.0" spacing="20.0" styleClass="inner-pane">
+                           <children>
+                              <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../images/book-check-dashbord.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </ImageView>
+                              <VBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <Label text="คำร้องอนุมัติแล้ว">
+                                    </Label>
+                                    <Label fx:id="approvedLabel" text="approvedLabel">
+                                    </Label>
+                                 </children>
+                              </VBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Button mnemonicParsing="false" text="ดูสรุปจำนวนบัญชีผู้ใช้" />
+                        <VBox HBox.hgrow="ALWAYS" />
+                        <Button mnemonicParsing="false" onMouseClicked="#onAllRequestClick" styleClass="middle-button" text="ดูสรุปจำนวนคำร้องทั้งหมด" />
+                        <VBox HBox.hgrow="ALWAYS" />
+                        <Button mnemonicParsing="false" onMouseClicked="#onApprovedClick" styleClass="middle-button" text="ดูสรุปจำนวนคำร้องที่อนุมัติแล้ว" />
+                     </children>
+                  </HBox>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="25.0" left="35.0" right="45.0" top="30.0" />
+               </VBox.margin>
+            </VBox>
+            <VBox fx:id="pane" prefHeight="874.0" prefWidth="1229.0" styleClass="inner-pane" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets bottom="25.0" left="35.0" right="45.0" top="30.0" />
+               </VBox.margin>
+               <padding>
+                  <Insets bottom="35.0" left="45.0" right="45.0" top="35.0" />
+               </padding>
+               <children>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label styleClass="title-label" text="สรุปจำนวนบัญชีผู้ใช้ทั้งหมด">
+                           <font>
+                              <Font name="System Bold" size="36.0" />
+                           </font>
+                        </Label>
+                        <VBox HBox.hgrow="ALWAYS" />
+                        <Label text="จำแนกตาม : ">
+                        </Label>
+                        <ChoiceBox fx:id="selectedChoiceBox" prefWidth="300.0" />
+                     </children>
+                  </HBox>
+                  <StackPane prefHeight="150.0" prefWidth="200.0">
+                     <children>
+                        <VBox fx:id="facDepVBox" prefHeight="200.0" prefWidth="100.0" spacing="30.0" visible="false">
+                           <children>
+                              <HBox prefWidth="200.0" spacing="30.0">
+                                 <children>
+                                    <VBox HBox.hgrow="ALWAYS" />
+                                    <ChoiceBox fx:id="selectedFaculty" prefWidth="300.0" />
+                                    <ChoiceBox fx:id="selectedDepartment" prefWidth="300.0" />
+                                    <VBox HBox.hgrow="ALWAYS" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="330.0" spacing="30.0">
+                                       <children>
+                                          <Label prefWidth="100.0" text="คณะ :">
+                              </Label>
+                                          <Label prefWidth="100.0" text="สาขาวิชา :">
+                              </Label>
+                                          <Label prefWidth="300.0" text="จำนวนบัญชีผู้ใช้ :">
+                              </Label>
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER_LEFT" layoutX="445.0" layoutY="40.0" prefHeight="200.0" prefWidth="300.0" spacing="30.0">
+                                       <children>
+                                          <Label fx:id="facultyLabel" text="facultyLabel">
+                              </Label>
+                                          <Label fx:id="departmentLabel" text="departmentLabel">
+                              </Label>
+                                          <Label fx:id="totalLabel" text="totalLabel">
+                              </Label>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <VBox fx:id="roleVBox" prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <HBox alignment="CENTER">
+                                 <children>
+                                    <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="330.0" spacing="30.0">
+                                       <children>
+                                          <Label prefWidth="300.0" text="บทบาทผู้ใช้" />
+                                          <Separator prefWidth="200.0" />
+                                          <Label prefWidth="200.0" text="เจ้าหน้าที่คณะ" />
+                                          <Label prefWidth="200.0" text="เจ้าหน้าที่ภาควิชา" />
+                                          <Label prefWidth="300.0" text="อาจารย์" />
+                                          <Label prefWidth="300.0" text="นิสิต" />
+                                       </children>
+                                    </VBox>
+                                    <VBox alignment="CENTER_LEFT" layoutX="445.0" layoutY="40.0" prefHeight="200.0" prefWidth="300.0" spacing="30.0">
+                                       <children>
+                                          <Label prefWidth="300.0" text="จำนวนผู้ใช้" />
+                                          <Separator prefWidth="200.0" />
+                                          <Label fx:id="countFacOff" text="countFacOff" />
+                                          <Label fx:id="countDepOff" text="countDepOff" />
+                                          <Label fx:id="countAdvisor" text="countAdvisor" />
+                                          <Label fx:id="countStudent" text="countStudent" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </StackPane>
+               </children>
+            </VBox>
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </VBox>
    </center>
 </BorderPane>

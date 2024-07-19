@@ -17,13 +17,12 @@ import com.itextpdf.layout.properties.UnitValue;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class SickLeaveRequestPDF {
-    private static final String imagePath = "src/main/resources/images/KU.png";
-    private static final String thaiFontPath = "src/main/resources/style/THSarabunNew.ttf";
 
     public static void createRequest(String requestsDirectory, SickLeaveRequest request) throws IOException {
         Student student = request.getRequester();
@@ -34,8 +33,24 @@ public class SickLeaveRequestPDF {
         PdfDocument pdfDoc = new PdfDocument(writer);
         Document document = new Document(pdfDoc, PageSize.A4);
 
+        // Load image from resources (ensure it's in src/main/resources/images/KU.png)
+        InputStream imageStream = SickLeaveRequestPDF.class.getResourceAsStream("/images/KU.png");
+        if (imageStream == null) {
+            throw new RuntimeException("Image file not found in resources");
+        }
+
+        // Load font from resources (ensure it's in src/main/resources/style/THSarabunNew.ttf)
+        InputStream fontStream = SickLeaveRequestPDF.class.getResourceAsStream("/style/THSarabunNew.ttf");
+        if (fontStream == null) {
+            throw new RuntimeException("Font file not found in resources");
+        }
+        // Use InputStream to load the font directly
+        PdfFont thaiFont = PdfFontFactory.createFont(fontStream.readAllBytes(), PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
+
+
         // Set Font
-        PdfFont thaiFont = PdfFontFactory.createFont(thaiFontPath,"Identity-H", PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
+        //PdfFont thaiFont = PdfFontFactory.createFont(thaiFontPath,"Identity-H", PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
+        //PdfFont thaiFont = PdfFontFactory.createFont(fontStream.readAllBytes(), PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
 
         // Get PageSize
         Rectangle pageSize = pdfDoc.getDefaultPageSize();
@@ -46,7 +61,7 @@ public class SickLeaveRequestPDF {
         Div div = new Div();
 
         // Adding the image to the top left of the document
-        ImageData imageData = ImageDataFactory.create(imagePath);
+        ImageData imageData = ImageDataFactory.create(imageStream.readAllBytes());
         Image image = new Image(imageData);
         image.setHeight(70);
         image.setWidth(70);

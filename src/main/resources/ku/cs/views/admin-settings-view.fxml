@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 
-<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1024.0" prefWidth="1440.0" styleClass="canvas" stylesheets="@../../../style/Light-theme.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.SettingsController">
+<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1024.0" prefWidth="1440.0" styleClass="canvas" stylesheets="@../../../style/Light-theme.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.AdminSettingsController">
    <left>
       <VBox prefHeight="1024.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
@@ -39,20 +39,18 @@
                         <Insets />
                      </VBox.margin>
                   </Circle>
-                  <Label fx:id="nameLabel" text="nameLabel">
+                  <Label styleClass="header" text="  ผู้ดูแลระบบ">
                      <VBox.margin>
                         <Insets left="20.0" right="20.0" top="20.0" />
                      </VBox.margin>
-                  </Label>
-                  <Label fx:id="roleLabel" text="roleLabel">
                   </Label>
                   <VBox fx:id="userInfoPane" spacing="30.0">
                      <VBox.margin>
                         <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
                      </VBox.margin>
                   </VBox>
-                  <Button mnemonicParsing="false" onMouseClicked="#uploadProfilePictureButton" text="อัปโหลดรูปผู้ใช้" />
-                  <Button mnemonicParsing="false" onMouseClicked="#changeProfileToDefaultButton" styleClass="middle-button" text="กำหนดรูปผู้ใช้เริ่มต้น" />
+                  <Button mnemonicParsing="false" onMouseClicked="#uploadProfilePictureButton" text="อัปโหลดรูปผู้ดูแลระบบ" />
+                  <Button mnemonicParsing="false" onMouseClicked="#changeProfileToDefaultButton" styleClass="middle-button" text="กำหนดรูปผู้ดูแลระบบเริ่มต้น" />
                </children>
             </VBox>
          </children>
@@ -89,7 +87,7 @@
                   <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
                </padding>
                <children>
-                  <Label styleClass="header" text="เปลี่ยนรหัสผ่านผู้ใช้" />
+                  <Label styleClass="header" text="เปลี่ยนรหัสผ่านผู้ดูแลระบบ" />
                   <VBox alignment="TOP_RIGHT" spacing="30.0">
                      <children>
                         <PasswordField fx:id="currentPasswordField" promptText="รหัสผ่านปัจจุบัน" styleClass="capsule-text-field" />

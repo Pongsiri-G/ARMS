@@ -54,9 +54,9 @@ public class SettingsController extends BaseController {
 
 
     public SettingsController() {
-        datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
+        datasource = new UserListFileDatasource("data/csv_files", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
         this.userList = datasource.readData();
-        preferencesListFileDatasource = new UserPreferencesListFileDatasource("data/test", "preferences.csv", userList);
+        preferencesListFileDatasource = new UserPreferencesListFileDatasource("data/csv_files", "preferences.csv", userList);
         this.preferencesListFileDatasource.readData();
     }
 
@@ -221,11 +221,12 @@ public class SettingsController extends BaseController {
 
     @FXML
     public void changeProfileToDefaultButton(MouseEvent event) throws IOException {
-        String filePath = "src/main/resources/images/profile.jpg";
-        user.setProfilePicturePath(filePath);  // Set the profile picture path for the user
+        user.setProfilePicturePath(null);  // Set the profile picture path for the user
         // Update the Circle profile picture display
-        setProfilePicture(filePath);
         // Save changes (if necessary) and update the data source
         datasource.writeData(userList);
+        Image profileImage = new Image(getClass().getResource("/images/profile.jpg").toExternalForm());
+        profilePictureDisplay.setFill(new ImagePattern(profileImage));
+
     }
 }

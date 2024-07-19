@@ -22,7 +22,7 @@ public class ChangePasswordController {
 
     @FXML
     public void initialize() {
-        datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv", "departmentofficerlist.csv", "facdeplist.csv");
+        datasource = new UserListFileDatasource("data/csv_files", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv", "departmentofficerlist.csv", "facdeplist.csv");
         this.userList = datasource.readData();
         user = userList.findUserByUsername((String) FXRouter.getData());
         errorPasswordLabel.setText("");

@@ -7,6 +7,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+
 public class BaseController {
     private String currentTheme = "Light";
     private String fontSize = "Medium";
@@ -14,7 +21,23 @@ public class BaseController {
 
     private void setTheme(BorderPane rootPane, String theme) {
         rootPane.getStylesheets().clear();
-        rootPane.getStylesheets().add(getClass().getResource("/style/" + theme + "-theme.css").toExternalForm());
+        InputStream resourceStream = getClass().getResourceAsStream("/style/" + theme + "-theme.css");
+
+        if (resourceStream == null) {
+            System.out.println("Resource not found: " + "/style/" + theme + "-theme.css");
+        } else {
+            try {
+                Path tempFile = Files.createTempFile("temp-style", ".css");
+
+                Files.copy(resourceStream, tempFile, StandardCopyOption.REPLACE_EXISTING);
+
+                rootPane.getStylesheets().add(tempFile.toUri().toString());
+
+                tempFile.toFile().deleteOnExit();
+            } catch (IOException e) {
+                System.out.println("Error applying theme: " + e.getMessage());
+            }
+        }
     }
     private void setFontSize(BorderPane rootPane, String fontSize) {
         rootPane.getStyleClass().removeAll("Small", "Medium", "Large");

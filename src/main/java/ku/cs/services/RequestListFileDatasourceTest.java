@@ -10,7 +10,7 @@ public class RequestListFileDatasourceTest {
     private RequestListFileDatasource datasource;
     private UserListFileDatasource userDatasource;
     private UserList userList;
-    private String testDirectory = "data/test";
+    private String testDirectory = "data/students_requests";
     private String testFileName = "requestlist.csv";
 
     public static void main(String[] args) throws IOException {
@@ -24,7 +24,7 @@ public class RequestListFileDatasourceTest {
     }
 
     private void setup() {
-        userDatasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
+        userDatasource = new UserListFileDatasource("data/csv_files", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
         userList = userDatasource.readData();
         datasource = new RequestListFileDatasource(testDirectory, testFileName, userList);
        // RequestList requestList = datasource.readData();

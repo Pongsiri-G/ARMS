@@ -12,11 +12,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.shape.Circle;
 import ku.cs.models.*;
-import ku.cs.services.Datasource;
-import ku.cs.services.FXRouter;
-import ku.cs.services.RequestListFileDatasource;
-import ku.cs.services.UserListFileDatasource;
+import ku.cs.services.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.TableCell;
@@ -30,19 +29,20 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
 
-public class UserManagementController {
+public class UserManagementController extends BaseController{
     @FXML private ChoiceBox<String> searchByRole;
     @FXML private TextField searchTextField;
-    @FXML private Label roleLabel;
-    @FXML private Label allRequestLabel;
-    @FXML private Label approvedLabel;
     @FXML private TableView<User> userManagementTableView;
+    @FXML private BorderPane rootPane;
+    @FXML private Circle profilePictureDisplay;
     private String[] role = {"ทั้งหมด", "นิสิต", "อาจารย์", "เจ้าหน้าที่คณะ", "เจ้าหน้าที่ภาควิชา"};
     private UserList userList;
+    private Admin admin;
     private Datasource<UserList> datasource;
+    private Datasource<Admin> adminDatasource;
     private Datasource<RequestList> requestListDatasource;
     private UserListFileDatasource listDatasource;
-    private String testDirectory = "data/test";
+    private String testDirectory = "data/csv_files";
     private String testAdvisorFileName = "advisorlist.csv";
     private String testStudentFileName = "studentlist.csv";
     private String testFacultyOfficerFileName = "facultyofficerlist.csv";
@@ -59,6 +59,11 @@ public class UserManagementController {
 
         datasource = new UserListFileDatasource(testDirectory, testStudentFileName, testAdvisorFileName, testFacultyOfficerFileName, testDepartmentFileName, testFacDepFileName);
         userList = datasource.readData();
+        adminDatasource = new AdminPasswordFileDataSource("data/csv_files", "admin.csv");
+        admin = adminDatasource.readData();
+
+        applyThemeAndFont(rootPane, admin.getPreferences().getTheme(), admin.getPreferences().getFontFamily(), admin.getPreferences().getFontSize());
+        setProfilePicture(profilePictureDisplay, admin.getProfilePicturePath());
 
         showTable(userList);
 
@@ -128,7 +133,7 @@ public class UserManagementController {
     }
 
     @FXML
-    private void showTable(UserList userList) {
+    private void showTable(UserList filteredUserList) {
         // Column for image
         TableColumn<User, Image> pictureColumn = new TableColumn<>("รูปภาพ");
         pictureColumn.setCellValueFactory(cellData -> {
@@ -227,7 +232,7 @@ public class UserManagementController {
         userManagementTableView.getColumns().addAll(pictureColumn, usernameColumn, nameColumn, timeColumn, suspendColumn);
 
         // สร้าง ObservableList จาก userList
-        ObservableList<User> observableUserList = FXCollections.observableArrayList(userList.getAllUsers());
+        ObservableList<User> observableUserList = FXCollections.observableArrayList(filteredUserList.getAllUsers());
 
         // สร้าง SortedList และกำหนด Comparator
         SortedList<User> sortedList = new SortedList<>(observableUserList, new Comparator<User>() {
@@ -293,6 +298,15 @@ public class UserManagementController {
     protected void onStaffClick() {
         try {
             FXRouter.goTo("staff-advisor-management");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
+    protected void onSettingButtonClick() {
+        try {
+            FXRouter.goTo("admin-settings", "user-management");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

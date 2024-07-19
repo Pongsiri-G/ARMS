@@ -7,12 +7,9 @@ import ku.cs.models.Admin;
 import ku.cs.models.Advisor;
 import ku.cs.models.User;
 import ku.cs.models.UserList;
-import ku.cs.services.AdminPasswordFileDataSource;
-import ku.cs.services.FXRouter;
+import ku.cs.services.*;
 
 import javafx.fxml.FXML;
-import ku.cs.services.UserListFileDatasource;
-import ku.cs.services.UserListFileDatasourceTest;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -31,12 +28,15 @@ public class LoginController {
     private Admin admin;
     private UserListFileDatasource datasource;
     private AdminPasswordFileDataSource adminPasswordFileDataSource;
+    private UserPreferencesListFileDatasource userPreferencesListFileDatasource;
 
     public LoginController() {
-        datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
+        datasource = new UserListFileDatasource("data/csv_files", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
         this.userList = datasource.readData();
-        adminPasswordFileDataSource = new AdminPasswordFileDataSource("data/test", "admin.csv");
+        adminPasswordFileDataSource = new AdminPasswordFileDataSource("data/csv_files", "admin.csv");
         admin = adminPasswordFileDataSource.readData();
+        userPreferencesListFileDatasource = new UserPreferencesListFileDatasource("data/csv_files", "preferences.csv", userList);
+        userPreferencesListFileDatasource.writeData();
     }
 
     public void initialize() {

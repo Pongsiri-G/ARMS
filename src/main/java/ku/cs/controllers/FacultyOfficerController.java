@@ -103,7 +103,7 @@ public class FacultyOfficerController extends BaseController{
     public void initialize() {
         initializeDataSources();
         loadRequests();
-        preferencesListFileDatasource = new UserPreferencesListFileDatasource("data/test", "preferences.csv", userList);
+        preferencesListFileDatasource = new UserPreferencesListFileDatasource("data/csv_files", "preferences.csv", userList);
         this.preferencesListFileDatasource.readData();
         setupOfficerInfo();
         switchToRequestScene();
@@ -118,14 +118,14 @@ public class FacultyOfficerController extends BaseController{
     }
 
     private void initializeDataSources() {
-        datasource = new UserListFileDatasource("data/test",
+        datasource = new UserListFileDatasource("data/csv_files",
                                             "studentlist.csv",
                                             "advisorlist.csv",
                                         "facultyofficerlist.csv",
                                     "departmentofficerlist.csv",
                                             "facdeplist.csv");
         userList = datasource.readData();
-        requestDatasource = new RequestListFileDatasource("data/test", "requestlist.csv", userList);
+        requestDatasource = new RequestListFileDatasource("data/students_requests", "requestlist.csv", userList);
         requestList = requestDatasource.readData();
         officer = (FacultyOfficer) userList.findUserByUsername((String) FXRouter.getData());
         requests = officer.getRequestsByFaculty(requestList);
