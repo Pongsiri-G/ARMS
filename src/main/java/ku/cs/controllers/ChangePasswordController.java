@@ -40,7 +40,7 @@ public class ChangePasswordController {
             String newPassword = newPasswordField.getText();
             String confirmPassword = confirmYourPasswordField.getText();
 
-            if (confirmPassword.equals(newPassword)) {
+            if (confirmPassword.equals(newPassword) && !confirmPassword.isEmpty() && !newPassword.isEmpty()) {
                 user.setPassword(newPassword, false);
                 user.setLastLogin(LocalDateTime.now());
                 datasource.writeData(userList);
@@ -54,7 +54,10 @@ public class ChangePasswordController {
                 } else if (user instanceof FacultyOfficer) {
                     FXRouter.goTo("faculty-officer", loggedInUser);
                 }
-            }else {
+            }else if (confirmPassword.isEmpty() || newPassword.isEmpty()) {
+                errorPasswordLabel.setText("กรุณากรอกรหัสผ่านด้วย");
+            }
+            else {
                 errorPasswordLabel.setText("รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน");
             }
         } catch (IOException e) {
