@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import ku.cs.models.Advisor;
 import ku.cs.services.FXRouter;
-
 import java.io.IOException;
 
 public class AdvisorController {
