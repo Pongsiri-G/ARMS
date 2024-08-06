@@ -9,7 +9,7 @@ import java.io.IOException;
 public class AdvisorController {
     @FXML
     private Label emailLabel;
-
+/*
     @FXML
     public void initialize() {
         Advisor advisor = new Advisor("rattaphon");
@@ -18,7 +18,7 @@ public class AdvisorController {
 
     private void showAdvisor(Advisor advisor) {
         emailLabel.setText(advisor.getEmail());
-    }
+    }*/
 /*
     @FXML
     protected void onChangButtonClick() {

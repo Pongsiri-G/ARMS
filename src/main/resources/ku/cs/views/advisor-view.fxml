@@ -8,32 +8,30 @@
 
 <AnchorPane prefHeight="1024.0" prefWidth="1440.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.AdvisorController">
     <children>
-        <AnchorPane prefHeight="200.0" prefWidth="200.0">
-            <children>
-                <Label layoutX="41.0" layoutY="14.0" text="Advisor">
-                    <font>
-                        <Font size="32.0" />
-                    </font>
-                </Label>
-                <Label layoutX="34.0" prefHeight="200.0" prefWidth="390.0" text="Welcome">
-                    <font>
-                        <Font name="Javanese Text" size="96.0" />
-                    </font>
-                </Label>
-                <TextField layoutX="34.0" layoutY="190.0" prefHeight="47.0" prefWidth="390.0" />
-                <Label fx:id="emailLabel" layoutX="52.0" layoutY="196.0" text="Emali">
-                    <font>
-                        <Font size="24.0" />
-                    </font>
-                </Label>
-                <Label layoutX="34.0" layoutY="249.0" text="To continue the process. Please change your password to verify it's you.">
-                    <font>
-                        <Font size="20.0" />
-                    </font>
-                </Label>
-            </children>
-        </AnchorPane>
-        <TextField layoutX="33.0" layoutY="378.0" prefHeight="70.0" prefWidth="794.0" />
+          <Label layoutX="41.0" layoutY="14.0" text="Advisor">
+              <font>
+                  <Font size="32.0" />
+              </font>
+          </Label>
+          <Label layoutX="34.0" prefHeight="200.0" prefWidth="390.0" text="Welcome">
+              <font>
+                  <Font name="Javanese Text" size="96.0" />
+              </font>
+          </Label>
+          <TextField layoutX="34.0" layoutY="190.0" prefHeight="47.0" prefWidth="390.0" promptText="Email">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </TextField>
+          <Label layoutX="34.0" layoutY="249.0" text="To continue the process. Please change your password to verify it's you.">
+              <font>
+                  <Font size="20.0" />
+              </font>
+          </Label>
+        <TextField layoutX="33.0" layoutY="378.0" prefHeight="70.0" prefWidth="794.0" promptText="ConfirmYourPassword">
+         <font>
+            <Font size="24.0" />
+         </font></TextField>
         <Label layoutX="33.0" layoutY="460.0" text="error message" textFill="#dc0d0d">
             <font>
                 <Font size="20.0" />
@@ -42,16 +40,14 @@
             <font>
                 <Font size="20.0" />
             </font></Label>
-        <TextField layoutX="33.0" layoutY="293.0" prefHeight="70.0" prefWidth="795.0" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="612.5999999999999" />
-        <Label layoutX="48.0" layoutY="313.0" text="Newpassword">
-            <font>
-                <Font size="20.0" />
-            </font>
-        </Label>
-        <Label layoutX="47.0" layoutY="398.0" text="Confirm new password">
-            <font>
-                <Font size="20.0" />
-            </font>
-        </Label>
+        <TextField layoutX="33.0" layoutY="293.0" prefHeight="70.0" prefWidth="795.0" promptText="NewPassword" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="612.5999999999999">
+         <font>
+            <Font size="24.0" />
+         </font></TextField>
+      <Button layoutX="1106.0" layoutY="905.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="268.0" text="Change Password">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Button>
     </children>
 </AnchorPane>
