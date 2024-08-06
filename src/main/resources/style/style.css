@@ -1,0 +1,149 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@100..900&display=swap');
+
+* {
+	-fx-primary-color: #006664;
+	-fx-secondary-color: #ffffff;
+	-fx-black-color: #000000;
+	-fx-font-family: "Noto Sans Thai";
+}
+
+.title-label {
+	-fx-font-family: -fx-font-family;
+	-fx-font-weight: 700;
+}
+
+.label {
+	-fx-font-family: -fx-font-family;
+}
+
+.text-field {
+	-fx-background-color: -fx-black-color, white;
+	-fx-background-insets: 0, -1 -1 2 -1;
+	-fx-background-radius: 0;
+	-fx-prompt-text-fill: -fx-grey-color;
+	-fx-padding: 0 0 0 45;
+	-fx-font-size: 18;
+	-fx-text-box-border: transparent;
+}
+
+.text-field:focused {
+	-fx-background-color: -fx-primary-color, white;
+	-fx-focus-color: transparent;
+}
+
+.password-field {
+    -fx-background-color: -fx-black-color, white;
+    -fx-background-insets: 0, -1 -1 2 -1;
+    -fx-background-radius: 0;
+    -fx-prompt-text-fill: -fx-grey-color;
+    -fx-padding: 0 0 0 45;
+    -fx-text-box-border: transparent;
+    -fx-font-size: 18;
+    -fx-border-width: 0;
+    -fx-border-insets: 0;
+}
+
+.button {
+	-fx-background-radius: 20;
+	-fx-background-color: -fx-primary-color;
+	-fx-text-fill: white;
+	-fx-font-size: 16;
+	-fx-font-weight: 700;
+}
+
+.button:focused {
+	-fx-opacity: 0.75;
+}
+
+.nisit-regis-button {
+	-fx-text-fill: -fx-primary-color;
+	-fx-background-color: transparent;
+	-fx-font-size: 14;
+}
+
+.nisit-regis-button:focused {
+	-fx-opacity: 0.75;
+}
+
+.nisit-regis-text-field {
+	-fx-background-color: -fx-black-color, white;
+    -fx-background-insets: 0, -1 -1 2 -1;
+    -fx-background-radius: 0;
+    -fx-prompt-text-fill: -fx-grey-color;
+    -fx-padding: 0 0 0 10;
+    -fx-text-box-border: transparent;
+    -fx-border-width: 0;
+    -fx-border-insets: 0;
+	-fx-font-size: 18;
+}
+
+.nisit-regis-text-field:focusd {
+	-fx-background-color: -fx-primary-color, white;
+	-fx-focus-color: transparent;
+}
+
+.next-regis-button {          
+    -fx-background-image: url("../icon/next-arrow-green.png");
+    -fx-background-size: 100% 100%;
+	-fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+}
+
+.next-regis-button:focused {
+	-fx-opacity: 0.75;
+}
+
+.back-regis-button {          
+    -fx-background-image: url("../icon/back-arrow-grey.png");
+    -fx-background-size: 100% 100%;
+	-fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+}
+
+.back-regis-button:focused {
+	-fx-opacity: 0.75;
+}
+
+.nisit-regis-password-field {
+    -fx-background-color: -fx-black-color, white;
+    -fx-background-insets: 0, -1 -1 2 -1;
+    -fx-background-radius: 0;
+    -fx-prompt-text-fill: -fx-grey-color;
+    -fx-padding: 0 0 0 10;
+    -fx-text-box-border: transparent;
+    -fx-font-size: 18;
+    -fx-border-width: 0;
+    -fx-border-insets: 0;
+}
+
+.logout-button {          
+    -fx-background-image: url("../icon/exit.png");
+	-fx-text-fill : transparent;
+    -fx-background-size: 100% 100%;
+	-fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+}
+.settings-button {          
+    -fx-background-image: url("../icon/settings.png");
+	-fx-text-fill : transparent;
+    -fx-background-size: 100% 100%;
+	-fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+}
+
+
+.notification-button {          
+    -fx-background-image: url("../icon/notification.png");
+	-fx-text-fill : transparent;
+    -fx-background-size: 100% 100%;
+	-fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+}
+
+.create-request-button {          
+    -fx-background-image: url("../icon/write.png");
+	-fx-text-fill : transparent;
+    -fx-background-size: 100% 100%;
+	-fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+}
