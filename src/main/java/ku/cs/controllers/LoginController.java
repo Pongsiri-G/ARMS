@@ -32,4 +32,8 @@ public class LoginController {
             FXRouter.goTo("advisor");
         }
     }
+
+    public void toRegisterPageClick(ActionEvent event) throws IOException {
+        FXRouter.goTo("register-first");
+    }
 }

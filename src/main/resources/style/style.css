@@ -4,6 +4,7 @@
 	-fx-primary-color: #006664;
 	-fx-secondary-color: #ffffff;
 	-fx-black-color: #000000;
+	-fx-grey-color: grey;
 	-fx-font-family: "Noto Sans Thai";
 }
 
@@ -49,6 +50,10 @@
 	-fx-text-fill: white;
 	-fx-font-size: 16;
 	-fx-font-weight: 700;
+}
+
+.button:focused {
+	-fx-opacity: 0.75;
 }
 
 .nisit-regis-button {
