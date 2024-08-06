@@ -13,12 +13,13 @@ public class MainApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXRouter.bind(this, stage, "CS211 Project", 1440, 1024);
         configRoutes();
-        FXRouter.goTo("login");
+        FXRouter.goTo("admin");
     }
 
     private void configRoutes() {
         String viewPath = "ku/cs/views/";
         FXRouter.when("login", viewPath + "login-view.fxml");
+        FXRouter.when("admin", viewPath + "admin-view.fxml");
     }
 
     public static void main(String[] args) {

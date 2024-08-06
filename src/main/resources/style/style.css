@@ -51,10 +51,6 @@
 	-fx-font-weight: 700;
 }
 
-.button:focused {
-	-fx-opacity: 0.75;
-}
-
 .nisit-regis-button {
 	-fx-text-fill: -fx-primary-color;
 	-fx-background-color: transparent;
@@ -77,27 +73,13 @@
 	-fx-font-size: 18;
 }
 
-.nisit-regis-text-field:focusd {
+.nisit-regis-text-field:focused {
 	-fx-background-color: -fx-primary-color, white;
 	-fx-focus-color: transparent;
 }
 
-.next-regis-button {          
-    -fx-background-image: url("../icon/next-arrow-green.png");
-    -fx-background-size: 100% 100%;
-	-fx-background-color: transparent;
-    -fx-background-repeat: no-repeat;
-}
-
 .next-regis-button:focused {
 	-fx-opacity: 0.75;
-}
-
-.back-regis-button {          
-    -fx-background-image: url("../icon/back-arrow-grey.png");
-    -fx-background-size: 100% 100%;
-	-fx-background-color: transparent;
-    -fx-background-repeat: no-repeat;
 }
 
 .back-regis-button:focused {
@@ -116,34 +98,72 @@
     -fx-border-insets: 0;
 }
 
-.logout-button {          
-    -fx-background-image: url("../icon/exit.png");
-	-fx-text-fill : transparent;
-    -fx-background-size: 100% 100%;
-	-fx-background-color: transparent;
-    -fx-background-repeat: no-repeat;
-}
-.settings-button {          
-    -fx-background-image: url("../icon/settings.png");
-	-fx-text-fill : transparent;
-    -fx-background-size: 100% 100%;
-	-fx-background-color: transparent;
-    -fx-background-repeat: no-repeat;
+
+.dash-board-background {
+    -fx-background-color: #EAEAEA;
+    -fx-background-radius: 50;
 }
 
-
-.notification-button {          
-    -fx-background-image: url("../icon/notification.png");
-	-fx-text-fill : transparent;
-    -fx-background-size: 100% 100%;
-	-fx-background-color: transparent;
-    -fx-background-repeat: no-repeat;
+.dash-board-box {
+    -fx-background-color: white;
+    -fx-background-radius: 30;
 }
 
-.create-request-button {          
-    -fx-background-image: url("../icon/write.png");
-	-fx-text-fill : transparent;
-    -fx-background-size: 100% 100%;
+.table-view,
+.table-view .column-header,
+.table-view .column-header-background .filler,
+.table-view .corner {
 	-fx-background-color: transparent;
-    -fx-background-repeat: no-repeat;
+}
+
+.table-view .column-header-background{
+	-fx-background-color: white;
+	-fx-border-width: 0 0 2 0;
+	-fx-border-color: #EAEAEA;
+	-fx-font-size: 18;
+	-fx-font-family: -fx-font-family;
+}
+
+.table-view .table-cell{
+	-fx-border-color: transparent;
+	-fx-padding: 2 0 2 50px;
+	-fx-font-size: 18;
+	-fx-font-family: -fx-font-family;
+}
+
+.table-row-cell:hover {
+	-fx-background-color: white;
+}
+
+.table-row-cell:odd{
+	-fx-background-color: white;
+	-fx-background-insets: 0, 0 0 1 0;
+	-fx-padding: 0.0em;
+}
+
+.table-row-cell:even{
+	-fx-background-color: white;
+	-fx-background-insets: 0, 0 0 1 0;
+	-fx-padding: 0.0em;
+}
+
+.table-row-cell:highlighted {
+	-fx-background-color: -fx-primary-color;
+	-fx-background-radius: 5px;
+	-fx-background-insets: 2px;
+}
+
+.table-row-cell:selected {
+	-fx-text-background-color: white;
+	-fx-background-radius: 5px;
+	-fx-background-insets: 2px;
+}
+
+.table-view .virtual-flow .scroll-bar:vertical,
+.table-view .virtual-flow .scroll-bar:vertical .track,
+.table-view .virtual-flow .scroll-bar:vertical .track-background,
+.table-view .virtual-flow .scroll-bar:horizontal,
+.table-view .virtual-flow .scroll-bar:horizontal .track,
+.table-view .virtual-flow .scroll-bar:horizontal .track-background {
+	-fx-background-color: transparent;
 }
