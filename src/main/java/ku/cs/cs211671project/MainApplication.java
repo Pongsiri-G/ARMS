@@ -23,6 +23,13 @@ public class MainApplication extends Application {
         FXRouter.when("advisor", viewPath + "advisor-view.fxml");
         FXRouter.when("register-first", viewPath + "register-first-view.fxml");
         FXRouter.when("register-second", viewPath + "register-second-view.fxml");
+        FXRouter.when("department-request", viewPath + "department-request-view.fxml");
+        FXRouter.when("department-request-managed", viewPath + "department-request-managed-view.fxml");
+        FXRouter.when("department-request-reject", viewPath + "department-request-reject-view.fxml");
+        FXRouter.when("department-approver", viewPath + "department-approver-view.fxml");
+        FXRouter.when("department-approver-add", viewPath + "department-approver-add-view.fxml");
+        FXRouter.when("department-student-manage", viewPath + "departmetn-student-manage-view.fxml");
+        FXRouter.when("department-student-add", viewPath + "department-student-add-view.fxml");
     }
 
     public static void main(String[] args) {

@@ -172,3 +172,62 @@
 .table-view .virtual-flow .scroll-bar:horizontal .track-background {
 	-fx-background-color: transparent;
 }
+
+.menubar-edit .menu-bar{
+	-fx-background-color: white;
+	-fx-padding: 3px;
+	-fx-border-color: #191b29;
+	-fx-border-width: 2px;;
+	-fx-border-radius: 50;
+	-fx-stroke: 4;
+}
+
+
+.menubar-edit .menu {
+	-fx-text-fill: black; /* Text color */
+	-fx-padding: 0 10px;
+}
+
+.menubar-edit .menu:hover {
+	-fx-background-color: #656b9f;
+}
+
+.menubar-edit .menu-item {
+	-fx-text-fill: black;
+}
+
+.menubar-edit .menu-item:hover {
+	-fx-background-color: #656b9f;
+}
+
+.apply-botton {
+	-fx-background-color: #006C67;
+}
+
+.apply-botton .text{
+	fx-font-size: 18;
+}
+
+.reject-botton {
+	-fx-background-color: #BE0000;
+}
+
+.reject-botton .text{
+	fx-font-size: 18;
+}
+
+.back-botton {
+	-fx-background-color: #394954;
+}
+
+.back-botton .text{
+	fx-font-size: 18;
+}
+
+.send-botton {
+	-fx-background-color: #D7A700;
+}
+
+.send-botton .text{
+	fx-font-size: 18;
+}
