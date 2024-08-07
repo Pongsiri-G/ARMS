@@ -44,7 +44,7 @@
          <font>
             <Font size="24.0" />
          </font></TextField>
-      <Button layoutX="1106.0" layoutY="905.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="268.0" text="Change Password">
+      <Button layoutX="1106.0" layoutY="905.0" mnemonicParsing="false" onAction="#onExitButtonClick" prefHeight="70.0" prefWidth="268.0" text="Logout">
          <font>
             <Font size="24.0" />
          </font>
