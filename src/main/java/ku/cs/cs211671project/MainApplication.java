@@ -11,15 +11,28 @@ import java.io.IOException;
 public class MainApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXRouter.bind(this, stage, "CS211 Project", 1024, 768);
+        FXRouter.bind(this, stage, "CS211 Project", 1440, 1024);
         configRoutes();
-        FXRouter.goTo("admin");
+        FXRouter.goTo("login");
     }
 
     private void configRoutes() {
         String viewPath = "ku/cs/views/";
         FXRouter.when("hello", viewPath + "hello-view.fxml");
         FXRouter.when("admin", viewPath + "admin.fxml");
+        FXRouter.when("login", viewPath + "login-view.fxml");
+        FXRouter.when("dashboard", viewPath + "admin-view.fxml");
+        FXRouter.when("advisor", viewPath + "advisor-view.fxml");
+        FXRouter.when("student", viewPath + "student-view.fxml");
+        FXRouter.when("register-first", viewPath + "register-first-view.fxml");
+        FXRouter.when("register-second", viewPath + "register-second-view.fxml");
+        FXRouter.when("department-request", viewPath + "department-request-view.fxml");
+        FXRouter.when("department-request-managed", viewPath + "department-request-managed-view.fxml");
+        FXRouter.when("department-request-reject", viewPath + "department-request-reject-view.fxml");
+        FXRouter.when("department-approver", viewPath + "department-approver-view.fxml");
+        FXRouter.when("department-approver-add", viewPath + "department-approver-add-view.fxml");
+        FXRouter.when("department-student-manage", viewPath + "departmetn-student-manage-view.fxml");
+        FXRouter.when("department-student-add", viewPath + "department-student-add-view.fxml");
     }
 
     public static void main(String[] args) {
