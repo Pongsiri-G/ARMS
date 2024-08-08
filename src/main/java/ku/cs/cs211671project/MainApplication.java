@@ -18,8 +18,6 @@ public class MainApplication extends Application {
 
     private void configRoutes() {
         String viewPath = "ku/cs/views/";
-        FXRouter.when("hello", viewPath + "hello-view.fxml");
-        FXRouter.when("admin", viewPath + "admin.fxml");
         FXRouter.when("login", viewPath + "login-view.fxml");
         FXRouter.when("dashboard", viewPath + "admin-view.fxml");
         FXRouter.when("advisor", viewPath + "advisor-view.fxml");
