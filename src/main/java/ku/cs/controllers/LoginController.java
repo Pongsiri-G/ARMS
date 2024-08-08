@@ -30,10 +30,11 @@ public class LoginController {
             FXRouter.goTo("dashboard");
         } else if (username.getText().toString().equals("advisor") && password.getText().toString().equals("123")) {
             FXRouter.goTo("advisor");
+        } else if (username.getText().toString().equals("staff") && password.getText().toString().equals("123")) {
+            //FXRouter.goTo(""); รอพุธมาเพิ่ม fxml
         } else if (username.getText().toString().equals("student") && password.getText().toString().equals("123")) {
             FXRouter.goTo("student");
         }
-
     }
 
     public void toRegisterPageClick(ActionEvent event) throws IOException {

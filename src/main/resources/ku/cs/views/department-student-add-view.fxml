@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="1024.0" prefWidth="1440.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.DepartmentStudentAddController">
+   <children>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="904.0" layoutX="153.0" layoutY="151.0" stroke="TRANSPARENT" strokeType="INSIDE" style="-fx-fill: EAEAEA; -fx-arc-height: 80; -fx-arc-width: 80; -fx-stroke: tranparent;" width="1317.0" />
+      <Rectangle arcHeight="100.0" arcWidth="5.0" fill="WHITE" height="851.0" layoutX="197.0" layoutY="203.0" stroke="TRANSPARENT" strokeType="INSIDE" style="-fx-stroke: tranparent; -fx-arc-height: 80; -fx-arc-width: 80;" width="1275.0" />
+      <Label layoutX="177.0" layoutY="67.0" text="ภาควิชาวิทยาการคอมพิวเตอร์">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Label>
+      <Button layoutX="69.0" layoutY="340.0" mnemonicParsing="false" prefHeight="54.0" prefWidth="58.0" style="-fx-background-color: tranparnt;">
+         <graphic>
+            <ImageView fitHeight="52.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../images/list.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button layoutX="68.0" layoutY="430.0" mnemonicParsing="false" prefHeight="54.0" prefWidth="58.0" style="-fx-background-color: tranparnt;">
+         <graphic>
+            <ImageView fitHeight="52.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../images/users-svgrepo-com.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button layoutX="68.0" layoutY="530.0" mnemonicParsing="false" prefHeight="54.0" prefWidth="58.0" style="-fx-background-color: tranparnt;">
+         <graphic>
+            <ImageView fitHeight="52.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../images/teacher-admin.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button layoutX="68.0" layoutY="911.0" mnemonicParsing="false" prefHeight="54.0" prefWidth="38.0" style="-fx-background-color: tranparnt;">
+         <graphic>
+            <ImageView fitHeight="52.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../images/exit.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Label layoutX="269.0" layoutY="235.0" text="บริหารจัดการนิสิต">
+         <font>
+            <Font name="System Bold" size="48.0" />
+         </font>
+      </Label>
+      <TableView layoutX="241.0" layoutY="325.0" prefHeight="696.0" prefWidth="1139.0" stylesheets="@../../../style/style.css">
+         <columns>
+            <TableColumn prefWidth="75.0" text="รหัสนิสิต" />
+            <TableColumn prefWidth="75.0" text="ชื่อ-นามสกุล" />
+            <TableColumn prefWidth="75.0" text="อีเมล" />
+            <TableColumn prefWidth="75.0" text="อาจารย์ที่ปรึกษส" />
+         </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
+      <Button layoutX="1264.0" layoutY="236.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="103.0" styleClass="apply-botton" stylesheets="@../../../style/style.css" text="เพิ่ม +">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#0000004d" height="1058.0" layoutX="10.0" layoutY="7.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-opacity: 1;" width="1474.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="655.0" layoutX="371.0" layoutY="213.0" stroke="BLACK" strokeType="INSIDE" style="-fx-fill: white; -fx-stroke: #E2E2E2; -fx-stroke-width: 1; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 30, 0.5, 0, 4); -fx-arc-height: 35; -fx-arc-width: 35;" width="831.0" />
+      <Label layoutX="663.0" layoutY="258.0" text="เพิ่มรายชื่อนิสิต">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Label>
+      <Button layoutX="890.0" layoutY="778.0" mnemonicParsing="false" onAction="#onBackButtonClick" prefHeight="50.0" prefWidth="103.0" styleClass="back-botton" stylesheets="@../../../style/style.css" text="ย้อนกลับ">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button layoutX="1037.0" layoutY="777.0" mnemonicParsing="false" onAction="#onApplyButtonClick" prefHeight="50.0" prefWidth="103.0" styleClass="apply-botton" stylesheets="@../../../style/style.css" text="ตกลง">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

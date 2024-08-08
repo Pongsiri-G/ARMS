@@ -19,13 +19,13 @@ public class AdvisorController {
     private void showAdvisor(Advisor advisor) {
         emailLabel.setText(advisor.getEmail());
     }*/
-/*
+
     @FXML
-    protected void onChangButtonClick() {
+    protected void onExitButtonClick() {
         try {
-            FXRouter.goTo("advisor-account");
+            FXRouter.goTo("login");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }*/
+    }
 }

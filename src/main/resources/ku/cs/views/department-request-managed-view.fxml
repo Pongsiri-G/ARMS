@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="1024.0" prefWidth="1440.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.DepartmentRequestManagedController">
+   <children>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="904.0" layoutX="133.0" layoutY="131.0" stroke="TRANSPARENT" strokeType="INSIDE" style="-fx-fill: EAEAEA; -fx-arc-height: 80; -fx-arc-width: 80; -fx-stroke: tranparent;" width="1317.0" />
+      <Rectangle arcHeight="100.0" arcWidth="5.0" fill="WHITE" height="851.0" layoutX="177.0" layoutY="183.0" stroke="TRANSPARENT" strokeType="INSIDE" style="-fx-stroke: tranparent; -fx-arc-height: 80; -fx-arc-width: 80;" width="1275.0" />
+      <Label layoutX="157.0" layoutY="47.0" text="ภาควิชาวิทยาการคอมพิวเตอร์">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Label>
+      <Button layoutX="49.0" layoutY="320.0" mnemonicParsing="false" prefHeight="54.0" prefWidth="58.0" style="-fx-background-color: tranparnt;">
+         <graphic>
+            <ImageView fitHeight="52.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../images/list.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button layoutX="48.0" layoutY="410.0" mnemonicParsing="false" onAction="#onApproverManagementClick" prefHeight="54.0" prefWidth="58.0" style="-fx-background-color: tranparnt;">
+         <graphic>
+            <ImageView fitHeight="52.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../images/users-svgrepo-com.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button layoutX="48.0" layoutY="510.0" mnemonicParsing="false" onAction="#onStudentManagementClick" prefHeight="54.0" prefWidth="58.0" style="-fx-background-color: tranparnt;">
+         <graphic>
+            <ImageView fitHeight="52.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../images/teacher-admin.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button layoutX="48.0" layoutY="891.0" mnemonicParsing="false" onAction="#onLogoutClick" prefHeight="54.0" prefWidth="38.0" style="-fx-background-color: tranparnt;">
+         <graphic>
+            <ImageView fitHeight="52.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../images/exit.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Label layoutX="570.0" layoutY="221.0" text="รายละเอียดคำร้อง">
+         <font>
+            <Font name="System Bold" size="36.0" />
+         </font>
+      </Label>
+      <MenuButton layoutX="1049.0" layoutY="750.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="334.0" style="-fx-background-color: white; -fx-border-color: black;" styleClass="menubar-edit" stylesheets="@../../../style/style.css" text="เลือกผู้ดำเนินการ">
+        <items>
+          <MenuItem mnemonicParsing="false" text="Action 1" />
+          <MenuItem mnemonicParsing="false" text="Action 2" />
+        </items>
+         <font>
+            <Font size="24.0" />
+         </font>
+      </MenuButton>
+      <Button layoutX="1138.0" layoutY="889.0" mnemonicParsing="false" onAction="#onApplyButtonClick" prefHeight="50.0" prefWidth="103.0" styleClass="apply-botton" stylesheets="@../../../style/style.css" text="อนุมัติ">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button layoutX="1275.0" layoutY="889.0" mnemonicParsing="false" onAction="#onSendButtonClick" prefHeight="50.0" prefWidth="103.0" styleClass="send-botton" stylesheets="@../../../style/style.css" text="ส่งต่อ">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button layoutX="1003.0" layoutY="890.0" mnemonicParsing="false" onAction="#onRejectButtonClick" prefHeight="50.0" prefWidth="103.0" styleClass="reject-botton" stylesheets="@../../../style/style.css" text="ปฏิเสธ">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button layoutX="255.0" layoutY="890.0" mnemonicParsing="false" onAction="#onBackButtonClick" prefHeight="50.0" prefWidth="103.0" styleClass="back-botton" stylesheets="@../../../style/style.css" text="ย้อนกลับ">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
