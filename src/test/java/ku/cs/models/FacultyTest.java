@@ -34,7 +34,7 @@ class FacultyTest {
     void testRemoveDepartment() {
         science.addDepartment(computerScience);
         science.removeDepartment(computerScience);
-        assertFalse(science.getDepartments().contains(computerScience));
+        assertTrue(science.getDepartments().isEmpty());
     }
 
     @Test
@@ -63,6 +63,15 @@ class FacultyTest {
         science.addDepartment("eng", "03");
         System.out.println(science.getDepartments());
 
+    }
+
+    @Test
+    void testSetter(){
+        System.out.println(science.getFacultyName() + " " + science.getFacultyId());
+        science.setFacultyName("c");
+        System.out.println(science.getFacultyName());
+        science.setFacultyId("12");
+        System.out.println(science.getFacultyId());
     }
 
 

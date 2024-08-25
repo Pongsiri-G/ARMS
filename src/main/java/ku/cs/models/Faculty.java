@@ -91,7 +91,7 @@ public class Faculty {
 
     @Override
     public String toString(){
-        return this.facultyName + "/t" + this.facultyId;
+        return this.facultyName + "\t" + this.facultyId;
     }
 
 
