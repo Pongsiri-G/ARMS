@@ -9,7 +9,7 @@ public class User {
 
     public User(String username, String password, String name) {
         this.username = username;
-        this.password = password;
+        this.password = BCrypt.withDefaults().hashToString(12, password.toCharArray());
         this.name = name;
     }
 

@@ -67,7 +67,15 @@ public class UserList {
     public User login(String username, String password) {
         User user = findUserByUsername(username);
         if (user != null) {
-            if (user.validatePassword(password)) return user;
+            if (user instanceof FacultyStaff fs) {
+                if (user.validatePassword(password)) return fs;
+            }
+            else if (user instanceof DepartmentStaff ds) {
+                if (user.validatePassword(password)) return ds;
+            }
+            else if (user instanceof Student student) {
+                if (user.validatePassword(password)) return student;
+            }
         }
         return null;
     }

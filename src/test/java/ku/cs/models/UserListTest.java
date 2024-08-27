@@ -33,7 +33,7 @@ class UserListTest {
         userList.addUser("user2.3", "5678", "user2.3", "Engineer", "Mechatronic");
         userList.addUser("user2.4", "5678", "user2.4", "Engineer", "Electronics");
 
-        User a = userList.findUserByUsername("user1");
+        User a = userList.login("user1", "1234");
         assertEquals("user1", a.getName());
     }
 
