@@ -4,13 +4,47 @@ import java.util.ArrayList;
 
 public class UserList {
     private ArrayList<User> users;
+    private FacultyList faculties;
 
-    public UserList() { this.users = new ArrayList<>(); }
+
+    public UserList() {
+        this.users = new ArrayList<>();
+        readData();
+    }
+    public void readData() {
+        faculties = new FacultyList();
+        faculties.addFaculty("Science");
+        faculties.addFaculty("Engineer");
+        faculties.findFacultyByName("Science").addDepartment("Computer");
+        faculties.findFacultyByName("Science").addDepartment("Math");
+        faculties.findFacultyByName("Engineer").addDepartment("Electronics");
+        faculties.findFacultyByName("Engineer").addDepartment("Mechatronic");
+    }
 
     public void addUser(User user) { this.users.add(user); }
-    public void addUser(String username, String password, String name, String faculty) {}
-    public void addUser(String username, String password, String name, String faculty, String department) {}
-    public void addUser(String username, String password, String name, String faculty, String department, String advisorID) {}
+    public void addUser(String username, String password, String name, String faculty) {
+        if (findUserByUsername(username) == null) {
+            Faculty f = faculties.findFacultyByName(faculty);
+            if (f != null) {
+                users.add(new FacultyStaff(username, password, name, f));
+            }
+        }
+    }
+    public void addUser(String username, String password, String name, String faculty, String department) {
+        if (findUserByUsername(username) == null) {
+            Faculty f = faculties.findFacultyByName(faculty);
+            if (f != null) {
+                Department d = f.findDepartmentByName(department);
+                if (d != null) {
+                    users.add(new DepartmentStaff(username, password, name, f, d));
+                }
+
+            }
+        }
+    }
+    public void addUser(String username, String password, String name, String faculty, String department, String advisorID) {
+
+    }
     public void addUser(String username, String password, String name, String faculty, String department, String studentID, String email) {
         Student newUser = new Student(username, password, name, faculty, department, studentID, email);
         User exist = findUserByUsername(username);

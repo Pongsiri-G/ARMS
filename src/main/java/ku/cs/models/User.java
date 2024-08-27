@@ -45,8 +45,21 @@ public class User {
         return name;
     }
 
+    public Faculty getFaculty() {
+        return null;
+    }
+
+    public Department getDepartment() {
+        return null;
+    }
+
     public boolean validatePassword(String password) {
         BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), this.password);
         return result.verified;
+    }
+
+    @Override
+    public String toString() {
+        return name + " " + username;
     }
 }
