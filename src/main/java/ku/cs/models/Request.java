@@ -1,26 +1,22 @@
 package ku.cs.models;
 
-public class Request {
-    private int allRequest;
-    private int approved;
-    private int users;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-    Request(int request, int approved, int users) {
-        this.allRequest = request;
-        this.approved = approved;
-        this.users = users;
+public abstract class Request {
+    protected String timeStamp;
+    protected String approveName;
+    protected String status;
+
+
+    Request(String status) {
+        this.status = status;
+        this.timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
-    public int getRequest() {
-        return allRequest;
-    }
+    public abstract String changeStatus(String newStatus, String approveName);
 
-    public int getApproved() {
-        return approved;
-    }
+    public String getTimeStamp() {return timeStamp;}
 
-    public int getUsers() {
-        return users;
-    }
-
+    public String getStatus() {return status;}
 }
