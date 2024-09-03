@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="1024.0" prefWidth="1440.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.AdvisorController">
+    <children>
+        <Pane layoutX="89.0" layoutY="57.0" prefHeight="968.0" prefWidth="1361.0" style="-fx-background-color: #EAEAEA;">
+            <stylesheets>@../../../../../target/classes/style/style.css</stylesheets>
+            <children>
+                <Pane layoutX="71.0" layoutY="54.0" prefHeight="913.0" prefWidth="1218.0" style="-fx-background-color: #FFFFFF;" styleClass="framin" stylesheets="@../../../style/style.css">
+                    <children>
+                        <ImageView fitHeight="236.0" fitWidth="232.0" layoutX="95.0" layoutY="63.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../../../images/ลุงโท.jpg" />
+                            </image>
+                        </ImageView>
+                        <Label graphicTextGap="20.0" layoutX="569.0" layoutY="84.0" prefHeight="39.0" prefWidth="398.0" text="ชื่อ-นามสกุล: โทนี่ สตาร์ค">
+                            <font>
+                                <Font size="24.0" />
+                            </font>
+                        </Label>
+                        <Label graphicTextGap="20.0" layoutX="569.0" layoutY="227.0" text="อีเมล: ติดต่อเจ้าหน้าที่">
+                            <font>
+                                <Font size="24.0" />
+                            </font>
+                        </Label>
+                        <Label graphicTextGap="20.0" layoutX="569.0" layoutY="179.0" prefHeight="39.0" prefWidth="333.0" text="รหัสนิสิต: 661040xxxx">
+                            <font>
+                                <Font size="24.0" />
+                            </font>
+                        </Label>
+                        <Label graphicTextGap="20.0" layoutX="827.0" layoutY="132.0" text="สาขา: ดนตรีเเละต่างๆ">
+                            <font>
+                                <Font size="24.0" />
+                            </font>
+                        </Label>
+                        <Label graphicTextGap="20.0" layoutX="569.0" layoutY="132.0" text="คณะ: ศิลปกรรมศาสตร์">
+                            <font>
+                                <Font size="24.0" />
+                            </font>
+                        </Label>
+                        <Label layoutX="435.0" layoutY="400.0" styleClass="fontsadvisor" text="ประวัติการยื่นคำร้อง">
+                            <font>
+                                <Font size="34.0" />
+                            </font>
+                        </Label>
+                        <TableView fx:id="studentTable" layoutX="70.0" layoutY="474.0" prefHeight="425.0" prefWidth="1079.0" style="-fx-background-color: #FFFFFF;">
+                            <columns>
+                                <TableColumn prefWidth="268.0" text="คำร้อง" />
+                                <TableColumn prefWidth="466.0" text="รายละเอียดคำร้อง" />
+                                <TableColumn prefWidth="344.0" text="วันที่" />
+                            </columns>
+                        </TableView>
+                    </children>
+                </Pane>
+            </children>
+        </Pane>
+        <Button layoutX="22.0" layoutY="899.0" mnemonicParsing="false" onAction="#onButtonTBackAdvisor" prefHeight="39.0" prefWidth="57.0" style="-fx-background-color: #FFFFFF;">
+            <graphic>
+                <ImageView fitHeight="49.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../../../images/exit-admin.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+        </Button>
+    </children>
+</AnchorPane>

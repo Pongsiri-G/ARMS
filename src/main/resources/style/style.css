@@ -231,3 +231,24 @@
 .send-botton .text{
 	fx-font-size: 18;
 }
+
+.frameout{
+	-fx-background-color: #DCDCDC;
+	-fx-border-color: #DCDCDC;
+	-fx-border-width: 2px 2px 2px 2px;
+	-fx-border-radius: 50px;
+	-fx-background-radius: 50px;
+	-fx-border-style: solid;
+}
+.framin{
+	-fx-background-color: #FFFFFF;
+	-fx-border-color: #FFFFFF;
+	-fx-border-width: 2px 2px 2px 2px;
+	-fx-border-radius: 50px;
+	-fx-background-radius: 50px;
+	-fx-border-style: solid;
+}
+
+.fontsadvisor{
+	-fx-font: Inter;
+}

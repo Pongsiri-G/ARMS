@@ -22,7 +22,7 @@ public class LoginController {
         if (username.getText().toString().equals("admin") && password.getText().toString().equals("123")) {
             FXRouter.goTo("dashboard");
         } else if (username.getText().toString().equals("advisor") && password.getText().toString().equals("123")) {
-            FXRouter.goTo("advisor");
+            FXRouter.goTo("change-password");
         } else if (username.getText().toString().equals("staff") && password.getText().toString().equals("123")) {
             FXRouter.goTo("department-request");
         } else if (username.getText().toString().equals("student") && password.getText().toString().equals("123")) {

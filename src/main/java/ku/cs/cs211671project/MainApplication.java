@@ -20,7 +20,7 @@ public class MainApplication extends Application {
         String viewPath = "ku/cs/views/";
         FXRouter.when("login", viewPath + "login-view.fxml");
         FXRouter.when("dashboard", viewPath + "admin-view.fxml");
-        FXRouter.when("advisor", viewPath + "advisor-view.fxml");
+        FXRouter.when("change-password", viewPath + "change-password-view.fxml");
         FXRouter.when("student", viewPath + "student-view.fxml");
         FXRouter.when("register-first", viewPath + "register-first-view.fxml");
         FXRouter.when("register-second", viewPath + "register-second-view.fxml");
@@ -31,6 +31,8 @@ public class MainApplication extends Application {
         FXRouter.when("department-approver-add", viewPath + "department-approver-add-view.fxml");
         FXRouter.when("department-student-manage", viewPath + "departmetn-student-manage-view.fxml");
         FXRouter.when("department-student-add", viewPath + "department-student-add-view.fxml");
+        FXRouter.when("advisor", viewPath + "advisor-view.fxml");
+        FXRouter.when("advisor-nisit", viewPath + "advisor-nisit-view.fxml");
     }
 
     public static void main(String[] args) {
