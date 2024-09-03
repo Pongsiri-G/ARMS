@@ -30,7 +30,11 @@ public class MainApplication extends Application {
         FXRouter.when("department-approver", viewPath + "department-approver-view.fxml");
         FXRouter.when("department-approver-add", viewPath + "department-approver-add-view.fxml");
         FXRouter.when("department-student-manage", viewPath + "departmetn-student-manage-view.fxml");
-        FXRouter.when("department-student-add", viewPath + "department-student-add-view.fxml");
+        FXRouter.when("all-request", viewPath + "all-request.fxml");
+        FXRouter.when("approved-request", viewPath + "approved-request.fxml");
+        FXRouter.when("department-faculty-management", viewPath + "department-faculty-management.fxml");
+        FXRouter.when("staff-advisor-management", viewPath + "staff-advisor-management.fxml");
+        FXRouter.when("user-management", viewPath + "user-management.fxml");
     }
 
     public static void main(String[] args) {

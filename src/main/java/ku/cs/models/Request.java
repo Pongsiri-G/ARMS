@@ -1,11 +1,11 @@
 package ku.cs.models;
 
-public class Dashboard {
+public class Request {
     private int allRequest;
     private int approved;
     private int users;
 
-    Dashboard(int request, int approved, int users) {
+    Request(int request, int approved, int users) {
         this.allRequest = request;
         this.approved = approved;
         this.users = users;
