@@ -13,6 +13,8 @@ public class User {
         this.name = name;
     }
 
+
+
     public boolean isUsername(String username) {
         return this.username.equals(username);
     }

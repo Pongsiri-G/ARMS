@@ -14,6 +14,12 @@ public class Student extends User {
         this.enrolledDepartment = department;
     }
 
+    /*
+    public createRequest() {
+        Request new
+    }
+    */
+
     public String getStudentID() { return studentID; }
     public String getEmail() { return email; }
     public String getEnrolledFaculty() { return enrolledFaculty.getFacultyName(); }

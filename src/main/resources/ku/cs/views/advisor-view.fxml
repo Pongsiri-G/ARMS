@@ -2,52 +2,76 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="1024.0" prefWidth="1440.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.AdvisorController">
+<AnchorPane prefHeight="1024.0" prefWidth="1440.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.AdvisorController">
     <children>
-        <Label layoutX="41.0" layoutY="14.0" text="Advisor">
-            <font>
-                <Font size="32.0" />
-            </font>
-        </Label>
-        <Label layoutX="34.0" prefHeight="200.0" prefWidth="390.0" text="Welcome">
-            <font>
-                <Font name="Javanese Text" size="96.0" />
-            </font>
-        </Label>
-        <TextField layoutX="34.0" layoutY="190.0" prefHeight="47.0" prefWidth="390.0" promptText="Email">
-            <font>
-                <Font size="24.0" />
-            </font>
-        </TextField>
-        <Label layoutX="34.0" layoutY="249.0" text="To continue the process. Please change your password to verify it's you.">
-            <font>
-                <Font size="20.0" />
-            </font>
-        </Label>
-        <TextField layoutX="33.0" layoutY="378.0" prefHeight="70.0" prefWidth="794.0" promptText="ConfirmYourPassword">
-            <font>
-                <Font size="24.0" />
-            </font></TextField>
-        <Label layoutX="33.0" layoutY="460.0" text="error message" textFill="#dc0d0d">
-            <font>
-                <Font size="20.0" />
-            </font></Label>
-        <Label layoutX="30.0" layoutY="497.0" text="Use at least 8 characters, preferably lowercase, uppercase, numbers, and mixed of symbols.">
-            <font>
-                <Font size="20.0" />
-            </font></Label>
-        <TextField layoutX="33.0" layoutY="293.0" prefHeight="70.0" prefWidth="795.0" promptText="NewPassword" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="612.5999999999999">
-            <font>
-                <Font size="24.0" />
-            </font></TextField>
-        <Button layoutX="1106.0" layoutY="905.0" mnemonicParsing="false" onAction="#onExitButtonClick" prefHeight="70.0" prefWidth="268.0" text="Logout">
-            <font>
-                <Font size="24.0" />
-            </font>
-        </Button>
+        <Pane layoutX="89.0" layoutY="57.0" prefHeight="968.0" prefWidth="1361.0" style="-fx-background-color: #EAEAEA;">
+            <stylesheets>@../../../style/style.css</stylesheets>
+            <children>
+                <Pane layoutX="71.0" layoutY="54.0" prefHeight="913.0" prefWidth="1218.0" style="-fx-background-color: #FFFFFF;" styleClass="framin" stylesheets="@../../../style/style.css">
+               <children>
+                  <ImageView fitHeight="236.0" fitWidth="232.0" layoutX="95.0" layoutY="63.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../images/อาจารย์แดง.jpg" />
+                     </image>
+                  </ImageView>
+                  <Label graphicTextGap="20.0" layoutX="569.0" layoutY="84.0" prefHeight="39.0" prefWidth="398.0" text="ชื่อ-นามสกุล: จารย์เเดง กีจาร์เจ้าเก่า">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <Label graphicTextGap="20.0" layoutX="569.0" layoutY="227.0" text="อีเมล: ติดต่อเจ้าหน้าที่">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <Label graphicTextGap="20.0" layoutX="569.0" layoutY="179.0" text="ตำเเหน่ง: อาจารย์ปรึกษา">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <Label graphicTextGap="20.0" layoutX="827.0" layoutY="132.0" text="สาขา: ดนตรีเเละต่างๆ">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <Label graphicTextGap="20.0" layoutX="569.0" layoutY="132.0" text="คณะ: ศิลปกรรมศาสตร์">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="71.0" layoutY="415.0" styleClass="fontsadvisor" text="รายชื่อนิสิตในที่ปรึกษา">
+                     <font>
+                        <Font size="34.0" />
+                     </font>
+                  </Label>
+                  <TableView fx:id="studentTable" layoutX="70.0" layoutY="474.0" prefHeight="425.0" prefWidth="1079.0" style="-fx-background-color: #FFFFFF;">
+                    <columns>
+                      <TableColumn prefWidth="268.0" text="รหัสนิสิต" />
+                      <TableColumn prefWidth="174.0" text="ชื่อ-นามสกุล" />
+                        <TableColumn prefWidth="360.0" text="คณะ" />
+                        <TableColumn minWidth="0.0" prefWidth="276.0" text="สาขา" />
+                    </columns>
+                  </TableView>
+               </children>
+                </Pane>
+            </children>
+        </Pane>
+      <Button layoutX="22.0" layoutY="899.0" mnemonicParsing="false" onAction="#onButtonToAdvisor" prefHeight="39.0" prefWidth="57.0" style="-fx-background-color: #FFFFFF;">
+         <graphic>
+            <ImageView fitHeight="49.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../images/exit-admin.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
     </children>
 </AnchorPane>

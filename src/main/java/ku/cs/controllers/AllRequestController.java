@@ -5,20 +5,11 @@ import ku.cs.services.FXRouter;
 
 import java.io.IOException;
 
-public class AdminController {
+public class AllRequestController {
     @FXML
     protected void onLogoutClick() {
         try {
             FXRouter.goTo("login");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @FXML
-    protected void onAllRequestClick() {
-        try {
-            FXRouter.goTo("all-request");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
