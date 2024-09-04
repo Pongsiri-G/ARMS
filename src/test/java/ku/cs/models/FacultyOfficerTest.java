@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FacultyStaffTest {
-    private FacultyStaff fs;
+class FacultyOfficerTest {
+    private FacultyOfficer fs;
     @BeforeEach
     void setUp1() {
-        fs = new FacultyStaff("User", "1234", "Test", new Faculty("Science"));
+        fs = new FacultyOfficer("User", "1234", "Test", new Faculty("Science"));
     }
     @BeforeEach
     void setUp2() {

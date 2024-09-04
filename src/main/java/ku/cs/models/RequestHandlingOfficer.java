@@ -1,11 +1,11 @@
 package ku.cs.models;
 
-public class RequestManager {
+public class RequestHandlingOfficer {
     private String name;
     private String position;
 
     // Begin Constructor
-    RequestManager(String name, String position) {
+    RequestHandlingOfficer(String name, String position) {
         this.name = name;
         this.position = position;
     }

@@ -26,7 +26,7 @@ public class UserList {
         if (findUserByUsername(username) == null) {
             Faculty f = faculties.findFacultyByName(faculty);
             if (f != null) {
-                users.add(new FacultyStaff(username, password, name, f));
+                users.add(new FacultyOfficer(username, password, name, f));
             }
         }
     }
@@ -36,7 +36,7 @@ public class UserList {
             if (f != null) {
                 Department d = f.findDepartmentByName(department);
                 if (d != null) {
-                    users.add(new DepartmentStaff(username, password, name, f, d));
+                    users.add(new DepartmentOfficer(username, password, name, f, d));
                 }
 
             }
@@ -74,10 +74,10 @@ public class UserList {
     public User login(String username, String password) {
         User user = findUserByUsername(username);
         if (user != null) {
-            if (user instanceof FacultyStaff fs) {
+            if (user instanceof FacultyOfficer fs) {
                 if (user.validatePassword(password)) return fs;
             }
-            else if (user instanceof DepartmentStaff ds) {
+            else if (user instanceof DepartmentOfficer ds) {
                 if (user.validatePassword(password)) return ds;
             }
             else if (user instanceof Student student) {

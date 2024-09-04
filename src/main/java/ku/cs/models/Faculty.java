@@ -7,6 +7,7 @@ public class Faculty {
     private String facultyName;
     private String facultyId;
     private ArrayList<Department> departments;
+    private ArrayList<RequestHandlingOfficer> requestHandlingOfficers;
 
     // Begin Constructor
     Faculty(String facultyName){
@@ -75,6 +76,19 @@ public class Faculty {
         return null;
     }
     // End handle Department
+
+    // Methods to handle RequestHandlingOfficers
+    public void addRequestHandlingOfficer(RequestHandlingOfficer officer) {
+        this.requestHandlingOfficers.add(officer);
+    }
+
+    public void removeRequestHandlingOfficer(RequestHandlingOfficer officer) {
+        this.requestHandlingOfficers.remove(officer);
+    }
+
+    public ArrayList<RequestHandlingOfficer> getRequestHandlingOfficers() {
+        return this.requestHandlingOfficers;
+    }
 
     // Begin getter
     public ArrayList<Department> getDepartments(){
