@@ -7,39 +7,37 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FacultyOfficerTest {
     private FacultyOfficer fs;
+    private Faculty f;
     @BeforeEach
     void setUp1() {
         fs = new FacultyOfficer("User", "1234", "Test", new Faculty("Science"));
-    }
-    @BeforeEach
-    void setUp2() {
-        fs.loadRequestManagers();
+        f = fs.getFaculty();
     }
 
     @Test
     void addRequestManager() {
         fs.addRequestManager("staff1", "Deputy Dean ");
-        assertEquals("Deputy Dean Science", fs.getRequestManagers().getFirst().getPosition());
+        assertEquals("Deputy Dean Science", f.getRequestHandlingOfficers().getFirst().getPosition());
     }
 
     @Test
     void removeRequestManager() {
         fs.addRequestManager("staff1", "Deputy Dean ");
-        fs.removeRequestManager(fs.getRequestManagers().getFirst());
-        assertEquals(0, fs.getRequestManagers().size());
+        fs.removeRequestManager(f.getRequestHandlingOfficers().getFirst());
+        assertEquals(0, f.getRequestHandlingOfficers().size());
     }
 
     @Test
     void changeRequestManagerName() {
         fs.addRequestManager("staff1", "Deputy Dean ");
-        fs.changeRequestManagerName(fs.getRequestManagers().getFirst(), "Change");
-        assertEquals("Change", fs.getRequestManagers().getFirst().getName());
+        fs.changeRequestManagerName(f.getRequestHandlingOfficers().getFirst(), "Change");
+        assertEquals("Change", f.getRequestHandlingOfficers().getFirst().getName());
     }
 
     @Test
     void changeRequestManagerPosition() {
         fs.addRequestManager("staff1", "Deputy Dean ");
-        fs.changeRequestManagerPosition(fs.getRequestManagers().getFirst(), "Change");
-        assertEquals("ChangeScience", fs.getRequestManagers().getFirst().getPosition());
+        fs.changeRequestManagerPosition(f.getRequestHandlingOfficers().getFirst(), "Change");
+        assertEquals("ChangeScience", f.getRequestHandlingOfficers().getFirst().getPosition());
     }
 }

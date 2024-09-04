@@ -16,12 +16,14 @@ public class Faculty {
         this.facultyName = facultyName;
         this.facultyId = String.valueOf(rand.nextInt(90) + 10 +"");
         this.departments = new ArrayList<>();
+        this.requestHandlingOfficers = new ArrayList<>();
     }
 
     Faculty(String facultyName, String facultyId) {
         this.facultyName = facultyName;
         this.facultyId = facultyId;
         this.departments = new ArrayList<>();
+        this.requestHandlingOfficers = new ArrayList<>();
     }// End Constructor
 
     public boolean isFacultyName(String facultyName){

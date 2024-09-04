@@ -86,4 +86,15 @@ public class UserList {
         }
         return null;
     }
+
+    public void Register(String studentName, String studentID, String email){
+        for (User user : users) {
+            if (user instanceof Student){
+                Student s = (Student) user;
+                if (studentName.equals(s.getName()) && studentID.equals(s.getStudentID()) && email.equals(s.getEmail())){
+                    ;;
+                }
+            }
+        }
+    }
 }

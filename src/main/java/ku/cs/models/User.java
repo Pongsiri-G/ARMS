@@ -12,9 +12,11 @@ public class User {
         this.password = BCrypt.withDefaults().hashToString(12, password.toCharArray());
         this.name = name;
     }
-
-
-
+    public User(String name){
+        this.username = null;
+        this.password = null;
+        this.name = name;
+    }
     public boolean isUsername(String username) {
         return this.username.equals(username);
     }
