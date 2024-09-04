@@ -46,9 +46,16 @@ public class UserList {
 
     }
     public void addUser(String username, String password, String name, String faculty, String department, String studentID, String email) {
-        Student newUser = new Student(username, password, name, faculty, department, studentID, email);
-        User exist = findUserByUsername(username);
-        if (exist == null) users.add(newUser);
+        if (findUserByUsername(username) == null) {
+            Faculty f = faculties.findFacultyByName(faculty);
+            if (f != null) {
+                Department d = f.findDepartmentByName(department);
+                if (d != null) {
+                    users.add(new Student(username, password, name, f, d, studentID, email));
+                }
+
+            }
+        }
     }
 
     public User findUserByUsername(String username) {

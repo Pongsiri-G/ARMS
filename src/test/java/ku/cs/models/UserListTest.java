@@ -34,7 +34,7 @@ class UserListTest {
         userList.addUser("user2.4", "5678", "user2.4", "Engineer", "Electronics");
 
         User a = userList.login("user1", "1234");
-        assertEquals("user1", a.getName());
+        assertEquals("Science", a.getFaculty().getFacultyName());
     }
 
 
