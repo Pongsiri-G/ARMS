@@ -19,7 +19,7 @@ public class Faculty {
         this.requestHandlingOfficers = new ArrayList<>();
     }
 
-    Faculty(String facultyName, String facultyId) {
+    public Faculty(String facultyName, String facultyId) {
         this.facultyName = facultyName;
         this.facultyId = facultyId;
         this.departments = new ArrayList<>();

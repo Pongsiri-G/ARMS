@@ -11,7 +11,7 @@ public class Department {
     private ArrayList<Student> students;
 
     // Begin Constructor
-    Department(String departmentName, Faculty faculty) {
+    public Department(String departmentName, Faculty faculty) {
         // Auto Generate departmentID will implement later
         Random rand = new Random();
         this.departmentName = departmentName;
@@ -19,7 +19,7 @@ public class Department {
         this.requestHandlingOfficers = new ArrayList<>();
     }
 
-    Department(String departmentName, String departmentID, Faculty faculty) {
+    public Department(String departmentName, String departmentID, Faculty faculty) {
         this.departmentName = departmentName;
         this.departmentID = departmentID;
         this.requestHandlingOfficers = new ArrayList<>();
