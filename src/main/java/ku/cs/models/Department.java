@@ -6,10 +6,12 @@ import java.util.Random;
 public class Department {
     private String departmentName;
     private String departmentID;
+    private Faculty faculty;
     private ArrayList<RequestHandlingOfficer> requestHandlingOfficers;
+    private ArrayList<Student> students;
 
     // Begin Constructor
-    Department(String departmentName){
+    Department(String departmentName, Faculty faculty) {
         // Auto Generate departmentID will implement later
         Random rand = new Random();
         this.departmentName = departmentName;
@@ -17,12 +19,16 @@ public class Department {
         this.requestHandlingOfficers = new ArrayList<>();
     }
 
-    Department(String departmentName, String departmentID) {
+    Department(String departmentName, String departmentID, Faculty faculty) {
         this.departmentName = departmentName;
         this.departmentID = departmentID;
         this.requestHandlingOfficers = new ArrayList<>();
     }
     // End Constructor
+
+    public void loadData(){
+
+    }
 
     public boolean isDepartmentName(String departmentName){
         return this.departmentName.equals(departmentName);
@@ -46,6 +52,7 @@ public class Department {
     }
 
     // Begin Setter
+    public void setFaculty(Faculty faculty) {this.faculty = faculty;}
     public void setDepartmentName(String departmentName){
         this.departmentName = departmentName;
     }
@@ -55,6 +62,7 @@ public class Department {
     // End Setter
 
     // Begin Getter
+    public Faculty getFaculty() { return faculty; }
     public String getDepartmentName(){
         return this.departmentName;
     }

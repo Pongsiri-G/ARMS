@@ -45,15 +45,18 @@ public class Faculty {
 
     // Begin handle Departments
     public void addDepartment(Department department){
+        if (department.getFaculty() == null){
+            department.setFaculty(this);
+        }
         this.departments.add(department);
     }
 
     public void addDepartment(String departmentName){
-        this.departments.add(new Department(departmentName));
+        this.departments.add(new Department(departmentName, this));
     }
 
     public void addDepartment(String departmentName, String departmentId){
-        this.departments.add(new Department(departmentName, departmentId));
+        this.departments.add(new Department(departmentName, departmentId, this));
     }
 
     public void removeDepartment(Department department){
