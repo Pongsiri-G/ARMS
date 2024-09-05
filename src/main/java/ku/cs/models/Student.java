@@ -1,11 +1,11 @@
 package ku.cs.models;
 
 public class Student extends User {
-    String studentID;
-    String email;
-    Faculty enrolledFaculty;
-    Department enrolledDepartment;
-    Advisor studentAdvisor;
+    private String studentID;
+    private String email;
+    private Faculty enrolledFaculty;
+    private Department enrolledDepartment;
+    private Advisor studentAdvisor;
 
 
     public Student(String name, String studentID, String email) {

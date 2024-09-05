@@ -3,19 +3,22 @@ package ku.cs.models;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
 public class User {
-    String username;
-    String password;
-    String name;
+    private String username;
+    private String password;
+    private String name;
+    private boolean suspended;
 
     public User(String username, String password, String name) {
         this.username = username;
         this.password = BCrypt.withDefaults().hashToString(12, password.toCharArray());
         this.name = name;
+        suspended = false;
     }
     public User(String name){
         this.username = null;
         this.password = null;
         this.name = name;
+        suspended = false;
     }
     public boolean isUsername(String username) {
         return this.username.equals(username);
@@ -37,6 +40,10 @@ public class User {
         this.name = firstName + " " + lastName;
     }
 
+    public void setSuspended(boolean suspended) { this.suspended = suspended; }
+
+    public boolean getSuspended() { return suspended; }
+
     public String getUsername() {
         return username;
     }
@@ -47,14 +54,6 @@ public class User {
 
     public String getName() {
         return name;
-    }
-
-    public Faculty getFaculty() {
-        return null;
-    }
-
-    public Department getDepartment() {
-        return null;
     }
 
     public boolean validatePassword(String password) {

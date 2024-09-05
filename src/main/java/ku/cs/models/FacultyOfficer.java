@@ -29,15 +29,12 @@ public class FacultyOfficer extends User {
     }
 
     // End Handle Request Manager
-
-
-    @Override
     public Faculty getFaculty() {
         return faculty;
     }
 
     @Override
     public String toString() {
-        return name + " " + faculty.toString();
+        return getName() + " " + faculty.toString();
     }
 }
