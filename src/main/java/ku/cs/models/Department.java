@@ -7,6 +7,7 @@ public class Department {
     private String departmentName;
     private String departmentID;
     private ArrayList<RequestHandlingOfficer> requestHandlingOfficers;
+    private ArrayList<Student> studentList; // student database
 
     // Begin Constructor
     Department(String departmentName){
@@ -44,6 +45,28 @@ public class Department {
     public ArrayList<RequestHandlingOfficer> getRequestHandlingOfficers() {
         return this.requestHandlingOfficers;
     }
+
+    public void addStudent(Student student) {
+        this.studentList.add(student);
+    }
+
+    public void removeStudent(Student student) {
+        this.studentList.remove(student);
+    }
+
+    public ArrayList<Student> getStudentList() {
+        return this.studentList;
+    }
+
+    public Student findStudentByID(String studentID) {
+        for (Student student : studentList) {
+            if (student.getStudentID().equals(studentID)) {
+                return student;
+            }
+        }
+        return null;
+    }
+
 
     // Begin Setter
     public void setDepartmentName(String departmentName){

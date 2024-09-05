@@ -1,6 +1,6 @@
 package ku.cs.models;
 
-public class subjectRegisterRequest extends Request{
+public class SubjectRegisterRequest extends Request{
     private String subject;
     private String username;
     private String message;
@@ -8,7 +8,7 @@ public class subjectRegisterRequest extends Request{
     // 1 = lecture , 0 = lab
     private boolean lecture;
 
-    public subjectRegisterRequest(String subject, String username, String message, int section, boolean lecture) {
+    public SubjectRegisterRequest(String subject, String username, String message, int section, boolean lecture) {
         super("Pending");
         this.subject = subject;
         this.username = username;
