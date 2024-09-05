@@ -43,9 +43,11 @@ public class UserList {
         }
     }
     public void addUser(String username, String password, String name, String faculty, String department, String advisorID) {
-        for ()
+        Advisor advisor = new Advisor(username, password, name, faculty, department, advisorID);// เพิ่มอาจารย์ที่ปรึกษา
+        addUser(advisor);
 
     }
+
     public void addUser(String username, String password, String name, String faculty, String department, String studentID, String email) {
         if (findUserByUsername(username) == null) {
             Faculty f = faculties.findFacultyByName(faculty);
@@ -58,6 +60,45 @@ public class UserList {
             }
         }
     }
+
+    public void registerStudent(String username, String password, String confirmPassword, String fullName,
+                                String studentId, String email) throws IllegalArgumentException {
+        if (!password.equals(confirmPassword)) {
+            throw new IllegalArgumentException("Passwords do not match.");
+        }
+
+        boolean foundStudent = false;
+        Student matchedStudent = null;
+
+        for (Faculty faculty : faculties.getFaculties()) {
+            for (Department department : faculty.getDepartments()) {
+                for (Student student : department.getStudentList()) {
+                    if (student.getStudentID().equals(studentId) &&
+                            student.getName().equals(fullName) &&
+                            student.getEmail().equals(email)) {
+
+                        matchedStudent = student;
+                        foundStudent = true;
+                        break;
+                    }
+                }
+                if (foundStudent) break;
+            }
+            if (foundStudent) break;
+        }
+
+        if (!foundStudent) {
+            throw new IllegalArgumentException("Student data not found in any department.");
+        }
+
+        matchedStudent.setUsername(username);
+        matchedStudent.setPassword(password);
+
+        users.add(matchedStudent);
+    }
+
+
+
 
     public User findUserByUsername(String username) {
         for (User user : users) {
@@ -86,16 +127,5 @@ public class UserList {
             }
         }
         return null;
-    }
-
-    public void Register(String studentName, String studentID, String email){
-        for (User user : users) {
-            if (user instanceof Student){
-                Student s = (Student) user;
-                if (studentName.equals(s.getName()) && studentID.equals(s.getStudentID()) && email.equals(s.getEmail())){
-                    ;;
-                }
-            }
-        }
     }
 }

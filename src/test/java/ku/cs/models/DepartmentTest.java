@@ -16,11 +16,11 @@ class DepartmentTest {
     }
     @BeforeEach
     void setUp() {
-        department = new Department("Science", "01", faculty);
+        department = new Department("Math", "01", faculty);
     }
     @Test
     void testIsDepartmentName() {
-        assertTrue(department.isDepartmentName("Science"));
+        assertTrue(department.isDepartmentName("Math"));
     }
 
     @Test

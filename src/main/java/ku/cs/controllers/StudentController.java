@@ -1,11 +1,14 @@
 package ku.cs.controllers;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.text.Font;
@@ -22,6 +25,9 @@ public class StudentController {
 
     @FXML
     private VBox pane;
+
+    @FXML
+    private ImageView optionDropdown;
 
     @FXML
     public void initialize() {
@@ -61,6 +67,25 @@ public class StudentController {
         pane.getChildren().addAll(title, tableView);
     }
 
+    @FXML
+    public void optionDropdown(MouseEvent event) {
+        ContextMenu contextMenu = new ContextMenu();
+
+        MenuItem item1 = new MenuItem("Option 1");
+        MenuItem item2 = new MenuItem("Option 2");
+        MenuItem item3 = new MenuItem("Option 3");
+
+
+        contextMenu.getItems().addAll(item1, item2, item3);
+
+        if (!contextMenu.isShowing()) {
+            Bounds optionBounds = optionDropdown.localToScreen(optionDropdown.getBoundsInLocal());
+            contextMenu.show(optionDropdown, optionBounds.getMinX(), optionBounds.getMaxY());
+        } else {
+            contextMenu.hide();
+        }
+
+    }
 
     @FXML
     public void logoutClick(MouseEvent event) throws IOException {

@@ -11,6 +11,10 @@ public class Department {
     private ArrayList<Student> students;
 
     // Begin Constructor
+    public Department(String departmentName) {
+        this(departmentName, null);
+    }
+
     public Department(String departmentName, Faculty faculty) {
         // Auto Generate departmentID will implement later
         Random rand = new Random();
@@ -25,10 +29,6 @@ public class Department {
         this.requestHandlingOfficers = new ArrayList<>();
     }
     // End Constructor
-
-    public void loadData(){
-
-    }
 
     public boolean isDepartmentName(String departmentName){
         return this.departmentName.equals(departmentName);
@@ -50,6 +50,28 @@ public class Department {
     public ArrayList<RequestHandlingOfficer> getRequestHandlingOfficers() {
         return this.requestHandlingOfficers;
     }
+
+    public void addStudent(Student student) {
+        this.students.add(student);
+    }
+
+    public void removeStudent(Student student) {
+        this.students.remove(student);
+    }
+
+    public ArrayList<Student> getStudentList() {
+        return this.students;
+    }
+
+    public Student findStudentByID(String studentID) {
+        for (Student student : students) {
+            if (student.getStudentID().equals(studentID)) {
+                return student;
+            }
+        }
+        return null;
+    }
+
 
     // Begin Setter
     public void setFaculty(Faculty faculty) {this.faculty = faculty;}
