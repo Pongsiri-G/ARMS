@@ -53,7 +53,7 @@ public class AdvisorController{
     @FXML
     public void initialize() {
         readData();
-        advisor = new Advisor("user1", "1234", "Boom", data.findFacultyByName("Science"), data.findFacultyByName("Science").findDepartmentByName("Computer"), "123");
+        advisor = new Advisor("user1", "1234", "Boom", "Science", "Computer", "D14");
         advisor.testAddStudents(new Student("student1", "1234", "temp01", "Science", "Computer", "001", "temp01@email"));
         advisor.testAddStudents(new Student("student2", "1234", "temp02", "Science", "Computer", "002", "temp02@email"));
         advisor.testAddStudents(new Student("student3", "1234", "temp003", "Science", "Computer", "003", "temp03@email"));
