@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1024.0" prefWidth="1440.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.StudentController">
+   <top>
+      <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="roleLabel" prefHeight="54.0" prefWidth="320.0" stylesheets="@../../../style/style.css" text="roleLabel">
+               <HBox.margin>
+                  <Insets left="120.0" />
+               </HBox.margin>
+               <font>
+                  <Font size="32.0" />
+               </font>
+            </Label>
+            <HBox prefHeight="80.0" prefWidth="930.0" HBox.hgrow="ALWAYS" />
+            <Group>
+               <children>
+                  <Label fx:id="usernameLabel" alignment="CENTER_RIGHT" layoutX="45.0" layoutY="22.0" prefHeight="24.0" prefWidth="180.0" stylesheets="@../../../style/style.css" text="usernameLabel" textFill="#394954">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="nameLabel" alignment="CENTER_RIGHT" layoutX="45.0" layoutY="-5.0" prefHeight="30.0" prefWidth="180.0" stylesheets="@../../../style/style.css" text="nameLabel">
+                     <font>
+                        <Font size="22.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Group>
+            <Circle fill="WHITE" radius="27.0" stroke="BLACK" strokeType="INSIDE">
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin>
+            </Circle>
+            <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../images/arrow-down.png" />
+               </image>
+               <HBox.margin>
+                  <Insets right="30.0" />
+               </HBox.margin>
+            </ImageView>
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <TabPane cacheShape="false" prefHeight="200.0" prefWidth="200.0" side="LEFT" style="-fx-background-color: #EAEAEA; -fx-background-radius: 45 0 0 0;" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+        <tabs>
+          <Tab closable="false">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+               <graphic>
+                  <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../images/write.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+          </Tab>
+          <Tab closable="false">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+               <graphic>
+                  <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../images/list.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+          </Tab>
+        </tabs>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </TabPane>
+   </center>
+</BorderPane>

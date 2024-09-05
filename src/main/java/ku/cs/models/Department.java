@@ -1,22 +1,26 @@
 package ku.cs.models;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Department {
     private String departmentName;
     private String departmentID;
+    private ArrayList<RequestHandlingOfficer> requestHandlingOfficers;
 
     // Begin Constructor
-    Department(String departmentName){
+    public Department(String departmentName){
         // Auto Generate departmentID will implement later
         Random rand = new Random();
         this.departmentName = departmentName;
         this.departmentID = rand.nextInt(90) + 10 + "";
+        this.requestHandlingOfficers = new ArrayList<>();
     }
 
     Department(String departmentName, String departmentID) {
         this.departmentName = departmentName;
         this.departmentID = departmentID;
+        this.requestHandlingOfficers = new ArrayList<>();
     }
     // End Constructor
 
@@ -26,6 +30,19 @@ public class Department {
 
     public boolean isDepartmentID(String departmentID){
         return this.departmentID.equals(departmentID);
+    }
+
+    // Methods to handle RequestHandlingOfficers
+    public void addRequestHandlingOfficer(RequestHandlingOfficer officer) {
+        this.requestHandlingOfficers.add(officer);
+    }
+
+    public void removeRequestHandlingOfficer(RequestHandlingOfficer officer) {
+        this.requestHandlingOfficers.remove(officer);
+    }
+
+    public ArrayList<RequestHandlingOfficer> getRequestHandlingOfficers() {
+        return this.requestHandlingOfficers;
     }
 
     // Begin Setter

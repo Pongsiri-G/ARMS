@@ -26,7 +26,7 @@ public class UserList {
         if (findUserByUsername(username) == null) {
             Faculty f = faculties.findFacultyByName(faculty);
             if (f != null) {
-                users.add(new FacultyStaff(username, password, name, f));
+                users.add(new FacultyOfficer(username, password, name, f));
             }
         }
     }
@@ -36,7 +36,7 @@ public class UserList {
             if (f != null) {
                 Department d = f.findDepartmentByName(department);
                 if (d != null) {
-                    users.add(new DepartmentStaff(username, password, name, f, d));
+                    users.add(new DepartmentOfficer(username, password, name, f, d));
                 }
 
             }
@@ -48,9 +48,16 @@ public class UserList {
 
     }
     public void addUser(String username, String password, String name, String faculty, String department, String studentID, String email) {
-        Student newUser = new Student(username, password, name, faculty, department, studentID, email);
-        User exist = findUserByUsername(username);
-        if (exist == null) users.add(newUser);
+        if (findUserByUsername(username) == null) {
+            Faculty f = faculties.findFacultyByName(faculty);
+            if (f != null) {
+                Department d = f.findDepartmentByName(department);
+                if (d != null) {
+                    users.add(new Student(username, password, name, f, d, studentID, email));
+                }
+
+            }
+        }
     }
 
     public User findUserByUsername(String username) {
@@ -69,10 +76,10 @@ public class UserList {
     public User login(String username, String password) {
         User user = findUserByUsername(username);
         if (user != null) {
-            if (user instanceof FacultyStaff fs) {
+            if (user instanceof FacultyOfficer fs) {
                 if (user.validatePassword(password)) return fs;
             }
-            else if (user instanceof DepartmentStaff ds) {
+            else if (user instanceof DepartmentOfficer ds) {
                 if (user.validatePassword(password)) return ds;
             }
             else if (user instanceof Student student) {
@@ -80,5 +87,16 @@ public class UserList {
             }
         }
         return null;
+    }
+
+    public void Register(String studentName, String studentID, String email){
+        for (User user : users) {
+            if (user instanceof Student){
+                Student s = (Student) user;
+                if (studentName.equals(s.getName()) && studentID.equals(s.getStudentID()) && email.equals(s.getEmail())){
+                    ;;
+                }
+            }
+        }
     }
 }

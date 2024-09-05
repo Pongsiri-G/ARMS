@@ -7,20 +7,23 @@ public class Faculty {
     private String facultyName;
     private String facultyId;
     private ArrayList<Department> departments;
+    private ArrayList<RequestHandlingOfficer> requestHandlingOfficers;
 
     // Begin Constructor
-    Faculty(String facultyName){
+    public Faculty(String facultyName){
         // Auto Generate facultyID will implement later
         Random rand = new Random();
         this.facultyName = facultyName;
         this.facultyId = String.valueOf(rand.nextInt(90) + 10 +"");
         this.departments = new ArrayList<>();
+        this.requestHandlingOfficers = new ArrayList<>();
     }
 
     Faculty(String facultyName, String facultyId) {
         this.facultyName = facultyName;
         this.facultyId = facultyId;
         this.departments = new ArrayList<>();
+        this.requestHandlingOfficers = new ArrayList<>();
     }// End Constructor
 
     public boolean isFacultyName(String facultyName){
@@ -75,6 +78,19 @@ public class Faculty {
         return null;
     }
     // End handle Department
+
+    // Methods to handle RequestHandlingOfficers
+    public void addRequestHandlingOfficer(RequestHandlingOfficer officer) {
+        this.requestHandlingOfficers.add(officer);
+    }
+
+    public void removeRequestHandlingOfficer(RequestHandlingOfficer officer) {
+        this.requestHandlingOfficers.remove(officer);
+    }
+
+    public ArrayList<RequestHandlingOfficer> getRequestHandlingOfficers() {
+        return this.requestHandlingOfficers;
+    }
 
     // Begin getter
     public ArrayList<Department> getDepartments(){
