@@ -10,7 +10,7 @@ public class Department {
     private ArrayList<Student> studentList; // student database
 
     // Begin Constructor
-    Department(String departmentName){
+    public Department(String departmentName){
         // Auto Generate departmentID will implement later
         Random rand = new Random();
         this.departmentName = departmentName;

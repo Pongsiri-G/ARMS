@@ -21,40 +21,7 @@ public class ChangePasswordController {
         User user = new User("advisor", "123", "Putt");
         showUserInfo(user);
     }
-    /*
-    @FXML
-    public void onToppingButtonClick() {
-        if (userPassWord != null) {
-            String toppingText = NewpasswordTextField.getText();
-            String errorMessage = "";
-            // check 'yes' or 'no'
-            try {
-                if (!toppingText.equalsIgnoreCase("yes") && !toppingText.equalsIgnoreCase("no") ) {
-                    throw new IllegalArgumentException("กรอกผิดค่าา");
-                }
-                user.toppingAdd(userPassWord, toppingText);
-                clearForm();
-                datasource.writeData(drinkList);
-                showDrinkInfo(selectedDrink);
-            } catch (NumberFormatException e) {
-                clearForm();
-                errorMessage = "Please insert number value";
-                errorLabel.setText(errorMessage);
-            } catch (IllegalArgumentException ex) {
-                clearForm();
-                errorLabel.setText(ex.getMessage());
-            }
-            finally {
-                if (errorMessage.equals("")) {
-                    toppingTextField.setText("");
-                }
-            }
-        } else {
-            toppingTextField.setText("");
-            errorLabel.setText("");
-        }
 
-    }*/
 
     private void showUserInfo(User user) {
         userLabel.setText(user.getUsername());
@@ -65,6 +32,15 @@ public class ChangePasswordController {
         try {
             FXRouter.goTo("advisor");
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
+    protected void clickExitTologin() {
+        try {
+            FXRouter.goTo("login");
+        }catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
