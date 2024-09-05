@@ -43,6 +43,7 @@ public class UserList {
         }
     }
     public void addUser(String username, String password, String name, String faculty, String department, String advisorID) {
+        for ()
 
     }
     public void addUser(String username, String password, String name, String faculty, String department, String studentID, String email) {

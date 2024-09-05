@@ -10,7 +10,7 @@ public class Faculty {
     private ArrayList<RequestHandlingOfficer> requestHandlingOfficers;
 
     // Begin Constructor
-    Faculty(String facultyName){
+    public Faculty(String facultyName){
         // Auto Generate facultyID will implement later
         Random rand = new Random();
         this.facultyName = facultyName;
