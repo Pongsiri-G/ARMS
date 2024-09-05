@@ -61,7 +61,7 @@ public class UserList {
         }
     }
 
-    public void registerStudent(String username, String password, String confirmPassword, String fullName,
+    public void registerstudent(String username, String password, String confirmPassword, String fullName,
                                 String studentId, String email) throws IllegalArgumentException {
         if (!password.equals(confirmPassword)) {
             throw new IllegalArgumentException("Passwords do not match.");
@@ -117,13 +117,16 @@ public class UserList {
         User user = findUserByUsername(username);
         if (user != null) {
             if (user instanceof FacultyOfficer fs) {
-                if (user.validatePassword(password)) return fs;
+                if (user.validatePassword(password) && !user.getSuspended()) return fs;
+                else return null;
             }
             else if (user instanceof DepartmentOfficer ds) {
-                if (user.validatePassword(password)) return ds;
+                if (user.validatePassword(password) && !user.getSuspended()) return ds;
+                else return null;
             }
             else if (user instanceof Student student) {
-                if (user.validatePassword(password)) return student;
+                if (user.validatePassword(password) && !user.getSuspended()) return student;
+                else return null;
             }
         }
         return null;
