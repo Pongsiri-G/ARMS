@@ -5,7 +5,7 @@ import ku.cs.services.FXRouter;
 
 import java.io.IOException;
 
-public class AdminController {
+public class UserManagement {
     @FXML
     protected void onLogoutClick() {
         try {
@@ -16,18 +16,9 @@ public class AdminController {
     }
 
     @FXML
-    protected void onAllRequestClick() {
+    protected void onDashboardClick() {
         try {
-            FXRouter.goTo("all-request");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @FXML
-    protected void onUserClick() {
-        try {
-            FXRouter.goTo("user-management");
+            FXRouter.goTo("dashboard");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -46,15 +37,6 @@ public class AdminController {
     protected void onStaffClick() {
         try {
             FXRouter.goTo("staff-advisor-management");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @FXML
-    protected void onApprovedClick() {
-        try {
-            FXRouter.goTo("approved-request");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

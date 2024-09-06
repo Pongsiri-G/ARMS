@@ -37,7 +37,7 @@
             </HBox>
             <HBox alignment="CENTER" prefHeight="60.0" prefWidth="200.0">
                <children>
-                  <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="50.0" fitWidth="50.0" onMouseClicked="#onUserClick" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../../images/users-admin.png" />
                      </image>
@@ -55,7 +55,7 @@
             </HBox>
             <HBox alignment="CENTER" prefHeight="60.0" prefWidth="200.0">
                <children>
-                  <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="60.0" fitWidth="60.0" onMouseClicked="#onDepartmentAndFacultyClick" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../../images/building-admin.png" />
                      </image>
@@ -70,7 +70,7 @@
             </HBox>
             <HBox alignment="CENTER" prefHeight="60.0" prefWidth="200.0">
                <children>
-                  <ImageView fitHeight="55.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="55.0" fitWidth="55.0" onMouseClicked="#onStaffClick" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../../images/teacher-admin.png" />
                      </image>
@@ -133,52 +133,52 @@
                         <Image url="@../../../images/user-rounded-dashbord.png" />
                      </image>
                   </ImageView>
-                  <Label layoutX="146.0" layoutY="35.0" text="userLabel">
-                     <font>
-                        <Font size="24.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="146.0" layoutY="74.0" prefHeight="58.0" prefWidth="170.0" text="บัญชีผู้ใช้">
+                  <Label layoutX="146.0" layoutY="35.0" text="บัญชีผู้ใช้">
                      <font>
                         <Font size="30.0" />
                      </font>
                   </Label>
+                  <Label layoutX="146.0" layoutY="74.0" prefHeight="58.0" prefWidth="170.0" text="userLabel">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
                </children>
             </AnchorPane>
-            <AnchorPane layoutX="474.0" layoutY="177.0" prefHeight="166.0" prefWidth="366.0" style="-fx-background-color: white; -fx-background-radius: 30;">
+            <AnchorPane layoutX="474.0" layoutY="177.0" onMouseClicked="#onAllRequestClick" prefHeight="166.0" prefWidth="366.0" style="-fx-background-color: white; -fx-background-radius: 30;">
                <children>
                   <ImageView fitHeight="150.0" fitWidth="100.0" layoutX="19.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../../images/book-dashbord.png" />
                      </image>
                   </ImageView>
-                  <Label layoutX="146.0" layoutY="35.0" text="allRequestLabel">
-                     <font>
-                        <Font size="24.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="146.0" layoutY="74.0" prefHeight="58.0" prefWidth="170.0" text="คำร้องทั้งหมด">
+                  <Label layoutX="146.0" layoutY="35.0" text="คำร้องทั้งหมด">
                      <font>
                         <Font size="30.0" />
                      </font>
                   </Label>
+                  <Label layoutX="146.0" layoutY="74.0" prefHeight="58.0" prefWidth="182.0" text="allRequestLabel">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
                </children>
             </AnchorPane>
-            <AnchorPane layoutX="894.0" layoutY="177.0" prefHeight="166.0" prefWidth="366.0" style="-fx-background-color: white; -fx-background-radius: 30;">
+            <AnchorPane layoutX="894.0" layoutY="177.0" onMouseClicked="#onApprovedClick" prefHeight="166.0" prefWidth="366.0" style="-fx-background-color: white; -fx-background-radius: 30;">
                <children>
                   <ImageView fitHeight="150.0" fitWidth="100.0" layoutX="19.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../../images/book-check-dashbord.png" />
                      </image>
                   </ImageView>
-                  <Label layoutX="146.0" layoutY="35.0" text="approvedLabel">
-                     <font>
-                        <Font size="24.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="146.0" layoutY="74.0" prefHeight="58.0" prefWidth="201.0" text="คำร้องอนุมัติแล้ว">
+                  <Label layoutX="146.0" layoutY="35.0" text="คำร้องอนุมัติแล้ว">
                      <font>
                         <Font size="30.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="146.0" layoutY="74.0" prefHeight="58.0" prefWidth="201.0" text="approvedLabel">
+                     <font>
+                        <Font size="24.0" />
                      </font>
                   </Label>
                </children>

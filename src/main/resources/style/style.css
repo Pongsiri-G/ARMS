@@ -11,6 +11,7 @@
 .title-label {
 	-fx-font-family: -fx-font-family;
 	-fx-font-weight: 700;
+	-fx-font-size: 36;
 }
 
 .label {
@@ -230,4 +231,56 @@
 
 .send-botton .text{
 	fx-font-size: 18;
+}
+
+#tabpane {
+	-fx-tab-min-height: 80;
+	-fx-tab-max-height: 80;
+
+	-fx-tab-min-width: 80;
+	-fx-tab-max-width: 80;
+}
+
+.tab .tab-label {
+	-fx-background-color: transparent;
+	-fx-alignment: center;
+}
+
+.separator .line {
+    -fx-background-color: #e1e1e1;
+    -fx-pref-height: 3;
+    -fx-border-color: null ;
+}
+
+.choice-box {
+	-fx-background-color: #f2f3f7;
+	-fx-background-radius: 10;
+	-fx-font-size: 18;
+	-fx-focus-color: -fx-grey-color;
+	-fx-faint-focus-color: #f2f3f7;
+	-fx-control-inner-background: #f2f3f7;
+	-fx-selection-bar: -fx-grey-color;
+ }
+ .choice-box .menu-item:focused .label {
+	 -fx-text-fill: white;
+ }
+.frameout{
+	-fx-background-color: #DCDCDC;
+	-fx-border-color: #DCDCDC;
+	-fx-border-width: 2px 2px 2px 2px;
+	-fx-border-radius: 50px;
+	-fx-background-radius: 50px;
+	-fx-border-style: solid;
+}
+.framin{
+	-fx-background-color: #FFFFFF;
+	-fx-border-color: #FFFFFF;
+	-fx-border-width: 2px 2px 2px 2px;
+	-fx-border-radius: 50px;
+	-fx-background-radius: 50px;
+	-fx-border-style: solid;
+}
+
+.fontsadvisor{
+	-fx-font: Inter;
 }

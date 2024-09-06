@@ -35,7 +35,7 @@
             </Label>
             <Group>
                <children>
-                  <TextField layoutX="1.0" layoutY="9.0" prefHeight="40.0" prefWidth="300.0" promptText="Enter here" styleClass="nisit-regis-text-field" stylesheets="@../../../style/style.css" />
+                  <TextField fx:id="usernameTextField" layoutX="1.0" layoutY="9.0" prefHeight="40.0" prefWidth="300.0" promptText="Enter here" styleClass="nisit-regis-text-field" stylesheets="@../../../style/style.css" />
                   <Label layoutX="12.0" stylesheets="@../../../style/style.css" text="ชื่อบัญชีผู้ใช้" />
                </children>
                <VBox.margin>
@@ -44,7 +44,7 @@
             </Group>
             <Group>
                <children>
-                  <PasswordField prefHeight="40.0" prefWidth="300.0" promptText="New Password" styleClass="nisit-regis-password-field" stylesheets="@../../../style/style.css" translateY="8.0" />
+                  <PasswordField fx:id="passwordPasswordField" prefHeight="40.0" prefWidth="300.0" promptText="New Password" styleClass="nisit-regis-password-field" stylesheets="@../../../style/style.css" translateY="8.0" />
                   <Label layoutX="12.0" stylesheets="@../../../style/style.css" text="รหัสผ่านใหม่" />
                </children>
                <VBox.margin>
@@ -53,13 +53,14 @@
             </Group>
             <Group>
                <children>
-                  <PasswordField prefHeight="40.0" prefWidth="300.0" promptText="Confirm New Password" styleClass="nisit-regis-password-field" stylesheets="@../../../style/style.css" translateY="8.0" />
+                  <PasswordField fx:id="confirmPasswordPasswordField" prefHeight="40.0" prefWidth="300.0" promptText="Confirm New Password" styleClass="nisit-regis-password-field" stylesheets="@../../../style/style.css" translateY="8.0" />
                   <Label layoutX="12.0" stylesheets="@../../../style/style.css" text="ยืนยันรหัสผ่านใหม่" />
                </children>
                <VBox.margin>
-                  <Insets bottom="40.0" />
+                  <Insets bottom="20.0" />
                </VBox.margin>
             </Group>
+            <Label fx:id="errorLabel" stylesheets="@../../../style/style.css" text="errorLabel" textFill="RED" />
             <ImageView fitHeight="42.0" fitWidth="42.0" onMouseClicked="#backRegisterClick" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../images/back-arrow-grey.png" />
@@ -68,7 +69,7 @@
                   <Insets top="5.0" />
                </VBox.margin>
             </ImageView>
-            <Button mnemonicParsing="false" onAction="#userRegister" prefHeight="38.0" prefWidth="300.0" stylesheets="@../../../style/style.css" text="ลงทะเบียน">
+            <Button mnemonicParsing="false" onMouseClicked="#userRegister" prefHeight="38.0" prefWidth="300.0" stylesheets="@../../../style/style.css" text="ลงทะเบียน">
                <VBox.margin>
                   <Insets bottom="20.0" />
                </VBox.margin>

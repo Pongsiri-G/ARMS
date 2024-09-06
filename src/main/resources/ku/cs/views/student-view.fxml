@@ -15,7 +15,7 @@
     <top>
         <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <children>
-                <Label stylesheets="@../../../style/style.css" text="นิสิต">
+                <Label fx:id="roleLabel" prefHeight="54.0" prefWidth="320.0" stylesheets="@../../../style/style.css" text="roleLabel">
                     <HBox.margin>
                         <Insets left="120.0" />
                     </HBox.margin>
@@ -43,7 +43,7 @@
                   <Insets left="20.0" />
                </HBox.margin>
             </Circle>
-            <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="optionDropdown" fitHeight="40.0" fitWidth="40.0" onMouseClicked="#optionDropdown" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../images/arrow-down.png" />
                </image>
@@ -58,22 +58,25 @@
         <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" prefHeight="200.0" prefWidth="100.0" spacing="30.0" BorderPane.alignment="CENTER">
             <children>
             <VBox prefWidth="80.0" VBox.vgrow="ALWAYS" />
-                    <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                        <image>
-                            <Image url="@../../../images/write.png" />
-                        </image>
-                        <VBox.margin>
-                            <Insets left="30.0" right="30.0" />
-                        </VBox.margin>
-                    </ImageView>
-                    <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                        <image>
-                            <Image url="@../../../images/list.png" />
-                        </image>
-               <VBox.margin>
-                  <Insets left="30.0" right="30.0" />
-               </VBox.margin>
-                    </ImageView>
+            <VBox fx:id="navigation" prefHeight="200.0" prefWidth="100.0" spacing="30.0">
+               <children>
+                  <ImageView fitHeight="50.0" fitWidth="50.0" onMouseClicked="#createRequestMenu" pickOnBounds="true" preserveRatio="true">
+                     <VBox.margin>
+                        <Insets left="25.0" right="25.0" />
+                     </VBox.margin>
+                     <image>
+                        <Image url="@../../../images/write.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="50.0" fitWidth="50.0" onMouseClicked="#listRequestsMenu" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../images/list.png" />
+                     </image>
+                     <VBox.margin>
+                        <Insets left="25.0" right="25.0" />
+                     </VBox.margin>
+                  </ImageView>
+               </children></VBox>
             <VBox prefWidth="80.0" VBox.vgrow="ALWAYS" />
                   <ImageView fitHeight="50.0" fitWidth="50.0" onMouseClicked="#logoutClick" pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
                       <image>
@@ -83,11 +86,24 @@
                   <Insets left="25.0" right="25.0" />
                </VBox.margin>
                   </ImageView>
-            <VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="180.0" prefWidth="80.0" VBox.vgrow="ALWAYS" />
+            <VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="80.0" prefWidth="80.0" VBox.vgrow="ALWAYS" />
             </children>
         </VBox>
     </left>
    <center>
-      <VBox onMouseClicked="#logoutClick" prefHeight="200.0" prefWidth="100.0" style="-fx-background-radius: 20px 0 0 0; -fx-background-color: #EAEAEA;" BorderPane.alignment="CENTER" />
+      <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-radius: 30px 0 0 0; -fx-background-color: #EAEAEA;" stylesheets="@../../../style/style.css" BorderPane.alignment="CENTER">
+         <children>
+            <VBox fx:id="pane" prefHeight="874.0" prefWidth="1229.0" spacing="10.0" style="-fx-background-color: white; -fx-background-radius: 25;" stylesheets="@../../../style/style.css" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets bottom="25.0" left="35.0" right="45.0" top="30.0" />
+               </VBox.margin>
+               <padding>
+                  <Insets bottom="35.0" left="45.0" right="45.0" top="35.0" />
+               </padding>
+            </VBox>
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets></VBox>
    </center>
 </BorderPane>
