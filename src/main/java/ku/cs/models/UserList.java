@@ -42,7 +42,7 @@ public class UserList {
             }
         }
     }
-    public void addUser(String username, String password, String name, String faculty, String department, String advisorID) {
+    public void addUser(String username, String password, String name, Faculty faculty, Department department, String advisorID) {
         Advisor advisor = new Advisor(username, password, name, faculty, department, advisorID);// เพิ่มอาจารย์ที่ปรึกษา
         addUser(advisor);
 

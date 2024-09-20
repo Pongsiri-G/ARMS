@@ -4,15 +4,14 @@ import java.awt.image.AreaAveragingScaleFilter;
 import java.util.ArrayList;
 
 public class Advisor extends User{
-    private String faculty;
-    private String department;
+    private Faculty faculty;
+    private Department department;
     private String advisorID;
-    private String facultyAdvisor;
-    private String departmentAdvisor; //
     private boolean status = false;
     private ArrayList<Student> students;
 
-    public Advisor(String username, String password, String name, String faculty, String department, String advisorID) {
+
+    public Advisor(String username, String password, String name, Faculty faculty, Department department, String advisorID) {
         super(username, password, name);
         this.faculty = faculty;
         this.department = department;
@@ -20,11 +19,10 @@ public class Advisor extends User{
         students = new ArrayList<>(); // will read datasource later
 
     }
-
-    public Advisor(String username, String password, String name, String facultyAdvisor, String departmentAdvisor, ArrayList<Student> students) {
+    public Advisor(String username, String password, String name, Faculty faculty, Department department, ArrayList<Student> students) {
         super(username, password, name);
-        this.facultyAdvisor = facultyAdvisor;
-        this.departmentAdvisor = departmentAdvisor;
+        this.faculty = faculty;
+        this.department = department;
         students = new ArrayList<>();
     }
 
@@ -38,22 +36,30 @@ public class Advisor extends User{
 
     public void setStudents(ArrayList<Student> students) { this.students = students; }
 
-    public Student checkStudentByDepartment(Student student, String department){ //Table เเสดงรายชื่อนิสิตในที่ปรึกษาหาก สาขาเเละคณะตรงกันก็จะส่งค่าเเสดง
-        for  (Student stud : students){
-            if (student.getEnrolledDepartment().equals(department) && student.getEnrolledDepartment().equals(faculty)){
-                return stud;
-            }
-        }
-        return null;
-    }
-
-    public boolean getStatus() {return status;}
-
     public RequestHandlingOfficer fineRequestManager(RequestHandlingOfficer requestManager, Advisor advisor){
         requestManager = new RequestHandlingOfficer("Sick", "Advisor");
         if (advisor.getStatus())
             return requestManager; // เช็คสถานะคำร้องหากเป็น true คือสถานะคำร้องผ่านการอนุมัติถึงจะส่งคำร้องต่อไปได้
         return null;
     }
+
+    public boolean getStatus() {return status;}
+
+    public String getAdvisorID() {
+        return advisorID;
+    }
+
+    public Faculty getFaculty() {
+        return faculty;
+    }
+
+    public Department getDepartment () {
+        return department;
+    }
+
+    public String getRole(){
+        return "Advisor";
+    }
+
 
 }

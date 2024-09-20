@@ -16,17 +16,18 @@ public class Department {
     }
 
     public Department(String departmentName, Faculty faculty) {
+        this(departmentName, null, faculty);
         // Auto Generate departmentID will implement later
         Random rand = new Random();
-        this.departmentName = departmentName;
         this.departmentID = rand.nextInt(90) + 10 + "";
-        this.requestHandlingOfficers = new ArrayList<>();
     }
 
     public Department(String departmentName, String departmentID, Faculty faculty) {
         this.departmentName = departmentName;
         this.departmentID = departmentID;
+        this.faculty = faculty;
         this.requestHandlingOfficers = new ArrayList<>();
+        this.students = new ArrayList<>();
     }
     // End Constructor
 

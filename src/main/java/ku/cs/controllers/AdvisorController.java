@@ -55,7 +55,7 @@ public class AdvisorController{
         readData();
         Faculty faculty = new Faculty("Science");
         Department department = new Department("Computer");
-        advisor = new Advisor("user1", "1234", "Boom", "Science", "Computer", "D14");
+        advisor = new Advisor("user1", "1234", "Boom", new Faculty("Scienec"), new Department("Computer"), "D14");
         advisor.testAddStudents(new Student("student1", "1234", "temp01", new Faculty("Science"), new Department("Computer"), "001", "temp01@email"));
         advisor.testAddStudents(new Student("student2", "1234", "temp02", new Faculty("Science"), new Department("Computer"), "002", "temp02@email"));
         advisor.testAddStudents(new Student("student3", "1234", "temp003", new Faculty("Science"), new Department("Computer"), "003", "temp03@email"));

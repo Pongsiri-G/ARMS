@@ -3,6 +3,7 @@ module ku.cs {
     requires javafx.fxml;
     requires java.desktop;
     requires bcrypt;
+    requires java.sql;
 
 
     opens ku.cs.cs211671project to javafx.fxml;
