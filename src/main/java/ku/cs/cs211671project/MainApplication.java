@@ -37,7 +37,7 @@ public class MainApplication extends Application {
         FXRouter.when("department-faculty-management", viewPath + "department-faculty-management.fxml");
         FXRouter.when("all-request", viewPath + "all-request.fxml");
         FXRouter.when("approved-request", viewPath + "approved-request.fxml");
-
+        FXRouter.when("change-password", viewPath + "change-password-view.fxml");
     }
 
     public static void main(String[] args) {

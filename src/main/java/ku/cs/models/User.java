@@ -14,6 +14,7 @@ public class User {
         this.name = name;
         suspended = false;
     }
+
     public User(String name){
         this.username = null;
         this.password = null;

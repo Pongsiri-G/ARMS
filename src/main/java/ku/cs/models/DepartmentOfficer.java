@@ -49,7 +49,7 @@ public class DepartmentOfficer extends User{
     }
 
 
-
+    /*
     @Override
     public Faculty getFaculty() {
         return faculty;
@@ -58,8 +58,8 @@ public class DepartmentOfficer extends User{
     public Department getDepartment() {
         return department;
     }
-    @Override
+    /*@Override
     public String toString() {
         return name + " " + faculty.toString() + " " + department.toString();
-    }
+    }*/
 }
