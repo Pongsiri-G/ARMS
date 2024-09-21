@@ -5,7 +5,7 @@ public class RequestHandlingOfficer {
     private String position;
 
     // Begin Constructor
-    RequestHandlingOfficer(String name, String position) {
+    public RequestHandlingOfficer(String name, String position) {
         this.name = name;
         this.position = position;
     }

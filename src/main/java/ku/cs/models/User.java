@@ -2,34 +2,49 @@ package ku.cs.models;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
-public class User {
+public abstract class User {
     private String username;
     private String password;
     private String name;
     private boolean suspended;
 
+    // Constructor for new users (password is hashed)
     public User(String username, String password, String name) {
-        this.username = username;
-        this.password = BCrypt.withDefaults().hashToString(12, password.toCharArray());
-        this.name = name;
-        suspended = false;
+        this(username, password, name, false);
     }
-    public User(String name){
+
+    // Constructor for cases when only the name is provided (when creating a temporary user)
+    public User(String name) {
         this.username = null;
         this.password = null;
         this.name = name;
-        suspended = false;
-    }
-    public boolean isUsername(String username) {
-        return this.username.equals(username);
+        this.suspended = false;
     }
 
+    // Constructor for users loaded from a file (password is either hashed or plaintext)
+    public User(String username, String password, String name, boolean isHashed) {
+        this.username = username;
+        if (isHashed) {
+            this.password = password; // Use the hashed password as is
+        } else {
+            this.password = BCrypt.withDefaults().hashToString(12, password.toCharArray()); // Hash if not already hashed
+        }
+        this.name = name;
+        this.suspended = false;
+    }
+
+    // Check if the username matches
+    public boolean isUsername(String username) {
+        return this.username != null && this.username.equals(username);
+    }
+
+    // Setters for fields
     public void setUsername(String username) {
         this.username = username;
     }
 
     public void setPassword(String password) {
-        this.password = BCrypt.withDefaults().hashToString(12, password.toCharArray());
+        this.password = BCrypt.withDefaults().hashToString(12, password.toCharArray()); // Hash the new password
     }
 
     public void setName(String name) {
@@ -40,9 +55,14 @@ public class User {
         this.name = firstName + " " + lastName;
     }
 
-    public void setSuspended(boolean suspended) { this.suspended = suspended; }
+    public void setSuspended(boolean suspended) {
+        this.suspended = suspended;
+    }
 
-    public boolean getSuspended() { return suspended; }
+    // Getters for fields
+    public boolean getSuspended() {
+        return suspended;
+    }
 
     public String getUsername() {
         return username;
@@ -61,8 +81,10 @@ public class User {
         return result.verified;
     }
 
+    public abstract String getRole();
+
     @Override
     public String toString() {
-        return name + " " + username;
+        return getRole() + " " + name + " (" + username + ")";
     }
 }

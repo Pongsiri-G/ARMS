@@ -5,6 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import ku.cs.services.FXRouter;
+import ku.cs.services.UserListFileDatasource;
+import ku.cs.services.UserListFileDatasourceTest;
 
 import java.io.IOException;
 
@@ -14,6 +16,8 @@ public class MainApplication extends Application {
         FXRouter.bind(this, stage, "CS211 Project", 1440, 1024);
         configRoutes();
         FXRouter.goTo("login");
+        UserListFileDatasourceTest u = new UserListFileDatasourceTest(); //FOR TESTING ONLY
+        u.runTests(); //FOR TESTING ONLY
     }
 
     private void configRoutes() {
@@ -37,7 +41,7 @@ public class MainApplication extends Application {
         FXRouter.when("department-faculty-management", viewPath + "department-faculty-management.fxml");
         FXRouter.when("all-request", viewPath + "all-request.fxml");
         FXRouter.when("approved-request", viewPath + "approved-request.fxml");
-
+        FXRouter.when("change-password", viewPath + "change-password-view.fxml");
     }
 
     public static void main(String[] args) {

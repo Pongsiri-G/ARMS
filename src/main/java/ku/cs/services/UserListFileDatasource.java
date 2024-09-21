@@ -1,34 +1,28 @@
 package ku.cs.services;
 
-import ku.cs.models.Department;
-import ku.cs.models.Faculty;
-import ku.cs.models.Student;
-import ku.cs.models.User;
-import ku.cs.models.UserList;
-
+import ku.cs.models.*;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.util.*;
 
-public class UserListFileDatasource implements Datasource<UserList> {
+public class UserListFileDatasource implements Datasource<List<User>> {
     private String directoryName;
-    private String fileName;
+    private String userListFileName;
 
-    public UserListFileDatasource(String directoryName, String fileName) {
+    public UserListFileDatasource(String directoryName, String userListFileName) {
         this.directoryName = directoryName;
-        this.fileName = fileName;
+        this.userListFileName = userListFileName;
         checkFileIsExisted();
     }
 
     private void checkFileIsExisted() {
-        File file = new File(directoryName);
-        if (!file.exists()) {
-            file.mkdirs();
+        File dir = new File(directoryName);
+        if (!dir.exists()) {
+            dir.mkdirs();
         }
-        String filePath = directoryName + File.separator + fileName;
-        file = new File(filePath);
-        if (!file.exists()) {
+        File userListFile = new File(directoryName + File.separator + userListFileName);
+        if (!userListFile.exists()) {
             try {
-                file.createNewFile();
+                userListFile.createNewFile();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -36,126 +30,88 @@ public class UserListFileDatasource implements Datasource<UserList> {
     }
 
     @Override
-    public UserList readData() {
-        UserList users = new UserList();
-        String filePath = directoryName + File.separator + fileName;
-        File file = new File(filePath);
-
-        FileInputStream fileInputStream = null;
-
+    public List<User> readData() {
+        List<User> users = new ArrayList<>();
         try {
-            fileInputStream = new FileInputStream(file);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+            File file = new File(directoryName + File.separator + userListFileName);
+            Scanner scanner = new Scanner(file);
 
-        InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
-        BufferedReader buffer = new BufferedReader(inputStreamReader);
-
-        String line = "";
-        try {
-            while ((line = buffer.readLine()) != null) {
-                if (line.equals("")) continue;
-
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
                 String[] data = line.split(",");
+                String role = data[0];
 
-                String username = data[0].trim();
-                String password = data[1].trim();
-                String name = data[2].trim();
-
-                User user = null;
-
-                if (data.length == 4) {
-                    String faculty = data[3].trim();
-                    //user = new Faculty(username, password, name, faculty);
+                switch (role) {
+                    case "FacultyOfficer":
+                        users.add(new FacultyOfficer(data[1], data[2], data[3], new Faculty(data[4]), true)); // true for already hashed password
+                        break;
+                    case "DepartmentOfficer":
+                        users.add(new DepartmentOfficer(data[1], data[2], data[3], new Faculty(data[4]), new Department(data[5]), true));
+                        break;
+                    case "Advisor":
+                        users.add(new Advisor(data[1], data[2], data[3], new Faculty(data[4]), new Department(data[5]), data[6], true));
+                        break;
+                    case "Student":
+                        users.add(new Student(data[1], data[2], data[3], new Faculty(data[4]), new Department(data[5]), data[6], data[7], true));
+                        break;
                 }
-                else if (data.length == 5) {
-                    String faculty = data[3].trim();
-                    String department = data[4].trim();
-                    //user = new Faculty(username, password, name, faculty, department);
-                } else if (data.length == 6) {
-                    String faculty = data[3].trim();
-                    String department = data[4].trim();
-                    String advisorID = data[5].trim();
-                    //user = new Advisor(username, password, name, faculty, department, advisorID);
-                } else if (data.length == 7) {
-                    String faculty = data[3].trim();
-                    String department = data[4].trim();
-                    String studentID = data[5].trim();
-                    String email = data[6].trim();
-                    //user = new Student(username, password, name, faculty, department, studentID, email);
-                } else {
-                    user = new User(username, password, name);
-                }
-
-                users.addUser(user);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("File not found", e);
         }
-
         return users;
     }
 
-
     @Override
-    public void writeData(UserList data) {
-        String filePath = directoryName + File.separator + fileName;
-        File file = new File(filePath);
-
-        FileOutputStream fileOutputStream = null;
-
+    public void writeData(List<User> users) {
         try {
-            fileOutputStream = new FileOutputStream(file);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+            FileWriter fileWriter = new FileWriter(directoryName + File.separator + userListFileName, false);
 
-        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
-                fileOutputStream,
-                StandardCharsets.UTF_8
-        );
-        BufferedWriter buffer = new BufferedWriter(outputStreamWriter);
-
-        try {
-            for (User user : data.getAllUsers()) {
+            for (User user : users) {
                 StringBuilder line = new StringBuilder();
 
-                line.append(user.getUsername()).append(",");
-                line.append(user.getPassword()).append(",");
-                line.append(user.getName());
-
-                /*
-                if (user instanceof Faculty) {
-                    Faculty faculty = (Faculty) user;
-                    line.append(",").append(faculty.getFacultyName());
-                    if (faculty instanceof Department) {
-                        Department department = (Department) faculty;
-                        line.append(",").append(department.getDepartmentName());
-                        if (department instanceof Advisor) {
-                            Advisor advisor = (Advisor) department;
-                            line.append(",").append(advisor.getAdvisorID());
-                        }
-                    }
-                } else if (user instanceof Student student) {
-                    line.append(",").append(student.getEnrolledFaculty());
-                    line.append(",").append(student.getEnrolledDepartment());
-                    line.append(",").append(student.getStudentID());
-                    line.append(",").append(student.getEmail());
+                if (user instanceof FacultyOfficer) {
+                    FacultyOfficer fo = (FacultyOfficer) user;
+                    line.append("FacultyOfficer,")
+                            .append(fo.getUsername()).append(",")
+                            .append(fo.getPassword()).append(",")
+                            .append(fo.getName()).append(",")
+                            .append(fo.getFaculty().getFacultyName());
+                } else if (user instanceof DepartmentOfficer) {
+                    DepartmentOfficer dofficer = (DepartmentOfficer) user;
+                    line.append("DepartmentOfficer,")
+                            .append(dofficer.getUsername()).append(",")
+                            .append(dofficer.getPassword()).append(",")
+                            .append(dofficer.getName()).append(",")
+                            .append(dofficer.getFaculty().getFacultyName()).append(",")
+                            .append(dofficer.getDepartment().getDepartmentName());
+                } else if (user instanceof Advisor) {
+                    Advisor advisor = (Advisor) user;
+                    line.append("Advisor,")
+                            .append(advisor.getUsername()).append(",")
+                            .append(advisor.getPassword()).append(",")
+                            .append(advisor.getName()).append(",")
+                            .append(advisor.getFaculty().getFacultyName()).append(",")
+                            .append(advisor.getDepartment().getDepartmentName()).append(",")
+                            .append(advisor.getAdvisorID());
+                } else if (user instanceof Student) {
+                    Student student = (Student) user;
+                    line.append("Student,")
+                            .append(student.getUsername()).append(",")
+                            .append(student.getPassword()).append(",")
+                            .append(student.getName()).append(",")
+                            .append(student.getEnrolledFaculty().getFacultyName()).append(",")
+                            .append(student.getEnrolledDepartment().getDepartmentName()).append(",")
+                            .append(student.getStudentID()).append(",")
+                            .append(student.getEmail());
                 }
-                */
-                buffer.append(line.toString());
-                buffer.newLine();
+
+                fileWriter.write(line.toString() + "\n");
             }
+            fileWriter.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                buffer.flush();
-                buffer.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            throw new RuntimeException("Error writing data to file", e);
         }
     }
 }

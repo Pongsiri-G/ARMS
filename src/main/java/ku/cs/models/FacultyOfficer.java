@@ -6,8 +6,8 @@ public class FacultyOfficer extends User {
     private Faculty faculty;
 
     // Begin Constructor
-    public FacultyOfficer(String name, String username, String password, Faculty faculty) {
-        super(username, password, name);
+    public FacultyOfficer(String username, String password, String name, Faculty faculty, boolean isHashed) {
+        super(username, password, name, isHashed);
         this.faculty = faculty;
     }
     // End Constructor
@@ -34,7 +34,12 @@ public class FacultyOfficer extends User {
     }
 
     @Override
+    public String getRole(){
+        return "FacultyOfficer";
+    }
+
+    @Override
     public String toString() {
-        return getName() + " " + faculty.toString();
+        return "FacultyOfficer: " + getName() + " (" + getUsername() + "), Faculty: " + getFaculty().getFacultyName();
     }
 }

@@ -5,8 +5,8 @@ public class DepartmentOfficer extends User{
     private Department department;
 
     // Begin Constructor
-    public DepartmentOfficer(String username, String password, String name, Faculty faculty, Department department) {
-        super(username, password, name);
+    public DepartmentOfficer(String username, String password, String name, Faculty faculty, Department department, boolean isHashed) {
+        super(username, password, name, isHashed);
         this.faculty = faculty;
         this.department = department;
     }
@@ -48,18 +48,18 @@ public class DepartmentOfficer extends User{
         student.setStudentAdvisor(advisor);
     }
 
-
-
-    @Override
     public Faculty getFaculty() {
         return faculty;
     }
-    @Override
     public Department getDepartment() {
         return department;
     }
     @Override
+    public String getRole(){
+        return "DepartmentOfficer";
+    }
+    @Override
     public String toString() {
-        return name + " " + faculty.toString() + " " + department.toString();
+        return "DepartmentOfficer: " + getName() + " (" + getUsername() + "), Faculty: " + getFaculty().getFacultyName() + ", Department: " + getDepartment().getDepartmentName();
     }
 }

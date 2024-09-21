@@ -18,8 +18,8 @@ public class ChangePasswordController {
 
     @FXML
     public void initialize() {
-        User user = new User("advisor", "123", "Putt");
-        showUserInfo(user);
+//        User user = new User("advisor", "123", "Putt");
+//        showUserInfo(user);
     }
 
 
