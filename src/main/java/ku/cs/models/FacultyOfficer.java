@@ -6,8 +6,8 @@ public class FacultyOfficer extends User implements Officer {
     private Faculty faculty;
 
     // Begin Constructor
-    public FacultyOfficer(String username, String password, String name, Faculty faculty, boolean isHashed) {
-        super(username, password, name, isHashed);
+    public FacultyOfficer(String username, String password, String name, Faculty faculty, boolean isHashed, boolean suspended) {
+        super(username, password, name, isHashed, suspended);
         this.faculty = faculty;
     }
     // End Constructor

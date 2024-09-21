@@ -10,7 +10,7 @@ class FacultyOfficerTest {
     private Faculty f;
     @BeforeEach
     void setUp1() {
-        fs = new FacultyOfficer("User", "1234", "Test", new Faculty("Science"), false);
+        fs = new FacultyOfficer("User", "1234", "Test", new Faculty("Science"), false, false);
         f = fs.getFaculty();
     }
 

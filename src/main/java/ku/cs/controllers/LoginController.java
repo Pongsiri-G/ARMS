@@ -2,7 +2,6 @@ package ku.cs.controllers;
 
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import ku.cs.models.FacultyList;
 import ku.cs.models.User;
 import ku.cs.models.UserList;
 import ku.cs.services.FXRouter;
@@ -19,6 +18,7 @@ public class LoginController {
     @FXML
     private PasswordField password;
 
+
     private UserList userList;
 
     public LoginController() {
@@ -26,7 +26,6 @@ public class LoginController {
         this.userList = new UserList();
         this.userList.setUsers((ArrayList<User>) datasource.readData());
     }
-
 
     public void userLogin() throws IOException {
         System.out.println("Loaded users: " + userList.getAllUsers());

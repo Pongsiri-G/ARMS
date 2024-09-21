@@ -10,7 +10,7 @@ public abstract class User {
 
     // Constructor for new users (password is hashed)
     public User(String username, String password, String name) {
-        this(username, password, name, false);
+        this(username, password, name, false, false);
     }
 
     // Constructor for cases when only the name is provided (when creating a temporary user)
@@ -22,7 +22,7 @@ public abstract class User {
     }
 
     // Constructor for users loaded from a file (password is either hashed or plaintext)
-    public User(String username, String password, String name, boolean isHashed) {
+    public User(String username, String password, String name, boolean isHashed, boolean suspended) {
         this.username = username;
         if (isHashed) {
             this.password = password; // Use the hashed password as is
@@ -30,7 +30,7 @@ public abstract class User {
             this.password = BCrypt.withDefaults().hashToString(12, password.toCharArray()); // Hash if not already hashed
         }
         this.name = name;
-        this.suspended = false;
+        this.suspended = suspended;
     }
 
     // Check if the username matches
