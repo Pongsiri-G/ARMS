@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class FacultyList {
     private ArrayList<Faculty> faculties;
 
+
     public FacultyList() {
         // Will Read Data From CSV File Later
         faculties = new ArrayList<>();
@@ -16,9 +17,10 @@ public class FacultyList {
     public void addFaculty(String facultyName) {
         faculties.add(new Faculty(facultyName));
     }
-    public void addFaculty(String facultyName, String facultyID) {
-        faculties.add(new Faculty(facultyName, facultyID));
-    }
+    public void addFaculty(String facultyName, String facultyID, String departmentName, String departmentID) {
+        //faculties.add(new Faculty(facultyName, facultyID)); อันเดิม
+        faculties.add(new Faculty(facultyName, facultyID, departmentName, departmentID));
+    } // ping : แก้ parameters เพื่อใช้ใน FacDepListFileDatasource
 
     public void removeFaculty(Faculty faculty) {
         faculties.remove(faculty);

@@ -12,7 +12,7 @@ public class Department {
 
     // Begin Constructor
     public Department(String departmentName) {
-        this(departmentName, null);
+        this(departmentName, (Faculty) null);
     }
 
     public Department(String departmentName, Faculty faculty) {
@@ -28,6 +28,11 @@ public class Department {
         this.departmentID = departmentID;
         this.requestHandlingOfficers = new ArrayList<>();
     }
+
+    public Department(String departmentName, String departmentID) {
+        this.departmentName = departmentName;
+        this.departmentID = departmentID;
+    } // ping : เพิ่ม constructor
     // End Constructor
 
     public boolean isDepartmentName(String departmentName){

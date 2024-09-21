@@ -40,7 +40,7 @@ public class Advisor extends User{
 
     public Student checkStudentByDepartment(Student student, String department){ //Table เเสดงรายชื่อนิสิตในที่ปรึกษาหาก สาขาเเละคณะตรงกันก็จะส่งค่าเเสดง
         for  (Student stud : students){
-            if (student.getDepartment().equals(department) && student.getFaculty().equals(faculty)){
+            if (student.getEnrolledDepartment().equals(department) && student.getEnrolledFaculty().equals(faculty)){
                 return stud;
             }
         }

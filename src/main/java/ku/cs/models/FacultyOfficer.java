@@ -6,7 +6,7 @@ public class FacultyOfficer extends User {
     private Faculty faculty;
 
     // Begin Constructor
-    public FacultyOfficer(String username, String password, String name, Faculty faculty) {
+    public FacultyOfficer(String name, String username, String password, Faculty faculty) {
         super(username, password, name);
         this.faculty = faculty;
     }

@@ -6,13 +6,11 @@ public class RequestList {
     private ArrayList<Request> requests;
     private int allRequest;
     private int approvedRequest;
-    private int users;
 
     public RequestList() {
         requests = new ArrayList<>();
         allRequest = 0;
         approvedRequest = 0;
-        users = 0;
     }
 
     public void addRequest(Request request) {
@@ -21,9 +19,6 @@ public class RequestList {
         if (request.getStatus().equals("Approved")) {
             approvedRequest++;
         }
-    }
-    public void addUser(User user) {
-        users++;
     }
 
     public int countAllRequests() {
