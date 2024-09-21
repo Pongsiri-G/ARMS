@@ -16,48 +16,48 @@ public class UserList {
     }
 
     // Add FacultyOfficer
-    public void addUser(String username, String password, String name, String faculty, boolean isHashed) {
+    public void addUser(String username, String password, String name, String faculty, boolean isHashed, boolean suspended) {
         if (findUserByUsername(username) == null) {
             Faculty f = faculties.findFacultyByName(faculty);
             if (f != null) {
-                users.add(new FacultyOfficer(username, password, name, f, isHashed));
+                users.add(new FacultyOfficer(username, password, name, f, isHashed, suspended));
             }
         }
     }
 
     // Add DepartmentOfficer
-    public void addUser(String username, String password, String name, String faculty, String department, boolean isHashed) {
+    public void addUser(String username, String password, String name, String faculty, String department, boolean isHashed, boolean suspended) {
         if (findUserByUsername(username) == null) {
             Faculty f = faculties.findFacultyByName(faculty);
             if (f != null) {
                 Department d = f.findDepartmentByName(department);
                 if (d != null) {
-                    users.add(new DepartmentOfficer(username, password, name, f, d, isHashed));
+                    users.add(new DepartmentOfficer(username, password, name, f, d, isHashed, suspended));
                 }
             }
         }
     }
 
     // Add Advisor
-    public void addUser(String username, String password, String name, String faculty, String department, String advisorID, boolean isHashed) {
+    public void addUser(String username, String password, String name, String faculty, String department, String advisorID, boolean isHashed, boolean suspended) {
         Faculty f = faculties.findFacultyByName(faculty);
         if (f != null) {
             Department d = f.findDepartmentByName(department);
             if (d != null) {
-                Advisor advisor = new Advisor(username, password, name, f, d, advisorID, isHashed);
+                Advisor advisor = new Advisor(username, password, name, f, d, advisorID, isHashed, suspended);
                 addUser(advisor);
             }
         }
     }
 
     // Add Student
-    public void addUser(String username, String password, String name, String faculty, String department, String studentID, String email, boolean isHashed) {
+    public void addUser(String username, String password, String name, String faculty, String department, String studentID, String email, boolean isHashed, boolean suspended) {
         if (findUserByUsername(username) == null) {
             Faculty f = faculties.findFacultyByName(faculty);
             if (f != null) {
                 Department d = f.findDepartmentByName(department);
                 if (d != null) {
-                    users.add(new Student(username, password, name, f, d, studentID, email, isHashed));
+                    users.add(new Student(username, password, name, f, d, studentID, email, isHashed, suspended));
                 }
             }
         }
@@ -76,7 +76,7 @@ public class UserList {
     public void registerStudent(String username, String password, String confirmPassword, String fullName,
                                 String studentId, String email, boolean isHashed) throws IllegalArgumentException {
         if (!password.equals(confirmPassword)) {
-            throw new IllegalArgumentException("Passwords do not match.");
+            throw new IllegalArgumentException("รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน");
         }
 
         boolean foundStudent = false;
@@ -99,7 +99,7 @@ public class UserList {
         }
 
         if (!foundStudent) {
-            throw new IllegalArgumentException("Student data not found in any department.");
+            throw new IllegalArgumentException("ไม่พบข้อมูลนิสิตในฐานข้อมูลภาควิชา กรุณาตรวจสอบข้อมูลที่กรอกอีกครั้ง");
         }
 
         matchedStudent.setUsername(username);
@@ -124,13 +124,21 @@ public class UserList {
     }
 
     // Login with hashed password verification
-    public String login(String username, String password) {
-        User user = findUserByUsername(username);
-
-        if (user != null && user.validatePassword(password) && !user.getSuspended()) {
-            return user.getRole();
+    public String login(String username, String password) throws IllegalArgumentException {
+        if (username.isEmpty() || password.isEmpty()) {
+            throw new IllegalArgumentException("ชื่อบัญชีผู้ใช้หรือรหัสผ่านไม่สามารถเป็นค่าว่างได้");
         }
 
-        return null;
+        User user = findUserByUsername(username);
+
+        if (user == null || !user.validatePassword(password)) {
+            throw new IllegalArgumentException("ชื่อบัญชีผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
+        }
+
+        if (user.getSuspended()) {
+            throw new IllegalArgumentException("บัญชีผู้ใช้นี้ถูกระงับ ไม่สามารถเข้าสู่ระบบได้");
+        }
+
+        return user.getRole();
     }
 }

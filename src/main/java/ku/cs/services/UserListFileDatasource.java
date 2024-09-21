@@ -40,19 +40,20 @@ public class UserListFileDatasource implements Datasource<List<User>> {
                 String line = scanner.nextLine();
                 String[] data = line.split(",");
                 String role = data[0];
+                boolean isSuspended = data.length > 1 && "suspended".equals(data[data.length - 1]);
 
                 switch (role) {
                     case "FacultyOfficer":
-                        users.add(new FacultyOfficer(data[1], data[2], data[3], new Faculty(data[4]), true)); // true for already hashed password
+                        users.add(new FacultyOfficer(data[1], data[2], data[3], new Faculty(data[4]), true, isSuspended)); // true for already hashed password
                         break;
                     case "DepartmentOfficer":
-                        users.add(new DepartmentOfficer(data[1], data[2], data[3], new Faculty(data[4]), new Department(data[5]), true));
+                        users.add(new DepartmentOfficer(data[1], data[2], data[3], new Faculty(data[4]), new Department(data[5]), true, isSuspended));
                         break;
                     case "Advisor":
-                        users.add(new Advisor(data[1], data[2], data[3], new Faculty(data[4]), new Department(data[5]), data[6], true));
+                        users.add(new Advisor(data[1], data[2], data[3], new Faculty(data[4]), new Department(data[5]), data[6], true, isSuspended));
                         break;
                     case "Student":
-                        users.add(new Student(data[1], data[2], data[3], new Faculty(data[4]), new Department(data[5]), data[6], data[7], true));
+                        users.add(new Student(data[1], data[2], data[3], new Faculty(data[4]), new Department(data[5]), data[6], data[7], true, isSuspended));
                         break;
                 }
             }
@@ -77,7 +78,8 @@ public class UserListFileDatasource implements Datasource<List<User>> {
                             .append(fo.getUsername()).append(",")
                             .append(fo.getPassword()).append(",")
                             .append(fo.getName()).append(",")
-                            .append(fo.getFaculty().getFacultyName());
+                            .append(fo.getFaculty().getFacultyName()).append(",")
+                            .append(fo.getSuspended() ? "suspended" : "normal");
                 } else if (user instanceof DepartmentOfficer) {
                     DepartmentOfficer dofficer = (DepartmentOfficer) user;
                     line.append("DepartmentOfficer,")
@@ -85,7 +87,8 @@ public class UserListFileDatasource implements Datasource<List<User>> {
                             .append(dofficer.getPassword()).append(",")
                             .append(dofficer.getName()).append(",")
                             .append(dofficer.getFaculty().getFacultyName()).append(",")
-                            .append(dofficer.getDepartment().getDepartmentName());
+                            .append(dofficer.getDepartment().getDepartmentName()).append(",")
+                            .append(dofficer.getSuspended() ? "suspended" : "normal");
                 } else if (user instanceof Advisor) {
                     Advisor advisor = (Advisor) user;
                     line.append("Advisor,")
@@ -94,7 +97,8 @@ public class UserListFileDatasource implements Datasource<List<User>> {
                             .append(advisor.getName()).append(",")
                             .append(advisor.getFaculty().getFacultyName()).append(",")
                             .append(advisor.getDepartment().getDepartmentName()).append(",")
-                            .append(advisor.getAdvisorID());
+                            .append(advisor.getAdvisorID()).append(",")
+                            .append(advisor.getSuspended() ? "suspended" : "normal");
                 } else if (user instanceof Student) {
                     Student student = (Student) user;
                     line.append("Student,")
@@ -104,7 +108,8 @@ public class UserListFileDatasource implements Datasource<List<User>> {
                             .append(student.getEnrolledFaculty().getFacultyName()).append(",")
                             .append(student.getEnrolledDepartment().getDepartmentName()).append(",")
                             .append(student.getStudentID()).append(",")
-                            .append(student.getEmail());
+                            .append(student.getEmail()).append(",")
+                            .append(student.getSuspended() ? "suspended" : "normal");
                 }
 
                 fileWriter.write(line.toString() + "\n");

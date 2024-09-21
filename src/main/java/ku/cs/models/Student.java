@@ -14,8 +14,8 @@ public class Student extends User {
         this.email = email;
     }
 
-    public Student(String username, String password, String name, Faculty faculty, Department department, String studentID, String email, boolean isHashed) {
-        super(username, password, name, isHashed);
+    public Student(String username, String password, String name, Faculty faculty, Department department, String studentID, String email, boolean isHashed, boolean suspended) {
+        super(username, password, name, isHashed, suspended);
         this.studentID = studentID;
         this.email = email;
         this.enrolledFaculty = faculty;
