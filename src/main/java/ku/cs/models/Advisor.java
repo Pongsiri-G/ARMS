@@ -11,16 +11,16 @@ public class Advisor extends User{
     private ArrayList<Student> students;
 
 
-    public Advisor(String username, String password, String name, Faculty faculty, Department department, String advisorID) {
-        super(username, password, name);
+    public Advisor(String username, String password, String name, Faculty faculty, Department department, String advisorID, boolean isHashed) {
+        super(username, password, name, isHashed);
         this.faculty = faculty;
         this.department = department;
         this.advisorID = advisorID;
         students = new ArrayList<>(); // will read datasource later
 
     }
-    public Advisor(String username, String password, String name, Faculty faculty, Department department, ArrayList<Student> students) {
-        super(username, password, name);
+    public Advisor(String username, String password, String name, Faculty faculty, Department department, ArrayList<Student> students, boolean isHashed) {
+        super(username, password, name, isHashed);
         this.faculty = faculty;
         this.department = department;
         students = new ArrayList<>();
@@ -61,5 +61,9 @@ public class Advisor extends User{
         return "Advisor";
     }
 
+    @Override
+    public String toString() {
+        return "Advisor: " + getName() + " (" + getUsername() + "), Faculty: " + getFaculty().getFacultyName() + ", Department: " + getDepartment().getDepartmentName() + ", Advisor ID: " + getAdvisorID();
+    }
 
 }

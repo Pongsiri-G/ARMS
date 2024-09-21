@@ -14,8 +14,8 @@ public class Student extends User {
         this.email = email;
     }
 
-    public Student(String username, String password, String name, Faculty faculty, Department department, String studentID, String email) {
-        super(username, password, name);
+    public Student(String username, String password, String name, Faculty faculty, Department department, String studentID, String email, boolean isHashed) {
+        super(username, password, name, isHashed);
         this.studentID = studentID;
         this.email = email;
         this.enrolledFaculty = faculty;
@@ -36,7 +36,17 @@ public class Student extends User {
 
     public String getStudentID() { return studentID; }
     public String getEmail() { return email; }
-    public String getEnrolledFaculty() { return enrolledFaculty.getFacultyName(); }
-    public String getEnrolledDepartment() { return enrolledDepartment.getDepartmentName(); }
+    public Faculty getEnrolledFaculty() { return enrolledFaculty; }
+    public Department getEnrolledDepartment() { return enrolledDepartment; }
+
+    @Override
+    public String getRole(){
+        return "Student";
+    }
+
+    @Override
+    public String toString() {
+        return "Student: " + getName() + " (" + getUsername() + "), Faculty: " + getEnrolledFaculty().getFacultyName() + ", Department: " + getEnrolledDepartment().getDepartmentName() + ", Student ID: " + getStudentID() + ", Email: " + getEmail();
+    }
 
 }
