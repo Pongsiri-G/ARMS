@@ -21,6 +21,35 @@ public class RequestList {
         }
     }
 
+    // ลาป่วย/กิจ
+    public void addNewRequest(String approveName, String status, String type, String text) {
+        if (findRequestByStatus(status) != null) {
+            Request request = findRequestByStatus(status);
+            if (request != null) {
+                requests.add(new Request(approveName, status, type, text));
+            }
+        }
+    }
+
+    //ของดเรียนบางวิชาล่าช้า
+    public void addNewRequest(String approveName, String status, String type, String text, String subject) {
+        if (findRequestByStatus(status) != null) {
+            Request request = findRequestByStatus(status);
+            if (request != null) {
+                requests.add(new Request(approveName, status, type, text, subject));
+            }
+        }
+    }
+
+    public Request findRequestByStatus(String status) {
+        for (Request request : requests) {
+            if (request.getStatus().equals(status)) {
+                return request;
+            }
+        }
+        return null;
+    }
+
     public int countAllRequests() {
         return allRequest;
     }

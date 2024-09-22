@@ -35,7 +35,7 @@ public class FacDepListFileDatasourceTest {
         Department department2 = new Department("วิศวกรรมคอมพิวเตอร์", "022", faculty2);
 
         faculty1.addDepartment(department1);
-        faculty1.addDepartment(department2);
+        faculty2.addDepartment(department2);
 
         facultyList.addFaculty(faculty1);
         facultyList.addFaculty(faculty2);
