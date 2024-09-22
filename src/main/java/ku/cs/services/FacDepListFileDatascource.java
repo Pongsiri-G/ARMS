@@ -1,5 +1,6 @@
 package ku.cs.services;
 
+import ku.cs.models.Department;
 import ku.cs.models.Faculty;
 import ku.cs.models.FacultyList;
 
@@ -97,9 +98,13 @@ public class FacDepListFileDatascource implements Datasource<FacultyList> {
 
         try {
             for (Faculty fac : faculties.getFaculties()) {
-                String line = fac.getFacultyName() + ", " + fac.getFacultyId() + ", " + fac.getDepartmentName() + ", " + fac.getDepartmentId();
-                bw.append(line);
-                bw.append("\n");
+                // Put เพิ่ม ลูปอีกชั้นเพื่อ ดึงค่า Department ทั้งหมดที่อยู่ใน Faculty นั้น (ไม้ต้องใช้  fac.getDepartmentName() + ", " + fac.getDepartmentId() แล้ว)
+                for (Department dep : fac.getDepartments()) {
+                    String line = fac.getFacultyName() + ", " + fac.getFacultyId() + ", " + dep.getDepartmentName() + ", " + dep.getDepartmentID();
+                    bw.append(line);
+                    bw.append("\n");
+                }
+                // String line = fac.getFacultyName() + ", " + fac.getFacultyId() + ", " + fac.getDepartmentName() + ", " + fac.getDepartmentId(); ping เดิม
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
