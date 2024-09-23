@@ -8,6 +8,7 @@ public class Department {
     private String departmentID;
     private Faculty faculty;
     private ArrayList<RequestHandlingOfficer> requestHandlingOfficers;
+    private ArrayList<Advisor> advisors;
     private ArrayList<Student> students;
 
     // Begin Constructor
@@ -97,5 +98,12 @@ public class Department {
     }
 
 
-
+    public Advisor findAdvisorByName(String advisorName) {
+        for (Advisor advisor : advisors) {
+            if (advisor.getName().equals(advisorName)) {
+                return advisor;
+            }
+        }
+        return null;
+    }
 }

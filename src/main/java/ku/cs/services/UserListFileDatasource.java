@@ -7,10 +7,12 @@ import java.util.*;
 public class UserListFileDatasource implements Datasource<List<User>> {
     private String directoryName;
     private String userListFileName;
+    private StudentListFileDatasource studentDatasource;
 
-    public UserListFileDatasource(String directoryName, String userListFileName) {
+    public UserListFileDatasource(String directoryName, String userListFileName, String studentListFileName) {
         this.directoryName = directoryName;
         this.userListFileName = userListFileName;
+        this.studentDatasource = new StudentListFileDatasource(directoryName, studentListFileName);
         checkFileIsExisted();
     }
 
@@ -32,6 +34,8 @@ public class UserListFileDatasource implements Datasource<List<User>> {
     @Override
     public List<User> readData() {
         List<User> users = new ArrayList<>();
+        Map<String, Student> studentMap = studentDatasource.readStudentMap();
+
         try {
             File file = new File(directoryName + File.separator + userListFileName);
             Scanner scanner = new Scanner(file);
@@ -40,20 +44,30 @@ public class UserListFileDatasource implements Datasource<List<User>> {
                 String line = scanner.nextLine();
                 String[] data = line.split(",");
                 String role = data[0];
-                boolean isSuspended = data.length > 1 && "suspended".equals(data[data.length - 1]);
+                String username = data[1];
+                String password = data[2];
+                String name = data[3];
+                boolean isSuspended = data.length > 4 && "suspended".equals(data[4]);
 
                 switch (role) {
                     case "FacultyOfficer":
-                        users.add(new FacultyOfficer(data[1], data[2], data[3], new Faculty(data[4]), true, isSuspended)); // true for already hashed password
+                        users.add(new FacultyOfficer(username, password, name, null, true, isSuspended));
                         break;
                     case "DepartmentOfficer":
-                        users.add(new DepartmentOfficer(data[1], data[2], data[3], new Faculty(data[4]), new Department(data[5]), true, isSuspended));
+                        users.add(new DepartmentOfficer(username, password, name, null, null, true, isSuspended));
                         break;
                     case "Advisor":
-                        users.add(new Advisor(data[1], data[2], data[3], new Faculty(data[4]), new Department(data[5]), data[6], true, isSuspended));
+                        users.add(new Advisor(username, password, name, null, null, "", true, isSuspended));
                         break;
                     case "Student":
-                        users.add(new Student(data[1], data[2], data[3], new Faculty(data[4]), new Department(data[5]), data[6], data[7], true, isSuspended));
+                        // Link student data from studentlist.csv
+                        Student student = studentMap.get(name);  // Assuming name is used to link data
+                        if (student != null) {
+                            student.setUsername(username);
+                            student.setPassword(password, true);
+                            student.setSuspended(isSuspended);
+                            users.add(student);
+                        }
                         break;
                 }
             }
@@ -68,6 +82,7 @@ public class UserListFileDatasource implements Datasource<List<User>> {
     public void writeData(List<User> users) {
         try {
             FileWriter fileWriter = new FileWriter(directoryName + File.separator + userListFileName, false);
+            List<Student> studentList = new ArrayList<>();
 
             for (User user : users) {
                 StringBuilder line = new StringBuilder();
@@ -78,7 +93,6 @@ public class UserListFileDatasource implements Datasource<List<User>> {
                             .append(fo.getUsername()).append(",")
                             .append(fo.getPassword()).append(",")
                             .append(fo.getName()).append(",")
-                            .append(fo.getFaculty().getFacultyName()).append(",")
                             .append(fo.getSuspended() ? "suspended" : "normal");
                 } else if (user instanceof DepartmentOfficer) {
                     DepartmentOfficer dofficer = (DepartmentOfficer) user;
@@ -86,8 +100,6 @@ public class UserListFileDatasource implements Datasource<List<User>> {
                             .append(dofficer.getUsername()).append(",")
                             .append(dofficer.getPassword()).append(",")
                             .append(dofficer.getName()).append(",")
-                            .append(dofficer.getFaculty().getFacultyName()).append(",")
-                            .append(dofficer.getDepartment().getDepartmentName()).append(",")
                             .append(dofficer.getSuspended() ? "suspended" : "normal");
                 } else if (user instanceof Advisor) {
                     Advisor advisor = (Advisor) user;
@@ -95,26 +107,25 @@ public class UserListFileDatasource implements Datasource<List<User>> {
                             .append(advisor.getUsername()).append(",")
                             .append(advisor.getPassword()).append(",")
                             .append(advisor.getName()).append(",")
-                            .append(advisor.getFaculty().getFacultyName()).append(",")
-                            .append(advisor.getDepartment().getDepartmentName()).append(",")
-                            .append(advisor.getAdvisorID()).append(",")
                             .append(advisor.getSuspended() ? "suspended" : "normal");
                 } else if (user instanceof Student) {
-                    Student student = (Student) user;
+                    studentList.add((Student) user);  // Collect student data for studentlist.csv
                     line.append("Student,")
-                            .append(student.getUsername()).append(",")
-                            .append(student.getPassword()).append(",")
-                            .append(student.getName()).append(",")
-                            .append(student.getEnrolledFaculty().getFacultyName()).append(",")
-                            .append(student.getEnrolledDepartment().getDepartmentName()).append(",")
-                            .append(student.getStudentID()).append(",")
-                            .append(student.getEmail()).append(",")
-                            .append(student.getSuspended() ? "suspended" : "normal");
+                            .append(user.getUsername()).append(",")
+                            .append(user.getPassword()).append(",")
+                            .append(user.getName()).append(",")
+                            .append(user.getSuspended() ? "suspended" : "normal");
                 }
 
-                fileWriter.write(line.toString() + "\n");
+                if (line.length() > 0) {
+                    fileWriter.write(line.toString() + "\n");
+                }
             }
             fileWriter.close();
+
+            // Write student-specific data to studentlist.csv
+            studentDatasource.writeData(studentList);
+
         } catch (IOException e) {
             throw new RuntimeException("Error writing data to file", e);
         }

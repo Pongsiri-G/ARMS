@@ -43,8 +43,12 @@ public abstract class User {
         this.username = username;
     }
 
-    public void setPassword(String password) {
-        this.password = BCrypt.withDefaults().hashToString(12, password.toCharArray()); // Hash the new password
+    public void setPassword(String password, boolean isHashed) {
+        if (isHashed) {
+            this.password = password; // Use the hashed password directly
+        } else {
+            this.password = BCrypt.withDefaults().hashToString(12, password.toCharArray()); // Hash the password
+        }
     }
 
     public void setName(String name) {
