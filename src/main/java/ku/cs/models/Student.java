@@ -38,6 +38,7 @@ public class Student extends User {
     public String getEmail() { return email; }
     public Faculty getEnrolledFaculty() { return enrolledFaculty; }
     public Department getEnrolledDepartment() { return enrolledDepartment; }
+    public Advisor getStudentAdvisor() { return studentAdvisor; }
 
     @Override
     public String getRole(){

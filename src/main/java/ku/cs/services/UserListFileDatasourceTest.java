@@ -8,6 +8,7 @@ public class UserListFileDatasourceTest {
     private UserListFileDatasource datasource;
     private String testDirectory = "data/test";
     private String testFileName = "userlist.csv";
+    private String testStudentFileName = "studentlist.csv";
 
     public void runTests() {
         setup();
@@ -15,7 +16,7 @@ public class UserListFileDatasourceTest {
     }
 
     private void setup() {
-        datasource = new UserListFileDatasource(testDirectory, testFileName);
+        datasource = new UserListFileDatasource(testDirectory, testFileName, testStudentFileName);
         clearTestFile();
     }
 

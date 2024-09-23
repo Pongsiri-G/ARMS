@@ -103,7 +103,7 @@ public class UserList {
         }
 
         matchedStudent.setUsername(username);
-        matchedStudent.setPassword(password); // Password is hashed inside the method if isHashed is false
+        matchedStudent.setPassword(password, true); // Password is hashed inside the method if isHashed is false
 
         users.add(matchedStudent);
     }

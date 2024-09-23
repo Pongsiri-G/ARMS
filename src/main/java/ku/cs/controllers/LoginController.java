@@ -24,7 +24,7 @@ public class LoginController {
     private UserList userList;
 
     public LoginController() {
-        UserListFileDatasource datasource = new UserListFileDatasource("data/test", "userlist.csv");
+        UserListFileDatasource datasource = new UserListFileDatasource("data/test", "userlist.csv", "studentlist.csv");
         this.userList = new UserList();
         this.userList.setUsers((ArrayList<User>) datasource.readData());
     }
@@ -35,7 +35,7 @@ public class LoginController {
 
     public void userLogin() throws IOException {
         try {
-            System.out.println("Loaded users: " + userList.getAllUsers()); // Debugging Only, will remove later
+            //System.out.println("Loaded users: " + userList.getAllUsers()); // Debugging Only, will remove later
             String role = userList.login(username.getText().trim(), password.getText().trim());
 
             if ((username.getText().trim().equals("Admin")) && (password.getText().trim().equals("0000"))) {
