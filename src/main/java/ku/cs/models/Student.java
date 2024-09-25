@@ -22,6 +22,14 @@ public class Student extends User {
         this.enrolledDepartment = department;
     }
 
+    public Student(Faculty faculty, Department department, String name, String studentID, String email) {
+        super(null, null, name);
+        this.studentID = studentID;
+        this.enrolledFaculty = faculty;
+        this.enrolledDepartment = department;
+        this.email = email;
+    }
+
     public void createRequest() {
         //wait for Request finish
     }
