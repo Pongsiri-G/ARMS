@@ -11,20 +11,21 @@ public class Advisor extends User{
     private ArrayList<Student> students;
 
 
-    public Advisor(String username, String password, String name, Faculty faculty, Department department, String advisorID, boolean isHashed) {
-        super(username, password, name, isHashed);
+    public Advisor(String username, String password, String name, Faculty faculty, Department department, String advisorID, boolean isHashed, boolean suspended) {
+        super(username, password, name, isHashed, suspended);
         this.faculty = faculty;
         this.department = department;
         this.advisorID = advisorID;
         students = new ArrayList<>(); // will read datasource later
 
     }
-    public Advisor(String username, String password, String name, Faculty faculty, Department department, ArrayList<Student> students, boolean isHashed) {
-        super(username, password, name, isHashed);
+    public Advisor(String username, String password, String name, Faculty faculty, Department department, ArrayList<Student> students, boolean isHashed, boolean suspended) {
+        super(username, password, name, isHashed, suspended);
         this.faculty = faculty;
         this.department = department;
         students = new ArrayList<>();
     }
+
 
     public void testAddStudents(Student student){
         students.add(student);

@@ -1,5 +1,6 @@
 package ku.cs.controllers;
 
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import ku.cs.models.User;
@@ -17,28 +18,39 @@ public class LoginController {
     private TextField username;
     @FXML
     private PasswordField password;
+    @FXML
+    private Label errorLabel;
 
     private UserList userList;
 
     public LoginController() {
-        UserListFileDatasource datasource = new UserListFileDatasource("data/test", "userlist.csv");
+        UserListFileDatasource datasource = new UserListFileDatasource("data/test", "userlist.csv", "studentlist.csv");
         this.userList = new UserList();
         this.userList.setUsers((ArrayList<User>) datasource.readData());
     }
 
+    public void initialize() {
+        errorLabel.setText("");
+    }
+
     public void userLogin() throws IOException {
-        System.out.println("Loaded users: " + userList.getAllUsers());
-        String role = userList.login(username.getText().trim(), password.getText().trim());
+        try {
+            //System.out.println("Loaded users: " + userList.getAllUsers()); // Debugging Only, will remove later
+            String role = userList.login(username.getText().trim(), password.getText().trim());
 
-        if ((username.getText().trim().equals("Admin")) && (password.getText().trim().equals("0000"))) {
-            FXRouter.goTo("dashboard");
-        } // TEMPORARY LOGIN FOR TEST ONLY
+            if ((username.getText().trim().equals("Admin")) && (password.getText().trim().equals("0000"))) {
+                FXRouter.goTo("dashboard");
+            } // TEMPORARY LOGIN FOR TEST ONLY
 
-        if (role != null) {
-            redirect(role);  // Redirect based on role
-        } else {
-            System.out.println("Login failed. Invalid username or password.");
-            // Debugging Only, will remove later
+            if (role != null) {
+                redirect(role);  // Redirect based on role
+            } else {
+                System.out.println("Login failed. Invalid username or password.");
+                // Debugging Only, will remove later
+            }
+        }
+        catch (IllegalArgumentException e) {
+            errorLabel.setText(e.getMessage());
         }
     }
 
