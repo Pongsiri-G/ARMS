@@ -48,13 +48,10 @@ public class AdvisorController{
         studentListTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Student>() {
             @Override
             public void changed(ObservableValue<? extends Student> observableValue, Student oldStudent, Student newStudent) {
-                if (newStudent != null) {
-                    try {
-                        // ส่ง student ID ของนิสิตที่ถูกเลือกไปยังหน้า "advisor-nisit"
-                        FXRouter.goTo("advisor-nisit", newStudent.getStudentID());
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                try {
+                    FXRouter.goTo("advisor-nisit", newStudent.getStudentID());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
             }
         });
@@ -93,16 +90,16 @@ public class AdvisorController{
         studentListTable.getColumns().add(idCol);
         studentListTable.getColumns().add(emailCol);
 
-        studentListTable.getItems().clear();
+        //studentListTable.getItems().addAll(students.getStudents());
 
-        studentListTable.getItems().clear();
-        studentListTable.getItems().addAll(students.getStudents());
-/*
+
+
         // ใส่ข้อมูล Student ทั้งหมดจาก studentList ไปแสดงใน TableView
         for (Student student: students.getStudents()) {
             studentListTable.getItems().add(student);
-        }*/
+        }
+    }
     }
 
 
-}
+

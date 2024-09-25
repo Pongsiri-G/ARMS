@@ -33,6 +33,9 @@
                         <TableColumn prefWidth="100.0" text="รหัสนิสิต" />
                         <TableColumn prefWidth="100.0" text="อีเมล" />
                     </columns>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
                   </TableView>
                   <Label layoutX="83.0" layoutY="385.0" styleClass="fontsadvisor" text="รายชื่อนิสิตในที่ปรึกษา">
                      <font>
