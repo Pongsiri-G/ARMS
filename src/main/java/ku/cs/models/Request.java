@@ -9,22 +9,17 @@ public class Request {
     private String status;
     private String type;
     private String text;
-    private String subject;
+    private String id;
+    private String numberPhone;
 
-    Request(String approveName, String status, String type, String text) {
-        this.status = status;
-        this.timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    Request(String timeStamp,String approveName, String status, String type, String text, String id, String numberPhone) {
+        this.timeStamp = timeStamp;
         this.approveName = approveName;
+        this.status = status;
         this.type = type;
         this.text = text;
-    }
-
-    Request(String approveName, String status, String type, String text, String subject) {
-        this.status = status;
-        this.timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        this.approveName = approveName;
-        this.type = type;
-        this.text = text;
+        this.id = id;
+        this.numberPhone = numberPhone;
     }
 
     public void changeStatus(String newStatus) {
@@ -36,4 +31,15 @@ public class Request {
     public String getType() {return timeStamp;}
 
     public String getApproveName() {return approveName;}
+
+    public String getTimeStamp() {return timeStamp;}
+
+    public String getText() {return text;}
+
+    public String getId() {return id;}
+
+    public String getNumberPhone() {return numberPhone;}
+
+    public void setStatus(String newStatus) { status = newStatus;}
+
 }

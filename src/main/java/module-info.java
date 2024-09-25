@@ -6,8 +6,11 @@ module ku.cs {
     requires java.sql;
 
 
+
     opens ku.cs.cs211671project to javafx.fxml;
     exports ku.cs.cs211671project;
     exports ku.cs.controllers;
     opens ku.cs.controllers to javafx.fxml;
+    exports ku.cs.models;
+    opens ku.cs.models to javafx.base;
 }
