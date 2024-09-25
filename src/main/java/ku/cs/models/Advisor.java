@@ -36,12 +36,12 @@ public class Advisor extends User{
 
     public void setStudents(ArrayList<Student> students) { this.students = students; }
 
-    public RequestHandlingOfficer fineRequestManager(RequestHandlingOfficer requestManager, Advisor advisor){
-        requestManager = new RequestHandlingOfficer("Sick", "Advisor");
-        if (advisor.getStatus())
-            return requestManager; // เช็คสถานะคำร้องหากเป็น true คือสถานะคำร้องผ่านการอนุมัติถึงจะส่งคำร้องต่อไปได้
-        return null;
-    }
+//    public RequestHandlingOfficer fineRequestManager(RequestHandlingOfficer requestManager, Advisor advisor){
+//        requestManager = new RequestHandlingOfficer("Sick", "Advisor");
+//        if (advisor.getStatus())
+//            return requestManager; // เช็คสถานะคำร้องหากเป็น true คือสถานะคำร้องผ่านการอนุมัติถึงจะส่งคำร้องต่อไปได้
+//        return null;
+//    }
 
     public boolean getStatus() {return status;}
 

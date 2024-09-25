@@ -1,20 +1,21 @@
 package ku.cs.services;
 
-import ku.cs.models.RequestHandlingOfficer;
-import ku.cs.models.Student;
+import ku.cs.models.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-public class RequestHandlingOfficersDataSource implements Datasource<ArrayList<RequestHandlingOfficer>> {
+public class DepartmentOfficerDatasource implements Datasource<ArrayList<DepartmentOfficer>> {
+    private FacDepListFileDatascource facultiesDatasource;
     private String directoryName;
     private String fileName;
 
-    public RequestHandlingOfficersDataSource(String directoryName, String fileName) {
+    public DepartmentOfficerDatasource(String directoryName, String fileName) {
         this.directoryName = directoryName;
         this.fileName = fileName;
         checkFileIsExisted();
+        this.facultiesDatasource = new FacDepListFileDatascource("data/test", "facdep.csv");
     }
 
     // ตรวจสอบว่ามีไฟล์ให้อ่านหรือไม่ ถ้าไม่มีให้สร้างไฟล์เปล่า
@@ -35,8 +36,9 @@ public class RequestHandlingOfficersDataSource implements Datasource<ArrayList<R
     }
 
     @Override
-    public ArrayList<RequestHandlingOfficer> readData() {
-        ArrayList<RequestHandlingOfficer> approvers = new ArrayList<>();
+    public ArrayList<DepartmentOfficer> readData() {
+        FacultyList facultyList = facultiesDatasource.readData();
+        ArrayList<DepartmentOfficer> officers = new ArrayList<>();
         String filePath = directoryName + File.separator + fileName;
         File file = new File(filePath);
 
@@ -66,23 +68,26 @@ public class RequestHandlingOfficersDataSource implements Datasource<ArrayList<R
                 String[] data = line.split(",");
 
                 // อ่านข้อมูลตาม index แล้วจัดการประเภทของข้อมูลให้เหมาะสม
-                String station = data[0].trim();
-                String name = data[1].trim();
-                String position = data[2].trim();
-                String timeStamp = data[3].trim();
-
+                String username = data[1].trim();
+                String password = data[2].trim();
+                String name = data[3].trim();
+                String faculty = data[4].trim();
+                String department = data[5].trim();
                 // เพิ่มข้อมูลลงใน list
-                approvers.add(new RequestHandlingOfficer(station, name, position, timeStamp));
+                Faculty fac = facultyList.findFacultyByName(faculty);
+                Department dep = fac.findDepartmentByName(department);
+                officers.add(new DepartmentOfficer(username, password, name, fac, dep, false));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        return approvers;
+        return officers;
     }
 
+
     @Override
-    public void writeData(ArrayList<RequestHandlingOfficer> data) {
+    public void writeData(ArrayList<DepartmentOfficer> data) {
         String filePath = directoryName + File.separator + fileName;
         File file = new File(filePath);
 
@@ -103,8 +108,8 @@ public class RequestHandlingOfficersDataSource implements Datasource<ArrayList<R
 
         try {
             // สร้าง csv และเขียนลงในไฟล์ทีละบรรทัด
-            for (RequestHandlingOfficer approver : data) {
-                String line = approver.getPosition() + "," + approver.getName() + "," + approver.getPosition();
+            for (DepartmentOfficer officer : data) {
+                String line = officer.getRole() + "," + officer.getUsername() + "," + officer.getPassword() + "," + officer.getName() + "," + officer.getFaculty().getFacultyName() + "," + officer.getFaculty() + officer.getDepartment().getDepartmentName();
                 buffer.append(line);
                 buffer.append("\n");
             }
@@ -122,4 +127,3 @@ public class RequestHandlingOfficersDataSource implements Datasource<ArrayList<R
     }
 
 }
-

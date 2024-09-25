@@ -87,7 +87,7 @@
                   </StackPane>
                   <StackPane prefHeight="150.0" prefWidth="200.0" VBox.vgrow="NEVER">
                      <children>
-                        <Rectangle fx:id="currentBar2" arcHeight="20.0" arcWidth="20.0" fill="#eaeaea" height="83.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-arc-height: 25; -fx-arc-width: 25;" width="94.0">
+                        <Rectangle fx:id="currentBar2" arcHeight="20.0" arcWidth="20.0" fill="#eaeaea" height="83.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-arc-height: 25; -fx-arc-width: 25;" visible="false" width="94.0">
                            <StackPane.margin>
                               <Insets right="-25.0" />
                            </StackPane.margin>
@@ -126,7 +126,7 @@
                <children>
                   <StackPane prefHeight="1122.0" prefWidth="1178.0">
                      <children>
-                        <VBox fx:id="requestListScene" disable="true" prefHeight="200.0" prefWidth="1178.0" visible="false">
+                        <VBox fx:id="requestListScene" prefHeight="200.0" prefWidth="1178.0">
                            <children>
                               <Label text="รายการคำร้อง">
                                  <font>
@@ -142,12 +142,12 @@
                                  </VBox.margin></Line>
                               <TableView fx:id="requestListTableView" prefHeight="709.0" prefWidth="1178.0">
                                 <columns>
-                                  <TableColumn minWidth="150.0" prefWidth="150.0" text="ประเทภคำร้อง" />
-                                    <TableColumn minWidth="200.0" prefWidth="200.0" text="ภาควิชา" />
-                                    <TableColumn minWidth="200.0" prefWidth="250.0" text="ชื่อ-นามสกุล" />
-                                    <TableColumn minWidth="150.0" prefWidth="150.0" text="รหัสนิสิต" />
-                                    <TableColumn minWidth="200.0" prefWidth="200.0" text="หมายเหตุ" />
-                                    <TableColumn minWidth="150.0" prefWidth="200.0" text="วันที่อนุมัติโดยภาควิชา" />
+                                  <TableColumn fx:id="requestTypeTableColumn" minWidth="150.0" prefWidth="150.0" text="ประเทภคำร้อง" />
+                                    <TableColumn fx:id="requestStdDepartmentTableColumn" minWidth="200.0" prefWidth="200.0" text="ภาควิชา" />
+                                    <TableColumn fx:id="requestStdNameTableColumn" minWidth="200.0" prefWidth="250.0" text="ชื่อ-นามสกุล" />
+                                    <TableColumn fx:id="requestStdIDTableColumn" minWidth="150.0" prefWidth="150.0" text="รหัสนิสิต" />
+                                    <TableColumn fx:id="requestDetailTableColumn" minWidth="200.0" prefWidth="200.0" text="หมายเหตุ" />
+                                    <TableColumn fx:id="requestApprovedDateTableColumn" minWidth="150.0" prefWidth="200.0" text="วันที่อนุมัติโดยภาควิชา" />
                                 </columns>
                               </TableView>
                            </children>
@@ -155,7 +155,7 @@
                               <Insets top="-20.0" />
                            </StackPane.margin>
                         </VBox>
-                        <VBox fx:id="approverScene" prefHeight="200.0" prefWidth="100.0">
+                        <VBox fx:id="approverScene" prefHeight="200.0" prefWidth="100.0" visible="false">
                            <children>
                               <StackPane fx:id="approverMainButtons" prefHeight="62.0" prefWidth="1178.0">
                                  <children>
@@ -217,12 +217,12 @@
                                  <children>
                                     <TableView fx:id="approverTableView" prefHeight="1000.0" prefWidth="1000.0">
                                       <columns>
-                                        <TableColumn prefWidth="356.33331298828125" text="ตำแหน่ง" />
-                                        <TableColumn minWidth="0.0" prefWidth="423.0" text="ชื่อ-นามสกุล" />
-                                          <TableColumn prefWidth="397.0" text="วันที่แก้ไขล่าสุด" />
+                                        <TableColumn fx:id="approverRoleTableColumn" prefWidth="356.33331298828125" text="ตำแหน่ง" />
+                                        <TableColumn fx:id="approverNameTableColumn" minWidth="0.0" prefWidth="423.0" text="ชื่อ-นามสกุล" />
+                                          <TableColumn fx:id="approverLastUpdateTableColumn" prefWidth="397.0" text="วันที่แก้ไขล่าสุด" />
                                       </columns>
                                     </TableView>
-                                    <VBox fx:id="manageApproverScene" alignment="CENTER" disable="true" prefHeight="798.0" prefWidth="1170.0" visible="false">
+                                    <VBox fx:id="manageApproverScene" alignment="CENTER" prefHeight="798.0" prefWidth="1170.0" visible="false">
                                        <children>
                                           <HBox alignment="CENTER" prefHeight="837.0" prefWidth="1170.0">
                                              <children>
@@ -286,7 +286,7 @@
                                                                            <children>
                                                                               <Pane prefHeight="62.0" prefWidth="380.0" style="-fx-background-color: #EAEAEA; -fx-background-radius: 30px 30px 30px 30px;">
                                                                                  <children>
-                                                                                    <MenuButton fx:id="roleSelectMunuButton" layoutX="9.0" layoutY="7.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="363.0" style="-fx-background-color: #EAEAEA;" styleClass="choice-box" text="เลือกตำแหน่ง">
+                                                                                    <MenuButton fx:id="roleSelectMenuButton" layoutX="9.0" layoutY="7.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="363.0" style="-fx-background-color: #EAEAEA;" styleClass="choice-box" text="เลือกตำแหน่ง">
                                                                                       <items>
                                                                                         <MenuItem mnemonicParsing="false" text="Action 1" />
                                                                                         <MenuItem mnemonicParsing="false" text="Action 2" />
@@ -300,7 +300,7 @@
                                                                            <children>
                                                                               <Pane prefHeight="62.0" prefWidth="380.0" style="-fx-background-color: #EAEAEA; -fx-background-radius: 30px 30px 30px 30px;">
                                                                                  <children>
-                                                                                    <TextField fx:id="nameTilteTextField" alignment="TOP_LEFT" layoutX="6.0" layoutY="13.0" prefHeight="27.0" prefWidth="374.0" promptText="คำนำหน้าชื่อ" style="-fx-background-color: tranparent;" />
+                                                                                    <TextField fx:id="nameTitleTextField" alignment="TOP_LEFT" layoutX="6.0" layoutY="13.0" prefHeight="27.0" prefWidth="374.0" promptText="คำนำหน้าชื่อ" style="-fx-background-color: tranparent;" />
                                                                                  </children>
                                                                               </Pane>
                                                                            </children>

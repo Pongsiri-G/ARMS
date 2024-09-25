@@ -2,7 +2,7 @@ package ku.cs.models;
 
 import java.util.ArrayList;
 
-public class FacultyOfficer extends User {
+public class FacultyOfficer extends User implements Officer {
     private Faculty faculty;
 
     // Begin Constructor
@@ -12,21 +12,34 @@ public class FacultyOfficer extends User {
     }
     // End Constructor
 
+    @Override
     public void addRequestManager(String name, String position) {
-        faculty.addRequestHandlingOfficer(new RequestHandlingOfficer(name, position + faculty.getFacultyName()));
+        faculty.addRequestHandlingOfficer(new RequestHandlingOfficer(this.faculty.getFacultyName(), name, position));
     }
 
+    @Override
     public void removeRequestManager(RequestHandlingOfficer officer) {
         faculty.removeRequestHandlingOfficer(officer);
     }
 
-    public void changeRequestManagerName(RequestHandlingOfficer officer, String name) {
-        officer.setName(name);
+
+    @Override
+    public void changeRequestManager(RequestHandlingOfficer officer, String name, String position) {
+        removeRequestManager(officer);
+        addRequestManager(name, position);
     }
 
-    public void changeRequestManagerPosition(RequestHandlingOfficer officer, String position) {
-        officer.setPosition(position + faculty.getFacultyName());
+    @Override
+    public ArrayList<String> getAvailablePositions() {
+        ArrayList<String> positions = new ArrayList<>();
+        positions.add("คณบดีคณะ");
+        positions.add("รองคณบดีฝ่ายบริหารคณะ");
+        positions.add("รองคณบดีฝ่ายวิชาการรคณะ");
+        positions.add("รักษาแทนการคณบดี");
+        return  positions;
     }
+
+
 
     // End Handle Request Manager
     public Faculty getFaculty() {
@@ -42,4 +55,5 @@ public class FacultyOfficer extends User {
     public String toString() {
         return "FacultyOfficer: " + getName() + " (" + getUsername() + "), Faculty: " + getFaculty().getFacultyName();
     }
+
 }

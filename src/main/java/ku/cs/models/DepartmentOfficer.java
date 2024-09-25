@@ -1,6 +1,8 @@
 package ku.cs.models;
 
-public class DepartmentOfficer extends User{
+import java.util.ArrayList;
+
+public class DepartmentOfficer extends User implements Officer {
     private Faculty faculty;
     private Department department;
 
@@ -12,21 +14,29 @@ public class DepartmentOfficer extends User{
     }
     // End Constructor
 
-    // Begin handle Request Managers
+    @Override
     public void addRequestManager(String name, String position) {
-        department.addRequestHandlingOfficer(new RequestHandlingOfficer(name, position + department.getDepartmentName()));
+        department.addRequestHandlingOfficer(new RequestHandlingOfficer(this.department.getDepartmentName(), name, position));
     }
 
+    @Override
     public void removeRequestManager(RequestHandlingOfficer officer) {
         department.removeRequestHandlingOfficer(officer);
     }
 
-    public void changeRequestManagerName(RequestHandlingOfficer officer, String name) {
-        officer.setName(name);
-    }
 
-    public void changeRequestManagerPosition(RequestHandlingOfficer officer, String position) {
-        officer.setPosition(position + department.getDepartmentName());
+    @Override
+    public void changeRequestManager(RequestHandlingOfficer officer, String name, String position) {
+        removeRequestManager(officer);
+        addRequestManager(name, position);
+    }
+    @Override
+    public ArrayList<String> getAvailablePositions() {
+        ArrayList<String> positions = new ArrayList<>();
+        positions.add("หัวหน้าภาควิชา");
+        positions.add("รองหัวหน้าภาควิขา");
+        positions.add("รักษาการแทนหัวหน้าภาควิชา");
+        return  positions;
     }
 
 
