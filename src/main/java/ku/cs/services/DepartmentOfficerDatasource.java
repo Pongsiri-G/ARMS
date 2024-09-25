@@ -109,7 +109,7 @@ public class DepartmentOfficerDatasource implements Datasource<ArrayList<Departm
         try {
             // สร้าง csv และเขียนลงในไฟล์ทีละบรรทัด
             for (DepartmentOfficer officer : data) {
-                String line = officer.getRole() + "," + officer.getUsername() + "," + officer.getPassword() + "," + officer.getName() + "," + officer.getFaculty().getFacultyName() + "," + officer.getFaculty() + officer.getDepartment().getDepartmentName();
+                String line = officer.getRole() + "," + officer.getUsername() + "," + officer.getPassword() + "," + officer.getName() + "," + officer.getFaculty().getFacultyName() + "," + officer.getDepartment().getDepartmentName();
                 buffer.append(line);
                 buffer.append("\n");
             }
