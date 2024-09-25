@@ -33,6 +33,13 @@ public class Student extends User {
     public void setStudentAdvisor(Advisor studentAdvisor) {
         this.studentAdvisor = studentAdvisor;
     }
+    public void setStudentID(String studentID) {
+        this.studentID = studentID;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
 
     public String getStudentID() { return studentID; }
     public String getEmail() { return email; }

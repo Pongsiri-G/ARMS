@@ -34,7 +34,8 @@ public class UserListFileDatasource implements Datasource<List<User>> {
     @Override
     public List<User> readData() {
         List<User> users = new ArrayList<>();
-        Map<String, Student> studentMap = studentDatasource.readStudentMap();
+        StudentList studentList = studentDatasource.readData();
+        Map<String, Student> studentMap = studentList.getStudentMapByName();
 
         try {
             File file = new File(directoryName + File.separator + userListFileName);
@@ -82,7 +83,7 @@ public class UserListFileDatasource implements Datasource<List<User>> {
     public void writeData(List<User> users) {
         try {
             FileWriter fileWriter = new FileWriter(directoryName + File.separator + userListFileName, false);
-            List<Student> studentList = new ArrayList<>();
+            StudentList studentList = new StudentList();  // Use StudentList instead of List<Student>
 
             for (User user : users) {
                 StringBuilder line = new StringBuilder();
@@ -109,7 +110,7 @@ public class UserListFileDatasource implements Datasource<List<User>> {
                             .append(advisor.getName()).append(",")
                             .append(advisor.getSuspended() ? "suspended" : "normal");
                 } else if (user instanceof Student) {
-                    studentList.add((Student) user);  // Collect student data for studentlist.csv
+                    studentList.addStudent((Student) user);  // Collect student data for studentlist.csv
                     line.append("Student,")
                             .append(user.getUsername()).append(",")
                             .append(user.getPassword()).append(",")
@@ -123,7 +124,7 @@ public class UserListFileDatasource implements Datasource<List<User>> {
             }
             fileWriter.close();
 
-            // Write student-specific data to studentlist.csv
+            // Write student-specific data to studentlist.csv using StudentList
             studentDatasource.writeData(studentList);
 
         } catch (IOException e) {
