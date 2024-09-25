@@ -31,7 +31,7 @@ public class RequestList {
         }
     }
 
-    //ของดเรียนบางวิชาล่าช้า
+    //ของเรียนบางวิชาล่าช้า
     public void addNewRequest(String approveName, String status, String type, String text, String subject) {
         if (findRequestByStatus(status) != null) {
             Request request = findRequestByStatus(status);
