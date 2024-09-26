@@ -20,20 +20,8 @@ public class StudentList {
         students.add(student);
     }
 
-    public void removeStudent(Student student) {
-        students.remove(student);
-    }
-
     public List<Student> getStudents() {
         return students;
-    }
-
-    public Map<String, Student> getStudentMapByName() {
-        Map<String, Student> studentMap = new HashMap<>();
-        for (Student student : students) {
-            studentMap.put(student.getName(), student);
-        }
-        return studentMap;
     }
 
     public Student findStudentById(String studentID) {
@@ -52,5 +40,9 @@ public class StudentList {
             result.append(student.toString()).append("\n");
         }
         return result.toString();
+    }
+
+    public Student get(int i) {
+        return students.get(i);
     }
 }

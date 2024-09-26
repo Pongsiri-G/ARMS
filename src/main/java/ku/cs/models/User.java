@@ -2,11 +2,17 @@ package ku.cs.models;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
+import java.time.LocalDateTime;
+
 public abstract class User {
     private String username;
     private String password;
     private String name;
     private boolean suspended;
+    private LocalDateTime lastLogin;
+    private String profilePicturePath;
+
+    public static final String DEFAULT_PROFILE_PICTURE_PATH = "src/main/resources/images/profile.jpg";
 
     // Constructor for new users (password is hashed)
     public User(String username, String password, String name) {
@@ -19,6 +25,8 @@ public abstract class User {
         this.password = null;
         this.name = name;
         this.suspended = false;
+        this.lastLogin = null;
+        this.profilePicturePath = DEFAULT_PROFILE_PICTURE_PATH;
     }
 
     // Constructor for users loaded from a file (password is either hashed or plaintext)
@@ -31,6 +39,8 @@ public abstract class User {
         }
         this.name = name;
         this.suspended = suspended;
+        this.lastLogin = null;
+        this.profilePicturePath = DEFAULT_PROFILE_PICTURE_PATH;
     }
 
     // Check if the username matches
@@ -63,7 +73,22 @@ public abstract class User {
         this.suspended = suspended;
     }
 
-    // Getters for fields
+    public void setProfilePicturePath(String profilePicturePath) {
+        this.profilePicturePath = profilePicturePath;
+    }
+
+    public void setLastLogin(LocalDateTime lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+
+    public LocalDateTime getLastLogin() {
+        return lastLogin;
+    }
+
+    public String getProfilePicturePath(){
+        return profilePicturePath;
+    }
+
     public boolean getSuspended() {
         return suspended;
     }
