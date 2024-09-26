@@ -67,7 +67,7 @@ public class LoginController {
                 FXRouter.goTo("department-request");
                 break;
             case "Student":
-                FXRouter.goTo("student");
+                FXRouter.goTo("student-create-request");
                 break;
             case "FacultyOfficer":  // Handling FacultyOfficer role
                 //FXRouter.goTo("faculty-dashboard");  // Navigate to faculty dashboard (Wait for Putt Add fxml)
