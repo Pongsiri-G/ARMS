@@ -28,7 +28,7 @@
                   <Font name="System Bold" size="36.0" />
                </font>
                <VBox.margin>
-                  <Insets bottom="50.0" />
+                  <Insets bottom="40.0" />
                </VBox.margin>
             </Label>
             <Group>
@@ -64,9 +64,14 @@
                   <Label layoutX="12.0" stylesheets="@../../../style/style.css" text="รหัสนิสิต" />
                </children>
                <VBox.margin>
-                  <Insets bottom="40.0" />
+                  <Insets bottom="15.0" />
                </VBox.margin>
             </Group>
+            <Label fx:id="errorLabel" stylesheets="@../../../style/style.css" text="errorLabel" textFill="RED">
+               <VBox.margin>
+                  <Insets bottom="15.0" />
+               </VBox.margin>
+            </Label>
             <VBox alignment="CENTER">
                <children>
                   <ImageView fitHeight="40.0" fitWidth="40.0" onMouseClicked="#nextRegisterClick" pickOnBounds="true" preserveRatio="true">

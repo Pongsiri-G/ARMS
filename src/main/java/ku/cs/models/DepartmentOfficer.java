@@ -5,8 +5,8 @@ public class DepartmentOfficer extends User{
     private Department department;
 
     // Begin Constructor
-    public DepartmentOfficer(String username, String password, String name, Faculty faculty, Department department, boolean isHashed) {
-        super(username, password, name, isHashed);
+    public DepartmentOfficer(String username, String password, String name, Faculty faculty, Department department, boolean isHashed, boolean suspended) {
+        super(username, password, name, isHashed, suspended);
         this.faculty = faculty;
         this.department = department;
     }

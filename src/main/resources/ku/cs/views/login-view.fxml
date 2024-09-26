@@ -60,9 +60,17 @@
                   </ImageView>
                </children>
                <VBox.margin>
-                  <Insets bottom="80.0" />
+                  <Insets bottom="60.0" />
                </VBox.margin>
             </Group>
+            <Label fx:id="errorLabel" stylesheets="@../../../style/style.css" text="errorLabel" textFill="RED">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="20.0" />
+               </VBox.margin>
+            </Label>
             <Button fx:id="loginButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#userLogin" prefHeight="38.0" prefWidth="300.0" stylesheets="@../../../style/style.css" text="เข้าสู่ระบบ">
                <VBox.margin>
                   <Insets bottom="20.0" />

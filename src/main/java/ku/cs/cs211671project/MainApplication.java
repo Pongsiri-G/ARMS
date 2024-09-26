@@ -4,9 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import ku.cs.services.FXRouter;
-import ku.cs.services.UserListFileDatasource;
-import ku.cs.services.UserListFileDatasourceTest;
+import ku.cs.services.*;
 
 import javax.swing.*;
 import java.io.IOException;

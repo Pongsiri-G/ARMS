@@ -1,30 +1,24 @@
 package ku.cs.controllers;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import ku.cs.models.*;
 import ku.cs.services.Datasource;
 import ku.cs.services.FXRouter;
+import ku.cs.services.StudentListFileDatasource;
+import ku.cs.services.StudentListHardCodeDatasource;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
 
 public class AdvisorController{
-    @FXML private TableView<Student> studentTable;
-    private Advisor advisor;
-    private FacultyList data;
-    private Datasource<Advisor> datasource;
+    @FXML private TableView<Student> studentListTable;
+    private StudentList students;
+    private Datasource<StudentList> datasource;
 
     @FXML
     protected void onButtonToAdvisor() {
@@ -43,73 +37,69 @@ public class AdvisorController{
         }
     }
 
-    public void readData() {
-        data = new FacultyList();
-        data.addFaculty("Science");
-        data.getFaculties().getFirst().addDepartment("Computer");
-    }
-
 
     @FXML
     public void initialize() {
-//        readData();
-//        Faculty faculty = new Faculty("Science");
-//        Department department = new Department("Computer");
-//        advisor = new Advisor("user1", "1234", "Boom", new Faculty("Scienec"), new Department("Computer"), "D14");
-//        advisor.testAddStudents(new Student("student1", "1234", "temp01", new Faculty("Science"), new Department("Computer"), "001", "temp01@email"));
-//        advisor.testAddStudents(new Student("student2", "1234", "temp02", new Faculty("Science"), new Department("Computer"), "002", "temp02@email"));
-//        advisor.testAddStudents(new Student("student3", "1234", "temp003", new Faculty("Science"), new Department("Computer"), "003", "temp03@email"));
-//        ;
-//        //datasource = (Datasource<Advisor>) new Advisor("66104022xxxx", "Jason Army", "SCI", "CS"); // ไม่ใช่ๆ
-//        showTable();
 
-        studentTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Student>() {
+        datasource = new StudentListFileDatasource("data/test", "student-list.csv");
+        students = datasource.readData();
+        showTable(students);
+
+        studentListTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Student>() {
             @Override
-            public void changed(ObservableValue<? extends Student> observableValue, Student student, Student t1) {
+            public void changed(ObservableValue<? extends Student> observableValue, Student oldStudent, Student newStudent) {
                 try {
-                    FXRouter.goTo("advisor-nisit");
+                    FXRouter.goTo("advisor-nisit", newStudent.getStudentID());
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             }
         });
     }
+    /*
+    private void showTable(StudentList students) {
+        studentListTable.getItems().clear();
+        studentListTable.getItems().addAll(students.getStudents());
+    }*/
 
-    private void showTable() {
-        studentTable.getItems().clear();
-        studentTable.getItems().addAll(advisor.getStudents());
-    }
+    private void showTable(StudentList students) {
+        TableColumn<Student, String> facultyCol = new TableColumn<>("คณะ");
+        facultyCol.setCellValueFactory(student ->
+                new SimpleStringProperty(student.getValue().getEnrolledFaculty().getFacultyName())//ใช้ SimpleStringProperty ในการดึง method ที่่ return เป็น string
+        );//ซึ่งตรงกับชนิด dataType ที่กำหนดไว้เพราะ contructor ที่เรารับมานั้น Faculty and Department มันรับเป็น object
 
-    private void showTable(ArrayList<Student> students) {
-        // กำหนด column ให้มี title ว่า ID และใช้ค่าจาก attribute id ของ object Student
-        TableColumn<Student, String> idColumn = new TableColumn<>("Student ID");
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        TableColumn<Student, String> departmentCol = new TableColumn<>("สาขา");
+        departmentCol.setCellValueFactory(student ->
+                new SimpleStringProperty(student.getValue().getEnrolledDepartment().getDepartmentName())
+        );
 
-        // กำหนด column ให้มี title ว่า Name และใช้ค่าจาก attribute name ของ object Student
-        TableColumn<Student, String> nameColumn = new TableColumn<>("Name");
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        TableColumn<Student, String> nameCol = new TableColumn<>("ชื่อ-นามสกุล");
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-        // กำหนด column ให้มี title ว่า Score และใช้ค่าจาก attribute score ของ object Student
-        TableColumn<Student, String> factulyColumn = new TableColumn<>("Score");
-        factulyColumn.setCellValueFactory(new PropertyValueFactory<>("studentID"));
+        TableColumn<Student, String> idCol = new TableColumn<>("รหัสนิสิต");
+        idCol.setCellValueFactory(new PropertyValueFactory<>("studentID"));
 
-        TableColumn<Student, String> departmentColumn = new TableColumn<>("Score");
-        departmentColumn.setCellValueFactory(new PropertyValueFactory<>("score"));
+        TableColumn<Student, String> emailCol = new TableColumn<>("อีเมล");
+        emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
 
         // ล้าง column เดิมทั้งหมดที่มีอยู่ใน table แล้วเพิ่ม column ใหม่
-        //studentTable.getColumns().clear();
-        studentTable.getColumns().add(idColumn);
-        studentTable.getColumns().add(nameColumn);
-        studentTable.getColumns().add(factulyColumn);
-        studentTable.getColumns().add(departmentColumn);
+        studentListTable.getColumns().clear();
+        studentListTable.getColumns().add(facultyCol);
+        studentListTable.getColumns().add(departmentCol);
+        studentListTable.getColumns().add(nameCol);
+        studentListTable.getColumns().add(idCol);
+        studentListTable.getColumns().add(emailCol);
 
-        //studentTable.getItems().clear();
+        //studentListTable.getItems().addAll(students.getStudents());
+
+
 
         // ใส่ข้อมูล Student ทั้งหมดจาก studentList ไปแสดงใน TableView
-        for (Student student: students) {
-            studentTable.getItems().add(student);
+        for (Student student: students.getStudents()) {
+            studentListTable.getItems().add(student);
         }
+    }
     }
 
 
-}
+
