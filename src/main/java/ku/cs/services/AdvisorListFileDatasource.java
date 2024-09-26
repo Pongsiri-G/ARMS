@@ -1,14 +1,15 @@
 package ku.cs.services;
 
 import ku.cs.models.*;
-
 import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class AdvisorListFileDatasource implements Datasource<AdvisorList> {
     private String directoryName;
     private String advisorListFileName;
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public AdvisorListFileDatasource(String directoryName, String advisorListFileName) {
         this.directoryName = directoryName;
@@ -17,112 +18,84 @@ public class AdvisorListFileDatasource implements Datasource<AdvisorList> {
     }
 
     private void checkFileIsExisted() {
-        File file = new File(directoryName);
-        if (!file.exists()) {
-            file.mkdirs();
+        File dir = new File(directoryName);
+        if (!dir.exists()) {
+            dir.mkdirs();
         }
-        String filePath = directoryName + File.separator + advisorListFileName;
-        file = new File(filePath);
-        if (!file.exists()) {
+        File advisorListFile = new File(directoryName + File.separator + advisorListFileName);
+        if (!advisorListFile.exists()) {
             try {
-                file.createNewFile();
+                advisorListFile.createNewFile();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-
     @Override
     public AdvisorList readData() {
-        AdvisorList advisors = new AdvisorList();
-        String filePath = directoryName + File.separator + advisorListFileName;
-        File file = new File(filePath);
-
-        FileInputStream    fileInputStream = null;
-
-        // สร้าง AdvisorList และกำหนดค่า FacultyList
-
+        AdvisorList advisorList = new AdvisorList();
         try {
-            fileInputStream = new FileInputStream(file);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+            File file = new File(directoryName + File.separator + advisorListFileName);
+            Scanner scanner = new Scanner(file);
 
-        InputStreamReader inputStreamReader = new InputStreamReader(
-                fileInputStream,
-                StandardCharsets.UTF_8
-        );
-        BufferedReader buffer = new BufferedReader(inputStreamReader);
-
-        String line = "";
-        try {
-            // ใช้ while loop เพื่ออ่านข้อมูลรอบละบรรทัด
-            while ( (line = buffer.readLine()) != null ){
-                // ถ้าเป็นบรรทัดว่าง ให้ข้าม
-                if (line.equals("")) continue;
-
-                // แยกสตริงด้วย ,
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
                 String[] data = line.split(",");
+                if (data.length < 10) continue; // Skip incomplete lines
 
-                // อ่านข้อมูลตาม index แล้วจัดการประเภทของข้อมูลให้เหมาะสม
-                String name = data[0].trim();
-                String username = data[1].trim();
-                String password = data[2].trim();
-                String faculty = data[3].trim();
-                String department = data[4].trim();
-                String id = data[5].trim();
+                String username = data[0];
+                String password = data[1];
+                String name = data[2];
+                boolean isSuspended = "suspended".equals(data[3]);
+                LocalDateTime lastLogin = "Never".equals(data[4]) ? null : LocalDateTime.parse(data[4], formatter);
+                String profilePicturePath = data[5];
+                String facultyName = data[6];
+                String departmentName = data[7];
+                String advisorId = data[8];
+                String email = data[9];
 
-                // เพิ่มข้อมูลลงใน list
-                advisors.addNewAdvisor(name, username, password, faculty, department, id);
+                Faculty faculty = new Faculty(facultyName);
+                Department department = new Department(departmentName);
+                Advisor advisor = new Advisor(username, password, name, faculty, department, advisorId, email, true, isSuspended);
+                advisor.setLastLogin(lastLogin);
+                advisor.setProfilePicturePath(profilePicturePath);
+
+                advisorList.addAdvisor(advisor);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("File not found", e);
         }
-
-        return advisors;
+        return advisorList;
     }
-
 
     @Override
-    public void writeData(AdvisorList advisors) {
-        String filePath = directoryName + File.separator + advisorListFileName;
-        File file = new File(filePath);
-
-        // เตรียม object ที่ใช้ในการเขียนไฟล์
-        FileOutputStream fileOutputStream = null;
-
+    public void writeData(AdvisorList advisorList) {
         try {
-            fileOutputStream = new FileOutputStream(file);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+            FileWriter fileWriter = new FileWriter(directoryName + File.separator + advisorListFileName, false);
 
-        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
-                fileOutputStream,
-                StandardCharsets.UTF_8
-        );
-        BufferedWriter buffer = new BufferedWriter(outputStreamWriter);
+            for (Advisor advisor : advisorList.getAdvisors()) {
+                StringBuilder line = new StringBuilder();
+                String lastLoginStr = advisor.getLastLogin() == null ? "Never" : advisor.getLastLogin().format(formatter);
+                String profilePicturePath = advisor.getProfilePicturePath() == null ? User.DEFAULT_PROFILE_PICTURE_PATH : advisor.getProfilePicturePath();
 
-        try {
-            // สร้าง csv ของ Student และเขียนลงในไฟล์ทีละบรรทัด
-            for (Advisor advisor : advisors.getAdvisors()) {
-                String line = advisor.getName() + "," + advisor.getUsername() + "," + advisor.getPassword() + "," + advisor.getFaculty() + "," + advisor.getDepartment() + "," + advisor.getAdvisorID();
-                buffer.append(line);
-                buffer.append("\n");
+                line.append(advisor.getUsername()).append(",")
+                        .append(advisor.getPassword()).append(",")
+                        .append(advisor.getName()).append(",")
+                        .append(advisor.getSuspended() ? "suspended" : "normal").append(",")
+                        .append(lastLoginStr).append(",")
+                        .append(profilePicturePath).append(",")
+                        .append(advisor.getFaculty().getFacultyName()).append(",")
+                        .append(advisor.getDepartment().getDepartmentName()).append(",")
+                        .append(advisor.getAdvisorID()).append(",")
+                        .append(advisor.getAdvisorEmail());
+
+                fileWriter.write(line.toString() + "\n");
             }
+            fileWriter.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                buffer.flush();
-                buffer.close();
-            }
-            catch (IOException e){
-                throw new RuntimeException(e);
-            }
+            throw new RuntimeException("Error writing data to file", e);
         }
     }
-
-
 }

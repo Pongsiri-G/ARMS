@@ -39,8 +39,8 @@ public class UserListFileDatasourceTest {
         users.addUser("sample2", "5678", "Jane Doe", "Science", false, false); //Faculty Officer2
         users.addUser("sample3", "1234", "Jim Doe", "Architecture", "Thai Architecture", false, false); //Department Officer1
         users.addUser("sample4", "5678", "Jack Doe", "Architecture", "Urban Architecture", false, false); //Department Officer2
-        users.addUser("sample5", "1234", "Jeff Doe", "Science", "Computer Science", "D1411", false, false); //Advisor1
-        users.addUser("sample6", "5678", "Job Doe", "Science", "Math", "D1015", false, false); //Advisor2
+        users.addUser("sample5", "1234", "Jeff Doe", "Science", "Computer Science", "D1411","xxxxxxx@ku.th", false, false); //Advisor1
+        users.addUser("sample6", "5678", "Job Doe", "Science", "Math", "D1015", "aaaa@ku.th",  false, false); //Advisor2
         users.addUser("sample7", "1234", "Jerk Doe", "Engineering", "Civil Engineering", "b6620400000", "studentmail1@ku.th", false, false); //Student1
         users.addUser("sample8", "5678", "Josh Doe", "Engineering", "Computer Engineering", "b6620400001", "studentmail2@ku.th", false, false); //Student2
         users.findUserByUsername("sample8").setSuspended(true);

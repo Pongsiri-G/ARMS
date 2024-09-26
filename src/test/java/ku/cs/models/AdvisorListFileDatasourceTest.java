@@ -1,4 +1,4 @@
-/*package ku.cs.models;
+package ku.cs.models;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import ku.cs.models.Advisor;
@@ -44,13 +44,13 @@ public class AdvisorListFileDatasourceTest {
           AdvisorList readAdvisors = datasource.readData();
 
           // ทดสอบว่ามีจำนวนที่ปรึกษาถูกต้อง
-          assertEquals(2, readAdvisors.getAdvisors().size());
+          assertEquals(3, readAdvisors.getAdvisors().size());
 
           // ทดสอบที่ปรึกษาคนแรก
           Advisor advisor1 = readAdvisors.getAdvisors().get(0);
           assertEquals("John Doe", advisor1.getName());
           assertEquals("jdoe", advisor1.getUsername());
-          //assertTrue(advisor1.validatePassword("password123"), "Password validation failed for John Doe");
+          assertTrue(advisor1.validatePassword("password123"));
           assertEquals("Engineering", advisor1.getFaculty());
           assertEquals("Computer Science", advisor1.getDepartment());
           assertEquals("A001", advisor1.getAdvisorID());
@@ -59,10 +59,10 @@ public class AdvisorListFileDatasourceTest {
           Advisor advisor2 = readAdvisors.getAdvisors().get(1);
           assertEquals("Jane Smith", advisor2.getName());
           assertEquals("jsmith", advisor2.getUsername());
-          //assertTrue(advisor2.validatePassword("password456"), "Password validation failed for Jane Smith");
+          assertTrue(advisor2.validatePassword("password456"));
           assertEquals("Science", advisor2.getFaculty());
           assertEquals("Biology", advisor2.getDepartment());
           assertEquals("A002", advisor2.getAdvisorID());
 
      }
-}*/
+}
