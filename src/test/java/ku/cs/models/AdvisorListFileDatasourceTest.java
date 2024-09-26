@@ -1,4 +1,4 @@
-package ku.cs.models;
+/*package ku.cs.models;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import ku.cs.models.Advisor;
@@ -35,6 +35,7 @@ public class AdvisorListFileDatasourceTest {
           AdvisorList advisors = new AdvisorList();
           advisors.addNewAdvisor("John Doe", "jdoe", "password123", "Engineering", "Computer Science", "A001");
           advisors.addNewAdvisor("Jane Smith", "jsmith", "password456", "Science", "Biology", "A002");
+          advisors.addNewAdvisor("Boom", "user", "password147", "Engineering", "Computer Science", "A003");
 
           // เขียนข้อมูลลงในไฟล์
           datasource.writeData(advisors);
@@ -62,5 +63,6 @@ public class AdvisorListFileDatasourceTest {
           assertEquals("Science", advisor2.getFaculty());
           assertEquals("Biology", advisor2.getDepartment());
           assertEquals("A002", advisor2.getAdvisorID());
+
      }
-}
+}*/

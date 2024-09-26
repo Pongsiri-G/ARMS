@@ -143,6 +143,7 @@ public class RequestList {
     public void addNewRequest(String reason, String advisorName, String courseId, int semesters, int fromSemeters, int toSemesters, int academicYear, int academicLevel,String timeStamp,String approveName, String status, String type, String text, String id, String numberPhone) {
         leaveOFAbsenceRequests.add(new LeaveOFAbsenceRequest(reason, advisorName, courseId, semesters, fromSemeters, toSemesters, academicYear, academicLevel, timeStamp, approveName, status, type, text, id, numberPhone));
     }
+
     //อันนี้มีไว้ก่อนไม่รู้ทำไมเหมือนกันไม่เอาค่อยลบออก
     public Request findRequestByStatus(String status) {
         for (Request request : requests) {

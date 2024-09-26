@@ -83,7 +83,7 @@
                         <Font size="24.0" />
                      </font>
                   </Label>
-                  <Label fx:id="emailLabel" graphicTextGap="20.0" layoutX="620.0" layoutY="223.0" prefHeight="39.0" prefWidth="169.0" text="emailLabel">
+                  <Label fx:id="emailLabel" graphicTextGap="20.0" layoutX="620.0" layoutY="223.0" prefHeight="39.0" prefWidth="340.0" text="emailLabel">
                      <font>
                         <Font size="24.0" />
                      </font>
