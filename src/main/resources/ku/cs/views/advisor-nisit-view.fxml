@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="1024.0" prefWidth="1440.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.AdvisorController">
+<AnchorPane prefHeight="1024.0" prefWidth="1440.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.AdvisorNisitController">
     <children>
       <ImageView fitHeight="54.0" fitWidth="54.0" layoutX="1350.0" layoutY="36.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -28,22 +28,22 @@
                                 <TableColumn prefWidth="344.0" text="วันที่" />
                             </columns>
                         </TableView>
-                        <Label graphicTextGap="20.0" layoutX="561.0" layoutY="126.0" text="คณะ: ศิลปกรรมศาสตร์">
+                        <Label graphicTextGap="20.0" layoutX="561.0" layoutY="126.0" text="คณะ: ">
                             <font>
                                 <Font size="24.0" />
                             </font>
                         </Label>
-                        <Label graphicTextGap="20.0" layoutX="805.0" layoutY="126.0" text="สาขา: ดนตรีเเละต่างๆ">
+                        <Label graphicTextGap="20.0" layoutX="805.0" layoutY="126.0" text="สาขา:">
                             <font>
                                 <Font size="24.0" />
                             </font>
                         </Label>
-                        <Label graphicTextGap="20.0" layoutX="561.0" layoutY="175.0" prefHeight="39.0" prefWidth="333.0" text="รหัสนิสิต: 661040xxxx">
+                        <Label graphicTextGap="20.0" layoutX="561.0" layoutY="175.0" prefHeight="39.0" prefWidth="100.0" text="รหัสนิสิต: ">
                             <font>
                                 <Font size="24.0" />
                             </font>
                         </Label>
-                        <Label graphicTextGap="20.0" layoutX="561.0" layoutY="78.0" prefHeight="39.0" prefWidth="398.0" text="ชื่อ-นามสกุล: โทนี่ สตาร์ค">
+                        <Label graphicTextGap="20.0" layoutX="561.0" layoutY="78.0" prefHeight="39.0" prefWidth="135.0" text="ชื่อ-นามสกุล: ">
                             <font>
                                 <Font size="24.0" />
                             </font>
@@ -53,7 +53,7 @@
                                 <Image url="@../../../images/user.png" />
                             </image>
                         </ImageView>
-                        <Label graphicTextGap="20.0" layoutX="561.0" layoutY="223.0" text="อีเมล: ติดต่อเจ้าหน้าที่">
+                        <Label graphicTextGap="20.0" layoutX="561.0" layoutY="223.0" text="อีเมล: ">
                             <font>
                                 <Font size="24.0" />
                             </font>
@@ -63,6 +63,31 @@
                                 <Font size="34.0" />
                             </font>
                         </Label>
+                  <Label fx:id="nameLabel" graphicTextGap="20.0" layoutX="687.0" layoutY="78.0" prefHeight="39.0" prefWidth="135.0" text="nameLabel">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="facultyLabel" graphicTextGap="20.0" layoutX="620.0" layoutY="126.0" prefHeight="39.0" prefWidth="169.0" text="facultyLabel">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="departmentLabel" graphicTextGap="20.0" layoutX="865.0" layoutY="126.0" prefHeight="39.0" prefWidth="219.0" text="departmentLabel">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="idLabel" graphicTextGap="20.0" layoutX="661.0" layoutY="175.0" prefHeight="39.0" prefWidth="169.0" text="idLabel">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="emailLabel" graphicTextGap="20.0" layoutX="620.0" layoutY="223.0" prefHeight="39.0" prefWidth="169.0" text="emailLabel">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
                </children>
             </Pane>
               </children>

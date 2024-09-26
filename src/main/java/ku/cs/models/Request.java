@@ -5,35 +5,21 @@ import java.time.format.DateTimeFormatter;
 
 public class Request {
     private String timeStamp;
+    private String approveName;
     private String status;
-    private String name;
-    private String faculty;
-    private String department;
     private String type;
     private String text;
-    private String subject;
+    private String id;
+    private String numberPhone;
 
-    private void init(String status) {
+    Request(String timeStamp,String approveName, String status, String type, String text, String id, String numberPhone) {
+        this.timeStamp = timeStamp;
+        this.approveName = approveName;
         this.status = status;
-        this.timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-    }
-
-    public Request(String status, String type, String text, String subject, String name) {
-        init(status);
-        this.name = name;
         this.type = type;
         this.text = text;
-        this.subject = subject;
-    }
-
-    public Request(String name, String faculty, String department, String status) {
-        init(status);
-        this.name = name;
-        this.faculty = faculty;
-        this.department = department;
-        this.type = null;
-        this.text = null;
-        this.subject = null;
+        this.id = id;
+        this.numberPhone = numberPhone;
     }
 
     public void changeStatus(String newStatus) {
@@ -44,9 +30,16 @@ public class Request {
 
     public String getType() {return timeStamp;}
 
-    public String getName() {return name;}
+    public String getApproveName() {return approveName;}
 
-    public String getFaculty() {return faculty;}
+    public String getTimeStamp() {return timeStamp;}
 
-    public String getDepartment() {return department;}
+    public String getText() {return text;}
+
+    public String getId() {return id;}
+
+    public String getNumberPhone() {return numberPhone;}
+
+    public void setStatus(String newStatus) { status = newStatus;}
+
 }
