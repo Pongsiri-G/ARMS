@@ -16,4 +16,5 @@ module ku.cs {
     exports ku.cs.cs211671project;
     exports ku.cs.controllers;
     opens ku.cs.controllers to javafx.fxml;
+
 }
