@@ -12,6 +12,7 @@ import ku.cs.services.UserListFileDatasource;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class LoginController {
     @FXML
@@ -24,9 +25,9 @@ public class LoginController {
     private UserList userList;
 
     public LoginController() {
-        UserListFileDatasource datasource = new UserListFileDatasource("data/test", "userlist.csv", "studentlist.csv");
-        this.userList = new UserList();
-        this.userList.setUsers((ArrayList<User>) datasource.readData());
+        UserListFileDatasource datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv");
+        this.userList = datasource.readData();
+        System.out.println("Loaded users: " + this.userList.getAllUsers());
     }
 
     public void initialize() {
@@ -36,11 +37,20 @@ public class LoginController {
     public void userLogin() throws IOException {
         try {
             //System.out.println("Loaded users: " + userList.getAllUsers()); // Debugging Only, will remove later
-            String role = userList.login(username.getText().trim(), password.getText().trim());
 
             if ((username.getText().trim().equals("Admin")) && (password.getText().trim().equals("0000"))) {
                 FXRouter.goTo("dashboard");
             } // TEMPORARY LOGIN FOR TEST ONLY
+
+            else if ((username.getText().trim().equals("Advisor")) && (password.getText().trim().equals("0000"))) {
+                FXRouter.goTo("advisor");
+            } // TEMPORARY LOGIN FOR TEST ONLY
+
+            else if ((username.getText().trim().equals("Department")) && (password.getText().trim().equals("0000"))) {
+                FXRouter.goTo("department-request");
+            } // TEMPORARY LOGIN FOR TEST ONLY
+
+            String role = userList.login(username.getText().trim(), password.getText().trim());
 
             if (role != null) {
                 redirect(role);  // Redirect based on role

@@ -16,6 +16,8 @@ public class MainApplication extends Application {
         FXRouter.goTo("login");
         UserListFileDatasourceTest u = new UserListFileDatasourceTest(); //FOR TESTING ONLY
         u.runTests(); //FOR TESTING ONLY
+//        StudentListFileDatasourceTest u1 = new StudentListFileDatasourceTest();
+//        u1.runTests();
     }
 
     private void configRoutes() {
