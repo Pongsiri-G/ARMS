@@ -35,8 +35,6 @@ public class FacultyOfficer extends User implements Officer {
         addRequestManager(position, name);
     }
 
-
-
     @Override
     public ArrayList<String> getAvailablePositions() {
         ArrayList<String> positions = new ArrayList<>();
@@ -50,6 +48,16 @@ public class FacultyOfficer extends User implements Officer {
     @Override
     public ArrayList<RequestHandlingOfficer> getRequestManagers() {
         return faculty.getRequestHandlingOfficers();
+    }
+
+    public void rejectRequest(Request request, String reason, String approver) {
+        request.setApproveName(approver);
+        request.changeStatus("rejected");
+        request.setTimeStamp();
+    }
+    public void acceptRequest(Request request,String approver) {
+        request.setApproveName(approver);
+        request.changeStatus("accepted");
     }
 
 

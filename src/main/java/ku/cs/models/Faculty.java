@@ -11,6 +11,7 @@ public class Faculty {
     //ping : add department data
     private ArrayList<Department> departments;
     private ArrayList<RequestHandlingOfficer> requestHandlingOfficers;
+    private RequestList requestList;
 
     // Begin Constructor
     public Faculty(String facultyName){
@@ -111,6 +112,11 @@ public class Faculty {
     public String getDepartmentName(){return this.departmentName;}
     public String getDepartmentId(){return this.departmentId;}
     //ping : add department getter
+
+    public RequestList getRequestList() {
+        return requestList;
+    }
+
 
     // End getter
 

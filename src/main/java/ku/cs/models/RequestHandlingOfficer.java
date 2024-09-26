@@ -56,15 +56,13 @@ public class RequestHandlingOfficer {
         return lastUpdate;
     }
 
+    public String getFullPositoin(){
+        return name + " " + position + facDep;
+    }
     @Override
     public String toString() {
-        return "RequestHandlingOfficer{" +
-                "position='" + position + '\'' +
-                ", name='" + name + '\'' +
-                ", timeStamp='" + lastUpdate + '\'' +
-                '}';
+        return facDep + " " + position + " " + name;
     }
-
 
 
 }

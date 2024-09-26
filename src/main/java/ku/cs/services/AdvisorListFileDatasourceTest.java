@@ -35,7 +35,7 @@ public class AdvisorListFileDatasourceTest {
         faculty2.addDepartment(department2);
 
         // สร้างรายการที่ปรึกษา
-        //AdvisorList advisorList = new AdvisorList();
+        AdvisorList advisorList = new AdvisorList();
         //advisorList.addAdvisor("jdoe", "password123", "John Doe", true, true, "วิศวกรรมศาสตร์", "วิศวกรรมคอมพิวเตอร์", "12345", "A001", "jdoe@example.com");
         //advisorList.addAdvisor("jsmith", "pass456", "Jane Smith", true, true, "วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "67890", "A002", "jsmith@example.com");
 
@@ -43,6 +43,11 @@ public class AdvisorListFileDatasourceTest {
         //datasource.writeData(advisorList);
 
         // ทดสอบการอ่านข้อมูลหลังจากการเขียน
+
+        // Put จะรันไปเขียนใช้
+        advisorList.addNewAdvisor("สนใจ ใฝ่เรียน", "test","12345", "วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "0001");
+
+        datasource.writeData(advisorList);
         AdvisorList readAdvisorList = datasource.readData();
 
         // แสดงผลข้อมูลที่อ่านได้

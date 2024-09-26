@@ -8,6 +8,7 @@ public class Department {
     private String departmentID;
     private Faculty faculty;
     private ArrayList<RequestHandlingOfficer> requestHandlingOfficers;
+    private RequestList requestList;
     private ArrayList<Advisor> advisors;
     private ArrayList<Student> students;
 
@@ -90,7 +91,23 @@ public class Department {
     public String getDepartmentID(){
         return this.departmentID;
     }
+
+    public RequestList getRequestList() {
+        return requestList;
+    }
     // End Getter
+
+    public void rejectRequest(Request request, String reason) {
+        request.changeStatus("rejected");
+        request.setTimeStamp();
+    }
+    public void acceptRequest(Request request, String reason) {
+        request.changeStatus("accepted");
+    }
+
+    public void sendRequest(Request request) {
+        request.changeStatus("sent");
+    }
 
     @Override
     public String toString(){

@@ -212,7 +212,7 @@
                                                             <Insets left="10.0" />
                                                          </padding>
                                                          <font>
-                                                            <Font size="18.0" />
+                                                            <Font size="36.0" />
                                                          </font>
                                                       </TextArea>
                                                    </center>
