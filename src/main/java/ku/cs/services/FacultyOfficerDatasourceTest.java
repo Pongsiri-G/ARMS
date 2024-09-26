@@ -13,9 +13,9 @@ public class FacultyOfficerDatasourceTest {
         // ถ้าอ่านได้ = ทำงานได้
         FacultyList facultyList = facDepDatascource.readData();
         ArrayList<FacultyOfficer> officers = new ArrayList<>();
-        officers.add(new FacultyOfficer("test1", "1234", "test1", facultyList.findFacultyByName("วิทยาศาสตร์"), false));
-        officers.add(new FacultyOfficer("test2", "1234", "test2", facultyList.findFacultyByName("วิทยาศาสตร์"),  false));
-        officers.add(new FacultyOfficer("test3", "1234", "test3", facultyList.findFacultyByName("วิศวกรรมศาตร์"),false));
+        officers.add(new FacultyOfficer("test1", "1234", "test1", facultyList.findFacultyByName("วิทยาศาสตร์"), false, false));
+        officers.add(new FacultyOfficer("test2", "1234", "test2", facultyList.findFacultyByName("วิทยาศาสตร์"),  false, false));
+        officers.add(new FacultyOfficer("test3", "1234", "test3", facultyList.findFacultyByName("วิศวกรรมศาตร์"),false, false));
         for (FacultyOfficer officer : officers) {
             System.out.println(officer.toString());
         }

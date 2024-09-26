@@ -76,7 +76,7 @@ public class DepartmentOfficerDatasource implements Datasource<ArrayList<Departm
                 // เพิ่มข้อมูลลงใน list
                 Faculty fac = facultyList.findFacultyByName(faculty);
                 Department dep = fac.findDepartmentByName(department);
-                officers.add(new DepartmentOfficer(username, password, name, fac, dep, false));
+                officers.add(new DepartmentOfficer(username, password, name, fac, dep, false, false));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

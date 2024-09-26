@@ -74,7 +74,7 @@ public class FacultyOfficerDatasource implements Datasource<ArrayList<FacultyOff
                 String faculty = data[4].trim();
                 // เพิ่มข้อมูลลงใน list
                 Faculty fac = facultyList.findFacultyByName(faculty);
-                officers.add(new FacultyOfficer(username, password, name, fac, false));
+                officers.add(new FacultyOfficer(username, password, name, fac, false, false));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
