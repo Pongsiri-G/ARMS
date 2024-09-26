@@ -15,21 +15,27 @@ public class DepartmentOfficer extends User implements Officer {
     // End Constructor
 
     @Override
-    public void addRequestManager(String name, String position) {
-        department.addRequestHandlingOfficer(new RequestHandlingOfficer(name, position + department.getDepartmentName()));
+    public void loadRequestManage(ArrayList<RequestHandlingOfficer> approvers) {
+        department.setRequestManagers(approvers);
+    }
+
+    @Override
+    public void addRequestManager(String position, String name) {
+        department.getRequestHandlingOfficers().add(new RequestHandlingOfficer(department.getDepartmentName(), position, name));
     }
 
     @Override
     public void removeRequestManager(RequestHandlingOfficer officer) {
-        department.removeRequestHandlingOfficer(officer);
+        department.getRequestHandlingOfficers().remove(officer);
     }
 
 
     @Override
-    public void changeRequestManager(RequestHandlingOfficer officer, String name, String position) {
+    public void updateRequestManager(RequestHandlingOfficer officer, String position, String name) {
         removeRequestManager(officer);
-        addRequestManager(name, position);
+        addRequestManager(position, name);
     }
+
     @Override
     public ArrayList<String> getAvailablePositions() {
         ArrayList<String> positions = new ArrayList<>();
@@ -38,6 +44,13 @@ public class DepartmentOfficer extends User implements Officer {
         positions.add("รักษาการแทนหัวหน้าภาควิชา");
         return  positions;
     }
+
+    @Override
+    public ArrayList<RequestHandlingOfficer> getRequestManagers() {
+        return faculty.getRequestHandlingOfficers();
+    }
+
+
 
 
     // Handle Student

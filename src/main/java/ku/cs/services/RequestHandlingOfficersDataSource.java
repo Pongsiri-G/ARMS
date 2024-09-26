@@ -66,12 +66,13 @@ public class RequestHandlingOfficersDataSource implements Datasource<ArrayList<R
                 String[] data = line.split(",");
 
                 // อ่านข้อมูลตาม index แล้วจัดการประเภทของข้อมูลให้เหมาะสม
-                String position = data[0].trim();
-                String name = data[1].trim();
-                String lastUpdate = data[2].trim();
+                String facDep = data[0].trim();
+                String position = data[1].trim();
+                String name = data[2].trim();
+                String lastUpdate = data[3].trim();
 
                 // เพิ่มข้อมูลลงใน list
-                approvers.add(new RequestHandlingOfficer(position, name, lastUpdate));
+                approvers.add(new RequestHandlingOfficer(facDep, position, name, lastUpdate));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -103,7 +104,7 @@ public class RequestHandlingOfficersDataSource implements Datasource<ArrayList<R
         try {
             // สร้าง csv และเขียนลงในไฟล์ทีละบรรทัด
             for (RequestHandlingOfficer approver : data) {
-                String line = approver.getPosition() + "," + approver.getName() + "," + approver.getLastUpdate();
+                String line = approver.getFacDep() + "," + approver.getPosition() + "," + approver.getName() + "," + approver.getLastUpdate();
                 buffer.append(line);
                 buffer.append("\n");
             }

@@ -92,18 +92,10 @@ public class Faculty {
     }
     // End handle Department
 
-    // Methods to handle RequestHandlingOfficers
-    public void addRequestHandlingOfficer(RequestHandlingOfficer officer) {
-        this.requestHandlingOfficers.add(officer);
-    }
-
-    public void removeRequestHandlingOfficer(RequestHandlingOfficer officer) {
-        this.requestHandlingOfficers.remove(officer);
-    }
-
     public ArrayList<RequestHandlingOfficer> getRequestHandlingOfficers() {
         return this.requestHandlingOfficers;
     }
+    public void setRequestManagers(ArrayList<RequestHandlingOfficer> approvers){this.requestHandlingOfficers = approvers;}
 
     // Begin getter
     public ArrayList<Department> getDepartments(){

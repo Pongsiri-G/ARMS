@@ -12,22 +12,30 @@ public class FacultyOfficer extends User implements Officer {
     }
     // End Constructor
 
+
     @Override
-    public void addRequestManager(String name, String position) {
-        faculty.addRequestHandlingOfficer(new RequestHandlingOfficer(name, position + faculty.getFacultyName()));
+    public void loadRequestManage(ArrayList<RequestHandlingOfficer> approvers) {
+        faculty.setRequestManagers(approvers);
+    }
+
+    @Override
+    public void addRequestManager(String position, String name) {
+        faculty.getRequestHandlingOfficers().add(new RequestHandlingOfficer(faculty.getFacultyName(), position, name));
     }
 
     @Override
     public void removeRequestManager(RequestHandlingOfficer officer) {
-        faculty.removeRequestHandlingOfficer(officer);
+        faculty.getRequestHandlingOfficers().remove(officer);
     }
 
 
     @Override
-    public void changeRequestManager(RequestHandlingOfficer officer, String name, String position) {
+    public void updateRequestManager(RequestHandlingOfficer officer, String position, String name) {
         removeRequestManager(officer);
-        addRequestManager(name, position);
+        addRequestManager(position, name);
     }
+
+
 
     @Override
     public ArrayList<String> getAvailablePositions() {
@@ -39,6 +47,10 @@ public class FacultyOfficer extends User implements Officer {
         return  positions;
     }
 
+    @Override
+    public ArrayList<RequestHandlingOfficer> getRequestManagers() {
+        return faculty.getRequestHandlingOfficers();
+    }
 
 
     // End Handle Request Manager

@@ -5,18 +5,21 @@ import java.time.format.DateTimeFormatter;
 
 public class RequestHandlingOfficer {
     // นี่ไม่ใช่คำร้องน่่เป็นคนจัดการคำร้องพวก หัวหน้าภาควิชา
+    private String facDep;
     private String position;
     private String name;
     private String lastUpdate;
 
     // Begin Constructor
-    public RequestHandlingOfficer(String position, String name) {
+    public RequestHandlingOfficer(String facDep, String position, String name) {
+        this.facDep = facDep;
         this.position = position;
         this.name = name;
         this.lastUpdate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
-    public RequestHandlingOfficer(String position, String name, String lastUpdate) {
+    public RequestHandlingOfficer(String facDep, String position, String name, String lastUpdate) {
+        this.facDep = facDep;
         this.position = position;
         this.name = name;
         this.lastUpdate = lastUpdate;
@@ -40,7 +43,9 @@ public class RequestHandlingOfficer {
     }
 
 
-
+    public String getFacDep() {
+        return facDep;
+    }
     public String getName() {
         return name;
     }
@@ -50,6 +55,7 @@ public class RequestHandlingOfficer {
     public String getLastUpdate() {
         return lastUpdate;
     }
+
     @Override
     public String toString() {
         return "RequestHandlingOfficer{" +

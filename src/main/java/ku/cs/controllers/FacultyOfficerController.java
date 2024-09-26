@@ -1,7 +1,5 @@
 package ku.cs.controllers;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -19,14 +17,11 @@ import ku.cs.services.RequestHandlingOfficersDataSource;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.SimpleTimeZone;
 
 public class FacultyOfficerController {
-    FacultyOfficerDatasource facOfficerDatasource;
+    FacultyOfficerDatasource facultyOfficerDatasource;
     FacultyOfficer officer;
     RequestHandlingOfficersDataSource approverDatasource;
-    ArrayList<RequestHandlingOfficer> approvers;
 
     // UI Components
     @FXML
@@ -82,21 +77,70 @@ public class FacultyOfficerController {
 
     @FXML
     public void initialize() {
-        facOfficerDatasource = new FacultyOfficerDatasource("data/test", "faculty-officer.csv");
-        officer = facOfficerDatasource.readData().getFirst();
-        approverDatasource = new RequestHandlingOfficersDataSource("data/approver", officer.getFaculty().getFacultyName() + "-approver.csv");
-        start();
+        initializeDataSources();
+        setupOfficerInfo();
+        switchToRequestScene();
     }
 
-    public void start() {
+    public void setupOfficerInfo() {
         nameLabel.setText(officer.getName());
         userNameLabel.setText(officer.getUsername());
         roleLabel.setText(officer.getRole());
-        requestScene();
+    }
+
+    private void initializeDataSources() {
+        facultyOfficerDatasource = new FacultyOfficerDatasource("data/test", "faculty-officer.csv");
+        officer = facultyOfficerDatasource.readData().getFirst();
+        approverDatasource = new RequestHandlingOfficersDataSource("data/approver", officer.getFaculty().getFacultyName() + "-approver.csv");
+    }
+
+
+    public void resetScene() {
+        currentBar1.setVisible(false);
+        currentBar2.setVisible(false);
+        requestListScene.setVisible(false);
+        approverScene.setVisible(false);
+        approverScene.setManaged(false);
+        manageApproverScene.setVisible(false);
+        manageApproverScene.setManaged(true);
+    }
+
+    public void switchToRequestScene() {
+        resetScene();
+        currentBar1.setVisible(true);
+        requestListScene.setVisible(true);
+        requestListScene.setManaged(true);
+    }
+
+    public void switchToApproverScene() {
+        resetScene();
+        currentBar2.setVisible(true);
+        approverScene.setVisible(true);
+        approverScene.setManaged(true);
+        approverMainButtons.setDisable(false);
+        updateApproverTableView();
+    }
+
+    public void switchToManageApproverScene() {
+        manageApproverScene.setVisible(true);
+        manageApproverScene.setManaged(true);
+        approverMainButtons.setDisable(true);
+        setApproverPositionAvailable();
+        errorManageApproverLabel.setText("");
+        if (approverToEdit != null) {
+            roleSelectMenuButton.setText(approverToEdit.getPosition());
+            nameTextField.setText(approverToEdit.getName().split(" ")[0]);
+            lastNameTextField.setText(approverToEdit.getName().split(" ")[1]);
+        }
+        else {
+            roleSelectMenuButton.setText("เลือกตำแหน่ง");
+            nameTextField.clear();
+            lastNameTextField.clear();
+        }
     }
 
     public void loadApprovers(){
-        approvers = approverDatasource.readData();
+        officer.loadRequestManage(approverDatasource.readData());
     }
 
 
@@ -118,14 +162,12 @@ public class FacultyOfficerController {
         approverTableView.getColumns().add(approverLastUpdateTableColumn);
         approverTableView.getItems().clear();
 
-        for (RequestHandlingOfficer approver : approvers) {
+        for (RequestHandlingOfficer approver : officer.getRequestManagers()) {
             approverTableView.getItems().add(approver);
         }
 
 
     }
-
-
 
     public void setApproverPositionAvailable() {
         roleSelectMenuButton.getItems().clear(); // Clear existing items
@@ -149,59 +191,14 @@ public class FacultyOfficerController {
     }
 
 
-
-    public void resetScene() {
-        currentBar1.setVisible(false);
-        currentBar2.setVisible(false);
-        requestListScene.setVisible(false);
-        approverScene.setVisible(false);
-        approverScene.setManaged(false);
-        manageApproverScene.setVisible(false);
-        manageApproverScene.setManaged(true);
-    }
-
-    public void requestScene() {
-        resetScene();
-        currentBar1.setVisible(true);
-        requestListScene.setVisible(true);
-        requestListScene.setManaged(true);
-    }
-
-    public void approverScene() {
-        resetScene();
-        currentBar2.setVisible(true);
-        approverScene.setVisible(true);
-        approverScene.setManaged(true);
-        approverMainButtons.setDisable(false);
-        updateApproverTableView();
-    }
-
-    public void manageApproverScene() {
-        manageApproverScene.setVisible(true);
-        manageApproverScene.setManaged(true);
-        approverMainButtons.setDisable(true);
-        setApproverPositionAvailable();
-        if (approverToEdit != null) {
-            System.out.println(approverToEdit.getPosition()  + approverToEdit.getName() + approverToEdit.getLastUpdate());
-            roleSelectMenuButton.setText(approverToEdit.getPosition());
-            nameTextField.setText(approverToEdit.getName().split(" ")[0]);
-            lastNameTextField.setText(approverToEdit.getName().split(" ")[1]);
-        }
-        else {
-            roleSelectMenuButton.setText("เลือกตำแหน่ง");
-            nameTextField.clear();
-            lastNameTextField.clear();
-        }
-    }
-
     @FXML
-    public void onGoToRequsetSceneButtonClick(MouseEvent mouseEvent) {
-        requestScene();
+    public void onGoToRequestSceneButtonClick(MouseEvent mouseEvent) {
+        switchToRequestScene();
     }
 
     @FXML
     public void onGoToApproverSceneButtonClick(MouseEvent mouseEvent) {
-        approverScene();
+        switchToApproverScene();
     }
 
     @FXML
@@ -209,10 +206,10 @@ public class FacultyOfficerController {
         RequestHandlingOfficer selectedApprover = approverTableView.getSelectionModel().getSelectedItem();
         approverToEdit = selectedApprover;
         if (approverToEdit != null) {
-            approvers.remove(approverToEdit);
-            approverDatasource.writeData(approvers);
+            officer.removeRequestManager(approverToEdit);
+            approverDatasource.writeData(officer.getRequestManagers());
             approverToEdit = null;
-            approverScene();
+            switchToApproverScene();
         }
     }
 
@@ -221,20 +218,20 @@ public class FacultyOfficerController {
         RequestHandlingOfficer selectedApprover = approverTableView.getSelectionModel().getSelectedItem();
         approverToEdit = selectedApprover;
         if (approverToEdit != null) {
-            manageApproverScene();
+            switchToManageApproverScene();
         }
     }
 
     @FXML
     public void onAddApproverButtonClick(MouseEvent mouseEvent) {
         approverToEdit = null;
-        manageApproverScene();
+        switchToManageApproverScene();
     }
 
     @FXML
     public void onBackButtonClick(MouseEvent mouseEvent) {
         approverToEdit = null;
-        approverScene();
+        switchToApproverScene();
     }
 
     @FXML
@@ -250,14 +247,16 @@ public class FacultyOfficerController {
         }
         else {
             if (approverToEdit == null) {
-                approvers.add(new RequestHandlingOfficer(position, name));
+                officer.addRequestManager(position, name);
+                //approvers.add(new RequestHandlingOfficer(position, name));
             }
             else {
-                approverToEdit.update(position, name);
+                officer.updateRequestManager(approverToEdit, position, name);
+                //approverToEdit.update(position, name);
             }
-            approverDatasource.writeData(approvers);
+            approverDatasource.writeData(officer.getRequestManagers());
             approverToEdit = null;
-            approverScene();
+            switchToApproverScene();
         }
 
 

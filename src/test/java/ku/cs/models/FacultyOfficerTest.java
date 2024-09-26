@@ -28,14 +28,14 @@ class FacultyOfficerTest {
     }
 
     @Test
-    void changeRequestManagerName() {
+    void updateRequestManagerName() {
         fs.addRequestManager("staff1", "Deputy Dean ");
         fs.changeRequestManagerName(f.getRequestHandlingOfficers().getFirst(), "Change");
         assertEquals("Change", f.getRequestHandlingOfficers().getFirst().getName());
     }
 
     @Test
-    void changeRequestManagerPosition() {
+    void updateRequestManagerPosition() {
         fs.addRequestManager("staff1", "Deputy Dean ");
         fs.changeRequestManagerPosition(f.getRequestHandlingOfficers().getFirst(), "Change");
         assertEquals("ChangeScience", f.getRequestHandlingOfficers().getFirst().getPosition());
