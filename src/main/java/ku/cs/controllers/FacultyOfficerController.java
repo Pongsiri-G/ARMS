@@ -188,6 +188,7 @@ public class FacultyOfficerController {
             lastNameTextField.setText(approverToEdit.getName().split(" ")[1]);
         }
         else {
+            roleSelectMenuButton.setText("เลือกตำแหน่ง");
             nameTextField.clear();
             lastNameTextField.clear();
         }
@@ -205,14 +206,23 @@ public class FacultyOfficerController {
 
     @FXML
     public void onRemoveApproverButtonClick(MouseEvent mouseEvent) {
-        // Logic to remove an approver
+        RequestHandlingOfficer selectedApprover = approverTableView.getSelectionModel().getSelectedItem();
+        approverToEdit = selectedApprover;
+        if (approverToEdit != null) {
+            approvers.remove(approverToEdit);
+            approverDatasource.writeData(approvers);
+            approverToEdit = null;
+            approverScene();
+        }
     }
 
     @FXML
     public void onEditApproverButtonClick(MouseEvent mouseEvent) {
         RequestHandlingOfficer selectedApprover = approverTableView.getSelectionModel().getSelectedItem();
         approverToEdit = selectedApprover;
-        manageApproverScene();
+        if (approverToEdit != null) {
+            manageApproverScene();
+        }
     }
 
     @FXML
@@ -223,6 +233,7 @@ public class FacultyOfficerController {
 
     @FXML
     public void onBackButtonClick(MouseEvent mouseEvent) {
+        approverToEdit = null;
         approverScene();
     }
 
@@ -231,7 +242,7 @@ public class FacultyOfficerController {
         String position = roleSelectMenuButton.getText();
         String name = nameTextField.getText() + " " + lastNameTextField.getText();
         String test = name.replaceAll("\\s+", "");
-        if (position == null || position.equals("")) {
+        if (position == null || position.equals("") || position.equals("เลือกตำแหน่ง")) {
             errorManageApproverLabel.setText("กรุณาระบุตำแหน่งคนอนุมัติ");
         }
         else if (name == null || test.equals("")) {
@@ -245,6 +256,7 @@ public class FacultyOfficerController {
                 approverToEdit.update(position, name);
             }
             approverDatasource.writeData(approvers);
+            approverToEdit = null;
             approverScene();
         }
 
