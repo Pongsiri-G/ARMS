@@ -21,22 +21,22 @@ public class RequestList {
         }
     }
 
-    // ลาป่วย/กิจ
-    public void addNewRequest(String approveName, String status, String type, String text) {
+    public void addNewRequest(String status, String type, String text, String subject, String name) {
         if (findRequestByStatus(status) != null) {
             Request request = findRequestByStatus(status);
             if (request != null) {
-                requests.add(new Request(approveName, status, type, text));
+                requests.add(new Request(status, type, text, subject, name));
+                allRequest++;
             }
         }
     }
 
-    //ของเรียนบางวิชาล่าช้า
-    public void addNewRequest(String approveName, String status, String type, String text, String subject) {
+    public void addNewRequest(String name, String faculty, String department, String status) {
         if (findRequestByStatus(status) != null) {
             Request request = findRequestByStatus(status);
             if (request != null) {
-                requests.add(new Request(approveName, status, type, text, subject));
+                requests.add(new Request(name, faculty, department, status));
+                allRequest++;
             }
         }
     }
