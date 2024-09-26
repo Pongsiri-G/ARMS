@@ -107,7 +107,7 @@ public class FacultyOfficerDatasource implements Datasource<ArrayList<FacultyOff
         try {
             // สร้าง csv และเขียนลงในไฟล์ทีละบรรทัด
             for (FacultyOfficer officer : data) {
-                String line = officer.getRole() + "," + officer.getUsername() + "," + officer.getPassword() + "," + officer.getName() + "," + officer.getFaculty().getFacultyName() + "," + officer.getFaculty();
+                String line = officer.getRole() + "," + officer.getUsername() + "," + officer.getPassword() + "," + officer.getName() + "," + officer.getFaculty().getFacultyName();
                 buffer.append(line);
                 buffer.append("\n");
             }

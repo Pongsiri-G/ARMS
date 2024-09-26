@@ -296,15 +296,6 @@
                                                                               </Pane>
                                                                            </children>
                                                                         </HBox>
-                                                                        <HBox alignment="CENTER" layoutX="10.0" layoutY="234.0" prefHeight="52.0" prefWidth="986.0">
-                                                                           <children>
-                                                                              <Pane prefHeight="62.0" prefWidth="380.0" style="-fx-background-color: #EAEAEA; -fx-background-radius: 30px 30px 30px 30px;">
-                                                                                 <children>
-                                                                                    <TextField fx:id="nameTitleTextField" alignment="TOP_LEFT" layoutX="6.0" layoutY="13.0" prefHeight="27.0" prefWidth="374.0" promptText="คำนำหน้าชื่อ" style="-fx-background-color: tranparent;" />
-                                                                                 </children>
-                                                                              </Pane>
-                                                                           </children>
-                                                                        </HBox>
                                                                         <HBox alignment="CENTER" layoutX="10.0" layoutY="260.0" prefHeight="52.0" prefWidth="986.0">
                                                                            <children>
                                                                               <Pane prefHeight="62.0" prefWidth="380.0" style="-fx-background-color: #EAEAEA; -fx-background-radius: 30px 30px 30px 30px;">

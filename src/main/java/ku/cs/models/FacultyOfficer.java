@@ -14,7 +14,7 @@ public class FacultyOfficer extends User implements Officer {
 
     @Override
     public void addRequestManager(String name, String position) {
-        faculty.addRequestHandlingOfficer(new RequestHandlingOfficer(this.faculty.getFacultyName(), name, position));
+        faculty.addRequestHandlingOfficer(new RequestHandlingOfficer(name, position + faculty.getFacultyName()));
     }
 
     @Override

@@ -16,7 +16,7 @@ public class DepartmentOfficer extends User implements Officer {
 
     @Override
     public void addRequestManager(String name, String position) {
-        department.addRequestHandlingOfficer(new RequestHandlingOfficer(this.department.getDepartmentName(), name, position));
+        department.addRequestHandlingOfficer(new RequestHandlingOfficer(name, position + department.getDepartmentName()));
     }
 
     @Override

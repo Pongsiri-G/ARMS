@@ -5,22 +5,21 @@ import java.time.format.DateTimeFormatter;
 
 public class RequestHandlingOfficer {
     // นี่ไม่ใช่คำร้องน่่เป็นคนจัดการคำร้องพวก หัวหน้าภาควิชา
-    private String station; //Faculty or Department name
-    private String name;
     private String position;
-    private String timeStamp;
+    private String name;
+    private String lastUpdate;
 
     // Begin Constructor
-    public RequestHandlingOfficer(String station, String name, String position) {
-        this.name = name;
+    public RequestHandlingOfficer(String position, String name) {
         this.position = position;
-        this.timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        this.name = name;
+        this.lastUpdate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
-    public RequestHandlingOfficer(String station, String name, String position, String timeStamp) {
-        this.name = name;
+    public RequestHandlingOfficer(String position, String name, String lastUpdate) {
         this.position = position;
-        this.timeStamp = timeStamp;
+        this.name = name;
+        this.lastUpdate = lastUpdate;
     }
     // End Constructor
 
@@ -31,7 +30,13 @@ public class RequestHandlingOfficer {
         this.position = position;
     }
     public void setTimeStamp() {
-        this.timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        this.lastUpdate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    public void update(String position, String name) {
+        setPosition(position);
+        setName(name);
+        setTimeStamp();
     }
 
 
@@ -42,13 +47,18 @@ public class RequestHandlingOfficer {
     public String getPosition() {
         return position;
     }
-    public String getTimeStamp() {
-        return timeStamp;
+    public String getLastUpdate() {
+        return lastUpdate;
     }
     @Override
     public String toString() {
-        return position + name;
+        return "RequestHandlingOfficer{" +
+                "position='" + position + '\'' +
+                ", name='" + name + '\'' +
+                ", timeStamp='" + lastUpdate + '\'' +
+                '}';
     }
+
 
 
 }

@@ -11,7 +11,7 @@
 .title-label {
 	-fx-font-family: -fx-font-family;
 	-fx-font-weight: 700;
-	-fx-font-size: 36;
+	-fx-font-size: 36px;
 }
 
 .label {
@@ -19,12 +19,12 @@
 }
 
 .text-field {
-	-fx-background-color: -fx-black-color, white;
+	-fx-background-color: -fx-black-color; /* Set to a single color */
 	-fx-background-insets: 0, -1 -1 2 -1;
 	-fx-background-radius: 0;
 	-fx-prompt-text-fill: -fx-grey-color;
 	-fx-padding: 0 0 0 45;
-	-fx-font-size: 18;
+	-fx-font-size: 18px; /* Added px */
 	-fx-text-box-border: transparent;
 }
 
@@ -135,6 +135,7 @@
 	-fx-padding: 2 0 2 50px;
 	-fx-font-size: 18;
 	-fx-font-family: -fx-font-family;
+	-fx-alignment: CENTER;
 }
 
 .table-row-cell:hover {
@@ -160,7 +161,7 @@
 }
 
 .table-row-cell:selected {
-	-fx-text-background-color: white;
+	-fx-text-background-color: blue;
 	-fx-background-radius: 5px;
 	-fx-background-insets: 2px;
 }
