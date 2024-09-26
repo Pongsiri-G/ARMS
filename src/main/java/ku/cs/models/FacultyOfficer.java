@@ -2,7 +2,7 @@ package ku.cs.models;
 
 import java.util.ArrayList;
 
-public class FacultyOfficer extends User {
+public class FacultyOfficer extends User implements Officer {
     private Faculty faculty;
 
     // Begin Constructor
@@ -12,21 +12,54 @@ public class FacultyOfficer extends User {
     }
     // End Constructor
 
-    public void addRequestManager(String name, String position) {
-        faculty.addRequestHandlingOfficer(new RequestHandlingOfficer(name, position + faculty.getFacultyName()));
+
+    @Override
+    public void loadRequestManage(ArrayList<RequestHandlingOfficer> approvers) {
+        faculty.setRequestManagers(approvers);
     }
 
+    @Override
+    public void addRequestManager(String position, String name) {
+        faculty.getRequestHandlingOfficers().add(new RequestHandlingOfficer(faculty.getFacultyName(), position, name));
+    }
+
+    @Override
     public void removeRequestManager(RequestHandlingOfficer officer) {
-        faculty.removeRequestHandlingOfficer(officer);
+        faculty.getRequestHandlingOfficers().remove(officer);
     }
 
-    public void changeRequestManagerName(RequestHandlingOfficer officer, String name) {
-        officer.setName(name);
+
+    @Override
+    public void updateRequestManager(RequestHandlingOfficer officer, String position, String name) {
+        removeRequestManager(officer);
+        addRequestManager(position, name);
     }
 
-    public void changeRequestManagerPosition(RequestHandlingOfficer officer, String position) {
-        officer.setPosition(position + faculty.getFacultyName());
+    @Override
+    public ArrayList<String> getAvailablePositions() {
+        ArrayList<String> positions = new ArrayList<>();
+        positions.add("คณบดีคณะ");
+        positions.add("รองคณบดีฝ่ายบริหารคณะ");
+        positions.add("รองคณบดีฝ่ายวิชาการรคณะ");
+        positions.add("รักษาแทนการคณบดี");
+        return  positions;
     }
+
+    @Override
+    public ArrayList<RequestHandlingOfficer> getRequestManagers() {
+        return faculty.getRequestHandlingOfficers();
+    }
+
+    public void rejectRequest(Request request, String reason, String approver) {
+        request.setApproveName(approver);
+        request.changeStatus("rejected");
+        request.setTimeStamp();
+    }
+    public void acceptRequest(Request request,String approver) {
+        request.setApproveName(approver);
+        request.changeStatus("accepted");
+    }
+
 
     // End Handle Request Manager
     public Faculty getFaculty() {
@@ -42,4 +75,5 @@ public class FacultyOfficer extends User {
     public String toString() {
         return "FacultyOfficer: " + getName() + " (" + getUsername() + "), Faculty: " + getFaculty().getFacultyName();
     }
+
 }

@@ -12,7 +12,7 @@ public class Request {
     private String id;
     private String numberPhone;
 
-    Request(String timeStamp,String approveName, String status, String type, String text, String id, String numberPhone) {
+    public Request(String timeStamp, String approveName, String status, String type, String text, String id, String numberPhone) {
         this.timeStamp = timeStamp;
         this.approveName = approveName;
         this.status = status;
@@ -21,6 +21,10 @@ public class Request {
         this.id = id;
         this.numberPhone = numberPhone;
     }
+
+    // เดี๋ยวค่อยเปลียน
+    public void setTimeStamp() {this.timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));}
+    public void setApproveName(String approveName) {this.approveName = approveName;}
 
     public void changeStatus(String newStatus) {
             this.status = newStatus;

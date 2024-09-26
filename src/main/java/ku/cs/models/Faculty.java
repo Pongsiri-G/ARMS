@@ -11,6 +11,7 @@ public class Faculty {
     //ping : add department data
     private ArrayList<Department> departments;
     private ArrayList<RequestHandlingOfficer> requestHandlingOfficers;
+    private RequestList requestList;
 
     // Begin Constructor
     public Faculty(String facultyName){
@@ -92,18 +93,10 @@ public class Faculty {
     }
     // End handle Department
 
-    // Methods to handle RequestHandlingOfficers
-    public void addRequestHandlingOfficer(RequestHandlingOfficer officer) {
-        this.requestHandlingOfficers.add(officer);
-    }
-
-    public void removeRequestHandlingOfficer(RequestHandlingOfficer officer) {
-        this.requestHandlingOfficers.remove(officer);
-    }
-
     public ArrayList<RequestHandlingOfficer> getRequestHandlingOfficers() {
         return this.requestHandlingOfficers;
     }
+    public void setRequestManagers(ArrayList<RequestHandlingOfficer> approvers){this.requestHandlingOfficers = approvers;}
 
     // Begin getter
     public ArrayList<Department> getDepartments(){
@@ -119,6 +112,11 @@ public class Faculty {
     public String getDepartmentName(){return this.departmentName;}
     public String getDepartmentId(){return this.departmentId;}
     //ping : add department getter
+
+    public RequestList getRequestList() {
+        return requestList;
+    }
+
 
     // End getter
 

@@ -8,6 +8,7 @@ public class Department {
     private String departmentID;
     private Faculty faculty;
     private ArrayList<RequestHandlingOfficer> requestHandlingOfficers;
+    private RequestList requestList;
     private ArrayList<Advisor> advisors;
     private ArrayList<Student> students;
 
@@ -45,18 +46,10 @@ public class Department {
         return this.departmentID.equals(departmentID);
     }
 
-    // Methods to handle RequestHandlingOfficers
-    public void addRequestHandlingOfficer(RequestHandlingOfficer officer) {
-        this.requestHandlingOfficers.add(officer);
-    }
-
-    public void removeRequestHandlingOfficer(RequestHandlingOfficer officer) {
-        this.requestHandlingOfficers.remove(officer);
-    }
-
     public ArrayList<RequestHandlingOfficer> getRequestHandlingOfficers() {
         return this.requestHandlingOfficers;
     }
+    public void setRequestManagers(ArrayList<RequestHandlingOfficer> approvers){this.requestHandlingOfficers = approvers;}
 
     public void addStudent(Student student) {
         this.students.add(student);
@@ -98,7 +91,23 @@ public class Department {
     public String getDepartmentID(){
         return this.departmentID;
     }
+
+    public RequestList getRequestList() {
+        return requestList;
+    }
     // End Getter
+
+    public void rejectRequest(Request request, String reason) {
+        request.changeStatus("rejected");
+        request.setTimeStamp();
+    }
+    public void acceptRequest(Request request, String reason) {
+        request.changeStatus("accepted");
+    }
+
+    public void sendRequest(Request request) {
+        request.changeStatus("sent");
+    }
 
     @Override
     public String toString(){
