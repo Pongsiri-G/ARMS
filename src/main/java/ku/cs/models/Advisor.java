@@ -39,12 +39,12 @@ public class Advisor extends User{
         return advisorID;
     }
 
-    public Faculty getFaculty() {
-        return faculty;
+    public String getFaculty() {
+        return faculty.getFacultyName();
     }
 
-    public Department getDepartment () {
-        return department;
+    public String getDepartment () {
+        return department.getDepartmentName();
     }
 
 
@@ -54,7 +54,7 @@ public class Advisor extends User{
 
     @Override
     public String toString() {
-        return "Advisor: " + getName() + " (" + getUsername() + "), Faculty: " + getFaculty().getFacultyName() + ", Department: " + getDepartment().getDepartmentName() + ", Advisor ID: " + getAdvisorID();
+        return "Advisor: " + getName() + " (" + getUsername() + "), Faculty: " + getFaculty() + ", Department: " + getDepartment() + ", Advisor ID: " + getAdvisorID();
     }
 
 }

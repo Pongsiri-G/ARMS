@@ -62,7 +62,7 @@ public class AdvOffListFileDatasource implements Datasource<AdvisorList> {
                 if (line.equals("")) continue;
 
                 // แยกสตริงด้วย ,
-                String[] data = line.split(",");
+                String[] data = line.split(", ");
 
                 // อ่านข้อมูลตาม index แล้วจัดการประเภทของข้อมูลให้เหมาะสม
                 String name = data[0].trim();

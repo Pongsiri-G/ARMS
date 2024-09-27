@@ -7,9 +7,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
 import ku.cs.models.Request;
 import ku.cs.models.RequestList;
+import ku.cs.models.UserList;
 import ku.cs.services.Datasource;
 import ku.cs.services.FXRouter;
 import ku.cs.services.RequestListFileDatasource;
+import ku.cs.services.UserListFileDatasource;
 
 import java.io.IOException;
 
@@ -20,14 +22,19 @@ public class ApprovedController {
 
     @FXML private TableView<Request> approvedTableView;
     private RequestList requestList;
+    private UserList userList;
     private Datasource<RequestList> datasource;
+    private Datasource<UserList> userDatasource;
 
     @FXML
     public void initialize() {
         datasource = new RequestListFileDatasource("data/test", "all-request.csv");
+        userDatasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv");
         requestList = datasource.readData();
+        userList = userDatasource.readData();
         showTable(requestList);
         showRequest(requestList);
+        showTotalUsers(userList);
     }
 
     @FXML
@@ -60,6 +67,10 @@ public class ApprovedController {
     private void showRequest(RequestList requestList) {
         allRequestLabel.setText(String.format("%d", requestList.getAllRequest()));
         approvedLabel.setText(String.format("%d", requestList.getApprovedRequest()));
+    }
+
+    private void showTotalUsers(UserList userList) {
+        userLabel.setText(String.format("%d", userList.getAllUsers().size()));
     }
 
     @FXML

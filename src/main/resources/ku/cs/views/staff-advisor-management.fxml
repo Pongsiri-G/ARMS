@@ -130,10 +130,12 @@
                         </Label>
                         <TableView fx:id="officerAdvisorTableView" layoutX="60.0" layoutY="167.0" prefHeight="670.0" prefWidth="1086.0">
                             <columns>
+                                <TableColumn prefWidth="75.0" text="ชื่อ" />
                                 <TableColumn prefWidth="75.0" text="ชื่อผู้ใช้" />
-                                <TableColumn prefWidth="75.0" text="ตำแหน่ง" />
+                                <TableColumn maxWidth="300.0" prefWidth="75.0" text="รหัสผ่านเริ่มต้น" />
                                 <TableColumn prefWidth="75.0" text="คณะ" />
-                                <TableColumn prefWidth="75.0" text="ภาควิชา" />
+                        <TableColumn prefWidth="75.0" text="ภาควิชา" />
+                        <TableColumn prefWidth="75.0" text="รหัสประจำตัว" />
                             </columns>
                             <columnResizePolicy>
                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

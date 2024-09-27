@@ -4,13 +4,11 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 
 import java.time.LocalDateTime;
 
-public abstract class User {
+public class User {
     private String username;
     private String password;
     private String name;
     private String role;
-    private String faculty;
-    private String department;
     private boolean suspended;
     private LocalDateTime lastLogin;
     private String profilePicturePath;
@@ -45,6 +43,18 @@ public abstract class User {
         this.lastLogin = null;
         this.profilePicturePath = DEFAULT_PROFILE_PICTURE_PATH;
     }
+    /*
+    //ping
+    public User(String profilePicturePath, String username, String name, String role, String faculty, String department, String timeStamp) {
+        this.profilePicturePath = profilePicturePath;
+        this.username = username;
+        this.name = name;
+        this.role = role;
+        this.faculty = faculty;
+        this.department = department;
+        this.timeStamp = timeStamp;
+    }
+     */
 
     // Check if the username matches
     public boolean isUsername(String username) {
@@ -104,30 +114,17 @@ public abstract class User {
         return password;
     }
 
-    // ping : สร้าง getter เพื่อ นำไปใช้ใน user table view
-    public String getFacultyName() {
-        return faculty;
-    }
-
-    public String getDepartmentName() {
-        return department;
-    }
-
     public String getName() {
         return name;
     }
 
-    public String getRoleName() {
-        return role;
-    }
+    public String getRole() {return role;}
     // ping : สร้าง getter เพื่อ นำไปใช้ใน user table view
 
     public boolean validatePassword(String password) {
         BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), this.password);
         return result.verified;
     }
-
-    public abstract String getRole();
 
     @Override
     public String toString() {

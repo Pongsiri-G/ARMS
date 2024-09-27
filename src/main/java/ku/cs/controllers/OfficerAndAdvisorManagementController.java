@@ -14,7 +14,7 @@ import ku.cs.services.FXRouter;
 import java.io.IOException;
 
 public class OfficerAndAdvisorManagementController {
-    @FXML private TableView<Faculty> officerAdvisorTableView;
+    @FXML private TableView<Advisor> officerAdvisorTableView;
     private AdvisorList advisorList;
     private Datasource<AdvisorList> datasource;
 
@@ -27,23 +27,23 @@ public class OfficerAndAdvisorManagementController {
 
     @FXML
     private void showTable(AdvisorList advisorList) {
-        TableColumn<Faculty, String> nameColumn = new TableColumn<>("ชื่อ");
+        TableColumn<Advisor, String> nameColumn = new TableColumn<>("ชื่อ");
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-        TableColumn<Faculty, String> usernameColumn = new TableColumn<>("ชื่อผู้ใช้ระบบ");
+        TableColumn<Advisor, String> usernameColumn = new TableColumn<>("ชื่อผู้ใช้ระบบ");
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
 
-        TableColumn<Faculty, String> passwordColumn = new TableColumn<>("รหัสผ่านเริ่มต้น");
+        TableColumn<Advisor, String> passwordColumn = new TableColumn<>("รหัสผ่านเริ่มต้น");
         passwordColumn.setCellValueFactory(new PropertyValueFactory<>("password"));
 
-        TableColumn<Faculty, String> facultyColumn = new TableColumn<>("คณะ");
-        facultyColumn.setCellValueFactory(new PropertyValueFactory<>("facultyName"));
+        TableColumn<Advisor, String> facultyColumn = new TableColumn<>("คณะ");
+        facultyColumn.setCellValueFactory(new PropertyValueFactory<>("faculty"));
 
-        TableColumn<Faculty, String> departmentColumn = new TableColumn<>("ภาควิชา");
-        departmentColumn.setCellValueFactory(new PropertyValueFactory<>("departmentName"));
+        TableColumn<Advisor, String> departmentColumn = new TableColumn<>("ภาควิชา");
+        departmentColumn.setCellValueFactory(new PropertyValueFactory<>("department"));
 
-        TableColumn<Faculty, String> idColumn = new TableColumn<>("รหัสประจำตัวอาจารย์ที่ปรึกษา");
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("advisorId"));
+        TableColumn<Advisor, String> idColumn = new TableColumn<>("รหัสประจำตัวอาจารย์ที่ปรึกษา");
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("advisorID"));
 
         officerAdvisorTableView.getColumns().clear();
         officerAdvisorTableView.getColumns().add(nameColumn);
@@ -56,7 +56,7 @@ public class OfficerAndAdvisorManagementController {
         officerAdvisorTableView.getItems().clear();
 
         for (Advisor advisor: advisorList.getAdvisors()) {
-            officerAdvisorTableView.getItems().add(advisor.getFaculty());
+            officerAdvisorTableView.getItems().add(advisor);
         }
     }
 
