@@ -45,6 +45,10 @@ public class AdvisorList {
         }return null;
     }
 
+    public void addAdvisor(Advisor advisor) {
+        advisors.add(advisor);
+    }
+
     public ArrayList<Advisor> getAdvisors() {
         return advisors;
     }

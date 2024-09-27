@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1024.0" prefWidth="1440.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.FacultyOfficerRequestController">
+    <top>
+        <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <children>
+                <Label fx:id="roleLabel" prefHeight="54.0" prefWidth="320.0" stylesheets="@../../../style/style.css" text="roleLabel">
+                    <HBox.margin>
+                        <Insets left="120.0" />
+                    </HBox.margin>
+                    <font>
+                        <Font size="32.0" />
+                    </font>
+                </Label>
+            <HBox prefHeight="80.0" prefWidth="930.0" HBox.hgrow="ALWAYS" />
+            <Group>
+               <children>
+                  <Label fx:id="userNameLabel" alignment="CENTER_RIGHT" layoutX="45.0" layoutY="22.0" prefHeight="24.0" prefWidth="180.0" stylesheets="@../../../style/style.css" text="usernameLabel" textFill="#394954">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="nameLabel" alignment="CENTER_RIGHT" layoutX="45.0" layoutY="-5.0" prefHeight="30.0" prefWidth="180.0" stylesheets="@../../../style/style.css" text="nameLabel">
+                     <font>
+                        <Font size="22.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Group>
+            <Circle fx:id="profilePicture" fill="WHITE" radius="27.0" stroke="BLACK" strokeType="INSIDE">
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin>
+            </Circle>
+            <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../images/arrow-down.png" />
+               </image>
+               <HBox.margin>
+                  <Insets right="30.0" />
+               </HBox.margin>
+            </ImageView>
+            </children>
+        </HBox>
+    </top>
+    <left>
+        <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" prefHeight="200.0" prefWidth="100.0" spacing="30.0" BorderPane.alignment="CENTER">
+            <children>
+            <VBox prefWidth="80.0" VBox.vgrow="ALWAYS" />
+            <VBox fx:id="navigation" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <StackPane disable="true" prefHeight="150.0" prefWidth="92.0">
+                     <children>
+                        <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#eaeaea" height="83.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-arc-height: 25; -fx-arc-width: 25;" width="94.0">
+                           <StackPane.margin>
+                              <Insets right="-25.0" />
+                           </StackPane.margin>
+                        </Rectangle>
+                        <ImageView fitHeight="50.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../images/list.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </StackPane>
+                  <StackPane disable="true" prefHeight="150.0" prefWidth="200.0" VBox.vgrow="NEVER">
+                     <children>
+                        <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../images/users-svgrepo-com.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </StackPane>
+               </children></VBox>
+            <VBox prefWidth="80.0" VBox.vgrow="ALWAYS" />
+               <ImageView disable="true" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
+                  <VBox.margin>
+                     <Insets left="25.0" right="25.0" />
+                  </VBox.margin>
+                  <Image url="@../../../images/exit.png" />
+               </ImageView>
+            <VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="80.0" prefWidth="80.0" VBox.vgrow="ALWAYS" />
+            </children>
+        </VBox>
+    </left>
+   <center>
+      <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-radius: 30px 0 0 0; -fx-background-color: #EAEAEA;" stylesheets="@../../../style/style.css" BorderPane.alignment="CENTER">
+         <children>
+            <VBox prefHeight="874.0" prefWidth="1229.0" spacing="10.0" style="-fx-background-color: white; -fx-background-radius: 25;" stylesheets="@../../../style/style.css" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets bottom="25.0" left="35.0" right="45.0" top="30.0" />
+               </VBox.margin>
+               <padding>
+                  <Insets bottom="35.0" left="45.0" right="45.0" top="35.0" />
+               </padding>
+               <children>
+                  <StackPane prefHeight="810.0" prefWidth="1170.0">
+                     <children>
+                        <VBox fx:id="requestDetailScene" prefHeight="200.0" prefWidth="1170.0">
+                           <children>
+                              <HBox alignment="CENTER" prefHeight="50.0" prefWidth="1178.0">
+                                 <children>
+                                    <Label text="รายละเอียดคำร้อง">
+                                       <font>
+                                          <Font size="36.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <TextArea fx:id="requestDetail" editable="false" prefHeight="611.0" prefWidth="1170.0" text="เนื้อเพลง มหาลัยวัวชน วงพัทลุง&#10;ไม่รู้อิทำพรือได้แค่หยบแล&#10;เข้า แค่ แค่ ก็ไม่กล้า&#10;รักเกิดจากใจ อยากให้รู้ว่า&#10;เวลาเห็นหน้าแล้วมันตื่นเต้น&#10;&#10;ได้แต่มองแล้วเดินผ่านไป&#10;ไม่โร้ตอใดได้บอกให้ฟัง&#10;ว่าใครคนหนึ่งชอบเธอจัง&#10;แต่ภาพของฉัน ไม่น่ามอง&#10;&#10;เป็นเด็กบ้าน บ้าน เป็นเด็กเลี้ยงวัว&#10;เนื้อตัวไม่ใสสะอาด&#10;ไม่ได้ถือกระดาษ พี่ถือเคียวตัดหญ้า&#10;มหาลัยวัวชน&#10;&#10;* ตื่นเช้าเดินตามยาวหนน จูงวัวชน คนกับวัว&#10;น้องสาวคงไม่รู้ตัว ว่าทำเด็กแลวัวนั้นหวั่นไหว&#10;เธอมองมาแต่ละที ทำพี่บัดสีก้มหน้าเร็วไว&#10;มีแต่วัวที่เป็นเพื่อนรู้ใจ อยากจะบอกใครแต่ใจไม่กล้า&#10;&#10;** เราเด็กบ้าน บ้าน เราเด็กเลี้ยงวัว&#10;สากลัวเธอไม่สนใจ&#10;เราเด็กบ้าน บ้าน คงไม่สาไหร่&#10;ไม่ถูกใจเหมือนเด็กหาดใหญ่ในหลาด&#10;&#10;*** แค่เด็กบ้าน บ้าน ที่ไม่เจียมตัว&#10;ก็โร้ตัวก็รักเธอเหม็ดใจ&#10;แค่เด็ก บ้าน บ้าน ที่รักเธอมากหวาใคร&#10;จะบอกออกไปแต่ใจไม่กล้า&#10;&#10;**** ก็เป็นแค่เด็ก บ้าน บ้าน&#10;&#10;solo&#10;&#10;&#10;ซ้ำ * / ** / *** / ** / *** / ****&#10;">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                              </TextArea>
+                              <HBox alignment="TOP_RIGHT" prefHeight="50.0" prefWidth="1170.0">
+                                 <children>
+                                    <MenuButton fx:id="selectOfficerHandlingMenu" mnemonicParsing="false" prefHeight="46.0" prefWidth="234.0" style="-fx-background-color: white; -fx-border-color: black;" styleClass="choice-box" stylesheets="@../../../style/style.css" text="เลือกผู้ดำเนินการ" textAlignment="CENTER" wrapText="true">
+                                      <items>
+                                        <MenuItem mnemonicParsing="false" text="Action 1" />
+                                        <MenuItem mnemonicParsing="false" text="Action 2" />
+                                      </items>
+                                       <font>
+                                          <Font size="24.0" />
+                                       </font>
+                                    </MenuButton>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <VBox fx:id="rejectRequestScene" alignment="CENTER" disable="true" prefHeight="798.0" prefWidth="1170.0" visible="false">
+                           <children>
+                              <HBox alignment="CENTER" prefHeight="837.0" prefWidth="1170.0">
+                                 <children>
+                                    <VBox prefHeight="699.0" prefWidth="982.0">
+                                       <children>
+                                          <Pane prefHeight="734.0" prefWidth="982.0" style="-fx-background-color: white; -fx-background-radius: 30 30 30 30;">
+                                             <children>
+                                                <BorderPane prefHeight="731.0" prefWidth="986.0">
+                                                   <top>
+                                                      <VBox prefHeight="102.0" prefWidth="986.0" BorderPane.alignment="CENTER">
+                                                         <children>
+                                                            <Label text="ปฏิเสธคำร้อง">
+                                                               <font>
+                                                                  <Font size="36.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Line endX="809.0" startX="-100.0" stroke="#d9d9d9" strokeWidth="5.0">
+                                                               <VBox.margin>
+                                                                  <Insets top="10.0" />
+                                                               </VBox.margin>
+                                                            </Line>
+                                                         </children>
+                                                         <padding>
+                                                            <Insets left="30.0" />
+                                                         </padding>
+                                                         <BorderPane.margin>
+                                                            <Insets top="30.0" />
+                                                         </BorderPane.margin>
+                                                      </VBox>
+                                                   </top>
+                                                   <bottom>
+                                                      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                                                         <children>
+                                                            <Button mnemonicParsing="false" onMouseClicked="#onBackToDetailButtonClick" prefHeight="46.0" prefWidth="99.0" styleClass="back-botton" text="ยกเลิก">
+                                                               <HBox.margin>
+                                                                  <Insets right="30.0" />
+                                                               </HBox.margin>
+                                                            </Button>
+                                                            <Button mnemonicParsing="false" onMouseClicked="#onOkButtonClick" prefHeight="46.0" prefWidth="99.0" styleClass="apply-botton" text="ตกลง" />
+                                                         </children>
+                                                         <BorderPane.margin>
+                                                            <Insets />
+                                                         </BorderPane.margin>
+                                                         <padding>
+                                                            <Insets right="30.0" />
+                                                         </padding>
+                                                      </HBox>
+                                                   </bottom>
+                                                   <center>
+                                                      <TextArea fx:id="reasonForRejectTextArea" prefHeight="498.0" prefWidth="853.0" promptText="เหตุผล" style="-fx-border-color: black;" wrapText="true" BorderPane.alignment="CENTER">
+                                                         <BorderPane.margin>
+                                                            <Insets left="30.0" right="35.0" />
+                                                         </BorderPane.margin>
+                                                         <padding>
+                                                            <Insets left="10.0" />
+                                                         </padding>
+                                                         <font>
+                                                            <Font size="36.0" />
+                                                         </font>
+                                                      </TextArea>
+                                                   </center>
+                                                </BorderPane>
+                                             </children>
+                                             <effect>
+                                                <DropShadow height="45.0" radius="22.0" width="45.0" />
+                                             </effect>
+                                          </Pane>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets top="-20.0" />
+                                 </VBox.margin>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </StackPane>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="22.0" prefWidth="1109.0">
+                     <children>
+                        <Label fx:id="errorLabel" disable="true" text="Error" textFill="RED" visible="false">
+                           <HBox.margin>
+                              <Insets right="200.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <StackPane fx:id="requestDetailButtons" prefHeight="150.0" prefWidth="200.0">
+                     <children>
+                        <HBox alignment="BOTTOM_LEFT" prefHeight="59.0" prefWidth="1170.0" stylesheets="@../../../style/style.css">
+                           <children>
+                              <Button mnemonicParsing="false" onMouseClicked="#onBackToAllRequestButtonClick" prefHeight="49.0" prefWidth="99.0" styleClass="back-botton" text="ย้อนกลับ">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </HBox>
+                        <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Button mnemonicParsing="false" onMouseClicked="#onRejectRequestButtonClick" prefHeight="49.0" prefWidth="99.0" styleClass="reject-botton" text="ปฏิเสธ">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets right="20.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button mnemonicParsing="false" onMouseClicked="#onApproveRequestButtonClick" prefHeight="49.0" prefWidth="99.0" styleClass="apply-botton" text="อนุมัติ">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets right="20.0" />
+                                 </HBox.margin>
+                              </Button>
+                           </children>
+                        </HBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </StackPane>
+               </children>
+            </VBox>
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets></VBox>
+   </center>
+</BorderPane>

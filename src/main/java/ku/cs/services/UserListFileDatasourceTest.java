@@ -7,7 +7,7 @@ import java.io.*;
 public class UserListFileDatasourceTest {
     private UserListFileDatasource datasource;
     private String testDirectory = "data/test";
-    private String testFileName = "userlist.csv";
+    private String testAdvisorFileName = "advisor.csv";
     private String testStudentFileName = "studentlist.csv";
 
     public void runTests() {
@@ -16,14 +16,18 @@ public class UserListFileDatasourceTest {
     }
 
     private void setup() {
-        datasource = new UserListFileDatasource(testDirectory, testFileName, testStudentFileName);
+        datasource = new UserListFileDatasource(testDirectory, testStudentFileName, testAdvisorFileName);
         clearTestFile();
     }
 
     private void clearTestFile() {
-        File file = new File(testDirectory + File.separator + testFileName);
-        if (file.exists()) {
-            file.delete();
+        File file1 = new File(testDirectory + File.separator + testStudentFileName);
+        if (file1.exists()) {
+            file1.delete();
+        }
+        File file2 = new File(testDirectory + File.separator + testAdvisorFileName);
+        if (file2.exists()) {
+            file2.delete();
         }
     }
 
@@ -40,7 +44,7 @@ public class UserListFileDatasourceTest {
         users.addUser("sample7", "1234", "Jerk Doe", "Engineering", "Civil Engineering", "b6620400000", "studentmail1@ku.th", false, false); //Student1
         users.addUser("sample8", "5678", "Josh Doe", "Engineering", "Computer Engineering", "b6620400001", "studentmail2@ku.th", false, false); //Student2
         users.findUserByUsername("sample8").setSuspended(true);
-        //datasource.writeData(users.getAllUsers());
+        datasource.writeData(users);
         return users;
     }
 

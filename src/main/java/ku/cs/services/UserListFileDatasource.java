@@ -2,18 +2,20 @@ package ku.cs.services;
 
 import ku.cs.models.*;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class UserListFileDatasource implements Datasource<List<User>> {
+public class UserListFileDatasource implements Datasource<UserList> {
     private String directoryName;
-    private String userListFileName;
     private StudentListFileDatasource studentDatasource;
+    private AdvisorListFileDatasource advisorDatasource;
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public UserListFileDatasource(String directoryName, String userListFileName, String studentListFileName) {
+    public UserListFileDatasource(String directoryName, String studentListFileName, String advisorListFileName) {
         this.directoryName = directoryName;
-        this.userListFileName = userListFileName;
         this.studentDatasource = new StudentListFileDatasource(directoryName, studentListFileName);
+        this.advisorDatasource = new AdvisorListFileDatasource(directoryName, advisorListFileName);
         checkFileIsExisted();
     }
 
@@ -22,117 +24,42 @@ public class UserListFileDatasource implements Datasource<List<User>> {
         if (!dir.exists()) {
             dir.mkdirs();
         }
-        File userListFile = new File(directoryName + File.separator + userListFileName);
-        if (!userListFile.exists()) {
-            try {
-                userListFile.createNewFile();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
     }
 
     @Override
-    public List<User> readData() {
-        List<User> users = new ArrayList<>();
+    public UserList readData() {
+        UserList users = new UserList();
         StudentList studentList = studentDatasource.readData();
-        Map<String, Student> studentMap = studentList.getStudentMapByName();
+        AdvisorList advisorList = advisorDatasource.readData();
 
-        try {
-            File file = new File(directoryName + File.separator + userListFileName);
-            Scanner scanner = new Scanner(file);
-
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                String[] data = line.split(", ");
-
-                String role = data[0];
-                String username = data[1];
-                String password = data[2];
-                String name = data[3];
-
-                boolean isSuspended = data.length > 4 && "suspended".equals(data[4]);
-
-                switch (role) {
-                    case "FacultyOfficer":
-                        users.add(new FacultyOfficer(username, password, name, null, true, isSuspended));
-                        break;
-                    case "DepartmentOfficer":
-                        users.add(new DepartmentOfficer(username, password, name, null, null, true, isSuspended));
-                        break;
-                    case "Advisor":
-                        users.add(new Advisor(username, password, name, null, null, "", true, isSuspended));
-                        break;
-                    case "Student":
-                        // Link student data from studentlist.csv
-                        Student student = studentMap.get(name);  // Assuming name is used to link data
-                        if (student != null) {
-                            student.setUsername(username);
-                            student.setPassword(password, true);
-                            student.setSuspended(isSuspended);
-                            users.add(student);
-                        }
-                        break;
-                }
-
-            }
-            scanner.close();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("File not found", e);
+        // Add students from studentlist.csv
+        for (Student student : studentList.getStudents()) {
+            users.addUser(student);
         }
+
+        // Add advisors from advisor.csv
+        for (Advisor advisor : advisorList.getAdvisors()) {
+            users.addUser(advisor);
+        }
+
         return users;
     }
 
     @Override
-    public void writeData(List<User> users) {
-        try {
-            FileWriter fileWriter = new FileWriter(directoryName + File.separator + userListFileName, false);
-            StudentList studentList = new StudentList();  // Use StudentList instead of List<Student>
+    public void writeData(UserList users) {
+        StudentList studentList = new StudentList();
+        AdvisorList advisorList = new AdvisorList();
 
-            for (User user : users) {
-                StringBuilder line = new StringBuilder();
-
-                if (user instanceof FacultyOfficer) {
-                    FacultyOfficer fo = (FacultyOfficer) user;
-                    line.append("FacultyOfficer,")
-                            .append(fo.getUsername()).append(",")
-                            .append(fo.getPassword()).append(",")
-                            .append(fo.getName()).append(",")
-                            .append(fo.getSuspended() ? "suspended" : "normal");
-                } else if (user instanceof DepartmentOfficer) {
-                    DepartmentOfficer dofficer = (DepartmentOfficer) user;
-                    line.append("DepartmentOfficer,")
-                            .append(dofficer.getUsername()).append(",")
-                            .append(dofficer.getPassword()).append(",")
-                            .append(dofficer.getName()).append(",")
-                            .append(dofficer.getSuspended() ? "suspended" : "normal");
-                } else if (user instanceof Advisor) {
-                    Advisor advisor = (Advisor) user;
-                    line.append("Advisor,")
-                            .append(advisor.getUsername()).append(",")
-                            .append(advisor.getPassword()).append(",")
-                            .append(advisor.getName()).append(",")
-                            .append(advisor.getSuspended() ? "suspended" : "normal");
-                } else if (user instanceof Student) {
-                    studentList.addStudent((Student) user);  // Collect student data for studentlist.csv
-                    line.append("Student,")
-                            .append(user.getUsername()).append(",")
-                            .append(user.getPassword()).append(",")
-                            .append(user.getName()).append(",")
-                            .append(user.getSuspended() ? "suspended" : "normal");
-                }
-
-                if (line.length() > 0) {
-                    fileWriter.write(line.toString() + "\n");
-                }
+        for (User user : users.getAllUsers()) {
+            if (user instanceof Student) {
+                studentList.addStudent((Student) user);
+            } else if (user instanceof Advisor) {
+                advisorList.addAdvisor((Advisor) user);
             }
-            fileWriter.close();
-
-            // Write student-specific data to studentlist.csv using StudentList
-            studentDatasource.writeData(studentList);
-
-        } catch (IOException e) {
-            throw new RuntimeException("Error writing data to file", e);
         }
+
+        studentDatasource.writeData(studentList);
+        advisorDatasource.writeData(advisorList);
+        //NOTE : AdvisorListFile Datasource is not finish now, waiting boom to write...
     }
 }

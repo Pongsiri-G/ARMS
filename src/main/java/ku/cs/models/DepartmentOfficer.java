@@ -1,6 +1,8 @@
 package ku.cs.models;
 
-public class DepartmentOfficer extends User{
+import java.util.ArrayList;
+
+public class DepartmentOfficer extends User implements Officer {
     private Faculty faculty;
     private Department department;
 
@@ -12,22 +14,43 @@ public class DepartmentOfficer extends User{
     }
     // End Constructor
 
-    // Begin handle Request Managers
-    public void addRequestManager(String name, String position) {
-        department.addRequestHandlingOfficer(new RequestHandlingOfficer(name, position + department.getDepartmentName()));
+    @Override
+    public void loadRequestManage(ArrayList<RequestHandlingOfficer> approvers) {
+        department.setRequestManagers(approvers);
     }
 
+    @Override
+    public void addRequestManager(String position, String name) {
+        department.getRequestHandlingOfficers().add(new RequestHandlingOfficer(department.getDepartmentName(), position, name));
+    }
+
+    @Override
     public void removeRequestManager(RequestHandlingOfficer officer) {
-        department.removeRequestHandlingOfficer(officer);
+        department.getRequestHandlingOfficers().remove(officer);
     }
 
-    public void changeRequestManagerName(RequestHandlingOfficer officer, String name) {
-        officer.setName(name);
+
+    @Override
+    public void updateRequestManager(RequestHandlingOfficer officer, String position, String name) {
+        removeRequestManager(officer);
+        addRequestManager(position, name);
     }
 
-    public void changeRequestManagerPosition(RequestHandlingOfficer officer, String position) {
-        officer.setPosition(position + department.getDepartmentName());
+    @Override
+    public ArrayList<String> getAvailablePositions() {
+        ArrayList<String> positions = new ArrayList<>();
+        positions.add("หัวหน้าภาควิชา");
+        positions.add("รองหัวหน้าภาควิขา");
+        positions.add("รักษาการแทนหัวหน้าภาควิชา");
+        return  positions;
     }
+
+    @Override
+    public ArrayList<RequestHandlingOfficer> getRequestManagers() {
+        return faculty.getRequestHandlingOfficers();
+    }
+
+
 
 
     // Handle Student
