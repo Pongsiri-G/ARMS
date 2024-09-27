@@ -8,26 +8,34 @@ public class Department {
     private String departmentID;
     private Faculty faculty;
     private ArrayList<RequestHandlingOfficer> requestHandlingOfficers;
+    private RequestList requestList;
+    private ArrayList<Advisor> advisors;
     private ArrayList<Student> students;
 
     // Begin Constructor
     public Department(String departmentName) {
-        this(departmentName, null);
+        this(departmentName, (Faculty) null);
     }
 
     public Department(String departmentName, Faculty faculty) {
+        this(departmentName, null, faculty);
         // Auto Generate departmentID will implement later
         Random rand = new Random();
-        this.departmentName = departmentName;
         this.departmentID = rand.nextInt(90) + 10 + "";
-        this.requestHandlingOfficers = new ArrayList<>();
     }
 
     public Department(String departmentName, String departmentID, Faculty faculty) {
         this.departmentName = departmentName;
         this.departmentID = departmentID;
+        this.faculty = faculty;
         this.requestHandlingOfficers = new ArrayList<>();
+        this.students = new ArrayList<>();
     }
+
+    public Department(String departmentName, String departmentID) {
+        this.departmentName = departmentName;
+        this.departmentID = departmentID;
+    } // ping : เพิ่ม constructor
     // End Constructor
 
     public boolean isDepartmentName(String departmentName){
@@ -38,18 +46,10 @@ public class Department {
         return this.departmentID.equals(departmentID);
     }
 
-    // Methods to handle RequestHandlingOfficers
-    public void addRequestHandlingOfficer(RequestHandlingOfficer officer) {
-        this.requestHandlingOfficers.add(officer);
-    }
-
-    public void removeRequestHandlingOfficer(RequestHandlingOfficer officer) {
-        this.requestHandlingOfficers.remove(officer);
-    }
-
     public ArrayList<RequestHandlingOfficer> getRequestHandlingOfficers() {
         return this.requestHandlingOfficers;
     }
+    public void setRequestManagers(ArrayList<RequestHandlingOfficer> approvers){this.requestHandlingOfficers = approvers;}
 
     public void addStudent(Student student) {
         this.students.add(student);
@@ -91,7 +91,23 @@ public class Department {
     public String getDepartmentID(){
         return this.departmentID;
     }
+
+    public RequestList getRequestList() {
+        return requestList;
+    }
     // End Getter
+
+    public void rejectRequest(Request request, String reason) {
+        request.changeStatus("rejected");
+        request.setTimeStamp();
+    }
+    public void acceptRequest(Request request, String reason) {
+        request.changeStatus("accepted");
+    }
+
+    public void sendRequest(Request request) {
+        request.changeStatus("sent");
+    }
 
     @Override
     public String toString(){
@@ -99,5 +115,12 @@ public class Department {
     }
 
 
-
+    public Advisor findAdvisorByName(String advisorName) {
+        for (Advisor advisor : advisors) {
+            if (advisor.getName().equals(advisorName)) {
+                return advisor;
+            }
+        }
+        return null;
+    }
 }

@@ -6,8 +6,12 @@ import java.util.Random;
 public class Faculty {
     private String facultyName;
     private String facultyId;
+    private String departmentName;
+    private String departmentId;
+    //ping : add department data
     private ArrayList<Department> departments;
     private ArrayList<RequestHandlingOfficer> requestHandlingOfficers;
+    private RequestList requestList;
 
     // Begin Constructor
     public Faculty(String facultyName){
@@ -17,6 +21,13 @@ public class Faculty {
         this.facultyId = String.valueOf(rand.nextInt(90) + 10 +"");
         this.departments = new ArrayList<>();
         this.requestHandlingOfficers = new ArrayList<>();
+    }
+
+    public Faculty(String facultyName, String facultyId, String departmentName, String departmentId){
+        this.facultyName = facultyName;
+        this.facultyId = facultyId;
+        this.departmentName = departmentName;
+        this.departmentId = departmentId;
     }
 
     public Faculty(String facultyName, String facultyId) {
@@ -82,18 +93,10 @@ public class Faculty {
     }
     // End handle Department
 
-    // Methods to handle RequestHandlingOfficers
-    public void addRequestHandlingOfficer(RequestHandlingOfficer officer) {
-        this.requestHandlingOfficers.add(officer);
-    }
-
-    public void removeRequestHandlingOfficer(RequestHandlingOfficer officer) {
-        this.requestHandlingOfficers.remove(officer);
-    }
-
     public ArrayList<RequestHandlingOfficer> getRequestHandlingOfficers() {
         return this.requestHandlingOfficers;
     }
+    public void setRequestManagers(ArrayList<RequestHandlingOfficer> approvers){this.requestHandlingOfficers = approvers;}
 
     // Begin getter
     public ArrayList<Department> getDepartments(){
@@ -106,16 +109,20 @@ public class Faculty {
     public String getFacultyId(){
         return this.facultyId;
     }
+    public String getDepartmentName(){return this.departmentName;}
+    public String getDepartmentId(){return this.departmentId;}
+    //ping : add department getter
+
+    public RequestList getRequestList() {
+        return requestList;
+    }
+
+
     // End getter
 
     @Override
     public String toString(){
         return this.facultyName + "\t" + this.facultyId;
     }
-
-
-
-
-
 
 }

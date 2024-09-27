@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class FacultyList {
     private ArrayList<Faculty> faculties;
 
+
     public FacultyList() {
         // Will Read Data From CSV File Later
         faculties = new ArrayList<>();
@@ -16,8 +17,16 @@ public class FacultyList {
     public void addFaculty(String facultyName) {
         faculties.add(new Faculty(facultyName));
     }
-    public void addFaculty(String facultyName, String facultyID) {
-        faculties.add(new Faculty(facultyName, facultyID));
+    public void addFaculty(String facultyName, String facultyID, String departmentName, String departmentID) {
+        //faculties.add(new Faculty(facultyName, facultyID)); อันเดิม
+        faculties.add(new Faculty(facultyName, facultyID, departmentName, departmentID));
+
+        /* Put
+        Faculty faculty = new Faculty(facultyName, facultyID);
+        Department department = new Department(departmentName, departmentID, faculty);
+        faculty.addDepartment(department); // สร้างอ็อบเจก department เก็บใน faculty
+        faculties.add(faculty); // faculty เก็บใน facultyList
+        ping : departmentName กับ departmentID ไม่ขึ้นใน table view เลยใช้ faculties.add อันบนแทน */
     }
 
     public void removeFaculty(Faculty faculty) {

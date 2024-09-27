@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1024.0" prefWidth="1440.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.UserManagement">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1024.0" prefWidth="1440.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.UserManagementController">
     <left>
         <VBox prefHeight="200.0" prefWidth="108.0" spacing="30.0" BorderPane.alignment="TOP_CENTER">
             <children>
@@ -127,7 +127,7 @@
                                 <Font name="System Bold" size="48.0" />
                             </font>
                         </Label>
-                        <TableView layoutX="60.0" layoutY="167.0" prefHeight="670.0" prefWidth="1086.0">
+                        <TableView fx:id="userManagementTableView" layoutX="60.0" layoutY="167.0" prefHeight="670.0" prefWidth="1086.0">
                             <columns>
                                 <TableColumn prefWidth="75.0" text="ชื่อผู้ใช้" />
                                 <TableColumn prefWidth="75.0" text="ตำแหน่ง" />

@@ -1,6 +1,5 @@
 package ku.cs.controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -20,70 +19,40 @@ public class RegisterController {
     @FXML private TextField lastnameTextField;
     @FXML private TextField emailTextField;
     @FXML private TextField studentIdTextField;
-    @FXML private TextField usernameTextField;
-    @FXML private PasswordField passwordPasswordField;
-    @FXML private PasswordField confirmPasswordPasswordField;
     @FXML private Label errorLabel;
+
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String studentId;
 
     @FXML
     private void initialize() {
+        errorLabel.setText("");
     }
 
     @FXML
-    public void userRegister(MouseEvent event) {
+    public void nextRegisterClick(MouseEvent event) {
         checkRegister();
     }
 
     private void checkRegister() {
-        //NOT FINISH
-//        try {
-//            String firstname = firstnameTextField.getText().trim();
-//            String lastname = lastnameTextField.getText().trim();
-//            String email = emailTextField.getText().trim();
-//            String studentId = studentIdTextField.getText().trim();
-//
-//            String fullName = firstname + " " + lastname;
-//
-//            String username = usernameTextField.getText().trim();
-//            String password = passwordPasswordField.getText().trim();
-//            String confirmPassword = confirmPasswordPasswordField.getText().trim();
-//
-//            FacultyList data = new FacultyList();
-//            data.addFaculty("Science");
-//            data.findFacultyByName("Science").addDepartment("Computer");
-//
-//            Student existingStudent = new Student("John Doe", "6610400000", "john.d@ku.th");
-//            data.findFacultyByName("Science")
-//                    .findDepartmentByName("Computer")
-//                    .addStudent(existingStudent);
-//
-//            UserList userList = new UserList();
-//
-//            userList.registerStudent(username, password, confirmPassword, fullName, studentId, email);
-//
-//            FXRouter.goTo("login");
-//
-//        } catch (IllegalArgumentException e) {
-//            errorLabel.setText(e.getMessage());
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-    }
+        firstName = firstnameTextField.getText();
+        lastName = lastnameTextField.getText();
+        email = emailTextField.getText();
+        studentId = studentIdTextField.getText();
 
+        if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || studentId.isEmpty()) {
+            errorLabel.setText("โปรดกรอกข้อมูลให้ครบถ้วน");
+            return;
+        }
 
-    @FXML
-    public void nextRegisterClick(MouseEvent event) {
         try {
-            // Wait for implement
-            FXRouter.goTo("register-second");
+            FXRouter.goTo("register-second", List.of(firstName, lastName, email, studentId));
+        } catch (IOException e) {
+            errorLabel.setText("โปรแกรมเกิดข้อผิดพลาด");
+            System.err.println(e.getMessage());
         }
-        catch (Exception e) {
-            //Wait for implement
-        }
-    }
-
-    @FXML
-    public void backRegisterClick(MouseEvent event) throws IOException {
-        FXRouter.goTo("register-first");
     }
 }
+
