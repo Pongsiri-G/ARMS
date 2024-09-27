@@ -40,7 +40,7 @@ public class UserListFileDatasourceTest {
         users.addUser("sample7", "1234", "Jerk Doe", "Engineering", "Civil Engineering", "b6620400000", "studentmail1@ku.th", false, false); //Student1
         users.addUser("sample8", "5678", "Josh Doe", "Engineering", "Computer Engineering", "b6620400001", "studentmail2@ku.th", false, false); //Student2
         users.findUserByUsername("sample8").setSuspended(true);
-        datasource.writeData(users.getAllUsers());
+        //datasource.writeData(users.getAllUsers());
         return users;
     }
 

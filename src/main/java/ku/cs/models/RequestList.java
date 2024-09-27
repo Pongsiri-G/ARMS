@@ -132,16 +132,26 @@ public class RequestList {
 
     // ลาป่วย/กิจ
     public void addNewRequest(String timeStamp,String approveName, String status, String type, String text, String id, String numberPhone, String location, String fromDateLeave, String toDateLeave, String courseId, String reason) {
+        allRequest++;
         sickLeaveRequests.add(new SickLeaveRequest(timeStamp, approveName, status, type, text, id, numberPhone, location, fromDateLeave, toDateLeave, courseId, reason));
     }
 
     //ของดเรียนบางวิชาล่าช้า
     public void addNewRequest(String email, int semester, int academicYear, String courseId, String timeStamp,String approveName, String status, String type, String text, String id, String numberPhone) {
+        allRequest++;
         resignationRequests.add(new ResignationRequest(email, semester, academicYear, courseId, timeStamp, approveName, status, type, text, id, numberPhone));
     }
     //ลากพันร้อนนะอันนี้รู้สึก translate มา
     public void addNewRequest(String reason, String advisorName, String courseId, int semesters, int fromSemeters, int toSemesters, int academicYear, int academicLevel,String timeStamp,String approveName, String status, String type, String text, String id, String numberPhone) {
+        allRequest++;
         leaveOFAbsenceRequests.add(new LeaveOFAbsenceRequest(reason, advisorName, courseId, semesters, fromSemeters, toSemesters, academicYear, academicLevel, timeStamp, approveName, status, type, text, id, numberPhone));
+    }
+    // ping : สำหรับแสดงผลใน table view ของ admin หน้า dashboard
+    public void addTableRequest(String name, String faculty, String department, String status) {
+        allRequest++;
+        Request request = new Request(name, faculty, department, status);
+        requests.add(request);
+        if (request.getStatus().equals("คำร้องถูกอนุมัติ")) approvedRequest++;
     }
     //อันนี้มีไว้ก่อนไม่รู้ทำไมเหมือนกันไม่เอาค่อยลบออก
     public Request findRequestByStatus(String status) {
@@ -153,6 +163,10 @@ public class RequestList {
         return null;
     }
     //return ต่างๆ
+    public int getAllRequest() {return allRequest;}
+
+    public int getApprovedRequest() {return approvedRequest;}
+
     public ArrayList<Request> getRequests() {return requests;}
 
     public ArrayList<ResignationRequest> getResignationRequests() {return resignationRequests;}

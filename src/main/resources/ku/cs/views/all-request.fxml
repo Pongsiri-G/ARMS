@@ -37,7 +37,7 @@
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="60.0" prefWidth="200.0">
                     <children>
-                        <ImageView fitHeight="50.0" fitWidth="50.0" onMouseClicked="#onUserClick" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="50.0" fitWidth="50.0" onMouseClicked="#onUserManagementClick" pickOnBounds="true" preserveRatio="true">
                             <image>
                                 <Image url="@../../../images/users-admin.png" />
                             </image>
@@ -138,7 +138,7 @@
                                 <Font size="30.0" />
                             </font>
                         </Label>
-                        <Label layoutX="146.0" layoutY="74.0" prefHeight="58.0" prefWidth="170.0" text="userLabel">
+                        <Label fx:id="userLabel" layoutX="146.0" layoutY="74.0" prefHeight="58.0" prefWidth="170.0" text="userLabel">
                             <font>
                                 <Font size="24.0" />
                             </font>
@@ -157,7 +157,7 @@
                                 <Font size="30.0" />
                             </font>
                         </Label>
-                        <Label layoutX="146.0" layoutY="74.0" prefHeight="58.0" prefWidth="182.0" text="allRequestLabel">
+                        <Label fx:id="allRequestLabel" layoutX="146.0" layoutY="74.0" prefHeight="58.0" prefWidth="182.0" text="allRequestLabel">
                             <font>
                                 <Font size="24.0" />
                             </font>
@@ -176,7 +176,7 @@
                                 <Font size="30.0" />
                             </font>
                         </Label>
-                        <Label layoutX="146.0" layoutY="74.0" prefHeight="58.0" prefWidth="201.0" text="approvedLabel">
+                        <Label fx:id="approvedLabel" layoutX="146.0" layoutY="74.0" prefHeight="58.0" prefWidth="201.0" text="approvedLabel">
                             <font>
                                 <Font size="24.0" />
                             </font>

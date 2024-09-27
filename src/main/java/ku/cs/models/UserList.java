@@ -11,6 +11,7 @@ public class UserList {
         //readData();
     }
 
+
     public void addUser(User user) {
         this.users.add(user);
     }
@@ -64,7 +65,8 @@ public class UserList {
     }
 
     public void setUsers(ArrayList<User> users) {
-        this.users = users;
+        this.users.clear();
+        this.users.addAll(users);
     }
 
 

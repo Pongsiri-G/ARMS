@@ -1,7 +1,5 @@
 package ku.cs.models;
 
-import java.util.ArrayList;
-
 public class FacultyOfficer extends User {
     private Faculty faculty;
 

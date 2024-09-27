@@ -1,6 +1,5 @@
 package ku.cs.models;
 
-import java.awt.image.AreaAveragingScaleFilter;
 import java.util.ArrayList;
 
 public class Advisor extends User{

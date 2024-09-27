@@ -6,6 +6,9 @@ public abstract class User {
     private String username;
     private String password;
     private String name;
+    private String role;
+    private String faculty;
+    private String department;
     private boolean suspended;
 
     // Constructor for new users (password is hashed)
@@ -76,9 +79,23 @@ public abstract class User {
         return password;
     }
 
+    // ping : สร้าง getter เพื่อ นำไปใช้ใน user table view
+    public String getFacultyName() {
+        return faculty;
+    }
+
+    public String getDepartmentName() {
+        return department;
+    }
+
     public String getName() {
         return name;
     }
+
+    public String getRoleName() {
+        return role;
+    }
+    // ping : สร้าง getter เพื่อ นำไปใช้ใน user table view
 
     public boolean validatePassword(String password) {
         BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), this.password);

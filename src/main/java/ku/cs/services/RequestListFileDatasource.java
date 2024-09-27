@@ -67,7 +67,7 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
                 String department = data[2].trim();
                 String status = data[3].trim();
 
-                requests.addNewRequest(name, faculty, department, status);
+                requests.addTableRequest(name, faculty, department, status);
                 //System.out.println("Added request: " + name + ", " + faculty + ", " + department + ", " + status);
             }
 

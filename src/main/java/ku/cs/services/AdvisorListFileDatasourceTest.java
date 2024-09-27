@@ -5,12 +5,12 @@ import ku.cs.models.*;
 import java.io.File;
 
 public class AdvisorListFileDatasourceTest {
-    private static AdvisorListFileDatasource datasource;
+    private static AdvOffListFileDatasource datasource;
     private static String testDirectory = "data/test";
     private static String testFileName = "advisor-list.csv";
 
     public static void setup() {
-        datasource = new AdvisorListFileDatasource(testDirectory, testFileName);
+        datasource = new AdvOffListFileDatasource(testDirectory, testFileName);
         clearTestFile();
     }
 

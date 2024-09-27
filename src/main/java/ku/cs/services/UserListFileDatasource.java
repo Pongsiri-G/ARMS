@@ -2,6 +2,7 @@ package ku.cs.services;
 
 import ku.cs.models.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class UserListFileDatasource implements Datasource<List<User>> {
@@ -43,11 +44,13 @@ public class UserListFileDatasource implements Datasource<List<User>> {
 
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                String[] data = line.split(",");
+                String[] data = line.split(", ");
+
                 String role = data[0];
                 String username = data[1];
                 String password = data[2];
                 String name = data[3];
+
                 boolean isSuspended = data.length > 4 && "suspended".equals(data[4]);
 
                 switch (role) {
@@ -71,6 +74,7 @@ public class UserListFileDatasource implements Datasource<List<User>> {
                         }
                         break;
                 }
+
             }
             scanner.close();
         } catch (FileNotFoundException e) {

@@ -3,6 +3,7 @@ package ku.cs.controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
 import ku.cs.models.Request;
 import ku.cs.models.RequestList;
@@ -13,15 +14,18 @@ import ku.cs.services.RequestListFileDatasource;
 import java.io.IOException;
 
 public class AllRequestController {
+    @FXML private Label allRequestLabel;
+    @FXML private Label approvedLabel;
     @FXML private TableView<Request> allRequestTableView;
     private RequestList requestList;
     private Datasource<RequestList> datasource;
 
     @FXML
     public void initialize() {
-        datasource = new RequestListFileDatasource("data", "all-request.csv");
+        datasource = new RequestListFileDatasource("data/test", "all-request.csv");
         requestList = datasource.readData();
         showTable(requestList);
+        showRequest(requestList);
     }
 
     @FXML
@@ -53,6 +57,11 @@ public class AllRequestController {
         }
     }
 
+    private void showRequest(RequestList requestList) {
+        allRequestLabel.setText(String.format("%d", requestList.getAllRequest()));
+        approvedLabel.setText(String.format("%d", requestList.getApprovedRequest()));
+    }
+
     @FXML
     protected void onLogoutClick() {
         try {
@@ -63,9 +72,18 @@ public class AllRequestController {
     }
 
     @FXML
-    protected void onUserClick() {
+    protected void onUserManagementClick() {
         try {
             FXRouter.goTo("user-management");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
+    protected void onUserClick() {
+        try {
+            FXRouter.goTo("dashboard");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

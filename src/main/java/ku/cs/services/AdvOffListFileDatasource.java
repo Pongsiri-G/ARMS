@@ -4,13 +4,12 @@ import ku.cs.models.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
 
-public class AdvisorListFileDatasource implements Datasource<AdvisorList> {
+public class AdvOffListFileDatasource implements Datasource<AdvisorList> {
     private String directoryName;
     private String advisorListFileName;
 
-    public AdvisorListFileDatasource(String directoryName, String advisorListFileName) {
+    public AdvOffListFileDatasource(String directoryName, String advisorListFileName) {
         this.directoryName = directoryName;
         this.advisorListFileName = advisorListFileName;
         checkFileIsExisted();

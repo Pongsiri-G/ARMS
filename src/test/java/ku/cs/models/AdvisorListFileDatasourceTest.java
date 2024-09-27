@@ -1,9 +1,6 @@
 package ku.cs.models;
 
-import at.favre.lib.crypto.bcrypt.BCrypt;
-import ku.cs.models.Advisor;
-import ku.cs.models.AdvisorList;
-import ku.cs.services.AdvisorListFileDatasource;
+import ku.cs.services.AdvOffListFileDatasource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class AdvisorListFileDatasourceTest {
 
-     private AdvisorListFileDatasource datasource;
+     private AdvOffListFileDatasource datasource;
      private String testDirectory = "data/test";
      private String testFileName = "advisor-list.csv";
 
@@ -26,7 +23,7 @@ public class AdvisorListFileDatasourceTest {
           }
 
           // สร้าง datasource เพื่อทดสอบ
-          datasource = new AdvisorListFileDatasource(testDirectory, testFileName);
+          datasource = new AdvOffListFileDatasource(testDirectory, testFileName);
      }
 
      @Test
