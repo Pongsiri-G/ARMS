@@ -47,6 +47,7 @@ public class Advisor extends User{
         return department;
     }
 
+
     public String getRole(){
         return "Advisor";
     }

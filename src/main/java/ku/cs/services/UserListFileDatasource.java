@@ -9,13 +9,13 @@ import java.util.*;
 public class UserListFileDatasource implements Datasource<UserList> {
     private String directoryName;
     private StudentListFileDatasource studentDatasource;
-    private AdvisorListFileDatasource advisorDatasource;
+    private AdvOffListFileDatasource advisorDatasource;
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public UserListFileDatasource(String directoryName, String studentListFileName, String advisorListFileName) {
         this.directoryName = directoryName;
         this.studentDatasource = new StudentListFileDatasource(directoryName, studentListFileName);
-        this.advisorDatasource = new AdvisorListFileDatasource(directoryName, advisorListFileName);
+        this.advisorDatasource = new AdvOffListFileDatasource(directoryName, advisorListFileName);
         checkFileIsExisted();
     }
 

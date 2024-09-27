@@ -7,16 +7,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import ku.cs.models.Advisor;
 import ku.cs.models.AdvisorList;
 import ku.cs.models.Faculty;
-import ku.cs.models.FacultyList;
 import ku.cs.services.AdvOffListFileDatasource;
 import ku.cs.services.Datasource;
 import ku.cs.services.FXRouter;
-import ku.cs.services.FacDepListFileDatascource;
 
 import java.io.IOException;
 
-public class OfficerAndAdvisorManagement {
-    @FXML private TableView<Faculty> OfficerAdvisorTableView;
+public class OfficerAndAdvisorManagementController {
+    @FXML private TableView<Faculty> officerAdvisorTableView;
     private AdvisorList advisorList;
     private Datasource<AdvisorList> datasource;
 
@@ -47,20 +45,21 @@ public class OfficerAndAdvisorManagement {
         TableColumn<Faculty, String> idColumn = new TableColumn<>("รหัสประจำตัวอาจารย์ที่ปรึกษา");
         idColumn.setCellValueFactory(new PropertyValueFactory<>("advisorId"));
 
-        staffAdvisorTableView.getColumns().clear();
-        staffAdvisorTableView.getColumns().add(nameColumn);
-        staffAdvisorTableView.getColumns().add(usernameColumn);
-        staffAdvisorTableView.getColumns().add(passwordColumn);
-        staffAdvisorTableView.getColumns().add(facultyColumn);
-        staffAdvisorTableView.getColumns().add(departmentColumn);
-        staffAdvisorTableView.getColumns().add(idColumn);
+        officerAdvisorTableView.getColumns().clear();
+        officerAdvisorTableView.getColumns().add(nameColumn);
+        officerAdvisorTableView.getColumns().add(usernameColumn);
+        officerAdvisorTableView.getColumns().add(passwordColumn);
+        officerAdvisorTableView.getColumns().add(facultyColumn);
+        officerAdvisorTableView.getColumns().add(departmentColumn);
+        officerAdvisorTableView.getColumns().add(idColumn);
 
-        staffAdvisorTableView.getItems().clear();
+        officerAdvisorTableView.getItems().clear();
 
         for (Advisor advisor: advisorList.getAdvisors()) {
-            staffAdvisorTableView.getItems().add(advisor);
+            officerAdvisorTableView.getItems().add(advisor.getFaculty());
         }
     }
+
     @FXML
     protected void onLogoutClick() {
         try {
