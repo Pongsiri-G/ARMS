@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import ku.cs.models.Student;
 import ku.cs.models.StudentList;
+import ku.cs.models.User;
 import ku.cs.services.Datasource;
 import ku.cs.services.FXRouter;
 import ku.cs.services.StudentListFileDatasource;
@@ -15,16 +16,12 @@ import java.io.IOException;
 public class AdvisorNisitController {
 
     @FXML private Label departmentLabel;
-
     @FXML private Label facultyLabel;
-
     @FXML private Label idLabel;
-
     @FXML private Label nameLabel;
-
     @FXML private Label emailLabel;
-
     @FXML private TableView<?> studentTable;
+
     private Datasource<StudentList> datasource;
     private StudentList studentList;
     private Student student;

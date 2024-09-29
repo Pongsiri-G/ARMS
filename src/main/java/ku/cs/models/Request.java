@@ -11,6 +11,9 @@ public class Request {
     private String text;
     private String id;
     private String numberPhone;
+    private String name;
+    private String faculty;
+    private String department;
 
     public Request(String timeStamp, String approveName, String status, String type, String text, String id, String numberPhone) {
         this.timeStamp = timeStamp;
@@ -20,6 +23,13 @@ public class Request {
         this.text = text;
         this.id = id;
         this.numberPhone = numberPhone;
+    }
+
+    Request(String name, String faculty, String department, String status) {
+        this.name = name;
+        this.faculty = faculty;
+        this.department = department;
+        this.status = status;
     }
 
     // เดี๋ยวค่อยเปลียน
@@ -37,6 +47,12 @@ public class Request {
     public String getApproveName() {return approveName;}
 
     public String getTimeStamp() {return timeStamp;}
+
+    public String getName() {return name;}
+
+    public String getFaculty() {return faculty;}
+
+    public String getDepartment() {return department;}
 
     public String getText() {return text;}
 

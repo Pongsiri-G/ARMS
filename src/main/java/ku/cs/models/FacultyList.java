@@ -19,14 +19,15 @@ public class FacultyList {
     }
     public void addFaculty(String facultyName, String facultyID, String departmentName, String departmentID) {
         //faculties.add(new Faculty(facultyName, facultyID)); อันเดิม
-        // faculties.add(new Faculty(facultyName, facultyID, departmentName, departmentID)); อันเดิมของ ping ไม่ได้สร้างอ็อบเจ็กของ Department
+        faculties.add(new Faculty(facultyName, facultyID, departmentName, departmentID));
 
-        // Put
+        /* Put
         Faculty faculty = new Faculty(facultyName, facultyID);
         Department department = new Department(departmentName, departmentID, faculty);
         faculty.addDepartment(department); // สร้างอ็อบเจก department เก็บใน faculty
         faculties.add(faculty); // faculty เก็บใน facultyList
-    } // ping : แก้ parameters เพื่อใช้ใน FacDepListFileDatasource
+        ping : departmentName กับ departmentID ไม่ขึ้นใน table view เลยใช้ faculties.add อันบนแทน */
+    }
 
     public void removeFaculty(Faculty faculty) {
         faculties.remove(faculty);

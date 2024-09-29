@@ -6,7 +6,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import ku.cs.services.*;
 
-import javax.swing.*;
 import java.io.IOException;
 
 public class MainApplication extends Application {
@@ -14,11 +13,9 @@ public class MainApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXRouter.bind(this, stage, "CS211 Project", 1440, 1024);
         configRoutes();
-        FXRouter.goTo("faculty-officer");
+        FXRouter.goTo("login");
         UserListFileDatasourceTest u = new UserListFileDatasourceTest(); //FOR TESTING ONLY
         u.runTests(); //FOR TESTING ONLY
-//        StudentListFileDatasourceTest u1 = new StudentListFileDatasourceTest();
-//        u1.runTests();
     }
 
     private void configRoutes() {
@@ -26,10 +23,15 @@ public class MainApplication extends Application {
         FXRouter.when("login", viewPath + "login-view.fxml");
         FXRouter.when("dashboard", viewPath + "admin-view.fxml");
         FXRouter.when("advisor", viewPath + "advisor-view.fxml");
-        FXRouter.when("student-create-request", viewPath + "student-create-request.fxml");
-        FXRouter.when("student-request-list-view", viewPath + "student-request-list-view.fxml");
+        FXRouter.when("student", viewPath + "student-view.fxml");
         FXRouter.when("register-first", viewPath + "register-first-view.fxml");
         FXRouter.when("register-second", viewPath + "register-second-view.fxml");
+        FXRouter.when("department-request", viewPath + "department-request-view.fxml");
+        FXRouter.when("department-request-managed", viewPath + "department-request-managed-view.fxml");
+        FXRouter.when("department-request-reject", viewPath + "department-request-reject-view.fxml");
+        FXRouter.when("department-approver", viewPath + "department-approver-view.fxml");
+        FXRouter.when("department-approver-add", viewPath + "department-approver-add-view.fxml");
+        FXRouter.when("department-student-manage", viewPath + "department-student-manage-view.fxml");
         FXRouter.when("advisor-nisit", viewPath + "advisor-nisit-view.fxml");
         FXRouter.when("advisor", viewPath + "advisor-view.fxml");
         FXRouter.when("user-management", viewPath + "user-management.fxml");
@@ -38,12 +40,11 @@ public class MainApplication extends Application {
         FXRouter.when("all-request", viewPath + "all-request.fxml");
         FXRouter.when("approved-request", viewPath + "approved-request.fxml");
         FXRouter.when("change-password", viewPath + "change-password-view.fxml");
-
-        //For Officer
         FXRouter.when("faculty-officer", viewPath + "faculty-officer-view.fxml");
         FXRouter.when("faculty-officer-manage-request", viewPath + "faculty-officer-manage-request-view.fxml");
         FXRouter.when("department-officer", viewPath + "department-officer-view.fxml");
         FXRouter.when("department-officer-manage-request", viewPath + "department-officer-manage-request-view.fxml");
+
     }
 
     public static void main(String[] args) {

@@ -1,6 +1,5 @@
 package ku.cs.models;
 
-import java.awt.image.AreaAveragingScaleFilter;
 import java.util.ArrayList;
 
 public class Advisor extends User{
@@ -15,6 +14,15 @@ public class Advisor extends User{
         super(username, password, name);
         this.faculty = faculty;
         this.department = department;
+        this.advisorID = advisorID;
+    }
+
+    //test read/write file .csv
+    public Advisor(String name, Faculty faculty, Department department, String advisorEmail, String advisorID) {
+        super(name);
+        this.faculty = faculty;
+        this.department = department;
+        this.advisorEmail = advisorEmail;
         this.advisorID = advisorID;
     }
 
@@ -41,13 +49,14 @@ public class Advisor extends User{
         return advisorID;
     }
 
-    public Faculty getFaculty() {
-        return faculty;
+    public String getFaculty() {
+        return faculty.getFacultyName();
     }
 
-    public Department getDepartment () {
-        return department;
+    public String getDepartment () {
+        return department.getDepartmentName();
     }
+
 
     public String getRole(){
         return "Advisor";
@@ -55,7 +64,7 @@ public class Advisor extends User{
 
     @Override
     public String toString() {
-        return "Advisor: " + getName() + " (" + getUsername() + "), Faculty: " + getFaculty().getFacultyName() + ", Department: " + getDepartment().getDepartmentName() + ", Advisor ID: " + getAdvisorID();
+        return "Advisor: " + getName() + " (" + getUsername() + "), Faculty: " + getFaculty() + ", Department: " + getDepartment() + ", Advisor ID: " + getAdvisorID();
     }
 
 }

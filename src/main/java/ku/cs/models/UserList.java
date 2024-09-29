@@ -63,8 +63,16 @@ public class UserList {
         }
     }
 
+    /*
+    // ping : for dashboard user table view
+    public void addTableUser(String imagePath, String username, String name, String role, String faculty, String department, String timeStamp) {
+        users.add(new User(imagePath, username, name, role, faculty, department, timeStamp));
+    }
+     */
+
     public void setUsers(ArrayList<User> users) {
-        this.users = users;
+        this.users.clear();
+        this.users.addAll(users);
     }
 
 

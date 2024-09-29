@@ -4,13 +4,16 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 
 import java.time.LocalDateTime;
 
-public abstract class User {
+public class User {
     private String username;
     private String password;
     private String name;
+    private String role;
     private boolean suspended;
     private LocalDateTime lastLogin;
     private String profilePicturePath;
+    // test การเข้าใช้งานครั้งเเรกให้มีการเปลี่ยนรหัสผ่านสำหรับอาจารย์ที่ปรึกษา
+    private boolean isFirstLogin;
 
     public static final String DEFAULT_PROFILE_PICTURE_PATH = "src/main/resources/images/profile.jpg";
 
@@ -42,6 +45,28 @@ public abstract class User {
         this.lastLogin = null;
         this.profilePicturePath = DEFAULT_PROFILE_PICTURE_PATH;
     }
+
+    // Contructor เช็คการเข้าใช้งานครั้งเเรก
+    public User(String username, String password, String name, String role, boolean suspended, boolean isFirstLogin) {
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.role = role;
+        this.suspended = suspended;
+        this.isFirstLogin = isFirstLogin;
+    }
+    /*
+    //ping
+    public User(String profilePicturePath, String username, String name, String role, String faculty, String department, String timeStamp) {
+        this.profilePicturePath = profilePicturePath;
+        this.username = username;
+        this.name = name;
+        this.role = role;
+        this.faculty = faculty;
+        this.department = department;
+        this.timeStamp = timeStamp;
+    }
+     */
 
     // Check if the username matches
     public boolean isUsername(String username) {
@@ -105,12 +130,18 @@ public abstract class User {
         return name;
     }
 
+    public String getRole() {return role;}
+    // ping : สร้าง getter เพื่อ นำไปใช้ใน user table view
+
+    // test fistLogin
+    public boolean isFirstLogin() { return isFirstLogin;}
+    // test firstLogin
+    public void setFirstLogin(boolean firstLogin) { this.isFirstLogin = firstLogin;}
+
     public boolean validatePassword(String password) {
         BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), this.password);
         return result.verified;
     }
-
-    public abstract String getRole();
 
     @Override
     public String toString() {

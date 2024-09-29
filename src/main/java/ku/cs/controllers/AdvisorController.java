@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -17,8 +18,14 @@ import java.io.IOException;
 
 public class AdvisorController{
     @FXML private TableView<Student> studentListTable;
+    @FXML private Label departmentLabel;
+    @FXML private Label emailLabel;
+    @FXML private Label facultyLabel;
+    @FXML private Label nameLabel;
+
     private StudentList students;
     private Datasource<StudentList> datasource;
+    private User user;
 
     @FXML
     protected void onButtonToAdvisor() {
@@ -41,7 +48,9 @@ public class AdvisorController{
     @FXML
     public void initialize() {
 
-        datasource = new StudentListFileDatasource("data/test", "student-list.csv");
+        Advisor advisor = (Advisor) FXRouter.getData();
+        showUserInfo(advisor);
+        datasource = new StudentListFileDatasource("data/test", "studentlist.csv");
         students = datasource.readData();
         showTable(students);
 
@@ -55,6 +64,13 @@ public class AdvisorController{
                 }
             }
         });
+    }
+
+    private void showUserInfo(Advisor advisor) {
+        nameLabel.setText(advisor.getName());
+        facultyLabel.setText(advisor.getFaculty());
+        departmentLabel.setText(advisor.getDepartment());
+        emailLabel.setText(advisor.getAdvisorEmail());
     }
     /*
     private void showTable(StudentList students) {
