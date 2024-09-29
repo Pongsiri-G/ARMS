@@ -18,13 +18,13 @@ public class AdvOffListFileDatasource implements Datasource<AdvisorList> {
     private void checkFileIsExisted() {
         File directory = new File(directoryName);
         if (!directory.exists()) {
-            directory.mkdirs(); // สร้างโฟลเดอร์ถ้าไม่พบ
+            directory.mkdirs(); // Create directory if not found
         }
         String filePath = directoryName + File.separator + advisorListFileName;
         File file = new File(filePath);
         if (!file.exists()) {
             try {
-                file.createNewFile(); // สร้างไฟล์ใหม่ถ้าไม่พบ
+                file.createNewFile(); // Create new file if not found
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -34,34 +34,43 @@ public class AdvOffListFileDatasource implements Datasource<AdvisorList> {
     @Override
     public AdvisorList readData() {
         AdvisorList advisors = new AdvisorList();
-        String filePath = directoryName + File.separator + advisorListFileName; // ใช้ File.separator เพื่อความเข้ากันได้ระหว่างระบบปฏิบัติการ
+        String filePath = directoryName + File.separator + advisorListFileName;
         File file = new File(filePath);
-        BufferedReader buffer = null; // กำหนด buffer reader เป็น null ก่อน
+        BufferedReader buffer = null;
 
         try {
             buffer = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
             String line;
             while ((line = buffer.readLine()) != null) {
-                if (line.isEmpty()) continue; // ข้ามบรรทัดว่าง
+                if (line.isEmpty()) continue; // Skip empty lines
 
-                String[] data = line.split(","); // แยกข้อมูลโดยใช้ ,
+                String[] data = line.split(","); // Split data by comma
 
-                String name = data[0].trim();
-                String faculty = data[1].trim();
-                String department = data[2].trim();
-                String email = data[3].trim();
-                String id = data[4].trim();
+                // Ensure correct number of columns
+                if (data.length != 12) continue;
 
-                // เพิ่มข้อมูลลงใน AdvisorList
-                advisors.addNewAdvisor(name, faculty, department, email, id);
+                String username = data[0]; // username
+                String password = data[1]; // รหัสผ่าน
+                String name = data[2]; // ชื่อ
+                String role = data[3]; // role เก็บๆไปก่อนเผื่อง่าย
+                boolean suspended = Boolean.parseBoolean(data[4]); // สักอย่างจากเฟิสเอามาด้วย
+                boolean isFirstLogin = Boolean.parseBoolean(data[5]); // การเข้าใช้งานหากเป็นรหัสที่เข้าใช้ครั้งเเรกจะเป็น true เพื่อเปลี่ยนรหัสผ่านต่อไป
+                String lastLoginTime = data[6];  // For potential future use // เวลาล่าสุดที่ใช้
+                String profileImagePath = data[7]; // รูป
+                String faculty = data[8]; // คณะ
+                String department = data[9]; // สาขา
+                String advisorID = data[10]; // ไอดีจารย์
+                String advisorEmail = data[11]; // อีเมล
+
+                // Add Advisor to list using addNewAdvisor method from AdvisorList
+                advisors.addNewAdvisor(username, password, name, faculty, department, advisorID, advisorEmail, false, suspended, isFirstLogin);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {
-            // ปิด BufferedReader
             if (buffer != null) {
                 try {
-                    buffer.close(); // ปิด buffer
+                    buffer.close();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -73,37 +82,49 @@ public class AdvOffListFileDatasource implements Datasource<AdvisorList> {
 
     @Override
     public void writeData(AdvisorList advisors) {
-        String filePath = directoryName + File.separator + advisorListFileName; // ใช้ File.separator เพื่อความเข้ากันได้ระหว่างระบบปฏิบัติการ
+        String filePath = directoryName + File.separator + advisorListFileName;
         File file = new File(filePath);
-        BufferedWriter buffer = null; // กำหนด buffer writer เป็น null ก่อน
+        BufferedWriter buffer = null;
 
         try {
             buffer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));
-            // เขียนหัวข้อในไฟล์ CSV
-            buffer.write("name,faculty,department,email,id");
-            buffer.newLine();
+            // Write the CSV headers
+            //buffer.write("username,password,name,role,suspended,isFirstLogin,lastLoginTime,profileImagePath,faculty,department,advisorID,email");
+            //buffer.newLine();
 
-            // เขียนข้อมูลของ Advisor แต่ละคน
+            // Write each advisor's data
             for (Advisor advisor : advisors.getAdvisors()) {
-                String line = advisor.getName() + "," + advisor.getFaculty() + "," + advisor.getDepartment() + "," + advisor.getAdvisorEmail() + "," + advisor.getAdvisorID();
+                String line = advisor.getUsername() + ","
+                        + advisor.getPassword() + ","
+                        + advisor.getName() + ","
+                        + advisor.getRole() + ","
+                        + advisor.getSuspended() + ","
+                        + advisor.isFirstLogin() + ","
+                        + advisor.getLastLogin() + ","  // Example last login time
+                        + advisor.getProfilePicturePath() + ","
+                        + advisor.getFaculty() + ","
+                        + advisor.getDepartment() + ","
+                        + advisor.getAdvisorID() + ","
+                        + advisor.getAdvisorEmail();
                 buffer.write(line);
                 buffer.newLine();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {
-            // ปิด BufferedWriter
             if (buffer != null) {
                 try {
-                    buffer.close(); // ปิด buffer
+                    buffer.close();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             }
         }
     }
+
     public void displayAdvisors(AdvisorList advisors) {
         for (Advisor advisor : advisors.getAdvisors()) {
             System.out.println("Advisor: " + advisor.getName() + ", " + advisor.getFaculty() + ", " + advisor.getDepartment() + ", " + advisor.getAdvisorEmail() + ", " + advisor.getAdvisorID());
         }
-}}
+    }
+}

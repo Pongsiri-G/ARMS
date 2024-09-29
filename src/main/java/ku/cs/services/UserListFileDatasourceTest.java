@@ -7,7 +7,7 @@ import java.io.*;
 public class UserListFileDatasourceTest {
     private UserListFileDatasource datasource;
     private String testDirectory = "data/test";
-    private String testAdvisorFileName = "advisor.csv";
+    private String testAdvisorFileName = "advisors.csv";
     private String testStudentFileName = "studentlist.csv";
 
     public void runTests() {
