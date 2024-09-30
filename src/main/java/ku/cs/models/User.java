@@ -4,11 +4,10 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 
 import java.time.LocalDateTime;
 
-public class User {
+public abstract class User {
     private String username;
     private String password;
     private String name;
-    private String role;
     private boolean suspended;
     private LocalDateTime lastLogin;
     private String profilePicturePath;
@@ -121,16 +120,15 @@ public class User {
         return name;
     }
 
-    public String getRole() {return role;}
-    // ping : สร้าง getter เพื่อ นำไปใช้ใน user table view
-
     public boolean validatePassword(String password) {
         BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), this.password);
         return result.verified;
     }
 
+    public abstract String getRole();
+
     @Override
     public String toString() {
-        return getRole() + " " + name + " (" + username + ")";
+        return name + " (" + username + ")";
     }
 }

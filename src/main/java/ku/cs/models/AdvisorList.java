@@ -24,7 +24,9 @@ public class AdvisorList {
         advisors.add(newAdvisor);
     }
 
-
+    public void addNewAdvisor(Advisor newAdvisor) {
+        advisors.add(newAdvisor);
+    }
     public Advisor findAdvisorByID(String id) {
         for (Advisor advisor : advisors) {
             if (advisor.getAdvisorID().equals(id)) {
