@@ -6,7 +6,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-public class DepartmentOfficerDatasource implements Datasource<ArrayList<DepartmentOfficer>> {
+public class DepartmentOfficerDatasource implements Datasource<DepartmentOfficerList> {
     private FacDepListFileDatascource facultiesDatasource;
     private String directoryName;
     private String fileName;
@@ -36,9 +36,11 @@ public class DepartmentOfficerDatasource implements Datasource<ArrayList<Departm
     }
 
     @Override
-    public ArrayList<DepartmentOfficer> readData() {
+    //เดิม ArrayList<DepartmentOfficer>
+    public DepartmentOfficerList readData() {
         FacultyList facultyList = facultiesDatasource.readData();
-        ArrayList<DepartmentOfficer> officers = new ArrayList<>();
+        //เดิม ArrayList<DepartmentOfficer> officers = new ArrayList<>();
+        DepartmentOfficerList officers = new DepartmentOfficerList();
         String filePath = directoryName + File.separator + fileName;
         File file = new File(filePath);
 
@@ -87,7 +89,8 @@ public class DepartmentOfficerDatasource implements Datasource<ArrayList<Departm
 
 
     @Override
-    public void writeData(ArrayList<DepartmentOfficer> data) {
+    //เดิม ArrayList<DepartmentOfficer> data
+    public void writeData(DepartmentOfficerList data) {
         String filePath = directoryName + File.separator + fileName;
         File file = new File(filePath);
 
@@ -108,7 +111,7 @@ public class DepartmentOfficerDatasource implements Datasource<ArrayList<Departm
 
         try {
             // สร้าง csv และเขียนลงในไฟล์ทีละบรรทัด
-            for (DepartmentOfficer officer : data) {
+            for (DepartmentOfficer officer : data.getOfficers()) { // เดิม data เฉยๆ
                 String line = officer.getRole() + "," + officer.getUsername() + "," + officer.getPassword() + "," + officer.getName() + "," + officer.getFaculty().getFacultyName() + "," + officer.getDepartment().getDepartmentName();
                 buffer.append(line);
                 buffer.append("\n");

@@ -6,7 +6,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-public class FacultyOfficerDatasource implements Datasource<ArrayList<FacultyOfficer>> {
+public class FacultyOfficerDatasource implements Datasource<FacultyOfficerList> {
     private FacDepListFileDatascource facultiesDatasource;
     private String directoryName;
     private String fileName;
@@ -36,9 +36,10 @@ public class FacultyOfficerDatasource implements Datasource<ArrayList<FacultyOff
     }
 
     @Override
-    public ArrayList<FacultyOfficer> readData() {
+    // เดิม ArrayList<FacultyOfficer>
+    public FacultyOfficerList readData() {
         FacultyList facultyList = facultiesDatasource.readData();
-        ArrayList<FacultyOfficer> officers = new ArrayList<>();
+        FacultyOfficerList officers = new FacultyOfficerList();
         String filePath = directoryName + File.separator + fileName;
         File file = new File(filePath);
 
@@ -85,7 +86,8 @@ public class FacultyOfficerDatasource implements Datasource<ArrayList<FacultyOff
 
 
     @Override
-    public void writeData(ArrayList<FacultyOfficer> data) {
+    //เดิม ArrayList<FacultyOfficer> data
+    public void writeData(FacultyOfficerList data) {
         String filePath = directoryName + File.separator + fileName;
         File file = new File(filePath);
 
@@ -106,7 +108,7 @@ public class FacultyOfficerDatasource implements Datasource<ArrayList<FacultyOff
 
         try {
             // สร้าง csv และเขียนลงในไฟล์ทีละบรรทัด
-            for (FacultyOfficer officer : data) {
+            for (FacultyOfficer officer : data.getOfficers()) {
                 String line = officer.getRole() + "," + officer.getUsername() + "," + officer.getPassword() + "," + officer.getName() + "," + officer.getFaculty().getFacultyName();
                 buffer.append(line);
                 buffer.append("\n");
