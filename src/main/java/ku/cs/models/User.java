@@ -4,7 +4,7 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 
 import java.time.LocalDateTime;
 
-public class User {
+public abstract class User {
     private String username;
     private String password;
     private String name;
