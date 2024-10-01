@@ -34,10 +34,14 @@ public abstract class User {
     // Constructor for users loaded from a file (password is either hashed or plaintext)
     public User(String username, String password, String name, boolean isHashed, boolean suspended) {
         this.username = username;
-        if (isHashed) {
-            this.password = password; // Use the hashed password as is
+        if (password != null) {
+            if (isHashed) {
+                this.password = password; // Use the hashed password as is
+            } else {
+                this.password = BCrypt.withDefaults().hashToString(12, password.toCharArray()); // Hash if not already hashed
+            }
         } else {
-            this.password = BCrypt.withDefaults().hashToString(12, password.toCharArray()); // Hash if not already hashed
+            this.password = null; // Handle case where password is null
         }
         this.name = name;
         this.suspended = suspended;

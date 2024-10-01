@@ -9,6 +9,7 @@ import ku.cs.services.FXRouter;
 
 import javafx.fxml.FXML;
 import ku.cs.services.UserListFileDatasource;
+import ku.cs.services.UserListFileDatasourceTest;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,15 +24,16 @@ public class LoginController {
     private Label errorLabel;
 
     private UserList userList;
+    private UserListFileDatasource datasource;
 
     public LoginController() {
-        UserListFileDatasource datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv");
+        datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
         this.userList = datasource.readData();
-        System.out.println("Loaded users: " + this.userList.getAllUsers());
     }
 
     public void initialize() {
         errorLabel.setText("");
+        System.out.println("Loaded users: " + this.userList.getAllUsers());
     }
 
     public void userLogin() throws IOException {
@@ -56,6 +58,7 @@ public class LoginController {
             String role = userList.login(username.getText().trim(), password.getText().trim());
 
             if (role != null) {
+                datasource.writeData(userList);
                 redirect(role);  // Redirect based on role
             } else {
                 System.out.println("Login failed. Invalid username or password.");
@@ -82,9 +85,9 @@ public class LoginController {
             case "Student":
                 FXRouter.goTo("student-create-request");
                 break;
-            case "FacultyOfficer":  // Handling FacultyOfficer role
-                //FXRouter.goTo("faculty-dashboard");  // Navigate to faculty dashboard (Wait for Putt Add fxml)
-                break;
+//            case "FacultyOfficer":  // Handling FacultyOfficer role
+//                //FXRouter.goTo("faculty-dashboard");  // Navigate to faculty dashboard (Wait for Putt Add fxml)
+//                break;
             default:
                 throw new NullPointerException("Unrecognized role: " + role);
         }

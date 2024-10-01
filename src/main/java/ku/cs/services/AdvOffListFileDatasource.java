@@ -65,9 +65,10 @@ public class AdvOffListFileDatasource implements Datasource<AdvisorList> {
                 String advisorEmail = data[10]; // อีเมล
 
                 // เพิ่ม Advisor ไปยัง list ด้วยวิธี addNewAdvisor
-                Advisor a = new Advisor(username, password, name, new Faculty(faculty), new Department(department), advisorID, advisorEmail, false, suspended);
+                Advisor a = new Advisor(username, password, name, new Faculty(faculty), new Department(department), advisorID, advisorEmail, true, suspended);
                 a.setLastLogin(lastLogin); // กำหนดค่า lastLogin
                 a.setProfilePicturePath(profilePicturePath); // กำหนดค่าพาธรูปโปรไฟล์
+                a.setFirstLogin(isFirstLogin);
                 advisors.addNewAdvisor(a);
             }
         } catch (IOException e) {

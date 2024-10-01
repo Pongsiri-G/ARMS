@@ -8,7 +8,6 @@ public class Advisor extends User{
     private String advisorID;
     private String advisorEmail;
     private boolean firstLogin;
-    private ArrayList<Student> students;
 
     public Advisor(String username, String password, String name, Faculty faculty, Department department, String advisorID, String advisorEmail, boolean isHashed, boolean suspended) {
         super(username, password, name, isHashed, suspended);
@@ -27,11 +26,6 @@ public class Advisor extends User{
     }
 
 
-
-    public ArrayList<Student> getStudents() {
-        return students;
-    }
-
     //public void setStudents(ArrayList<Student> students) { this.students = students; }
 
     public String getAdvisorEmail() { return advisorEmail; }
@@ -48,6 +42,10 @@ public class Advisor extends User{
     public boolean isFirstLogin() { return firstLogin; }
 
     public void setFirstLogin(boolean firstLogin) { this.firstLogin = firstLogin; }
+
+    public void setFaculty(Faculty faculty) { this.faculty = faculty; }
+
+    public void setDepartment(Department department) { this.department = department; }
 
     public String getDepartment () {
         return department.getDepartmentName();

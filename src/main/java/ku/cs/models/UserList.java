@@ -1,6 +1,8 @@
 package ku.cs.models;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public class UserList {
     private ArrayList<User> users;
@@ -8,79 +10,86 @@ public class UserList {
 
     public UserList() {
         this.users = new ArrayList<>();
-        //readData();
-    }
-
-    public void addUser(User user) {
-        this.users.add(user);
+        this.faculties = new FacultyList();
     }
 
     // Add FacultyOfficer
-    public void addUser(String username, String password, String name, String faculty, boolean isHashed, boolean suspended) {
-        if (findUserByUsername(username) == null) {
-            Faculty f = faculties.findFacultyByName(faculty);
-            if (f != null) {
-                users.add(new FacultyOfficer(username, password, name, f, isHashed, suspended));
+    public void addUser(FacultyOfficer facultyOfficer) {
+        if (findUserByUsername(facultyOfficer.getUsername()) == null) {
+            Faculty faculty = faculties.findFacultyByName(facultyOfficer.getFaculty().getFacultyName());
+            if (faculty != null) {
+                facultyOfficer.setFaculty(faculty);
+                faculty.getFacultyOfficerList().add(facultyOfficer);
+                users.add(facultyOfficer);
             }
         }
     }
 
     // Add DepartmentOfficer
-    public void addUser(String username, String password, String name, String faculty, String department, boolean isHashed, boolean suspended) {
-        if (findUserByUsername(username) == null) {
-            Faculty f = faculties.findFacultyByName(faculty);
-            if (f != null) {
-                Department d = f.findDepartmentByName(department);
-                if (d != null) {
-                    users.add(new DepartmentOfficer(username, password, name, f, d, isHashed, suspended));
+    public void addUser(DepartmentOfficer departmentOfficer) {
+        if (findUserByUsername(departmentOfficer.getUsername()) == null) {
+            Faculty faculty = faculties.findFacultyByName(departmentOfficer.getFaculty().getFacultyName());
+            if (faculty != null) {
+                Department department = faculty.findDepartmentByName(departmentOfficer.getDepartment().getDepartmentName());
+                if (department != null) {
+                    departmentOfficer.setFaculty(faculty);
+                    departmentOfficer.setDepartment(department);
+                    department.getDepartmentOfficerList().add(departmentOfficer);
+                    users.add(departmentOfficer);
                 }
             }
         }
     }
 
     // Add Advisor
-    public void addUserAdvisor(String username, String password, String name, String faculty, String department, String advisorID,String email, boolean isHashed, boolean suspended) {
-        Faculty f = faculties.findFacultyByName(faculty);
-        if (f != null) {
-            Department d = f.findDepartmentByName(department);
-            if (d != null) {
-                Advisor advisor = new Advisor(username, password, name, f, d, advisorID, email,  isHashed, suspended);
-                addUser(advisor);
-            }
-        }
-    }
-
-    // Add Student
-    public void addUser(String username, String password, String name, String faculty, String department, String studentID, String email, boolean isHashed, boolean suspended) {
-        if (findUserByUsername(username) == null) {
-            Faculty f = faculties.findFacultyByName(faculty);
-            if (f != null) {
-                Department d = f.findDepartmentByName(department);
-                if (d != null) {
-                    users.add(new Student(username, password, name, f, d, studentID, email, isHashed, suspended));
+    public void addUser(Advisor advisor) {
+        if (findUserByUsername(advisor.getUsername()) == null) {
+            Faculty faculty = faculties.findFacultyByName(advisor.getFaculty());
+            if (faculty != null) {
+                Department department = faculty.findDepartmentByName(advisor.getDepartment());
+                if (department != null) {
+                    advisor.setFaculty(faculty);
+                    advisor.setDepartment(department);
+                    department.getAdvisorList().addAdvisor(advisor);
+                    users.add(advisor);
                 }
             }
         }
     }
 
-    /*
-    // ping : for dashboard user table view
-    public void addTableUser(String imagePath, String username, String name, String role, String faculty, String department, String timeStamp) {
-        users.add(new User(imagePath, username, name, role, faculty, department, timeStamp));
+    // Add Student
+    public void addUser(Student student) {
+        if (findUserByUsername(student.getUsername()) == null) {
+            Faculty faculty = faculties.findFacultyByName(student.getEnrolledFaculty().getFacultyName());
+            if (faculty != null) {
+                Department department = faculty.findDepartmentByName(student.getEnrolledDepartment().getDepartmentName());
+                if (department != null) {
+                    student.setEnrolledFaculty(faculty);
+                    student.setEnrolledDepartment(department);
+                    department.getStudentList().addStudent(student);
+                    if (student.getUsername() != null && student.getPassword() != null) {
+                        users.add(student);
+                    }
+                }
+            }
+        }
     }
-     */
 
+    // Setters and Getters
     public void setUsers(ArrayList<User> users) {
         this.users.clear();
         this.users.addAll(users);
     }
 
-
-    public void setFaculties(FacultyList faculties) {
+    public void setFacultyList(FacultyList faculties) {
         this.faculties = faculties;
     }
 
-    // Register student with hashed password support
+    public FacultyList getFacultyList() {
+        return faculties;
+    }
+
+    // Register a student with hashed password support
     public void registerStudent(String username, String password, String confirmPassword, String fullName,
                                 String studentId, String email, boolean isHashed) throws IllegalArgumentException {
         if (!password.equals(confirmPassword)) {
@@ -91,8 +100,8 @@ public class UserList {
         Student matchedStudent = null;
 
         for (Faculty faculty : faculties.getFaculties()) {
-            for (Department department : faculty.getDepartments()) {
-                for (Student student : department.getStudentList()) {
+            for (Department department : faculty.getDepartmentList().getDepartments()) {
+                for (Student student : department.getStudentList().getStudents()) {
                     if (student.getStudentID().equals(studentId) &&
                             student.getName().equals(fullName) &&
                             student.getEmail().equals(email)) {
@@ -106,16 +115,18 @@ public class UserList {
             if (foundStudent) break;
         }
 
+        // If the student is not found, throw an exception
         if (!foundStudent) {
             throw new IllegalArgumentException("ไม่พบข้อมูลนิสิตในฐานข้อมูลภาควิชา กรุณาตรวจสอบข้อมูลที่กรอกอีกครั้ง");
         }
 
         matchedStudent.setUsername(username);
-        matchedStudent.setPassword(password, true); // Password is hashed inside the method if isHashed is false
+        matchedStudent.setPassword(password, isHashed);
 
         users.add(matchedStudent);
     }
 
+    // Find user by username
     public User findUserByUsername(String username) {
         for (User user : users) {
             if (user.isUsername(username)) return user;
@@ -123,10 +134,12 @@ public class UserList {
         return null;
     }
 
+    // Remove user from list
     public void removeUser(User user) {
         this.users.remove(user);
     }
 
+    // Get all users
     public ArrayList<User> getAllUsers() {
         return users;
     }
@@ -138,6 +151,7 @@ public class UserList {
         }
 
         User user = findUserByUsername(username);
+        user.setLastLogin(LocalDateTime.now());
 
         if (user == null || !user.validatePassword(password)) {
             throw new IllegalArgumentException("ชื่อบัญชีผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
@@ -146,7 +160,6 @@ public class UserList {
         if (user.getSuspended()) {
             throw new IllegalArgumentException("บัญชีผู้ใช้นี้ถูกระงับ ไม่สามารถเข้าสู่ระบบได้");
         }
-
         return user.getRole();
     }
 }
