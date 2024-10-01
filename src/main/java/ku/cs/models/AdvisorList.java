@@ -16,15 +16,14 @@ public class AdvisorList {
         students = new ArrayList<>();
     }
 
-    public void addNewAdvisor(String name, String username, String password, String faculty, String department, String advisorID) {
-        String hashedPassword = BCrypt.withDefaults().hashToString(12, password.toCharArray());
-        Advisor exist = findAdvisorByID(advisorID);
-        if (exist == null) {
-            Faculty faculty1 = new Faculty(faculty);
-            Department department1 = new Department(department);
-            advisors.add(new Advisor(name, username, hashedPassword, faculty1, department1, advisorID));
-        }
+    public void addNewAdvisor(String username, String password, String name, String faculty, String department, String id, String email, boolean isHashed, boolean suspended, boolean isFirstLogin) {
+        Faculty faculty1 = new Faculty(faculty);
+        Department department1 = new Department(department);
+        Advisor newAdvisor = new Advisor(username, password, name, faculty1, department1, id, email, isHashed, suspended);
+        newAdvisor.setFirstLogin(isFirstLogin);
+        advisors.add(newAdvisor);
     }
+
 
     public Advisor findAdvisorByID(String id) {
         for (Advisor advisor : advisors) {

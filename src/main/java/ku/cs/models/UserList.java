@@ -39,12 +39,12 @@ public class UserList {
     }
 
     // Add Advisor
-    public void addUser(String username, String password, String name, String faculty, String department, String advisorID, boolean isHashed, boolean suspended) {
+    public void addUserAdvisor(String username, String password, String name, String faculty, String department, String advisorID,String email, boolean isHashed, boolean suspended) {
         Faculty f = faculties.findFacultyByName(faculty);
         if (f != null) {
             Department d = f.findDepartmentByName(department);
             if (d != null) {
-                Advisor advisor = new Advisor(username, password, name, f, d, advisorID, isHashed, suspended);
+                Advisor advisor = new Advisor(username, password, name, f, d, advisorID, email,  isHashed, suspended);
                 addUser(advisor);
             }
         }

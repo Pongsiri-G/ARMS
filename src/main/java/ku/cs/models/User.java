@@ -12,6 +12,8 @@ public abstract class User {
     private boolean suspended;
     private LocalDateTime lastLogin;
     private String profilePicturePath;
+    // test การเข้าใช้งานครั้งเเรกให้มีการเปลี่ยนรหัสผ่านสำหรับอาจารย์ที่ปรึกษา
+    //private boolean isFirstLogin;
 
     public static final String DEFAULT_PROFILE_PICTURE_PATH = "src/main/resources/images/profile.jpg";
 
@@ -43,6 +45,7 @@ public abstract class User {
         this.lastLogin = null;
         this.profilePicturePath = DEFAULT_PROFILE_PICTURE_PATH;
     }
+
     /*
     //ping
     public User(String profilePicturePath, String username, String name, String role, String faculty, String department, String timeStamp) {

@@ -38,8 +38,8 @@ public class StudentListFileDatasourceTest {
         Department civilEngineering = engineering.findDepartmentByName("Civil Engineering");
         Department computerEngineering = engineering.findDepartmentByName("Computer Engineering");
 
-        Advisor advisor1 = new Advisor("advisor1", "password1", "Advisor One", science, computerScience, "A101", false, false);
-        Advisor advisor2 = new Advisor("advisor2", "password2", "Advisor Two", science, math, "A102", false, false);
+        Advisor advisor1 = new Advisor("advisor1", "password1", "Advisor One", science, computerScience, "A101", "xxxxxx@ku.th", false, false);
+        Advisor advisor2 = new Advisor("advisor2", "password2", "Advisor Two", science, math, "A102", "xxxxxx@ku.th", false, false);
 
         // Creating test students
         students.addStudent(new Student("student1", "password1", "John Doe", science, computerScience, "S001", "johndoe@ku.th", false, false));
