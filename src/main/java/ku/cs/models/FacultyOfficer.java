@@ -4,13 +4,24 @@ import java.util.ArrayList;
 
 public class FacultyOfficer extends User implements Officer {
     private Faculty faculty;
+    private Boolean isFirstLogin = true;
 
     // Begin Constructor
     public FacultyOfficer(String username, String password, String name, Faculty faculty, boolean isHashed, boolean suspended) {
         super(username, password, name, isHashed, suspended);
         this.faculty = faculty;
     }
+
+    // ใข้ไปก่อนเดี๋ยวแก้ที่หลัง
+    public FacultyOfficer(String username, String password, String name, String faculty, boolean isHashed, boolean suspended) {
+        super(username, password, name, isHashed, suspended);
+        this.faculty = new Faculty(faculty);
+    }
     // End Constructor
+
+    public void setFirstLogin(Boolean isFirstLogin) {
+        this.isFirstLogin = isFirstLogin;
+    }
 
 
     @Override
@@ -67,6 +78,10 @@ public class FacultyOfficer extends User implements Officer {
     // End Handle Request Manager
     public Faculty getFaculty() {
         return faculty;
+    }
+
+    public Boolean isFirstLogin() {
+        return isFirstLogin;
     }
 
     @Override

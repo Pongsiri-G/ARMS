@@ -6,8 +6,8 @@ import java.util.Random;
 public class Faculty {
     private String facultyName;
     private String facultyId;
-    private FacultyOfficerList facultyOfficers;
-    private DepartmentList departments;
+    private ArrayList<FacultyOfficer> facultyOfficers;
+    private ArrayList<Department> departments;
     private ArrayList<RequestHandlingOfficer> requestHandlingOfficers;
 
     // Begin Constructor
@@ -16,17 +16,17 @@ public class Faculty {
         Random rand = new Random();
         this.facultyName = facultyName;
         this.facultyId = String.valueOf(rand.nextInt(90) + 10 +"");
-        this.departments = new DepartmentList();
+        this.departments = new ArrayList<>();
         this.requestHandlingOfficers = new ArrayList<>();
-        this.facultyOfficers = new FacultyOfficerList();
+        this.facultyOfficers = new ArrayList<>();
     }
 
     public Faculty(String facultyName, String facultyId) {
         this.facultyName = facultyName;
         this.facultyId = facultyId;
-        this.departments = new DepartmentList();
+        this.departments = new ArrayList<>();
         this.requestHandlingOfficers = new ArrayList<>();
-        this.facultyOfficers = new FacultyOfficerList();
+        this.facultyOfficers = new ArrayList<>();
     }// End Constructor
 
     public boolean isFacultyName(String facultyName){
@@ -48,23 +48,23 @@ public class Faculty {
 
     // Begin handle Departments
     public void addDepartment(Department department){
-        this.departments.getDepartments().add(department);
+        this.departments.add(department);
     }
 
     public void addDepartment(String departmentName){
-       this.departments.getDepartments().add(new Department(departmentName));
+       this.departments.add(new Department(departmentName));
     }
 
     public void addDepartment(String departmentName, String departmentId){
-        this.departments.getDepartments().add(new Department(departmentName, departmentId));
+        this.departments.add(new Department(departmentName, departmentId));
     }
 
     public void removeDepartment(Department department){
-        this.departments.getDepartments().remove(department);
+        this.departments.remove(department);
     }
 
     public Department findDepartmentByName(String departmentName){
-        for(Department department : this.departments.getDepartments()){
+        for(Department department : this.departments){
             if(department.isDepartmentName(departmentName)){
                 return department;
             }
@@ -73,7 +73,7 @@ public class Faculty {
     }
 
     public Department findDepartmentByID(String departmentId){
-        for(Department department : this.departments.getDepartments()){
+        for(Department department : this.departments){
             if(department.isDepartmentID(departmentId)){
                 return department;
             }
@@ -88,14 +88,14 @@ public class Faculty {
     public void setRequestManagers(ArrayList<RequestHandlingOfficer> approvers){this.requestHandlingOfficers = approvers;}
 
     // Begin getter
-    public DepartmentList getDepartmentList() { return this.departments; }
+    public ArrayList<Department> getDepartments() { return this.departments; }
     public String getFacultyName(){
         return this.facultyName;
     }
     public String getFacultyId(){
         return this.facultyId;
     }
-    public FacultyOfficerList getFacultyOfficerList(){
+    public ArrayList<FacultyOfficer> getFacultyOfficers(){
         return this.facultyOfficers;
     }
 

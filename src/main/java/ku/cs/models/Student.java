@@ -33,6 +33,11 @@ public class Student extends User {
         this.email = email;
     }
 
+    // เดี๋ยวแก้ที่หลังใช้ไปก่อน
+    public Student(String name, String faculty, String department, String studentID, String email) {
+        this(name,new Faculty(faculty),new Department(department),studentID,email);
+    }
+
     public void createRequest() {
         //wait for Request finish
     }

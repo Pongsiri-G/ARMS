@@ -3,6 +3,7 @@ package ku.cs.services;
 import ku.cs.models.*;
 import java.io.*;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class UserListFileDatasource implements Datasource<UserList> {
     private String directoryName;
@@ -41,68 +42,68 @@ public class UserListFileDatasource implements Datasource<UserList> {
     public UserList readData() {
         UserList users = new UserList();
         FacultyList facultyList = facDepDatasource.readData();
-        StudentList studentList = studentDatasource.readData();
-        AdvisorList advisorList = advisorDatasource.readData();
-        FacultyOfficerList facultyOfficerList = facultyOfficerDatasource.readData();
-        DepartmentOfficerList departmentOfficerList = departmentOfficerDatasource.readData();
+        ArrayList<Student> studentList = studentDatasource.readData();
+        ArrayList<Advisor> advisorList = advisorDatasource.readData();
+        ArrayList<FacultyOfficer> facultyOfficers = facultyOfficerDatasource.readData();
+        ArrayList<DepartmentOfficer> departmentOfficers = departmentOfficerDatasource.readData();
 
         users.setFacultyList(facultyList);
 
 
 
         // Add students from studentlist.csv
-        for (Student student : studentList.getStudents()) {
+        for (Student student : studentList) {
             users.addUser(student);
         }
 
         // Add advisors from advisor.csv
-        for (Advisor advisor : advisorList.getAdvisors()) {
+        for (Advisor advisor : advisorList) {
             users.addUser(advisor);
         }
 
-        for (FacultyOfficer facultyOfficer : facultyOfficerList.getOfficers()){
+        for (FacultyOfficer facultyOfficer : facultyOfficers){
             users.addUser(facultyOfficer);
         }
 
-        for (DepartmentOfficer departmentOfficer : departmentOfficerList.getOfficers()){
+        for (DepartmentOfficer departmentOfficer : departmentOfficers){
             users.addUser(departmentOfficer);
         }
 
-        System.out.println("Loaded " + studentList.getStudents().size() + " students");
-        System.out.println("Loaded " + advisorList.getAdvisors().size() + " advisors");
-        System.out.println("Loaded " + facultyOfficerList.getOfficers().size() + " faculty officers");
-        System.out.println("Loaded " + departmentOfficerList.getOfficers().size() + " department officers");
+        System.out.println("Loaded " + studentList.size() + " students");
+        System.out.println("Loaded " + advisorList.size() + " advisors");
+        System.out.println("Loaded " + facultyOfficers.size() + " faculty officers");
+        System.out.println("Loaded " + departmentOfficers.size() + " department officers");
 
         return users;
     }
 
     @Override
     public void writeData(UserList users) {
-        StudentList studentList = new StudentList();
-        AdvisorList advisorList = new AdvisorList();
-        DepartmentOfficerList departmentOfficerList = new DepartmentOfficerList();
-        FacultyOfficerList facultyOfficerList = new FacultyOfficerList();
+        ArrayList<Student> studentList = new ArrayList<>();
+        ArrayList<Advisor> advisorList = new ArrayList<>();
+        ArrayList<DepartmentOfficer> departmentOfficers = new ArrayList<>();
+        ArrayList<FacultyOfficer> facultyOfficers = new ArrayList<>();
         FacultyList facultyList = users.getFacultyList();
 
         for (User user : users.getAllUsers()) {
             if (user instanceof Student) {
                 System.out.println("Adding student to file: " + ((Student) user).getStudentID());
-                studentList.addStudent((Student) user);
+                studentList.add((Student) user);
             } else if (user instanceof Advisor) {
-                advisorList.addAdvisor((Advisor) user);
+                advisorList.add((Advisor) user);
             }
             else if (user instanceof FacultyOfficer) {
-                facultyOfficerList.add((FacultyOfficer) user);
+                facultyOfficers.add((FacultyOfficer) user);
             }
             else if (user instanceof DepartmentOfficer) {
-                departmentOfficerList.add((DepartmentOfficer) user);
+                departmentOfficers.add((DepartmentOfficer) user);
             }
         }
 
         for (Faculty faculty : users.getFacultyList().getFaculties()){
-            for (Department department : faculty.getDepartmentList().getDepartments()) {
-                for (Student student : department.getStudentList().getStudents()) {
-                    if(student.getUsername() == null && student.getPassword() == null) studentList.addStudent(student);
+            for (Department department : faculty.getDepartments()) {
+                for (Student student : department.getStudents()) {
+                    if(student.getUsername() == null && student.getPassword() == null) studentList.add(student);
                 }
             }
         }
@@ -110,8 +111,8 @@ public class UserListFileDatasource implements Datasource<UserList> {
         facDepDatasource.writeData(facultyList);
         studentDatasource.writeData(studentList);
         advisorDatasource.writeData(advisorList);
-        facultyOfficerDatasource.writeData(facultyOfficerList);
-        departmentOfficerDatasource.writeData(departmentOfficerList);
+        facultyOfficerDatasource.writeData(facultyOfficers);
+        departmentOfficerDatasource.writeData(departmentOfficers);
 
     }
 }

@@ -18,12 +18,23 @@ public class Advisor extends User{
         this.firstLogin = true;
     }
 
+    // ใช้้ไปก่อนเดี๋ยวแก้ที่หลัง
+    public Advisor(String username, String password, String name, String faculty, String department, String advisorID, String advisorEmail, boolean isHashed, boolean suspended, boolean firstLogin) {
+        super(username, password, name, isHashed, suspended);
+        this.faculty = new Faculty(faculty);
+        this.department = new Department(department);
+        this.advisorID = advisorID;
+        this.advisorEmail = advisorEmail;
+        this.firstLogin = firstLogin;
+    }
+
     public Advisor(String name, String username, String password, Faculty faculty, Department department, String advisorID) {
         super(username, password, name);
         this.faculty = faculty;
         this.department = department;
         this.advisorID = advisorID;
     }
+
 
 
     //public void setStudents(ArrayList<Student> students) { this.students = students; }

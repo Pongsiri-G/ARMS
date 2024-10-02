@@ -2,7 +2,6 @@ package ku.cs.models;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
 public class UserList {
     private ArrayList<User> users;
@@ -19,7 +18,7 @@ public class UserList {
             Faculty faculty = faculties.findFacultyByName(facultyOfficer.getFaculty().getFacultyName());
             if (faculty != null) {
                 facultyOfficer.setFaculty(faculty);
-                faculty.getFacultyOfficerList().add(facultyOfficer);
+                faculty.getFacultyOfficers().add(facultyOfficer);
                 users.add(facultyOfficer);
             }
         }
@@ -34,7 +33,7 @@ public class UserList {
                 if (department != null) {
                     departmentOfficer.setFaculty(faculty);
                     departmentOfficer.setDepartment(department);
-                    department.getDepartmentOfficerList().add(departmentOfficer);
+                    department.getDepartmentOfficers().add(departmentOfficer);
                     users.add(departmentOfficer);
                 }
             }
@@ -50,7 +49,7 @@ public class UserList {
                 if (department != null) {
                     advisor.setFaculty(faculty);
                     advisor.setDepartment(department);
-                    department.getAdvisorList().addAdvisor(advisor);
+                    department.getAdvisors().add(advisor);
                     users.add(advisor);
                 }
             }
@@ -66,7 +65,7 @@ public class UserList {
                 if (department != null) {
                     student.setEnrolledFaculty(faculty);
                     student.setEnrolledDepartment(department);
-                    department.getStudentList().addStudent(student);
+                    department.getStudents().add(student);
                     if (student.getUsername() != null && student.getPassword() != null) {
                         users.add(student);
                     }
@@ -100,8 +99,8 @@ public class UserList {
         Student matchedStudent = null;
 
         for (Faculty faculty : faculties.getFaculties()) {
-            for (Department department : faculty.getDepartmentList().getDepartments()) {
-                for (Student student : department.getStudentList().getStudents()) {
+            for (Department department : faculty.getDepartments()) {
+                for (Student student : department.getStudents()) {
                     if (student.getStudentID().equals(studentId) &&
                             student.getName().equals(fullName) &&
                             student.getEmail().equals(email)) {

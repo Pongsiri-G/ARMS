@@ -4,9 +4,10 @@ import ku.cs.models.*;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Scanner;
 
-public class DepartmentOfficerListFileDatasource implements Datasource<DepartmentOfficerList> {
+public class DepartmentOfficerListFileDatasource implements Datasource<ArrayList<DepartmentOfficer>> {
     private String directoryName;
     private String departmentOfficerListFileName;
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -33,8 +34,8 @@ public class DepartmentOfficerListFileDatasource implements Datasource<Departmen
     }
 
     @Override
-    public DepartmentOfficerList readData() {
-        DepartmentOfficerList departmentOfficerList = new DepartmentOfficerList();
+    public ArrayList<DepartmentOfficer> readData() {
+        ArrayList<DepartmentOfficer> departmentOfficers = new ArrayList<>();
 
         try {
             File file = new File(directoryName + File.separator + departmentOfficerListFileName);
@@ -49,32 +50,34 @@ public class DepartmentOfficerListFileDatasource implements Datasource<Departmen
                 String password = data[1];
                 String name = data[2];
                 boolean isSuspended = "suspended".equals(data[3]);
-                LocalDateTime lastLogin = "Never".equals(data[4]) ? null : LocalDateTime.parse(data[4], formatter);
-                String profilePicturePath = data[5].isEmpty() ? User.DEFAULT_PROFILE_PICTURE_PATH : data[5];
-                String facultyName = data[6];
-                String departmentName = data[7];
+                boolean isFirstLogin = Boolean.parseBoolean(data[4]); // การเข้าใช้งานครั้งแรก
+                LocalDateTime lastLogin = "Never".equals(data[5]) ? null : LocalDateTime.parse(data[4], formatter);
+                String profilePicturePath = data[6].isEmpty() ? User.DEFAULT_PROFILE_PICTURE_PATH : data[5];
+                String facultyName = data[7];
+                String departmentName = data[8];
 
                 Faculty faculty = new Faculty(facultyName);
                 Department department = new Department(departmentName);
                 DepartmentOfficer departmentOfficer = new DepartmentOfficer(username, password, name, faculty, department, true, isSuspended);
+                departmentOfficer.setFirstLogin(isFirstLogin);
                 departmentOfficer.setLastLogin(lastLogin);
                 departmentOfficer.setProfilePicturePath(profilePicturePath);
 
-                departmentOfficerList.add(departmentOfficer);
+                departmentOfficers.add(departmentOfficer);
             }
             scanner.close();
         } catch (FileNotFoundException e) {
             throw new RuntimeException("File not found", e);
         }
-        return departmentOfficerList;
+        return departmentOfficers;
     }
 
     @Override
-    public void writeData(DepartmentOfficerList departmentOfficerList) {
+    public void writeData(ArrayList<DepartmentOfficer> departmentOfficers) {
         try {
             FileWriter fileWriter = new FileWriter(directoryName + File.separator + departmentOfficerListFileName, false);
 
-            for (DepartmentOfficer departmentOfficer : departmentOfficerList.getOfficers()) {
+            for (DepartmentOfficer departmentOfficer : departmentOfficers) {
                 String lastLoginStr = departmentOfficer.getLastLogin() == null ? "Never" : departmentOfficer.getLastLogin().format(formatter);
                 String profilePicturePath = departmentOfficer.getProfilePicturePath() == null ? User.DEFAULT_PROFILE_PICTURE_PATH : departmentOfficer.getProfilePicturePath();
 
@@ -83,6 +86,7 @@ public class DepartmentOfficerListFileDatasource implements Datasource<Departmen
                         .append(departmentOfficer.getPassword()).append(",")
                         .append(departmentOfficer.getName()).append(",")
                         .append(departmentOfficer.getSuspended() ? "suspended" : "normal").append(",")
+                        .append(departmentOfficer.isFirstLogin()).append(",")
                         .append(lastLoginStr).append(",")
                         .append(profilePicturePath).append(",")
                         .append(departmentOfficer.getFaculty().getFacultyName()).append(",")

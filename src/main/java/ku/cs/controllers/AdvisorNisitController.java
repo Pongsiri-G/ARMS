@@ -12,6 +12,7 @@ import ku.cs.services.FXRouter;
 import ku.cs.services.StudentListFileDatasource;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class AdvisorNisitController {
 
@@ -22,8 +23,8 @@ public class AdvisorNisitController {
     @FXML private Label emailLabel;
     @FXML private TableView<?> studentTable;
 
-    private Datasource<StudentList> datasource;
-    private StudentList studentList;
+    private Datasource<ArrayList<Student>> datasource;
+    private ArrayList<Student> studentList;
     private Student student;
 
     @FXML
@@ -34,7 +35,13 @@ public class AdvisorNisitController {
         // รับข้อมูล studentId จากหน้าอื่น ผ่าน method FXRouter.getData()
         // โดยจำเป็นต้อง casting data type ให้ตรงกับหน้าที่ส่งข้อมูล
         String studentId = (String) FXRouter.getData();
-        student = studentList.findStudentById(studentId);
+        // student = studentList.findStudentById(studentId);
+        // ใช้อันนี้ไปก่อนเดี๋ยวเขียนเพิ่มในคลาสที่หลังเป็นการหา student ด้วย Id
+        for (Student s : studentList) {
+            if (s.getStudentID().equals(studentId)) {
+                student = s;
+            }
+        }
 
         showStudent(student);
 

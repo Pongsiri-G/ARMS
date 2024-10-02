@@ -7,9 +7,9 @@ public class Department {
     private String departmentName;
     private String departmentID;
     private ArrayList<RequestHandlingOfficer> requestHandlingOfficers;
-    private DepartmentOfficerList departmentOfficers;
-    private AdvisorList advisors;
-    private StudentList students;
+    private ArrayList<DepartmentOfficer> departmentOfficers;
+    private ArrayList<Advisor> advisors;
+    private ArrayList<Student> students;
 
     // Begin Constructor
     public Department(String departmentName) {
@@ -23,9 +23,9 @@ public class Department {
         this.departmentName = departmentName;
         this.departmentID = departmentID;
         this.requestHandlingOfficers = new ArrayList<>();
-        this.students = new StudentList();
-        this.advisors = new AdvisorList();
-        this.departmentOfficers = new DepartmentOfficerList();
+        this.students = new ArrayList<>();
+        this.advisors = new ArrayList<>();
+        this.departmentOfficers = new ArrayList<>();
     }
 
     public boolean isDepartmentName(String departmentName){
@@ -49,12 +49,12 @@ public class Department {
 //        this.students.remove(student);
 //    }
 
-    public StudentList getStudentList() {
+    public ArrayList<Student> getStudents() {
         return this.students;
     }
 
     public Student findStudentByID(String studentID) {
-        for (Student student : students.getStudents()) {
+        for (Student student : students) {
             if (student.getStudentID().equals(studentID)) {
                 return student;
             }
@@ -73,8 +73,8 @@ public class Department {
     // End Setter
 
     // Begin Getter
-    public DepartmentOfficerList getDepartmentOfficerList() { return departmentOfficers; }
-    public AdvisorList getAdvisorList() { return advisors; }
+    public ArrayList<DepartmentOfficer> getDepartmentOfficers() { return departmentOfficers; }
+    public ArrayList<Advisor> getAdvisors() { return advisors; }
     public String getDepartmentName(){
         return this.departmentName;
     }
@@ -102,7 +102,7 @@ public class Department {
 
 
     public Advisor findAdvisorByName(String advisorName) {
-        for (Advisor advisor : advisors.getAdvisors()) {
+        for (Advisor advisor : advisors) {
             if (advisor.getName().equals(advisorName)) {
                 return advisor;
             }

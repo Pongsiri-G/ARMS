@@ -16,7 +16,7 @@ class DepartmentTest {
     }
     @BeforeEach
     void setUp() {
-        department = new Department("Math", "01", faculty);
+        department = new Department("Math", "01");
     }
     @Test
     void testIsDepartmentName() {
@@ -31,7 +31,7 @@ class DepartmentTest {
     @Test
     @DisplayName("Test Create Department with auto generate and display Object")
     void testGenerateDepartment() {
-        Department engineering  = new Department("Engineering", faculty);
+        Department engineering  = new Department("Engineering");
         System.out.println(engineering);
         assertNotNull(engineering);
         //g
