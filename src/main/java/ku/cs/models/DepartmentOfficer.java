@@ -12,6 +12,12 @@ public class DepartmentOfficer extends User implements Officer {
         this.faculty = faculty;
         this.department = department;
     }
+
+    public DepartmentOfficer(String username, String password, String name, String faculty, String department, boolean isHashed, boolean suspended) {
+        super(username, password, name, isHashed, suspended);
+        this.faculty = new Faculty(faculty);
+        this.department = new Department(department);
+    }
     // End Constructor
 
     @Override

@@ -12,6 +12,10 @@ public class UserListFileDatasourceTest {
     private String testFacultyOfficerFileName = "facultyofficerlist.csv";
     private String testDepartmentFileName = "departmentofficerlist.csv";
     private String testFacDepFileName = "facdeplist.csv";
+    public static void main(String[] args) {
+        UserListFileDatasourceTest test = new UserListFileDatasourceTest();
+        test.runTests();
+    }
 
     public void runTests() {
         setup(); //โปรดระวัง ถ้าใช้ runtest ไฟล์จะกลับเป็นค่าเริ่มต้น
@@ -69,13 +73,13 @@ public class UserListFileDatasourceTest {
 
     public void loadDepartmentOfficer(){
         DepartmentOfficerListFileDatasource datasource = new DepartmentOfficerListFileDatasource("data/test", "departmentofficerlist.csv");
-        DepartmentOfficerList officerList = new DepartmentOfficerList();
-        officerList.add("Rain", "cN76A0S", "อนันกร ปิติโอภาสพงศ์", "วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", false, false);
-        officerList.add("Patrick", "fORP833", "จักร จันทรเกียรติ", "วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", false, false);
-        officerList.add("Pi", "2Ug6V7v", "กุลนิภา เมธากิจขจร", "วิศวกรรมศาตร์", "วิศวกรรมคอมพิวเตอร์", false, false);
-        officerList.add("Tuptim", "5E2r4px", "รัญชน์ นิธิธรรมรงค์", "วิศวกรรมศาตร์", "วิศวกรรมคอมพิวเตอร์", false, false);
+        ArrayList<DepartmentOfficer> officers = new ArrayList<>();
+        officers.add(new DepartmentOfficer("Rain", "cN76A0S", "อนันกร ปิติโอภาสพงศ์", "วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", false, false));
+        officers.add(new DepartmentOfficer("Patrick", "fORP833", "จักร จันทรเกียรติ", "วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", false, false));
+        officers.add(new DepartmentOfficer("Pi", "2Ug6V7v", "กุลนิภา เมธากิจขจร", "วิศวกรรมศาตร์", "วิศวกรรมคอมพิวเตอร์", false, false));
+        officers.add(new DepartmentOfficer("Tuptim", "5E2r4px", "รัญชน์ นิธิธรรมรงค์", "วิศวกรรมศาตร์", "วิศวกรรมคอมพิวเตอร์", false, false));
 
-        datasource.writeData(officerList);
+        datasource.writeData(officers);
     }
 
     public void loadFacultyOfficer(){

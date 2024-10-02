@@ -33,7 +33,7 @@ public class UserList {
                 if (department != null) {
                     departmentOfficer.setFaculty(faculty);
                     departmentOfficer.setDepartment(department);
-                    department.getDepartmentOfficerList().add(departmentOfficer);
+                    department.getDepartmentOfficers().add(departmentOfficer);
                     users.add(departmentOfficer);
                 }
             }

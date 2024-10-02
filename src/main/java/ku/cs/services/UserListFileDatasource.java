@@ -45,7 +45,7 @@ public class UserListFileDatasource implements Datasource<UserList> {
         StudentList studentList = studentDatasource.readData();
         ArrayList<Advisor> advisorList = advisorDatasource.readData();
         FacultyOfficerList facultyOfficerList = facultyOfficerDatasource.readData();
-        DepartmentOfficerList departmentOfficerList = departmentOfficerDatasource.readData();
+        ArrayList<DepartmentOfficer> departmentOfficers = departmentOfficerDatasource.readData();
 
         users.setFacultyList(facultyList);
 
@@ -65,14 +65,14 @@ public class UserListFileDatasource implements Datasource<UserList> {
             users.addUser(facultyOfficer);
         }
 
-        for (DepartmentOfficer departmentOfficer : departmentOfficerList.getOfficers()){
+        for (DepartmentOfficer departmentOfficer : departmentOfficers){
             users.addUser(departmentOfficer);
         }
 
         System.out.println("Loaded " + studentList.getStudents().size() + " students");
         System.out.println("Loaded " + advisorList.size() + " advisors");
         System.out.println("Loaded " + facultyOfficerList.getOfficers().size() + " faculty officers");
-        System.out.println("Loaded " + departmentOfficerList.getOfficers().size() + " department officers");
+        System.out.println("Loaded " + departmentOfficers.size() + " department officers");
 
         return users;
     }
@@ -129,7 +129,7 @@ public class UserListFileDatasource implements Datasource<UserList> {
     public void writeData(UserList users) {
         StudentList studentList = new StudentList();
         ArrayList<Advisor> advisorList = new ArrayList<>();
-        DepartmentOfficerList departmentOfficerList = new DepartmentOfficerList();
+        ArrayList<DepartmentOfficer> departmentOfficers = new ArrayList<>();
         FacultyOfficerList facultyOfficerList = new FacultyOfficerList();
         FacultyList facultyList = users.getFacultyList();
 
@@ -144,7 +144,7 @@ public class UserListFileDatasource implements Datasource<UserList> {
                 facultyOfficerList.add((FacultyOfficer) user);
             }
             else if (user instanceof DepartmentOfficer) {
-                departmentOfficerList.add((DepartmentOfficer) user);
+                departmentOfficers.add((DepartmentOfficer) user);
             }
         }
 
@@ -160,7 +160,7 @@ public class UserListFileDatasource implements Datasource<UserList> {
         studentDatasource.writeData(studentList);
         advisorDatasource.writeData(advisorList);
         facultyOfficerDatasource.writeData(facultyOfficerList);
-        departmentOfficerDatasource.writeData(departmentOfficerList);
+        departmentOfficerDatasource.writeData(departmentOfficers);
 
     }
 }

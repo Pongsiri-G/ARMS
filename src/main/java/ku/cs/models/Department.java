@@ -7,7 +7,7 @@ public class Department {
     private String departmentName;
     private String departmentID;
     private ArrayList<RequestHandlingOfficer> requestHandlingOfficers;
-    private DepartmentOfficerList departmentOfficers;
+    private ArrayList<DepartmentOfficer> departmentOfficers;
     private ArrayList<Advisor> advisors;
     private StudentList students;
 
@@ -25,7 +25,7 @@ public class Department {
         this.requestHandlingOfficers = new ArrayList<>();
         this.students = new StudentList();
         this.advisors = new ArrayList<>();
-        this.departmentOfficers = new DepartmentOfficerList();
+        this.departmentOfficers = new ArrayList<>();
     }
 
     public boolean isDepartmentName(String departmentName){
@@ -73,7 +73,7 @@ public class Department {
     // End Setter
 
     // Begin Getter
-    public DepartmentOfficerList getDepartmentOfficerList() { return departmentOfficers; }
+    public ArrayList<DepartmentOfficer> getDepartmentOfficers() { return departmentOfficers; }
     public ArrayList<Advisor> getAdvisorList() { return advisors; }
     public String getDepartmentName(){
         return this.departmentName;

@@ -4,9 +4,10 @@ import ku.cs.models.*;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Scanner;
 
-public class DepartmentOfficerListFileDatasource implements Datasource<DepartmentOfficerList> {
+public class DepartmentOfficerListFileDatasource implements Datasource<ArrayList<DepartmentOfficer>> {
     private String directoryName;
     private String departmentOfficerListFileName;
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -33,8 +34,8 @@ public class DepartmentOfficerListFileDatasource implements Datasource<Departmen
     }
 
     @Override
-    public DepartmentOfficerList readData() {
-        DepartmentOfficerList departmentOfficerList = new DepartmentOfficerList();
+    public ArrayList<DepartmentOfficer> readData() {
+        ArrayList<DepartmentOfficer> departmentOfficers = new ArrayList<>();
 
         try {
             File file = new File(directoryName + File.separator + departmentOfficerListFileName);
@@ -60,21 +61,21 @@ public class DepartmentOfficerListFileDatasource implements Datasource<Departmen
                 departmentOfficer.setLastLogin(lastLogin);
                 departmentOfficer.setProfilePicturePath(profilePicturePath);
 
-                departmentOfficerList.add(departmentOfficer);
+                departmentOfficers.add(departmentOfficer);
             }
             scanner.close();
         } catch (FileNotFoundException e) {
             throw new RuntimeException("File not found", e);
         }
-        return departmentOfficerList;
+        return departmentOfficers;
     }
 
     @Override
-    public void writeData(DepartmentOfficerList departmentOfficerList) {
+    public void writeData(ArrayList<DepartmentOfficer> departmentOfficers) {
         try {
             FileWriter fileWriter = new FileWriter(directoryName + File.separator + departmentOfficerListFileName, false);
 
-            for (DepartmentOfficer departmentOfficer : departmentOfficerList.getOfficers()) {
+            for (DepartmentOfficer departmentOfficer : departmentOfficers) {
                 String lastLoginStr = departmentOfficer.getLastLogin() == null ? "Never" : departmentOfficer.getLastLogin().format(formatter);
                 String profilePicturePath = departmentOfficer.getProfilePicturePath() == null ? User.DEFAULT_PROFILE_PICTURE_PATH : departmentOfficer.getProfilePicturePath();
 
