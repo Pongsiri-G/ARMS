@@ -15,6 +15,7 @@ public class AdvOffListFileDatasourceTest {
         advisorList.addNewAdvisor("advisor2", "pass2", "Advisor Two", "Science", "Biology", "A12346", "advisor2@example.com", false, false, true);
         advisorList.addNewAdvisor("advisor3", "pass3", "Advisor Three", "Arts", "History", "A12347", "advisor3@example.com", false, false, true);
         advisorList.addNewAdvisor("advisor4", "pass4", "Advisor Four", "Com", "Comscience", "A12348", "advisor4@example.com", false, false, true);
+        advisorList.addNewAdvisor("advisor5", "pass5", "Advisor Five", "Engineering", "Com", "A12349", "advisor5@example.com", false, false, true);
 
         // เขียนข้อมูลลงไฟล์ CSV
         datasource.writeData(advisorList);
