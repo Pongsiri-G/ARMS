@@ -17,6 +17,8 @@ public class Advisor extends User{
         this.advisorEmail = advisorEmail;
         this.firstLogin = true;
     }
+
+    // ใช้้ไปก่อนเดี๋ยวแก้ที่หลัง
     public Advisor(String username, String password, String name, String faculty, String department, String advisorID, String advisorEmail, boolean isHashed, boolean suspended, boolean firstLogin) {
         super(username, password, name, isHashed, suspended);
         this.faculty = new Faculty(faculty);

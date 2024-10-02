@@ -14,6 +14,7 @@ import ku.cs.services.FXRouter;
 import ku.cs.services.StudentListFileDatasource;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class AdvisorController{
     @FXML private TableView<Student> studentListTable;
@@ -22,8 +23,8 @@ public class AdvisorController{
     @FXML private Label facultyLabel;
     @FXML private Label nameLabel;
 
-    private StudentList students;
-    private Datasource<StudentList> datasource;
+    private ArrayList<Student> students;
+    private Datasource<ArrayList<Student>> datasource;
     private User user;
 
     @FXML
@@ -77,7 +78,7 @@ public class AdvisorController{
         studentListTable.getItems().addAll(students.getStudents());
     }*/
 
-    private void showTable(StudentList students) {
+    private void showTable(ArrayList<Student> students) {
         TableColumn<Student, String> facultyCol = new TableColumn<>("คณะ");
         facultyCol.setCellValueFactory(student ->
                 new SimpleStringProperty(student.getValue().getEnrolledFaculty().getFacultyName())//ใช้ SimpleStringProperty ในการดึง method ที่่ return เป็น string
@@ -110,7 +111,7 @@ public class AdvisorController{
 
 
         // ใส่ข้อมูล Student ทั้งหมดจาก studentList ไปแสดงใน TableView
-        for (Student student: students.getStudents()) {
+        for (Student student: students) {
             studentListTable.getItems().add(student);
         }
     }

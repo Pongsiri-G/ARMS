@@ -49,7 +49,7 @@ public class UserList {
                 if (department != null) {
                     advisor.setFaculty(faculty);
                     advisor.setDepartment(department);
-                    department.getAdvisorList().add(advisor);
+                    department.getAdvisors().add(advisor);
                     users.add(advisor);
                 }
             }
@@ -65,7 +65,7 @@ public class UserList {
                 if (department != null) {
                     student.setEnrolledFaculty(faculty);
                     student.setEnrolledDepartment(department);
-                    department.getStudentList().addStudent(student);
+                    department.getStudents().add(student);
                     if (student.getUsername() != null && student.getPassword() != null) {
                         users.add(student);
                     }
@@ -100,7 +100,7 @@ public class UserList {
 
         for (Faculty faculty : faculties.getFaculties()) {
             for (Department department : faculty.getDepartments()) {
-                for (Student student : department.getStudentList().getStudents()) {
+                for (Student student : department.getStudents()) {
                     if (student.getStudentID().equals(studentId) &&
                             student.getName().equals(fullName) &&
                             student.getEmail().equals(email)) {

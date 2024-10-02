@@ -61,11 +61,11 @@ public class UserListFileDatasourceTest {
 
     public void loadStudent(){
         StudentListFileDatasource datasource = new StudentListFileDatasource("data/test", "studentlist.csv");
-        StudentList studentList = new StudentList();
-        studentList.addNewStudent("อธิฐาน คมปราชญ์","วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "b6620400000", "studentmail1@ku.th");
-        studentList.addNewStudent("นิชกานต์ ประเสริฐโสม","วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "b6620400001", "studentmail2@ku.th");
-        studentList.addNewStudent("กรีฑา พิพัฒนกุล","วิศวกรรมศาตร์", "วิศวกรรมคอมพิวเตอร์", "b6625500002", "studentmail3@ku.th");
-        studentList.addNewStudent("ณัฐวดี ทรัพย์ธารา","วิศวกรรมศาตร์", "วิศวกรรมคอมพิวเตอร์", "b6625500003", "studentmail4@ku.th");
+        ArrayList<Student> studentList = new ArrayList<>();
+        studentList.add(new Student("อธิฐาน คมปราชญ์","วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "b6620400000", "studentmail1@ku.th"));
+        studentList.add(new Student("นิชกานต์ ประเสริฐโสม","วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "b6620400001", "studentmail2@ku.th"));
+        studentList.add(new Student("กรีฑา พิพัฒนกุล","วิศวกรรมศาตร์", "วิศวกรรมคอมพิวเตอร์", "b6625500002", "studentmail3@ku.th"));
+        studentList.add(new Student("ณัฐวดี ทรัพย์ธารา","วิศวกรรมศาตร์", "วิศวกรรมคอมพิวเตอร์", "b6625500003", "studentmail4@ku.th"));
 
         datasource.writeData(studentList);
 

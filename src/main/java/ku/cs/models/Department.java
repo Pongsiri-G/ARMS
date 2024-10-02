@@ -9,7 +9,7 @@ public class Department {
     private ArrayList<RequestHandlingOfficer> requestHandlingOfficers;
     private ArrayList<DepartmentOfficer> departmentOfficers;
     private ArrayList<Advisor> advisors;
-    private StudentList students;
+    private ArrayList<Student> students;
 
     // Begin Constructor
     public Department(String departmentName) {
@@ -23,7 +23,7 @@ public class Department {
         this.departmentName = departmentName;
         this.departmentID = departmentID;
         this.requestHandlingOfficers = new ArrayList<>();
-        this.students = new StudentList();
+        this.students = new ArrayList<>();
         this.advisors = new ArrayList<>();
         this.departmentOfficers = new ArrayList<>();
     }
@@ -49,12 +49,12 @@ public class Department {
 //        this.students.remove(student);
 //    }
 
-    public StudentList getStudentList() {
+    public ArrayList<Student> getStudents() {
         return this.students;
     }
 
     public Student findStudentByID(String studentID) {
-        for (Student student : students.getStudents()) {
+        for (Student student : students) {
             if (student.getStudentID().equals(studentID)) {
                 return student;
             }
@@ -74,7 +74,7 @@ public class Department {
 
     // Begin Getter
     public ArrayList<DepartmentOfficer> getDepartmentOfficers() { return departmentOfficers; }
-    public ArrayList<Advisor> getAdvisorList() { return advisors; }
+    public ArrayList<Advisor> getAdvisors() { return advisors; }
     public String getDepartmentName(){
         return this.departmentName;
     }

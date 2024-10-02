@@ -13,6 +13,7 @@ public class DepartmentOfficer extends User implements Officer {
         this.department = department;
     }
 
+    // ใข้ไปก่อนเดี๋ยวแก้ที่หลัง
     public DepartmentOfficer(String username, String password, String name, String faculty, String department, boolean isHashed, boolean suspended) {
         super(username, password, name, isHashed, suspended);
         this.faculty = new Faculty(faculty);
