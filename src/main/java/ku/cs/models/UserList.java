@@ -2,7 +2,6 @@ package ku.cs.models;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
 public class UserList {
     private ArrayList<User> users;
@@ -50,7 +49,7 @@ public class UserList {
                 if (department != null) {
                     advisor.setFaculty(faculty);
                     advisor.setDepartment(department);
-                    department.getAdvisorList().addAdvisor(advisor);
+                    department.getAdvisorList().add(advisor);
                     users.add(advisor);
                 }
             }
@@ -100,7 +99,7 @@ public class UserList {
         Student matchedStudent = null;
 
         for (Faculty faculty : faculties.getFaculties()) {
-            for (Department department : faculty.getDepartmentList().getDepartments()) {
+            for (Department department : faculty.getDepartments()) {
                 for (Student student : department.getStudentList().getStudents()) {
                     if (student.getStudentID().equals(studentId) &&
                             student.getName().equals(fullName) &&

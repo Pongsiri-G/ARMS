@@ -7,6 +7,7 @@ import org.junit.jupiter.api.*;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,7 +16,7 @@ class AdvOffListFileDatasourceTest {
     private static final String TEST_DIRECTORY = "data/test";
     private static final String TEST_FILE = "test_advisors.csv";
     private AdvOffListFileDatasource datasource;
-    private AdvisorList advisorList;
+    private ArrayList<Advisor> advisorList;
 
     @BeforeEach
     void setUp() {
@@ -23,10 +24,10 @@ class AdvOffListFileDatasourceTest {
         datasource = new AdvOffListFileDatasource(TEST_DIRECTORY, TEST_FILE);
 
         // Create a new AdvisorList with sample data
-        advisorList = new AdvisorList();
-        advisorList.addNewAdvisor("advisor1", "pass1", "Advisor One", "Engineering", "Computer Science", "A12345", "advisor1@example.com", false, false, true);
-        advisorList.addNewAdvisor("advisor2", "pass2", "Advisor Two", "Science", "Biology", "A12346", "advisor2@example.com", false, false, true);
-        advisorList.addNewAdvisor("advisor3", "pass3", "Advisor Three", "Arts", "History", "A12347", "advisor3@example.com", false, false, true);
+        advisorList = new ArrayList<>();
+        advisorList.add(new Advisor("advisor1", "pass1", "Advisor One", "Engineering", "Computer Science", "A12345", "advisor1@example.com", false, false, true));
+        advisorList.add(new Advisor("advisor2", "pass2", "Advisor Two", "Science", "Biology", "A12346", "advisor2@example.com", false, false, true));
+        advisorList.add(new Advisor("advisor3", "pass3", "Advisor Three", "Arts", "History", "A12347", "advisor3@example.com", false, false, true));
     }
 
     @AfterEach
@@ -41,14 +42,14 @@ class AdvOffListFileDatasourceTest {
         datasource.writeData(advisorList);
 
         // Read data back from the file
-        AdvisorList readAdvisorList = datasource.readData();
+        ArrayList<Advisor> readAdvisorList = datasource.readData();
 
         // Check if the data read matches the data written
-        assertEquals(advisorList.getAdvisors().size(), readAdvisorList.getAdvisors().size(), "Number of advisors should match");
+        assertEquals(advisorList.size(), readAdvisorList.size(), "Number of advisors should match");
 
-        for (int i = 0; i < advisorList.getAdvisors().size(); i++) {
-            Advisor expected = advisorList.getAdvisors().get(i);
-            Advisor actual = readAdvisorList.getAdvisors().get(i);
+        for (int i = 0; i < advisorList.size(); i++) {
+            Advisor expected = advisorList.get(i);
+            Advisor actual = readAdvisorList.get(i);
 
             assertEquals(expected.getUsername(), actual.getUsername(), "Usernames should match");
             assertEquals(expected.getPassword(), actual.getPassword(), "Passwords should match");

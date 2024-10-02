@@ -3,6 +3,7 @@ package ku.cs.services;
 import ku.cs.models.*;
 import java.io.*;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class UserListFileDatasource implements Datasource<UserList> {
     private String directoryName;
@@ -42,7 +43,7 @@ public class UserListFileDatasource implements Datasource<UserList> {
         UserList users = new UserList();
         FacultyList facultyList = facDepDatasource.readData();
         StudentList studentList = studentDatasource.readData();
-        AdvisorList advisorList = advisorDatasource.readData();
+        ArrayList<Advisor> advisorList = advisorDatasource.readData();
         FacultyOfficerList facultyOfficerList = facultyOfficerDatasource.readData();
         DepartmentOfficerList departmentOfficerList = departmentOfficerDatasource.readData();
 
@@ -56,7 +57,7 @@ public class UserListFileDatasource implements Datasource<UserList> {
         }
 
         // Add advisors from advisor.csv
-        for (Advisor advisor : advisorList.getAdvisors()) {
+        for (Advisor advisor : advisorList) {
             users.addUser(advisor);
         }
 
@@ -69,7 +70,7 @@ public class UserListFileDatasource implements Datasource<UserList> {
         }
 
         System.out.println("Loaded " + studentList.getStudents().size() + " students");
-        System.out.println("Loaded " + advisorList.getAdvisors().size() + " advisors");
+        System.out.println("Loaded " + advisorList.size() + " advisors");
         System.out.println("Loaded " + facultyOfficerList.getOfficers().size() + " faculty officers");
         System.out.println("Loaded " + departmentOfficerList.getOfficers().size() + " department officers");
 
@@ -127,7 +128,7 @@ public class UserListFileDatasource implements Datasource<UserList> {
     @Override
     public void writeData(UserList users) {
         StudentList studentList = new StudentList();
-        AdvisorList advisorList = new AdvisorList();
+        ArrayList<Advisor> advisorList = new ArrayList<>();
         DepartmentOfficerList departmentOfficerList = new DepartmentOfficerList();
         FacultyOfficerList facultyOfficerList = new FacultyOfficerList();
         FacultyList facultyList = users.getFacultyList();
@@ -137,7 +138,7 @@ public class UserListFileDatasource implements Datasource<UserList> {
                 System.out.println("Adding student to file: " + ((Student) user).getStudentID());
                 studentList.addStudent((Student) user);
             } else if (user instanceof Advisor) {
-                advisorList.addAdvisor((Advisor) user);
+                advisorList.add((Advisor) user);
             }
             else if (user instanceof FacultyOfficer) {
                 facultyOfficerList.add((FacultyOfficer) user);
@@ -148,7 +149,7 @@ public class UserListFileDatasource implements Datasource<UserList> {
         }
 
         for (Faculty faculty : users.getFacultyList().getFaculties()){
-            for (Department department : faculty.getDepartmentList().getDepartments()) {
+            for (Department department : faculty.getDepartments()) {
                 for (Student student : department.getStudentList().getStudents()) {
                     if(student.getUsername() == null && student.getPassword() == null) studentList.addStudent(student);
                 }

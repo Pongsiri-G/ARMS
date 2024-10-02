@@ -8,7 +8,7 @@ public class Department {
     private String departmentID;
     private ArrayList<RequestHandlingOfficer> requestHandlingOfficers;
     private DepartmentOfficerList departmentOfficers;
-    private AdvisorList advisors;
+    private ArrayList<Advisor> advisors;
     private StudentList students;
 
     // Begin Constructor
@@ -24,7 +24,7 @@ public class Department {
         this.departmentID = departmentID;
         this.requestHandlingOfficers = new ArrayList<>();
         this.students = new StudentList();
-        this.advisors = new AdvisorList();
+        this.advisors = new ArrayList<>();
         this.departmentOfficers = new DepartmentOfficerList();
     }
 
@@ -74,7 +74,7 @@ public class Department {
 
     // Begin Getter
     public DepartmentOfficerList getDepartmentOfficerList() { return departmentOfficers; }
-    public AdvisorList getAdvisorList() { return advisors; }
+    public ArrayList<Advisor> getAdvisorList() { return advisors; }
     public String getDepartmentName(){
         return this.departmentName;
     }
@@ -102,7 +102,7 @@ public class Department {
 
 
     public Advisor findAdvisorByName(String advisorName) {
-        for (Advisor advisor : advisors.getAdvisors()) {
+        for (Advisor advisor : advisors) {
             if (advisor.getName().equals(advisorName)) {
                 return advisor;
             }

@@ -46,11 +46,11 @@ public class UserListFileDatasourceTest {
 
     public void loadAdvisorList(){
         AdvOffListFileDatasource datasource = new AdvOffListFileDatasource("data/test", "advisorlist.csv");
-        AdvisorList advisorList = new AdvisorList();
-        advisorList.addNewAdvisor("Jak", "vXuO637", "พรรษา จักรพันธ์ประดิษฐ์", "วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "D12345", "advisor1@example.com", false, false, true);
-        advisorList.addNewAdvisor("Tan", "168K5Hl", "ปวิน จันทรเกียรติ", "วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "D12346", "advisor2@example.com", false, false, true);
-        advisorList.addNewAdvisor("Pang", "Ux5G63Y", "ปาณิตา พันธ์ภูผา", "วิศวกรรมศาตร์", "วิศวกรรมคอมพิวเตอร์", "A12347", "advisor3@example.com", false, false, true);
-        advisorList.addNewAdvisor("Tai", "cN76A0S", "วันชัย เกียรติบวรสกุล", "วิศวกรรมศาตร์", "วิศวกรรมคอมพิวเตอร์", "A12348", "advisor4@example.com", false, false, true);
+        ArrayList<Advisor> advisorList = new ArrayList<>();
+        advisorList.add(new Advisor("Jak", "vXuO637", "พรรษา จักรพันธ์ประดิษฐ์", "วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "D12345", "advisor1@example.com", false, false, true));
+        advisorList.add(new Advisor("Tan", "168K5Hl", "ปวิน จันทรเกียรติ", "วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "D12346", "advisor2@example.com", false, false, true));
+        advisorList.add(new Advisor("Pang", "Ux5G63Y", "ปาณิตา พันธ์ภูผา", "วิศวกรรมศาตร์", "วิศวกรรมคอมพิวเตอร์", "A12347", "advisor3@example.com", false, false, true));
+        advisorList.add(new Advisor("Tai", "cN76A0S", "วันชัย เกียรติบวรสกุล", "วิศวกรรมศาตร์", "วิศวกรรมคอมพิวเตอร์", "A12348", "advisor4@example.com", false, false, true));
 
         datasource.writeData(advisorList);
     }
