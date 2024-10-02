@@ -84,13 +84,13 @@ public class UserListFileDatasourceTest {
 
     public void loadFacultyOfficer(){
         FacultyOfficerListFileDatasource datasource = new FacultyOfficerListFileDatasource("data/test", "facultyofficerlist.csv");
-        FacultyOfficerList officerList = new FacultyOfficerList();
-        officerList.add("Farm", "91gw9Wf", "โถมนะ สุพรรณภาคิน", "วิทยาศาสตร์", false, false);
-        officerList.add("Tame", "48eEO6X", "ปวัตร เจริญผลวัฒนา", "วิทยาศาสตร์", false, false);
-        officerList.add("Earth", "8Y65Dbt", "ธนภัทร อุดมเดชรักษา", "วิศวกรรมศาตร์", false, false);
-        officerList.add("At", "7V1v37r", "ตุลย์ กิตติชัยยากร", "วิศวกรรมศาตร์", false, false);
+        ArrayList<FacultyOfficer> officers = new ArrayList<>();
+        officers.add(new FacultyOfficer("Farm", "91gw9Wf", "โถมนะ สุพรรณภาคิน", "วิทยาศาสตร์", false, false));
+        officers.add(new FacultyOfficer("Tame", "48eEO6X", "ปวัตร เจริญผลวัฒนา", "วิทยาศาสตร์", false, false));
+        officers.add(new FacultyOfficer("Earth", "8Y65Dbt", "ธนภัทร อุดมเดชรักษา", "วิศวกรรมศาตร์", false, false));
+        officers.add(new FacultyOfficer("At", "7V1v37r", "ตุลย์ กิตติชัยยากร", "วิศวกรรมศาตร์", false, false));
 
-        datasource.writeData(officerList);
+        datasource.writeData(officers);
     }
 
 

@@ -6,7 +6,7 @@ import java.util.Random;
 public class Faculty {
     private String facultyName;
     private String facultyId;
-    private FacultyOfficerList facultyOfficers;
+    private ArrayList<FacultyOfficer> facultyOfficers;
     private ArrayList<Department> departments;
     private ArrayList<RequestHandlingOfficer> requestHandlingOfficers;
 
@@ -18,7 +18,7 @@ public class Faculty {
         this.facultyId = String.valueOf(rand.nextInt(90) + 10 +"");
         this.departments = new ArrayList<>();
         this.requestHandlingOfficers = new ArrayList<>();
-        this.facultyOfficers = new FacultyOfficerList();
+        this.facultyOfficers = new ArrayList<>();
     }
 
     public Faculty(String facultyName, String facultyId) {
@@ -26,7 +26,7 @@ public class Faculty {
         this.facultyId = facultyId;
         this.departments = new ArrayList<>();
         this.requestHandlingOfficers = new ArrayList<>();
-        this.facultyOfficers = new FacultyOfficerList();
+        this.facultyOfficers = new ArrayList<>();
     }// End Constructor
 
     public boolean isFacultyName(String facultyName){
@@ -95,7 +95,7 @@ public class Faculty {
     public String getFacultyId(){
         return this.facultyId;
     }
-    public FacultyOfficerList getFacultyOfficerList(){
+    public ArrayList<FacultyOfficer> getFacultyOfficers(){
         return this.facultyOfficers;
     }
 

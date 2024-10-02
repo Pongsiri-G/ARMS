@@ -4,9 +4,10 @@ import ku.cs.models.*;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Scanner;
 
-public class FacultyOfficerListFileDatasource implements Datasource<FacultyOfficerList> {
+public class FacultyOfficerListFileDatasource implements Datasource<ArrayList<FacultyOfficer>> {
     private String directoryName;
     private String facultyOfficerListFileName;
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -33,8 +34,8 @@ public class FacultyOfficerListFileDatasource implements Datasource<FacultyOffic
     }
 
     @Override
-    public FacultyOfficerList readData() {
-        FacultyOfficerList facultyOfficerList = new FacultyOfficerList();
+    public ArrayList<FacultyOfficer> readData() {
+        ArrayList<FacultyOfficer> facultyOfficers = new ArrayList<>();
 
         try {
             File file = new File(directoryName + File.separator + facultyOfficerListFileName);
@@ -58,21 +59,21 @@ public class FacultyOfficerListFileDatasource implements Datasource<FacultyOffic
                 facultyOfficer.setLastLogin(lastLogin);
                 facultyOfficer.setProfilePicturePath(profilePicturePath);
 
-                facultyOfficerList.add(facultyOfficer);
+                facultyOfficers.add(facultyOfficer);
             }
             scanner.close();
         } catch (FileNotFoundException e) {
             throw new RuntimeException("File not found", e);
         }
-        return facultyOfficerList;
+        return facultyOfficers;
     }
 
     @Override
-    public void writeData(FacultyOfficerList facultyOfficerList) {
+    public void writeData(ArrayList<FacultyOfficer> facultyOfficers) {
         try {
             FileWriter fileWriter = new FileWriter(directoryName + File.separator + facultyOfficerListFileName, false);
 
-            for (FacultyOfficer facultyOfficer : facultyOfficerList.getOfficers()) {
+            for (FacultyOfficer facultyOfficer : facultyOfficers) {
                 String lastLoginStr = facultyOfficer.getLastLogin() == null ? "Never" : facultyOfficer.getLastLogin().format(formatter);
                 String profilePicturePath = facultyOfficer.getProfilePicturePath() == null ? User.DEFAULT_PROFILE_PICTURE_PATH : facultyOfficer.getProfilePicturePath();
 

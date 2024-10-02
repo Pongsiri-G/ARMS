@@ -18,7 +18,7 @@ public class UserList {
             Faculty faculty = faculties.findFacultyByName(facultyOfficer.getFaculty().getFacultyName());
             if (faculty != null) {
                 facultyOfficer.setFaculty(faculty);
-                faculty.getFacultyOfficerList().add(facultyOfficer);
+                faculty.getFacultyOfficers().add(facultyOfficer);
                 users.add(facultyOfficer);
             }
         }
