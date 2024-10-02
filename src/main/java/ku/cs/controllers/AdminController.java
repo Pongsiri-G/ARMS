@@ -98,7 +98,7 @@ public class AdminController {
         allUserTableView.getColumns().clear();
         allUserTableView.getColumns().add(nameColumn);
         allUserTableView.getColumns().add(roleColumn);
-        allUserTableView.getColumns().add(facultyColumn);  // Add faculty column
+        allUserTableView.getColumns().add(facultyColumn);
         allUserTableView.getColumns().add(departmentColumn);
 
         // Add users to the table
