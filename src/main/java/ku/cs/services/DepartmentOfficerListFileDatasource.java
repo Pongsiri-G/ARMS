@@ -50,14 +50,16 @@ public class DepartmentOfficerListFileDatasource implements Datasource<ArrayList
                 String password = data[1];
                 String name = data[2];
                 boolean isSuspended = "suspended".equals(data[3]);
-                LocalDateTime lastLogin = "Never".equals(data[4]) ? null : LocalDateTime.parse(data[4], formatter);
-                String profilePicturePath = data[5].isEmpty() ? User.DEFAULT_PROFILE_PICTURE_PATH : data[5];
-                String facultyName = data[6];
-                String departmentName = data[7];
+                boolean isFirstLogin = Boolean.parseBoolean(data[4]); // การเข้าใช้งานครั้งแรก
+                LocalDateTime lastLogin = "Never".equals(data[5]) ? null : LocalDateTime.parse(data[4], formatter);
+                String profilePicturePath = data[6].isEmpty() ? User.DEFAULT_PROFILE_PICTURE_PATH : data[5];
+                String facultyName = data[7];
+                String departmentName = data[8];
 
                 Faculty faculty = new Faculty(facultyName);
                 Department department = new Department(departmentName);
                 DepartmentOfficer departmentOfficer = new DepartmentOfficer(username, password, name, faculty, department, true, isSuspended);
+                departmentOfficer.setFirstLogin(isFirstLogin);
                 departmentOfficer.setLastLogin(lastLogin);
                 departmentOfficer.setProfilePicturePath(profilePicturePath);
 
@@ -84,6 +86,7 @@ public class DepartmentOfficerListFileDatasource implements Datasource<ArrayList
                         .append(departmentOfficer.getPassword()).append(",")
                         .append(departmentOfficer.getName()).append(",")
                         .append(departmentOfficer.getSuspended() ? "suspended" : "normal").append(",")
+                        .append(departmentOfficer.isFirstLogin()).append(",")
                         .append(lastLoginStr).append(",")
                         .append(profilePicturePath).append(",")
                         .append(departmentOfficer.getFaculty().getFacultyName()).append(",")

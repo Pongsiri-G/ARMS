@@ -50,12 +50,14 @@ public class FacultyOfficerListFileDatasource implements Datasource<ArrayList<Fa
                 String password = data[1];
                 String name = data[2];
                 boolean isSuspended = "suspended".equals(data[3]);
-                LocalDateTime lastLogin = "Never".equals(data[4]) ? null : LocalDateTime.parse(data[4], formatter);
-                String profilePicturePath = data[5].isEmpty() ? User.DEFAULT_PROFILE_PICTURE_PATH : data[5];
-                String facultyName = data[6];
+                boolean isFirstLogin = Boolean.parseBoolean(data[4]); // การเข้าใช้งานครั้งแรก
+                LocalDateTime lastLogin = "Never".equals(data[5]) ? null : LocalDateTime.parse(data[4], formatter);
+                String profilePicturePath = data[6].isEmpty() ? User.DEFAULT_PROFILE_PICTURE_PATH : data[5];
+                String facultyName = data[7];
 
                 Faculty faculty = new Faculty(facultyName);
                 FacultyOfficer facultyOfficer = new FacultyOfficer(username, password, name, faculty, true, isSuspended);
+                facultyOfficer.setFirstLogin(isFirstLogin);
                 facultyOfficer.setLastLogin(lastLogin);
                 facultyOfficer.setProfilePicturePath(profilePicturePath);
 
@@ -82,6 +84,7 @@ public class FacultyOfficerListFileDatasource implements Datasource<ArrayList<Fa
                         .append(facultyOfficer.getPassword()).append(",")
                         .append(facultyOfficer.getName()).append(",")
                         .append(facultyOfficer.getSuspended() ? "suspended" : "normal").append(",")
+                        .append(facultyOfficer.isFirstLogin()).append(",")
                         .append(lastLoginStr).append(",")
                         .append(profilePicturePath).append(",")
                         .append(facultyOfficer.getFaculty().getFacultyName());

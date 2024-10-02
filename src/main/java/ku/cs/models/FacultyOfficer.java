@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class FacultyOfficer extends User implements Officer {
     private Faculty faculty;
+    private Boolean isFirstLogin = true;
 
     // Begin Constructor
     public FacultyOfficer(String username, String password, String name, Faculty faculty, boolean isHashed, boolean suspended) {
@@ -17,6 +18,10 @@ public class FacultyOfficer extends User implements Officer {
         this.faculty = new Faculty(faculty);
     }
     // End Constructor
+
+    public void setFirstLogin(Boolean isFirstLogin) {
+        this.isFirstLogin = isFirstLogin;
+    }
 
 
     @Override
@@ -73,6 +78,10 @@ public class FacultyOfficer extends User implements Officer {
     // End Handle Request Manager
     public Faculty getFaculty() {
         return faculty;
+    }
+
+    public Boolean isFirstLogin() {
+        return isFirstLogin;
     }
 
     @Override
