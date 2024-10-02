@@ -8,7 +8,6 @@ public abstract class User {
     private String username;
     private String password;
     private String name;
-    private String role;
     private boolean suspended;
     private LocalDateTime lastLogin;
     private String profilePicturePath;
@@ -35,10 +34,14 @@ public abstract class User {
     // Constructor for users loaded from a file (password is either hashed or plaintext)
     public User(String username, String password, String name, boolean isHashed, boolean suspended) {
         this.username = username;
-        if (isHashed) {
-            this.password = password; // Use the hashed password as is
+        if (password != null) {
+            if (isHashed) {
+                this.password = password; // Use the hashed password as is
+            } else {
+                this.password = BCrypt.withDefaults().hashToString(12, password.toCharArray()); // Hash if not already hashed
+            }
         } else {
-            this.password = BCrypt.withDefaults().hashToString(12, password.toCharArray()); // Hash if not already hashed
+            this.password = null; // Handle case where password is null
         }
         this.name = name;
         this.suspended = suspended;
@@ -121,16 +124,15 @@ public abstract class User {
         return name;
     }
 
-    public String getRole() {return role;}
-    // ping : สร้าง getter เพื่อ นำไปใช้ใน user table view
-
     public boolean validatePassword(String password) {
         BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), this.password);
         return result.verified;
     }
 
+    public abstract String getRole();
+
     @Override
     public String toString() {
-        return getRole() + " " + name + " (" + username + ")";
+        return name + " (" + username + ")";
     }
 }

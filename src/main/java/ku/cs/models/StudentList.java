@@ -20,6 +20,13 @@ public class StudentList {
         students.add(student);
     }
 
+    public void addNewStudent(String name, String faculty, String department, String studentID, String email) {
+        Faculty f = new Faculty(faculty);
+        Department d = new Department(department);
+        Student student = new Student(name, f, d, studentID, email);
+        students.add(student);
+    }
+
     public List<Student> getStudents() {
         return students;
     }

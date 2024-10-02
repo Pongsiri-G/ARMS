@@ -8,6 +8,9 @@ import javafx.scene.input.MouseEvent;
 import ku.cs.services.FXRouter;
 
 import ku.cs.models.*; //Add for testing only
+import ku.cs.services.UserListFileDatasource;
+import ku.cs.services.UserListFileDatasourceTest;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,11 +28,14 @@ public class RegisterSecondController {
     private String email;
     private String studentId;
 
-    private UserList userList; // Assume this is initialized elsewhere
+    private UserList userList;
+    private UserListFileDatasource datasource;
 
     @FXML
     private void initialize() {
         errorLabel.setText("");
+        datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv", "departmentofficerlist.csv", "facdeplist.csv");
+        this.userList = datasource.readData();
 
         // Get the data from the first registration step
         List<String> data = (List<String>) FXRouter.getData();
@@ -45,12 +51,10 @@ public class RegisterSecondController {
     }
 
     private void registerStudent() {
-        // Get the data from the form
         String username = usernameTextField.getText();
         String password = passwordPasswordField.getText();
         String confirmPassword = confirmPasswordPasswordField.getText();
 
-        // Validate username and passwords
         if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             errorLabel.setText("โปรดกรอกข้อมูลให้ครบถ้วน");
             return;
@@ -62,7 +66,8 @@ public class RegisterSecondController {
         }
 
         try {
-            userList.registerStudent(username, password, confirmPassword, firstName + " " + lastName, studentId, email, true);
+            userList.registerStudent(username, password, confirmPassword, firstName + " " + lastName, studentId, email, false);
+            datasource.writeData(userList);
             FXRouter.goTo("login");
         } catch (IllegalArgumentException e) {
             errorLabel.setText(e.getMessage());
@@ -73,8 +78,8 @@ public class RegisterSecondController {
 
     @FXML
     public void backRegisterClick(MouseEvent event) throws IOException {
-        // Go back to the first registration page
         FXRouter.goTo("register-first");
     }
 }
+
 

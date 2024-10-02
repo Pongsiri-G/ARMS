@@ -60,6 +60,9 @@ public class FacultyOfficer extends User implements Officer {
         request.changeStatus("accepted");
     }
 
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
+    }
 
     // End Handle Request Manager
     public Faculty getFaculty() {
