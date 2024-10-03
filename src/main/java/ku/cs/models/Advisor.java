@@ -8,6 +8,7 @@ public class Advisor extends User{
     private String advisorID;
     private String advisorEmail;
     private boolean firstLogin;
+    private ArrayList<Student> students;
 
     public Advisor(String username, String password, String name, Faculty faculty, Department department, String advisorID, String advisorEmail, boolean isHashed, boolean suspended) {
         super(username, password, name, isHashed, suspended);
@@ -38,8 +39,10 @@ public class Advisor extends User{
     //ใช้สำหรับอ่านข้อมูลจากไฟล์เก็บเป็น object ชั่วคราวเท่านั้น
     public Advisor(String name) {
         super(null, null, name);
+        this.students = new ArrayList<>();
     }
 
+    public ArrayList<Student> getStudents() { return students; }
 
 
     //public void setStudents(ArrayList<Student> students) { this.students = students; }

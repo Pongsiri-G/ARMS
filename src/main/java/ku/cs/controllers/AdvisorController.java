@@ -50,9 +50,19 @@ public class AdvisorController{
 
         Advisor advisor = (Advisor) FXRouter.getData();
         showUserInfo(advisor);
+
         datasource = new StudentListFileDatasource("data/test", "studentlist.csv");
         students = datasource.readData();
-        showTable(students);
+        //showTable(students);
+
+        ArrayList<Student> studentsUnderAdvisor = new ArrayList<>();
+        for (Student student : students) {
+            if (student.getStudentAdvisor() != null && student.getStudentAdvisor().getName().equals(advisor.getName())) {
+                studentsUnderAdvisor.add(student);
+            }
+        }
+
+        showTable(studentsUnderAdvisor);
 
         studentListTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Student>() {
             @Override

@@ -46,9 +46,21 @@ public class LoginController {
 
             String role = userList.login(username.getText().trim(), password.getText().trim());
 
-            if (role != null) {
+            if (role != null && role.equals("Student")) {
+                redirect(role);
+            }
+
+            if (role != null && !role.equals("Student")) {
+                // append
+                User loggedinUser = userList.findUserByUsername(username.getText().trim());
+                if (loggedinUser != null) {
+                    FXRouter.goTo("change-password", loggedinUser.getUsername());
+                }else {
+                    //datasource.writeData(userList);
+                    redirect(role);  // Redirect based on role
+                }
+                // เปลี่ยนบรรทัดมาไว้ตรงนี้ลองๆ
                 datasource.writeData(userList);
-                redirect(role);  // Redirect based on role
             }
         }
         catch (IllegalArgumentException e) {

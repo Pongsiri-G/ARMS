@@ -34,8 +34,9 @@ public class Student extends User {
     }
 
     // เดี๋ยวแก้ที่หลังใช้ไปก่อน
-    public Student(String name, String faculty, String department, String studentID, String email) {
+    public Student(String name, String faculty, String department, String studentID, String email, Advisor studentAdvisor) {
         this(name,new Faculty(faculty),new Department(department),studentID,email);
+        this.studentAdvisor = studentAdvisor;
     }
 
     public void createRequest() {

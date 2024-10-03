@@ -95,6 +95,16 @@ public class Department {
         request.changeStatus("sent");
     }
 
+    // หาอาจารย์ที่ปรึกษาในนิสิต
+    public Student findStudentByAdvisorName(String advisorName) {
+        for (Student student : students) {
+            if (student.getStudentAdvisor().getName().equals(advisorName)) {
+                return student; // ถ้าหากเจอชื่ออาจารย์ใน Student ก็ return Student ออกมาเเล้วไปเลือกเอาจะเลือกอะไรโชว์ Table บ้าง
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString(){
         return departmentName + "\t" + departmentID;
