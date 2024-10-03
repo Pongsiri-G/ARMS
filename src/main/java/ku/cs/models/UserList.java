@@ -2,6 +2,7 @@ package ku.cs.models;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public class UserList {
     private ArrayList<User> users;
@@ -65,6 +66,9 @@ public class UserList {
                 if (department != null) {
                     student.setEnrolledFaculty(faculty);
                     student.setEnrolledDepartment(department);
+                    if (student.getStudentAdvisor() != null) {
+                        student.setStudentAdvisor(department.findAdvisorByName(student.getStudentAdvisor().getName()));
+                    }
                     department.getStudents().add(student);
                     if (student.getUsername() != null && student.getPassword() != null) {
                         users.add(student);
@@ -73,6 +77,7 @@ public class UserList {
             }
         }
     }
+
 
     // Setters and Getters
     public void setUsers(ArrayList<User> users) {
@@ -116,7 +121,15 @@ public class UserList {
 
         // If the student is not found, throw an exception
         if (!foundStudent) {
-            throw new IllegalArgumentException("ไม่พบข้อมูลนิสิตในฐานข้อมูลภาควิชา กรุณาตรวจสอบข้อมูลที่กรอกอีกครั้ง");
+            throw new IllegalArgumentException("ไม่พบข้อมูลนิสิตในฐานข้อมูลภาควิชา\nกรุณาตรวจสอบข้อมูลที่กรอกอีกครั้ง");
+        }
+
+        if (matchedStudent.getUsername() != null && matchedStudent.getPassword() != null) {
+            throw new IllegalArgumentException("ข้อมูลนิสิตนี้ได้ทำการลงทะเบียนในระบบคำร้องแล้ว");
+        }
+
+        if (findUserByUsername(username) != null) {
+            throw new IllegalArgumentException("มีชื่อผู้ใช้นี้ในระบบแล้ว โปรดใช้ชื่อใหม่");
         }
 
         matchedStudent.setUsername(username);
@@ -150,7 +163,6 @@ public class UserList {
         }
 
         User user = findUserByUsername(username);
-        user.setLastLogin(LocalDateTime.now());
 
         if (user == null || !user.validatePassword(password)) {
             throw new IllegalArgumentException("ชื่อบัญชีผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
@@ -159,6 +171,8 @@ public class UserList {
         if (user.getSuspended()) {
             throw new IllegalArgumentException("บัญชีผู้ใช้นี้ถูกระงับ ไม่สามารถเข้าสู่ระบบได้");
         }
+
+        user.setLastLogin(LocalDateTime.now());
         return user.getRole();
     }
 }
