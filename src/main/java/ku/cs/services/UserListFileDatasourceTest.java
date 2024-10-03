@@ -7,16 +7,27 @@ import java.io.*;
 public class UserListFileDatasourceTest {
     private UserListFileDatasource datasource;
     private String testDirectory = "data/test";
-    private String testAdvisorFileName = "advisors.csv";
+    private String testAdvisorFileName = "advisorlist.csv";
     private String testStudentFileName = "studentlist.csv";
+    private String testFacultyOfficerFileName = "facultyofficerlist.csv";
+    private String testDepartmentFileName = "departmentofficerlist.csv";
+    private String testFacDepFileName = "facdeplist.csv";
+    public static void main(String[] args) {
+        UserListFileDatasourceTest test = new UserListFileDatasourceTest();
+        test.runTests();
+    }
 
     public void runTests() {
-        setup();
-        loadUserList();
+        setup(); //โปรดระวัง ถ้าใช้ runtest ไฟล์จะกลับเป็นค่าเริ่มต้น
+        loadFacultyList();
+        loadStudent();
+        loadFacultyOfficer();
+        loadAdvisorList();
+        loadDepartmentOfficer();
     }
 
     private void setup() {
-        datasource = new UserListFileDatasource(testDirectory, testStudentFileName, testAdvisorFileName);
+        datasource = new UserListFileDatasource(testDirectory, testStudentFileName, testAdvisorFileName, testFacultyOfficerFileName, testDepartmentFileName, testFacDepFileName);
         clearTestFile();
     }
 
@@ -33,53 +44,72 @@ public class UserListFileDatasourceTest {
 
     public UserList loadUserList() {
         UserList users = new UserList();
-        FacultyList facultyList = this.loadFacultyList();
-        users.setFaculties(facultyList);
-        users.addUser("sample1", "1234", "John Doe", "Science", false, false); //Faculty Officer1
-        users.addUser("sample2", "5678", "Jane Doe", "Science", false, false); //Faculty Officer2
-        users.addUser("sample3", "1234", "Jim Doe", "Architecture", "Thai Architecture", false, false); //Department Officer1
-        users.addUser("sample4", "5678", "Jack Doe", "Architecture", "Urban Architecture", false, false); //Department Officer2
-        users.addUser("sample5", "1234", "Jeff Doe", "Science", "Computer Science", "D1411","xxxxxxx@ku.th", false, false); //Advisor1
-        users.addUser("sample6", "5678", "Job Doe", "Science", "Math", "D1015", "aaaa@ku.th",  false, false); //Advisor2
-        users.addUser("sample7", "1234", "Jerk Doe", "Engineering", "Civil Engineering", "b6620400000", "studentmail1@ku.th", false, false); //Student1
-        users.addUser("sample8", "5678", "Josh Doe", "Engineering", "Computer Engineering", "b6620400001", "studentmail2@ku.th", false, false); //Student2
-        users.findUserByUsername("sample8").setSuspended(true);
         datasource.writeData(users);
         return users;
     }
 
-    public FacultyList loadFacultyList(){
-        FacultyList faculties = new FacultyList();
-        Faculty science = new Faculty("Science");
-        science.addDepartment("Computer Science");
-        science.addDepartment("Math");
-        science.addDepartment("Food Science");
+    public void loadAdvisorList(){
+        AdvOffListFileDatasource datasource = new AdvOffListFileDatasource("data/test", "advisorlist.csv");
+        ArrayList<Advisor> advisorList = new ArrayList<>();
+        advisorList.add(new Advisor("Jak", "vXuO637", "พรรษา จักรพันธ์ประดิษฐ์", "วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "D12345", "advisor1@example.com", false, false, true));
+        advisorList.add(new Advisor("Tan", "168K5Hl", "ปวิน จันทรเกียรติ", "วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "D12346", "advisor2@example.com", false, false, true));
+        advisorList.add(new Advisor("Pang", "Ux5G63Y", "ปาณิตา พันธ์ภูผา", "วิศวกรรมศาตร์", "วิศวกรรมคอมพิวเตอร์", "A12347", "advisor3@example.com", false, false, true));
+        advisorList.add(new Advisor("Tai", "cN76A0S", "วันชัย เกียรติบวรสกุล", "วิศวกรรมศาตร์", "วิศวกรรมคอมพิวเตอร์", "A12348", "advisor4@example.com", false, false, true));
 
-        Faculty architecture = new Faculty("Architecture");
-        architecture.addDepartment("Thai Architecture");
-        architecture.addDepartment("Interior Architecture");
-        architecture.addDepartment("Urban Architecture");
+        datasource.writeData(advisorList);
+    }
+
+    public void loadStudent(){
+        StudentListFileDatasource datasource = new StudentListFileDatasource("data/test", "studentlist.csv");
+        ArrayList<Student> studentList = new ArrayList<>();
+        studentList.add(new Student("อธิฐาน คมปราชญ์","วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "b6620400000", "studentmail1@ku.th"));
+        studentList.add(new Student("นิชกานต์ ประเสริฐโสม","วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "b6620400001", "studentmail2@ku.th"));
+        studentList.add(new Student("กรีฑา พิพัฒนกุล","วิศวกรรมศาตร์", "วิศวกรรมคอมพิวเตอร์", "b6625500002", "studentmail3@ku.th"));
+        studentList.add(new Student("ณัฐวดี ทรัพย์ธารา","วิศวกรรมศาตร์", "วิศวกรรมคอมพิวเตอร์", "b6625500003", "studentmail4@ku.th"));
+
+        datasource.writeData(studentList);
+
+    }
+
+    public void loadDepartmentOfficer(){
+        DepartmentOfficerListFileDatasource datasource = new DepartmentOfficerListFileDatasource("data/test", "departmentofficerlist.csv");
+        ArrayList<DepartmentOfficer> officers = new ArrayList<>();
+        officers.add(new DepartmentOfficer("Rain", "cN76A0S", "อนันกร ปิติโอภาสพงศ์", "วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", false, false));
+        officers.add(new DepartmentOfficer("Patrick", "fORP833", "จักร จันทรเกียรติ", "วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", false, false));
+        officers.add(new DepartmentOfficer("Pi", "2Ug6V7v", "กุลนิภา เมธากิจขจร", "วิศวกรรมศาตร์", "วิศวกรรมคอมพิวเตอร์", false, false));
+        officers.add(new DepartmentOfficer("Tuptim", "5E2r4px", "รัญชน์ นิธิธรรมรงค์", "วิศวกรรมศาตร์", "วิศวกรรมคอมพิวเตอร์", false, false));
+
+        datasource.writeData(officers);
+    }
+
+    public void loadFacultyOfficer(){
+        FacultyOfficerListFileDatasource datasource = new FacultyOfficerListFileDatasource("data/test", "facultyofficerlist.csv");
+        ArrayList<FacultyOfficer> officers = new ArrayList<>();
+        officers.add(new FacultyOfficer("Farm", "91gw9Wf", "โถมนะ สุพรรณภาคิน", "วิทยาศาสตร์", false, false));
+        officers.add(new FacultyOfficer("Tame", "48eEO6X", "ปวัตร เจริญผลวัฒนา", "วิทยาศาสตร์", false, false));
+        officers.add(new FacultyOfficer("Earth", "8Y65Dbt", "ธนภัทร อุดมเดชรักษา", "วิศวกรรมศาตร์", false, false));
+        officers.add(new FacultyOfficer("At", "7V1v37r", "ตุลย์ กิตติชัยยากร", "วิศวกรรมศาตร์", false, false));
+
+        datasource.writeData(officers);
+    }
 
 
-        Faculty agriculture = new Faculty("Agriculture");
-        agriculture.addDepartment("Agricultural Management");
+    public void loadFacultyList(){
+        FacDepListFileDatascource datasource = new FacDepListFileDatascource("data/test", "facdeplist.csv");
+        FacultyList facultyList = new FacultyList();
+        // เพิ่มคณะ
+        Faculty faculty1 = new Faculty("วิทยาศาสตร์", "01");
+        Faculty faculty2 = new Faculty("วิศวกรรมศาตร์", "02");
+        // เพิ่มสาขา
+        Department department1 = new Department("วิทยาการคอมพิวเตอร์", "011");
+        Department department2 = new Department("วิศวกรรมคอมพิวเตอร์", "022");
 
-        Faculty engineering = new Faculty("Engineering");
-        engineering.addDepartment("Civil Engineering");
-        engineering.addDepartment("Computer Engineering");
-        engineering.addDepartment("Electrical Engineering");
+        faculty1.addDepartment(department1);
+        faculty2.addDepartment(department2);
 
-        Faculty arts = new Faculty("Arts");
-        arts.addDepartment("Graphic Arts");
+        facultyList.addFaculty(faculty1);
+        facultyList.addFaculty(faculty2);
 
-        Faculty economics = new Faculty("Economics");
-        economics.addDepartment("Civil Economics");
-
-        faculties.addFaculty(science);
-        faculties.addFaculty(architecture);
-        faculties.addFaculty(engineering);
-        faculties.addFaculty(arts);
-        faculties.addFaculty(economics);
-        return faculties;
+        datasource.writeData(facultyList);
     }
 }

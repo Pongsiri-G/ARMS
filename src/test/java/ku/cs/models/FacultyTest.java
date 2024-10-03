@@ -14,8 +14,8 @@ class FacultyTest {
     void setUp() {
         science = new Faculty("Science");
         engineering = new Faculty("Engineering");
-        computerScience = new Department("Computer Science",  science);
-        computerEngineer = new Department("Computer Engineering", engineering);
+        //computerScience = new Department("Computer Science",  science);
+        //computerEngineer = new Department("Computer Engineering", engineering);
     }
 
     @Test

@@ -4,9 +4,10 @@ import ku.cs.models.*;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Scanner;
 
-public class StudentListFileDatasource implements Datasource<StudentList> {
+public class StudentListFileDatasource implements Datasource<ArrayList<Student>> {
     private String directoryName;
     private String studentListFileName;
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -33,8 +34,8 @@ public class StudentListFileDatasource implements Datasource<StudentList> {
     }
 
     @Override
-    public StudentList readData() {
-        StudentList studentList = new StudentList();
+    public ArrayList<Student> readData() {
+        ArrayList<Student> studentList = new ArrayList<>();
 
         try {
             File file = new File(directoryName + File.separator + studentListFileName);
@@ -43,10 +44,12 @@ public class StudentListFileDatasource implements Datasource<StudentList> {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] data = line.split(",");
+
+                // Ensure there are enough fields
                 if (data.length < 10) continue;
 
-                String username = data[0];
-                String password = data[1];
+                String username = data[0].isEmpty() ? null : data[0];
+                String password = data[1].isEmpty() ? null : data[1];
                 String name = data[2];
                 boolean isSuspended = "suspended".equals(data[3]);
                 LocalDateTime lastLogin = "Never".equals(data[4]) ? null : LocalDateTime.parse(data[4], formatter);
@@ -58,11 +61,19 @@ public class StudentListFileDatasource implements Datasource<StudentList> {
 
                 Faculty faculty = new Faculty(facultyName);
                 Department department = new Department(departmentName);
-                Student student = new Student(username, password, name, faculty, department, studentId, email, true, isSuspended);
+
+                // If username and password are null, create student without login details
+                Student student;
+                if (username == null && password == null) {
+                    student = new Student(name, faculty, department, studentId, email);
+                } else {
+                    student = new Student(username, password, name, faculty, department, studentId, email, true, isSuspended);
+                }
+
                 student.setLastLogin(lastLogin);
                 student.setProfilePicturePath(profilePicturePath);
 
-                studentList.addStudent(student);  // Add to StudentList
+                studentList.add(student);  // Add to StudentList
             }
             scanner.close();
         } catch (FileNotFoundException e) {
@@ -72,17 +83,19 @@ public class StudentListFileDatasource implements Datasource<StudentList> {
     }
 
     @Override
-    public void writeData(StudentList studentList) {
+    public void writeData(ArrayList<Student> studentList) {
         try {
             FileWriter fileWriter = new FileWriter(directoryName + File.separator + studentListFileName, false);
 
-            for (Student student : studentList.getStudents()) {
+            for (Student student : studentList) {
+                String username = student.getUsername() == null ? "" : student.getUsername();
+                String password = student.getPassword() == null ? "" : student.getPassword();
                 String lastLoginStr = student.getLastLogin() == null ? "Never" : student.getLastLogin().format(formatter);
                 String profilePicturePath = student.getProfilePicturePath() == null ? User.DEFAULT_PROFILE_PICTURE_PATH : student.getProfilePicturePath();
 
                 StringBuilder line = new StringBuilder();
-                line.append(student.getUsername()).append(",")
-                        .append(student.getPassword()).append(",")
+                line.append(username).append(",")
+                        .append(password).append(",")
                         .append(student.getName()).append(",")
                         .append(student.getSuspended() ? "suspended" : "normal").append(",")
                         .append(lastLoginStr).append(",")

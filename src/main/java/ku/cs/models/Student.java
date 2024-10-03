@@ -8,10 +8,13 @@ public class Student extends User {
     private Advisor studentAdvisor;
 
 
-    public Student(String name, String studentID, String email) {
+    //Add New Student (No Username and password
+    public Student(String name,  Faculty faculty, Department department, String studentID, String email) {
         super(null, null, name);
         this.studentID = studentID;
         this.email = email;
+        this.enrolledFaculty = faculty;
+        this.enrolledDepartment = department;
     }
 
     public Student(String username, String password, String name, Faculty faculty, Department department, String studentID, String email, boolean isHashed, boolean suspended) {
@@ -28,6 +31,11 @@ public class Student extends User {
         this.enrolledFaculty = faculty;
         this.enrolledDepartment = department;
         this.email = email;
+    }
+
+    // เดี๋ยวแก้ที่หลังใช้ไปก่อน
+    public Student(String name, String faculty, String department, String studentID, String email) {
+        this(name,new Faculty(faculty),new Department(department),studentID,email);
     }
 
     public void createRequest() {
@@ -47,6 +55,8 @@ public class Student extends User {
     public void setEmail(String email) {
         this.email = email;
     }
+    public void setEnrolledFaculty(Faculty faculty) { this.enrolledFaculty = faculty; }
+    public void setEnrolledDepartment(Department department) { this.enrolledDepartment = department; }
 
 
     public String getStudentID() { return studentID; }

@@ -6,12 +6,9 @@ import java.util.Random;
 public class Faculty {
     private String facultyName;
     private String facultyId;
-    private String departmentName;
-    private String departmentId;
-    //ping : add department data
+    private ArrayList<FacultyOfficer> facultyOfficers;
     private ArrayList<Department> departments;
     private ArrayList<RequestHandlingOfficer> requestHandlingOfficers;
-    private RequestList requestList;
 
     // Begin Constructor
     public Faculty(String facultyName){
@@ -21,13 +18,7 @@ public class Faculty {
         this.facultyId = String.valueOf(rand.nextInt(90) + 10 +"");
         this.departments = new ArrayList<>();
         this.requestHandlingOfficers = new ArrayList<>();
-    }
-
-    public Faculty(String facultyName, String facultyId, String departmentName, String departmentId){
-        this.facultyName = facultyName;
-        this.facultyId = facultyId;
-        this.departmentName = departmentName;
-        this.departmentId = departmentId;
+        this.facultyOfficers = new ArrayList<>();
     }
 
     public Faculty(String facultyName, String facultyId) {
@@ -35,6 +26,7 @@ public class Faculty {
         this.facultyId = facultyId;
         this.departments = new ArrayList<>();
         this.requestHandlingOfficers = new ArrayList<>();
+        this.facultyOfficers = new ArrayList<>();
     }// End Constructor
 
     public boolean isFacultyName(String facultyName){
@@ -56,18 +48,15 @@ public class Faculty {
 
     // Begin handle Departments
     public void addDepartment(Department department){
-        if (department.getFaculty() == null){
-            department.setFaculty(this);
-        }
         this.departments.add(department);
     }
 
     public void addDepartment(String departmentName){
-        this.departments.add(new Department(departmentName, this));
+       this.departments.add(new Department(departmentName));
     }
 
     public void addDepartment(String departmentName, String departmentId){
-        this.departments.add(new Department(departmentName, departmentId, this));
+        this.departments.add(new Department(departmentName, departmentId));
     }
 
     public void removeDepartment(Department department){
@@ -99,24 +88,16 @@ public class Faculty {
     public void setRequestManagers(ArrayList<RequestHandlingOfficer> approvers){this.requestHandlingOfficers = approvers;}
 
     // Begin getter
-    public ArrayList<Department> getDepartments(){
-        return this.departments;
-    }
-
+    public ArrayList<Department> getDepartments() { return this.departments; }
     public String getFacultyName(){
         return this.facultyName;
     }
     public String getFacultyId(){
         return this.facultyId;
     }
-    public String getDepartmentName(){return this.departmentName;}
-    public String getDepartmentId(){return this.departmentId;}
-    //ping : add department getter
-
-    public RequestList getRequestList() {
-        return requestList;
+    public ArrayList<FacultyOfficer> getFacultyOfficers(){
+        return this.facultyOfficers;
     }
-
 
     // End getter
 

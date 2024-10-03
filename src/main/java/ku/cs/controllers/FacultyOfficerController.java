@@ -12,7 +12,7 @@ import ku.cs.models.FacultyOfficer;
 import ku.cs.models.Request;
 import ku.cs.models.RequestHandlingOfficer;
 import ku.cs.services.FXRouter;
-import ku.cs.services.FacultyOfficerDatasource;
+import ku.cs.services.FacultyOfficerListFileDatasource;
 import ku.cs.services.RequestHandlingOfficersDataSource;
 
 import java.io.IOException;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FacultyOfficerController {
-    FacultyOfficerDatasource facultyOfficerDatasource;
+    FacultyOfficerListFileDatasource facultyOfficerDatasource;
     FacultyOfficer officer;
     RequestHandlingOfficersDataSource approverDatasource;
 
@@ -92,9 +92,9 @@ public class FacultyOfficerController {
     }
 
     private void initializeDataSources() {
-        facultyOfficerDatasource = new FacultyOfficerDatasource("data/test", "faculty-officer.csv");
-        officer = facultyOfficerDatasource.readData().getFirst();
-        approverDatasource = new RequestHandlingOfficersDataSource("data/approver", officer.getFaculty().getFacultyName() + "-approver.csv");
+        facultyOfficerDatasource = new FacultyOfficerListFileDatasource("data/test", "faculty-officer.csv");
+//        officer = facultyOfficerDatasource.readData().getFirst();
+//        approverDatasource = new RequestHandlingOfficersDataSource("data/approver", officer.getFaculty().getFacultyName() + "-approver.csv");
         loadApprovers();
         // mockup Data for Request Will implement Late
     }
