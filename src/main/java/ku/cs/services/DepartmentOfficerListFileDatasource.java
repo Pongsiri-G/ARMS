@@ -44,7 +44,7 @@ public class DepartmentOfficerListFileDatasource implements Datasource<ArrayList
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] data = line.split(",");
-                if (data.length < 8) continue;
+                if (data.length < 9) continue;
 
                 String username = data[0];
                 String password = data[1];

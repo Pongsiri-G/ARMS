@@ -35,6 +35,11 @@ public class Advisor extends User{
         this.advisorID = advisorID;
     }
 
+    //ใช้สำหรับอ่านข้อมูลจากไฟล์เก็บเป็น object ชั่วคราวเท่านั้น
+    public Advisor(String name) {
+        super(null, null, name);
+    }
+
 
 
     //public void setStudents(ArrayList<Student> students) { this.students = students; }

@@ -19,6 +19,7 @@ import ku.cs.services.FXRouter;
 import ku.cs.services.UserListFileDatasource;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class StudentCreateRequestController {
     @FXML private VBox navigation;
@@ -218,22 +219,11 @@ public class StudentCreateRequestController {
 
 
     @FXML
-    public void optionDropdown(MouseEvent event) {
-        ContextMenu contextMenu = new ContextMenu();
-
-        MenuItem item1 = new MenuItem("Option 1");
-        MenuItem item2 = new MenuItem("Option 2");
-        MenuItem item3 = new MenuItem("Option 3");
-
-
-        contextMenu.getItems().addAll(item1, item2, item3);
-
-        if (!contextMenu.isShowing()) {
-            Bounds optionBounds = optionDropdown.localToScreen(optionDropdown.getBoundsInLocal());
-            contextMenu.show(optionDropdown, optionBounds.getMinX(), optionBounds.getMaxY());
-        } else {
-            contextMenu.hide();
-        }
+    public void optionDropdown(MouseEvent event) throws IOException {
+        ArrayList<String> data = new ArrayList<>();
+        data.add("student-create-request");
+        data.add(student.getUsername());
+        FXRouter.goTo("settings", data);
 
     }
 
