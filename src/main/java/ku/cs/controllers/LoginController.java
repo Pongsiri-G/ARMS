@@ -3,6 +3,7 @@ package ku.cs.controllers;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import ku.cs.models.Advisor;
 import ku.cs.models.User;
 import ku.cs.models.UserList;
 import ku.cs.services.FXRouter;
@@ -12,6 +13,7 @@ import ku.cs.services.UserListFileDatasource;
 import ku.cs.services.UserListFileDatasourceTest;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +29,7 @@ public class LoginController {
     private UserListFileDatasource datasource;
 
     public LoginController() {
-        datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisors.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
+        datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
         this.userList = datasource.readData();
     }
 
@@ -44,23 +46,19 @@ public class LoginController {
                 FXRouter.goTo("dashboard");
             } // TEMPORARY LOGIN FOR TEST ONLY
 
-            String role = userList.login(username.getText().trim(), password.getText().trim());
+            String role = userList.login(username.getText(), password.getText());
+            // เพิ่ม
+            User user = userList.findUserByUsername(username.getText());
 
-            if (role != null && role.equals("Student")) {
-                redirect(role);
-            }
-
-            if (role != null && !role.equals("Student")) {
-                // append
-                User loggedinUser = userList.findUserByUsername(username.getText().trim());
-                if (loggedinUser != null) {
-                    FXRouter.goTo("change-password", loggedinUser.getUsername());
-                }else {
-                    //datasource.writeData(userList);
-                    redirect(role);  // Redirect based on role
+            if (role != null) {
+                //System.out.println("LastLogin : " + user.getLastLogin());
+                // เเก้ไขเพิ่มเติมหากเป็น 3 role นี้เเละเข้าใช้ครั้งเเรกจะบังคับไปเปลี่ยนรหัสผ่านก่อน
+                if (user.getLastLogin() == null && (role.equals("Advisor") || role.equals("FacultyOfficer") || role.equals("DepartmentOfficer"))) {
+                    FXRouter.goTo("change-password", user);
+                    return;
                 }
-                // เปลี่ยนบรรทัดมาไว้ตรงนี้ลองๆ
                 datasource.writeData(userList);
+                redirect(role);  // Redirect based on role
             }
         }
         catch (IllegalArgumentException e) {
@@ -77,7 +75,7 @@ public class LoginController {
                 FXRouter.goTo("dashboard");
                 break;
             case "Advisor":
-                FXRouter.goTo("change-password", loggedInUser);
+                FXRouter.goTo("advisor", loggedInUser);
                 break;
             case "DepartmentOfficer":
                 FXRouter.goTo("department-request", loggedInUser);

@@ -12,6 +12,7 @@ import ku.cs.models.*;
 import ku.cs.services.Datasource;
 import ku.cs.services.FXRouter;
 import ku.cs.services.StudentListFileDatasource;
+import ku.cs.services.UserListFileDatasource;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ public class AdvisorController{
     private ArrayList<Student> students;
     private Datasource<ArrayList<Student>> datasource;
     private User user;
+    private UserList userList;
+    private UserListFileDatasource datasources;
 
     @FXML
     protected void onButtonToAdvisor() {
@@ -47,17 +50,18 @@ public class AdvisorController{
 
     @FXML
     public void initialize() {
-
-        Advisor advisor = (Advisor) FXRouter.getData();
-        showUserInfo(advisor);
+        datasources = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv", "departmentofficerlist.csv", "facdeplist.csv");
+        this.userList = datasources.readData();
+        // เนื่องจากการส่งข้อมูลข้ามหน้าของเราเป็น การส่ง Username มาก็เลย Cast ให้มันเป็น String เเละหาใน UserList เเล้วให้ return Object นั้นมาเพื่อใช้ในการเเสดงข้อมูลขั้นต่อไป
+        User user = userList.findUserByUsername((String) FXRouter.getData());
+        showUserInfo(user);
 
         datasource = new StudentListFileDatasource("data/test", "studentlist.csv");
         students = datasource.readData();
-        //showTable(students);
 
         ArrayList<Student> studentsUnderAdvisor = new ArrayList<>();
         for (Student student : students) {
-            if (student.getStudentAdvisor() != null && student.getStudentAdvisor().getName().equals(advisor.getName())) {
+            if (student.getStudentAdvisor() != null && student.getStudentAdvisor().getName().equals(user.getName())) {
                 studentsUnderAdvisor.add(student);
             }
         }
@@ -68,7 +72,7 @@ public class AdvisorController{
             @Override
             public void changed(ObservableValue<? extends Student> observableValue, Student oldStudent, Student newStudent) {
                 try {
-                    FXRouter.goTo("advisor-nisit", newStudent.getStudentID());
+                    FXRouter.goTo("advisor-nisit", newStudent);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -76,7 +80,8 @@ public class AdvisorController{
         });
     }
 
-    private void showUserInfo(Advisor advisor) {
+    private void showUserInfo(User user) {
+        Advisor advisor = (Advisor) user;
         nameLabel.setText(advisor.getName());
         facultyLabel.setText(advisor.getFaculty());
         departmentLabel.setText(advisor.getDepartment());

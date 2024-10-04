@@ -172,7 +172,13 @@ public class UserList {
             throw new IllegalArgumentException("บัญชีผู้ใช้นี้ถูกระงับ ไม่สามารถเข้าสู่ระบบได้");
         }
 
-        user.setLastLogin(LocalDateTime.now());
+        //user.setLastLogin(LocalDateTime.now());
+        // เช็คการตั้งค่า lastLogin
+        if ( (user instanceof Advisor || user instanceof DepartmentOfficer || user instanceof FacultyOfficer) && user.getLastLogin() == null) {
+            user.setLastLogin(null); // set ซ้ำเพราะนึกไม่ออกจะเขียนยังไงให้ประหยัด
+        } else {
+            user.setLastLogin(LocalDateTime.now());
+        }
         return user.getRole();
     }
 }
