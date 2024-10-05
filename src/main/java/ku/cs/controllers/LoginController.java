@@ -83,8 +83,8 @@ public class LoginController {
             case "Student":
                 FXRouter.goTo("student-create-request", loggedInUser);
                 break;
-//            case "FacultyOfficer":  // Handling FacultyOfficer role
-//                //FXRouter.goTo("faculty-dashboard");  // Navigate to faculty dashboard (Wait for Putt Add fxml)
+            case "FacultyOfficer":
+                FXRouter.goTo("faculty-officer", loggedInUser);
 //                break;
             default:
                 throw new NullPointerException("Unrecognized role: " + role);
