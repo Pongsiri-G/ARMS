@@ -42,8 +42,8 @@ public class UserListFileDatasource implements Datasource<UserList> {
     public UserList readData() {
         UserList users = new UserList();
         FacultyList facultyList = facDepDatasource.readData();
-        ArrayList<Student> studentList = studentDatasource.readData();
         ArrayList<Advisor> advisorList = advisorDatasource.readData();
+        ArrayList<Student> studentList = studentDatasource.readData();
         ArrayList<FacultyOfficer> facultyOfficers = facultyOfficerDatasource.readData();
         ArrayList<DepartmentOfficer> departmentOfficers = departmentOfficerDatasource.readData();
 
@@ -51,14 +51,14 @@ public class UserListFileDatasource implements Datasource<UserList> {
 
 
 
-        // Add students from studentlist.csv
-        for (Student student : studentList) {
-            users.addUser(student);
-        }
-
         // Add advisors from advisor.csv
         for (Advisor advisor : advisorList) {
             users.addUser(advisor);
+        }
+
+        // Add students from studentlist.csv
+        for (Student student : studentList) {
+            users.addUser(student);
         }
 
         for (FacultyOfficer facultyOfficer : facultyOfficers){

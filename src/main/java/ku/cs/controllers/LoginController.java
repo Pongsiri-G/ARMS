@@ -47,19 +47,9 @@ public class LoginController {
             } // TEMPORARY LOGIN FOR TEST ONLY
 
             String role = userList.login(username.getText(), password.getText());
-            // เพิ่ม
-            User user = userList.findUserByUsername(username.getText());
 
-            if (role != null) {
-                //System.out.println("LastLogin : " + user.getLastLogin());
-                // เเก้ไขเพิ่มเติมหากเป็น 3 role นี้เเละเข้าใช้ครั้งเเรกจะบังคับไปเปลี่ยนรหัสผ่านก่อน
-                if (user.getLastLogin() == null && (role.equals("Advisor") || role.equals("FacultyOfficer") || role.equals("DepartmentOfficer"))) {
-                    FXRouter.goTo("change-password", user);
-                    return;
-                }
-                datasource.writeData(userList);
-                redirect(role);  // Redirect based on role
-            }
+            datasource.writeData(userList);
+            redirect(role);
         }
         catch (IllegalArgumentException e) {
             errorLabel.setText(e.getMessage());
@@ -69,23 +59,27 @@ public class LoginController {
     // Handle redirection based on the user role
     private void redirect(String role) throws IOException {
         String loggedInUser = userList.findUserByUsername(username.getText().trim()).getUsername();
+        User user = userList.findUserByUsername(username.getText().trim());
 
         switch (role) {
             case "Admin":
                 FXRouter.goTo("dashboard");
                 break;
             case "Advisor":
-                FXRouter.goTo("advisor", loggedInUser);
+                if (user.getLastLogin() == null) { FXRouter.goTo("change-password", loggedInUser); }
+                else { FXRouter.goTo("advisor", loggedInUser); }
                 break;
             case "DepartmentOfficer":
-                FXRouter.goTo("department-request", loggedInUser);
+                if (user.getLastLogin() == null) { FXRouter.goTo("change-password", loggedInUser); }
+                else { FXRouter.goTo("department-request", loggedInUser); }
                 break;
             case "Student":
                 FXRouter.goTo("student-create-request", loggedInUser);
                 break;
-//            case "FacultyOfficer":  // Handling FacultyOfficer role
-//                //FXRouter.goTo("faculty-dashboard");  // Navigate to faculty dashboard (Wait for Putt Add fxml)
-//                break;
+            case "FacultyOfficer":  // Handling FacultyOfficer role
+                if (user.getLastLogin() == null) { FXRouter.goTo("change-password", loggedInUser); }
+                else { FXRouter.goTo("faculty-dashboard"); } // Navigate to faculty dashboard (Wait for Putt Add fxml)
+               break;
             default:
                 throw new NullPointerException("Unrecognized role: " + role);
         }

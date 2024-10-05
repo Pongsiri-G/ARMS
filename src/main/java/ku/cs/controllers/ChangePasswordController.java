@@ -21,25 +21,16 @@ public class ChangePasswordController {
 
     @FXML
     public void initialize() {
-        user = (User) FXRouter.getData();
         datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv", "departmentofficerlist.csv", "facdeplist.csv");
         this.userList = datasource.readData();
+        user = userList.findUserByUsername((String) FXRouter.getData());
         errorPasswordLabel.setText("");
         userLabel.setText("");
         showUserInfo(user);
     }
 
     private void showUserInfo(User user) {
-        if (user instanceof DepartmentOfficer) {
-            DepartmentOfficer officer = (DepartmentOfficer) user;
-            userLabel.setText(officer.getUsername());
-        } else if (user instanceof Advisor) {
-            Advisor advisor = (Advisor) user;
-            userLabel.setText(advisor.getUsername());
-        } else if (user instanceof FacultyOfficer) {
-            FacultyOfficer officer = (FacultyOfficer) user;
-            userLabel.setText(officer.getUsername());
-        }
+        userLabel.setText(user.getUsername());
     }
 
     @FXML
@@ -49,7 +40,6 @@ public class ChangePasswordController {
             String confirmPassword = confirmYourPasswordField.getText();
 
             if (confirmPassword.equals(newPassword)) {
-                User user = userList.findUserByUsername(userLabel.getText());
                 user.setPassword(newPassword, false);
                 user.setLastLogin(LocalDateTime.now());
                 datasource.writeData(userList);
