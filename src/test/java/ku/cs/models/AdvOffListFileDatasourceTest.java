@@ -2,35 +2,72 @@ package ku.cs.models;
 
 import ku.cs.models.*;
 import ku.cs.services.AdvOffListFileDatasource;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AdvOffListFileDatasourceTest {
+class AdvOffListFileDatasourceTest {
+
+    private static final String TEST_DIRECTORY = "data/test";
+    private static final String TEST_FILE = "test_advisors.csv";
+    private AdvOffListFileDatasource datasource;
+    private ArrayList<Advisor> advisorList;
+
+    @BeforeEach
+    void setUp() {
+        // Initialize datasource with test directory and file
+        datasource = new AdvOffListFileDatasource(TEST_DIRECTORY, TEST_FILE);
+
+        // Create a new AdvisorList with sample data
+        advisorList = new ArrayList<>();
+        advisorList.add(new Advisor("advisor1", "pass1", "Advisor One", "Engineering", "Computer Science", "A12345", "advisor1@example.com", false, false, true));
+        advisorList.add(new Advisor("advisor2", "pass2", "Advisor Two", "Science", "Biology", "A12346", "advisor2@example.com", false, false, true));
+        advisorList.add(new Advisor("advisor3", "pass3", "Advisor Three", "Arts", "History", "A12347", "advisor3@example.com", false, false, true));
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        // Clean up: delete the test file after every test
+        Files.deleteIfExists(Paths.get(TEST_DIRECTORY, TEST_FILE));
+    }
+
     @Test
-    void testReadData() {
-        // สร้างแหล่งข้อมูล (datasource)
-        AdvOffListFileDatasource datasource = new AdvOffListFileDatasource("data", "advisorlist.csv");
+    void testWriteAndReadData() {
+        // Write data to the file
+        datasource.writeData(advisorList);
 
-        // อ่านข้อมูลจากไฟล์ CSV
-        AdvisorList advisors = datasource.readData();
+        // Read data back from the file
+        ArrayList<Advisor> readAdvisorList = datasource.readData();
 
-        // ตรวจสอบว่ามีข้อมูลครบ 10 บรรทัด
-        assertEquals(10, advisors.getAdvisors().size());
+        // Check if the data read matches the data written
+        assertEquals(advisorList.size(), readAdvisorList.size(), "Number of advisors should match");
 
-        // ตรวจสอบข้อมูลในบรรทัดแรก (index = 0)
-        Advisor advisor = advisors.getAdvisors().get(0);
-        assertEquals("Jeff Smith", advisor.getName());
-        assertEquals("Engineering", advisor.getFaculty());
-        assertEquals("Computer Science", advisor.getDepartment());
-        assertEquals("jeff.smith@university.edu", advisor.getAdvisorEmail());
-        assertEquals("A001", advisor.getAdvisorID());
+        for (int i = 0; i < advisorList.size(); i++) {
+            Advisor expected = advisorList.get(i);
+            Advisor actual = readAdvisorList.get(i);
 
-        // ตรวจสอบข้อมูลในบรรทัดสุดท้าย (index = 9)
-        Advisor lastAdvisor = advisors.getAdvisors().get(9);
-        assertEquals("William Garcia", lastAdvisor.getName());
-        assertEquals("Science", lastAdvisor.getFaculty());
-        assertEquals("Chemistry", lastAdvisor.getDepartment());
-        assertEquals("william.garcia@university.edu", lastAdvisor.getAdvisorEmail());
-        assertEquals("A010", lastAdvisor.getAdvisorID());
+            assertEquals(expected.getUsername(), actual.getUsername(), "Usernames should match");
+            assertEquals(expected.getPassword(), actual.getPassword(), "Passwords should match");
+            assertEquals(expected.getName(), actual.getName(), "Names should match");
+            assertEquals(expected.getFaculty(), actual.getFaculty(), "Faculties should match");
+            assertEquals(expected.getDepartment(), actual.getDepartment(), "Departments should match");
+            assertEquals(expected.getAdvisorID(), actual.getAdvisorID(), "Advisor IDs should match");
+            assertEquals(expected.getAdvisorEmail(), actual.getAdvisorEmail(), "Advisor emails should match");
+        }
+    }
+
+    @Test
+    void testFileCreated() {
+        // Write data to the file
+        datasource.writeData(advisorList);
+
+        // Check if the file is created in the correct directory
+        File file = new File(TEST_DIRECTORY, TEST_FILE);
+        assertTrue(file.exists(), "Test file should be created");
     }
 }

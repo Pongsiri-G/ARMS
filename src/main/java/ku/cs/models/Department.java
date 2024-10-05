@@ -6,37 +6,27 @@ import java.util.Random;
 public class Department {
     private String departmentName;
     private String departmentID;
-    private Faculty faculty;
     private ArrayList<RequestHandlingOfficer> requestHandlingOfficers;
-    private RequestList requestList;
+    private ArrayList<DepartmentOfficer> departmentOfficers;
     private ArrayList<Advisor> advisors;
     private ArrayList<Student> students;
 
     // Begin Constructor
     public Department(String departmentName) {
-        this(departmentName, (Faculty) null);
-    }
-
-    public Department(String departmentName, Faculty faculty) {
-        this(departmentName, null, faculty);
+        this(departmentName, null);
         // Auto Generate departmentID will implement later
         Random rand = new Random();
         this.departmentID = rand.nextInt(90) + 10 + "";
     }
 
-    public Department(String departmentName, String departmentID, Faculty faculty) {
-        this.departmentName = departmentName;
-        this.departmentID = departmentID;
-        this.faculty = faculty;
-        this.requestHandlingOfficers = new ArrayList<>();
-        this.students = new ArrayList<>();
-    }
-
     public Department(String departmentName, String departmentID) {
         this.departmentName = departmentName;
         this.departmentID = departmentID;
-    } // ping : เพิ่ม constructor
-    // End Constructor
+        this.requestHandlingOfficers = new ArrayList<>();
+        this.students = new ArrayList<>();
+        this.advisors = new ArrayList<>();
+        this.departmentOfficers = new ArrayList<>();
+    }
 
     public boolean isDepartmentName(String departmentName){
         return this.departmentName.equals(departmentName);
@@ -51,15 +41,15 @@ public class Department {
     }
     public void setRequestManagers(ArrayList<RequestHandlingOfficer> approvers){this.requestHandlingOfficers = approvers;}
 
-    public void addStudent(Student student) {
-        this.students.add(student);
-    }
+//    public void addStudent(Student student) {
+//        this.students.add(student);
+//    }
+//
+//    public void removeStudent(Student student) {
+//        this.students.remove(student);
+//    }
 
-    public void removeStudent(Student student) {
-        this.students.remove(student);
-    }
-
-    public ArrayList<Student> getStudentList() {
+    public ArrayList<Student> getStudents() {
         return this.students;
     }
 
@@ -74,7 +64,6 @@ public class Department {
 
 
     // Begin Setter
-    public void setFaculty(Faculty faculty) {this.faculty = faculty;}
     public void setDepartmentName(String departmentName){
         this.departmentName = departmentName;
     }
@@ -84,16 +73,13 @@ public class Department {
     // End Setter
 
     // Begin Getter
-    public Faculty getFaculty() { return faculty; }
+    public ArrayList<DepartmentOfficer> getDepartmentOfficers() { return departmentOfficers; }
+    public ArrayList<Advisor> getAdvisors() { return advisors; }
     public String getDepartmentName(){
         return this.departmentName;
     }
     public String getDepartmentID(){
         return this.departmentID;
-    }
-
-    public RequestList getRequestList() {
-        return requestList;
     }
     // End Getter
 
@@ -107,6 +93,16 @@ public class Department {
 
     public void sendRequest(Request request) {
         request.changeStatus("sent");
+    }
+
+    // หาอาจารย์ที่ปรึกษาในนิสิต
+    public Student findStudentByAdvisorName(String advisorName) {
+        for (Student student : students) {
+            if (student.getStudentAdvisor().getName().equals(advisorName)) {
+                return student; // ถ้าหากเจอชื่ออาจารย์ใน Student ก็ return Student ออกมาเเล้วไปเลือกเอาจะเลือกอะไรโชว์ Table บ้าง
+            }
+        }
+        return null;
     }
 
     @Override

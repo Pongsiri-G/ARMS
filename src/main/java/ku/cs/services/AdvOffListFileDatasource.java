@@ -4,10 +4,14 @@ import ku.cs.models.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
-public class AdvOffListFileDatasource implements Datasource<AdvisorList> {
+public class AdvOffListFileDatasource implements Datasource<ArrayList<Advisor>> {
     private String directoryName;
     private String advisorListFileName;
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public AdvOffListFileDatasource(String directoryName, String advisorListFileName) {
         this.directoryName = directoryName;
@@ -32,8 +36,8 @@ public class AdvOffListFileDatasource implements Datasource<AdvisorList> {
     }
 
     @Override
-    public AdvisorList readData() {
-        AdvisorList advisors = new AdvisorList();
+    public ArrayList<Advisor> readData() {
+        ArrayList<Advisor> advisors = new ArrayList<>();
         String filePath = directoryName + File.separator + advisorListFileName;
         File file = new File(filePath);
         BufferedReader buffer = null;
@@ -42,28 +46,31 @@ public class AdvOffListFileDatasource implements Datasource<AdvisorList> {
             buffer = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
             String line;
             while ((line = buffer.readLine()) != null) {
-                if (line.isEmpty()) continue; // Skip empty lines
+                if (line.isEmpty()) continue; // ข้ามบรรทัดที่ว่าง
 
-                String[] data = line.split(","); // Split data by comma
+                String[] data = line.split(","); // แบ่งข้อมูลด้วยเครื่องหมายจุลภาค
 
-                // Ensure correct number of columns
-                if (data.length != 12) continue;
+                // ตรวจสอบจำนวนคอลัมน์ว่าถูกต้อง
+                if (data.length != 11) continue;
 
-                String username = data[0]; // username
+                String username = data[0]; // ชื่อผู้ใช้
                 String password = data[1]; // รหัสผ่าน
                 String name = data[2]; // ชื่อ
-                String role = data[3]; // role เก็บๆไปก่อนเผื่อง่าย
-                boolean suspended = Boolean.parseBoolean(data[4]); // สักอย่างจากเฟิสเอามาด้วย
-                boolean isFirstLogin = Boolean.parseBoolean(data[5]); // การเข้าใช้งานหากเป็นรหัสที่เข้าใช้ครั้งเเรกจะเป็น true เพื่อเปลี่ยนรหัสผ่านต่อไป
-                String lastLoginTime = data[6];  // For potential future use // เวลาล่าสุดที่ใช้
-                String profileImagePath = data[7]; // รูป
-                String faculty = data[8]; // คณะ
-                String department = data[9]; // สาขา
-                String advisorID = data[10]; // ไอดีจารย์
-                String advisorEmail = data[11]; // อีเมล
+                boolean suspended = Boolean.parseBoolean(data[3]); // สถานะพักการใช้งาน
+                boolean isFirstLogin = Boolean.parseBoolean(data[4]); // การเข้าใช้งานครั้งแรก
+                LocalDateTime lastLogin = "Never".equals(data[5]) ? null : LocalDateTime.parse(data[5], formatter); // ถ้าเป็น "Never" ให้ค่าเป็น null
+                String profilePicturePath = data[6].isEmpty() ? User.DEFAULT_PROFILE_PICTURE_PATH : data[6]; // ค่าพาธรูปโปรไฟล์
+                String faculty = data[7]; // คณะ
+                String department = data[8]; // ภาควิชา
+                String advisorID = data[9]; // รหัสอาจารย์
+                String advisorEmail = data[10]; // อีเมล
 
-                // Add Advisor to list using addNewAdvisor method from AdvisorList
-                advisors.addNewAdvisor(username, password, name, faculty, department, advisorID, advisorEmail, false, suspended, isFirstLogin);
+                // เพิ่ม Advisor ไปยัง list ด้วยวิธี addNewAdvisor
+                Advisor a = new Advisor(username, password, name, new Faculty(faculty), new Department(department), advisorID, advisorEmail, true, suspended);
+                a.setLastLogin(lastLogin); // กำหนดค่า lastLogin
+                a.setProfilePicturePath(profilePicturePath); // กำหนดค่าพาธรูปโปรไฟล์
+                a.setFirstLogin(isFirstLogin);
+                advisors.add(a);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -80,8 +87,9 @@ public class AdvOffListFileDatasource implements Datasource<AdvisorList> {
         return advisors;
     }
 
+
     @Override
-    public void writeData(AdvisorList advisors) {
+    public void writeData(ArrayList<Advisor> advisors) {
         String filePath = directoryName + File.separator + advisorListFileName;
         File file = new File(filePath);
         BufferedWriter buffer = null;
@@ -93,15 +101,16 @@ public class AdvOffListFileDatasource implements Datasource<AdvisorList> {
             //buffer.newLine();
 
             // Write each advisor's data
-            for (Advisor advisor : advisors.getAdvisors()) {
+            for (Advisor advisor : advisors) {
+                String lastLoginStr = advisor.getLastLogin() == null ? "Never" : advisor.getLastLogin().format(formatter);
+                String profilePicturePath = advisor.getProfilePicturePath() == null ? User.DEFAULT_PROFILE_PICTURE_PATH : advisor.getProfilePicturePath();
                 String line = advisor.getUsername() + ","
                         + advisor.getPassword() + ","
                         + advisor.getName() + ","
-                        + advisor.getRole() + ","
-                        + advisor.getSuspended() + ","
+                        + (advisor.getSuspended() ? "suspended" : "normal") + ","
                         + advisor.isFirstLogin() + ","
-                        + advisor.getLastLogin() + ","  // Example last login time
-                        + advisor.getProfilePicturePath() + ","
+                        + lastLoginStr + ","  // Example last login time
+                        + (profilePicturePath) + ","
                         + advisor.getFaculty() + ","
                         + advisor.getDepartment() + ","
                         + advisor.getAdvisorID() + ","
@@ -122,8 +131,8 @@ public class AdvOffListFileDatasource implements Datasource<AdvisorList> {
         }
     }
 
-    public void displayAdvisors(AdvisorList advisors) {
-        for (Advisor advisor : advisors.getAdvisors()) {
+    public void displayAdvisors(ArrayList<Advisor> advisors) {
+        for (Advisor advisor : advisors) {
             System.out.println("Advisor: " + advisor.getName() + ", " + advisor.getFaculty() + ", " + advisor.getDepartment() + ", " + advisor.getAdvisorEmail() + ", " + advisor.getAdvisorID());
         }
     }

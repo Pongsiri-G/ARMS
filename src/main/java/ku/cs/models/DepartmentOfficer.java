@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class DepartmentOfficer extends User implements Officer {
     private Faculty faculty;
     private Department department;
+    private boolean isFirstLogin = true;
 
     // Begin Constructor
     public DepartmentOfficer(String username, String password, String name, Faculty faculty, Department department, boolean isHashed, boolean suspended) {
@@ -12,7 +13,18 @@ public class DepartmentOfficer extends User implements Officer {
         this.faculty = faculty;
         this.department = department;
     }
+
+    // ใข้ไปก่อนเดี๋ยวแก้ที่หลัง
+    public DepartmentOfficer(String username, String password, String name, String faculty, String department, boolean isHashed, boolean suspended) {
+        super(username, password, name, isHashed, suspended);
+        this.faculty = new Faculty(faculty);
+        this.department = new Department(department);
+    }
     // End Constructor
+
+    public void setFirstLogin(boolean firstLogin) {
+        isFirstLogin = firstLogin;
+    }
 
     @Override
     public void loadRequestManage(ArrayList<RequestHandlingOfficer> approvers) {
@@ -54,28 +66,37 @@ public class DepartmentOfficer extends User implements Officer {
 
 
     // Handle Student
-    public void addStudent(String name, String studentID, String email) {
-        Student student = new Student(name, studentID, email);
-        department.addStudent(student);
-    }
-
-    public void removeStudent(String studentID) {
-        Student student = department.findStudentByID(studentID);
-        if (student != null) {
-            department.removeStudent(student);
-        }
-    }
+//    public void addStudent(String name, String studentID, String email) {
+//        Student student = new Student(name, studentID, email);
+//        department.addStudent(student);
+//    }
+//
+//    public void removeStudent(String studentID) {
+//        Student student = department.findStudentByID(studentID);
+//        if (student != null) {
+//            department.removeStudent(student);
+//        }
+//    }
 
 
     public void assignAdvisor(Student student, Advisor advisor) {
         student.setStudentAdvisor(advisor);
     }
 
+    public void setFaculty(Faculty faculty){
+        this.faculty = faculty;
+    }
+    public void setDepartment(Department department){
+        this.department = department;
+    }
     public Faculty getFaculty() {
         return faculty;
     }
     public Department getDepartment() {
         return department;
+    }
+    public boolean isFirstLogin() {
+        return isFirstLogin;
     }
     @Override
     public String getRole(){

@@ -37,10 +37,10 @@ public class RegisterController {
     }
 
     private void checkRegister() {
-        firstName = firstnameTextField.getText();
-        lastName = lastnameTextField.getText();
-        email = emailTextField.getText();
-        studentId = studentIdTextField.getText();
+        firstName = firstnameTextField.getText().trim();
+        lastName = lastnameTextField.getText().trim();
+        email = emailTextField.getText().trim();
+        studentId = studentIdTextField.getText().trim();
 
         if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || studentId.isEmpty()) {
             errorLabel.setText("โปรดกรอกข้อมูลให้ครบถ้วน");
