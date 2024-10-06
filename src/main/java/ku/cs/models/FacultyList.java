@@ -25,7 +25,6 @@ public class FacultyList {
         Department department = new Department(departmentName, departmentID);
         faculty.addDepartment(department); // สร้างอ็อบเจก department เก็บใน faculty
         faculties.add(faculty); // faculty เก็บใน facultyList
-
     }
 
     public void removeFaculty(Faculty faculty) {

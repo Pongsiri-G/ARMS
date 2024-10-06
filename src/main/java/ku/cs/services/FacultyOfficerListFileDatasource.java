@@ -51,8 +51,8 @@ public class FacultyOfficerListFileDatasource implements Datasource<ArrayList<Fa
                 String name = data[2];
                 boolean isSuspended = "suspended".equals(data[3]);
                 boolean isFirstLogin = Boolean.parseBoolean(data[4]); // การเข้าใช้งานครั้งแรก
-                LocalDateTime lastLogin = "Never".equals(data[5]) ? null : LocalDateTime.parse(data[4], formatter);
-                String profilePicturePath = data[6].isEmpty() ? User.DEFAULT_PROFILE_PICTURE_PATH : data[5];
+                LocalDateTime lastLogin = "Never".equals(data[5]) ? null : LocalDateTime.parse(data[5], formatter);
+                String profilePicturePath = data[6].isEmpty() ? User.DEFAULT_PROFILE_PICTURE_PATH : data[6];
                 String facultyName = data[7];
 
                 Faculty faculty = new Faculty(facultyName);

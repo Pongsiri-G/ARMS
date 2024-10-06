@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -138,12 +140,12 @@
                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                             </columnResizePolicy>
                         </TableView>
-                  <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="1089.0" layoutY="49.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../images/filter-edit-svgrepo-com.png" />
-                     </image>
-                  </ImageView>
-                  <Label layoutX="817.0" layoutY="36.0" prefHeight="79.0" prefWidth="238.0" text="Filter by : userLabel">
+                  <ChoiceBox fx:id="searchByRole" layoutX="846.0" layoutY="56.0" prefHeight="6.0" prefWidth="247.0">
+                     <effect>
+                        <Glow />
+                     </effect>
+                  </ChoiceBox>
+                  <Label layoutX="704.0" layoutY="57.0" text="Search By :">
                      <font>
                         <Font size="24.0" />
                      </font>

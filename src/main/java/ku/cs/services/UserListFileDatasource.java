@@ -49,24 +49,26 @@ public class UserListFileDatasource implements Datasource<UserList> {
 
         users.setFacultyList(facultyList);
 
-
-
         // Add students from studentlist.csv
         for (Student student : studentList) {
             users.addUser(student);
+            System.out.println("Student: " + student.getUsername() + ", Faculty: " + student.getEnrolledFaculty().getFacultyName() + ", Department: " + student.getEnrolledDepartment().getDepartmentName());
         }
 
         // Add advisors from advisor.csv
         for (Advisor advisor : advisorList) {
             users.addUser(advisor);
+            System.out.println("Advisor: " + advisor.getUsername() + ", Faculty: " + advisor.getFaculty() + ", Department: " + advisor.getDepartment());
         }
 
         for (FacultyOfficer facultyOfficer : facultyOfficers){
             users.addUser(facultyOfficer);
+            System.out.println("FacOff " + facultyOfficer.getUsername() + ", Faculty" + facultyOfficer.getFaculty().getFacultyName());
         }
 
         for (DepartmentOfficer departmentOfficer : departmentOfficers){
             users.addUser(departmentOfficer);
+            System.out.println("Department Officer: " + departmentOfficer.getUsername() + ", Faculty: " + departmentOfficer.getFaculty().getFacultyName() + ", Department: " + departmentOfficer.getDepartment().getDepartmentName());
         }
 
         System.out.println("Loaded " + studentList.size() + " students");
