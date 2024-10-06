@@ -45,9 +45,9 @@ public class UserList {
     // Add Advisor
     public void addUser(Advisor advisor) {
         if (findUserByUsername(advisor.getUsername()) == null) {
-            Faculty faculty = faculties.findFacultyByName(advisor.getFaculty());
+            Faculty faculty = faculties.findFacultyByName(advisor.getFaculty().getFacultyName());
             if (faculty != null) {
-                Department department = faculty.findDepartmentByName(advisor.getDepartment());
+                Department department = faculty.findDepartmentByName(advisor.getDepartment().getDepartmentName());
                 if (department != null) {
                     advisor.setFaculty(faculty);
                     advisor.setDepartment(department);
@@ -70,6 +70,7 @@ public class UserList {
                     if (student.getStudentAdvisor() != null) {
                         student.setStudentAdvisor(department.findAdvisorByName(student.getStudentAdvisor().getName()));
                     }
+                    System.out.println("Name : " + student.getName() + "Department : " + student.getEnrolledDepartment().getDepartmentName() + "NameAdvisor : " + student.getStudentAdvisor().getName());
                     department.getStudents().add(student);
                     if (student.getUsername() != null && student.getPassword() != null) {
                         users.add(student);

@@ -6,6 +6,8 @@ public class Student extends User {
     private Faculty enrolledFaculty;
     private Department enrolledDepartment;
     private Advisor studentAdvisor;
+    // test หรือควรเก็บ AdvisorName เป็น String เเล้วเอาชชื่อไปหาด้วย method findUserByUseranme ใน userList จะได้ object ของ Advisor มาเพราะพอเก็บเป็น Object พอกุปลี่ยนรหัสผ่านเเล้วข้อมูลในไฟล์มันหาย
+    public String advisorName;
 
 
     //Add New Student (No Username and password
@@ -34,6 +36,10 @@ public class Student extends User {
     }
 
     // เดี๋ยวแก้ที่หลังใช้ไปก่อน
+    public Student(String name, String faculty, String department, String studentID, String email) {
+        this(name,new Faculty(faculty),new Department(department),studentID,email);
+    }
+
     public Student(String name, String faculty, String department, String studentID, String email, Advisor studentAdvisor) {
         this(name,new Faculty(faculty),new Department(department),studentID,email);
         this.studentAdvisor = studentAdvisor;
@@ -65,6 +71,7 @@ public class Student extends User {
     public Faculty getEnrolledFaculty() { return enrolledFaculty; }
     public Department getEnrolledDepartment() { return enrolledDepartment; }
     public Advisor getStudentAdvisor() { return studentAdvisor; }
+    public String getAdvisorName() { return advisorName; }
 
     @Override
     public String getRole(){
@@ -73,7 +80,7 @@ public class Student extends User {
 
     @Override
     public String toString() {
-        return "Student: " + getName() + " (" + getUsername() + "), Faculty: " + getEnrolledFaculty().getFacultyName() + ", Department: " + getEnrolledDepartment().getDepartmentName() + ", Student ID: " + getStudentID() + ", Email: " + getEmail();
+        return "Student: " + getName() + " (" + getUsername() + "), Faculty: " + getEnrolledFaculty().getFacultyName() + ", Department: " + getEnrolledDepartment().getDepartmentName() + ", Student ID: " + getStudentID() + ", Email: " + getEmail() + "AdvisorName : " + getAdvisorName();
     }
 
 }

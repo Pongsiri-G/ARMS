@@ -96,13 +96,15 @@ public class Department {
     }
 
     // หาอาจารย์ที่ปรึกษาในนิสิต
-    public Student findStudentByAdvisorName(String advisorName) {
+    public ArrayList<Student> findStudentsByAdvisorName(String advisorName) {
+        ArrayList<Student> studentList = new ArrayList<>();
         for (Student student : students) {
-            if (student.getStudentAdvisor().getName().equals(advisorName)) {
-                return student; // ถ้าหากเจอชื่ออาจารย์ใน Student ก็ return Student ออกมาเเล้วไปเลือกเอาจะเลือกอะไรโชว์ Table บ้าง
+            if (student.getStudentAdvisor() != null && student.getStudentAdvisor().getName().equals(advisorName)) {
+                studentList.add(student);
+                // ถ้าหากเจอชื่ออาจารย์ใน Student ก็ return Student ออกมาเเล้วไปเลือกเอาจะเลือกอะไรโชว์ Table บ้าง
             }
         }
-        return null;
+        return studentList;
     }
 
     @Override
