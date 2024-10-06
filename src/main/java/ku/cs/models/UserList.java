@@ -3,6 +3,7 @@ package ku.cs.models;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class UserList {
     private ArrayList<User> users;
@@ -146,6 +147,15 @@ public class UserList {
         return null;
     }
 
+    public DepartmentOfficer test(){
+        for (User user : users) {
+            if (user instanceof DepartmentOfficer) {
+                return (DepartmentOfficer) user;
+            }
+        }
+        return null;
+    }
+
     // Remove user from list
     public void removeUser(User user) {
         this.users.remove(user);
@@ -154,6 +164,26 @@ public class UserList {
     // Get all users
     public ArrayList<User> getAllUsers() {
         return users;
+    }
+
+    public ArrayList<Advisor> getAdvisorsByDepartment(String department) {
+        ArrayList<Advisor> advisors = new ArrayList<>();
+        for (User user : users) {
+            if (user instanceof Advisor && Objects.equals(((Advisor) user).getDepartment(), department)) {
+                advisors.add((Advisor) user);
+            }
+        }
+        return advisors;
+    }
+
+    public ArrayList<Student> getStudentByDepartment(String department) {
+        ArrayList<Student> students = new ArrayList<>();
+        for (User user : users) {
+            if (user instanceof Student && Objects.equals(((Student) user).getEnrolledDepartment().getDepartmentName(), department)) {
+                students.add((Student) user);
+            }
+        }
+        return students;
     }
 
     // Login with hashed password verification
