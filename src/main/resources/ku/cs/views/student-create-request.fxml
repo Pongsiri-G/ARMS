@@ -10,15 +10,17 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1024.0" prefWidth="1440.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.StudentCreateRequestController">
     <top>
         <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <children>
-                <Label fx:id="roleLabel" prefHeight="54.0" prefWidth="320.0" stylesheets="@../../../style/style.css" text="roleLabel">
+                <Label fx:id="roleLabel" prefHeight="54.0" prefWidth="650.0" stylesheets="@../../../style/style.css" text="roleLabel">
                     <HBox.margin>
                         <Insets left="120.0" />
                     </HBox.margin>
@@ -26,7 +28,7 @@
                         <Font size="32.0" />
                     </font>
                 </Label>
-            <HBox prefHeight="80.0" prefWidth="930.0" HBox.hgrow="ALWAYS" />
+            <HBox prefHeight="80.0" prefWidth="500.0" HBox.hgrow="ALWAYS" />
             <Group>
                <children>
                   <Label fx:id="usernameLabel" alignment="CENTER_RIGHT" layoutX="45.0" layoutY="22.0" prefHeight="24.0" prefWidth="180.0" stylesheets="@../../../style/style.css" text="usernameLabel" textFill="#394954">
@@ -41,7 +43,7 @@
                   </Label>
                </children>
             </Group>
-            <Circle fill="WHITE" radius="27.0" stroke="BLACK" strokeType="INSIDE">
+            <Circle fx:id="profilePictureDisplay" fill="WHITE" radius="27.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
                <HBox.margin>
                   <Insets left="20.0" />
                </HBox.margin>
@@ -63,22 +65,34 @@
             <VBox prefWidth="80.0" VBox.vgrow="ALWAYS" />
             <VBox fx:id="navigation" prefHeight="200.0" prefWidth="100.0" spacing="30.0">
                <children>
-                  <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-                     <VBox.margin>
-                        <Insets left="25.0" right="25.0" />
-                     </VBox.margin>
-                     <image>
-                        <Image url="@../../../images/write.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="50.0" fitWidth="50.0" onMouseClicked="#requestListViewPageClick" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../images/list.png" />
-                     </image>
-                     <VBox.margin>
-                        <Insets left="25.0" right="25.0" />
-                     </VBox.margin>
-                  </ImageView>
+                  <StackPane>
+                     <children>
+                        <Rectangle fx:id="currentBar1" arcHeight="35.0" arcWidth="35.0" fill="#eaeaea" height="75.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="95.0">
+                           <StackPane.margin>
+                              <Insets right="-30.0" />
+                           </StackPane.margin>
+                        </Rectangle>
+                        <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../images/write.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </StackPane>
+                  <StackPane>
+                     <children>
+                        <Rectangle fx:id="currentBar2" arcHeight="35.0" arcWidth="35.0" fill="#eaeaea" height="75.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="95.0">
+                           <StackPane.margin>
+                              <Insets right="-30.0" />
+                           </StackPane.margin>
+                        </Rectangle>
+                        <ImageView fitHeight="50.0" fitWidth="50.0" onMouseClicked="#requestListViewPageClick" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../images/list.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </StackPane>
                </children></VBox>
             <VBox prefWidth="80.0" VBox.vgrow="ALWAYS" />
                   <ImageView fitHeight="50.0" fitWidth="50.0" onMouseClicked="#logoutClick" pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">

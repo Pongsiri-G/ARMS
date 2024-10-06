@@ -1,22 +1,23 @@
 package ku.cs.controllers;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import ku.cs.models.Advisor;
-import ku.cs.models.AdvisorList;
 import ku.cs.models.Faculty;
 import ku.cs.services.AdvOffListFileDatasource;
 import ku.cs.services.Datasource;
 import ku.cs.services.FXRouter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class OfficerAndAdvisorManagementController {
     @FXML private TableView<Advisor> officerAdvisorTableView;
-    private AdvisorList advisorList;
-    private Datasource<AdvisorList> datasource;
+    private ArrayList<Advisor> advisorList;
+    private Datasource<ArrayList<Advisor>> datasource;
 
     @FXML
     public void initialize() {
@@ -26,7 +27,7 @@ public class OfficerAndAdvisorManagementController {
     }
 
     @FXML
-    private void showTable(AdvisorList advisorList) {
+    private void showTable(ArrayList<Advisor> advisorList) {
         TableColumn<Advisor, String> nameColumn = new TableColumn<>("ชื่อ");
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
@@ -55,7 +56,7 @@ public class OfficerAndAdvisorManagementController {
 
         officerAdvisorTableView.getItems().clear();
 
-        for (Advisor advisor: advisorList.getAdvisors()) {
+        for (Advisor advisor: advisorList) {
             officerAdvisorTableView.getItems().add(advisor);
         }
     }

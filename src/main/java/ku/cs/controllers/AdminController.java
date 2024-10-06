@@ -33,7 +33,7 @@ public class AdminController {
 
     @FXML
     public void initialize() {
-        datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv");
+        datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
         requestListDatasource = new RequestListFileDatasource("data/test", "all-request.csv");
         userList = datasource.readData();
         requestList = requestListDatasource.readData();
@@ -64,7 +64,7 @@ public class AdminController {
                 facultyName = student.getEnrolledFaculty().getFacultyName(); // Get faculty for student
             } else if (user instanceof Advisor) {
                 Advisor advisor = (Advisor) user;
-                facultyName = advisor.getFaculty(); // Get faculty for advisor
+                facultyName = advisor.getFaculty().getFacultyName(); // Get faculty for advisor
             } else if (user instanceof FacultyOfficer) {
                 FacultyOfficer facultyOfficer = (FacultyOfficer) user;
                 facultyName = facultyOfficer.getFaculty().getFacultyName(); // Get faculty for faculty officer

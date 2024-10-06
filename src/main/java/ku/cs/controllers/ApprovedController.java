@@ -29,7 +29,7 @@ public class ApprovedController {
     @FXML
     public void initialize() {
         datasource = new RequestListFileDatasource("data/test", "all-request.csv");
-        userDatasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv");
+        userDatasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
         requestList = datasource.readData();
         userList = userDatasource.readData();
         showTable(requestList);

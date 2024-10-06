@@ -24,7 +24,7 @@ public class UserManagementController {
 
     @FXML
     public void initialize() {
-        datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv");
+        //datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv");
         userList = datasource.readData();
         showTable(userList);
     }
