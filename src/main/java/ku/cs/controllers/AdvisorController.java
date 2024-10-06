@@ -68,8 +68,8 @@ public class AdvisorController{
 
     private void showUserInfo(Advisor advisor) {
         nameLabel.setText(advisor.getName());
-        facultyLabel.setText(advisor.getFaculty());
-        departmentLabel.setText(advisor.getDepartment());
+        facultyLabel.setText(advisor.getFaculty().getFacultyName());
+        departmentLabel.setText(advisor.getDepartment().getDepartmentName());
         emailLabel.setText(advisor.getAdvisorEmail());
     }
     /*

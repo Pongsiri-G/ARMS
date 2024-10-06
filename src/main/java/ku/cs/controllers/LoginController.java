@@ -64,16 +64,16 @@ public class LoginController {
             case "Admin":
                 FXRouter.goTo("dashboard");
                 break;
-            case "Advisor":
-                FXRouter.goTo("change-password", loggedInUser);
+            case "อาจารย์":
+                FXRouter.goTo("advisor", loggedInUser);
                 break;
-            case "DepartmentOfficer":
+            case "เจ้าหน้าที่ภาควิชา":
                 FXRouter.goTo("department-request", loggedInUser);
                 break;
-            case "Student":
+            case "นิสิต":
                 FXRouter.goTo("student-create-request", loggedInUser);
                 break;
-//            case "FacultyOfficer":  // Handling FacultyOfficer role
+//            case "เจ้าหน้าที่คณะ":  // Handling FacultyOfficer role
 //                //FXRouter.goTo("faculty-dashboard");  // Navigate to faculty dashboard (Wait for Putt Add fxml)
 //                break;
             default:

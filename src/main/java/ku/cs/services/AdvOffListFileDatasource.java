@@ -111,8 +111,8 @@ public class AdvOffListFileDatasource implements Datasource<ArrayList<Advisor>> 
                         + advisor.isFirstLogin() + ","
                         + lastLoginStr + ","  // Example last login time
                         + (profilePicturePath) + ","
-                        + advisor.getFaculty() + ","
-                        + advisor.getDepartment() + ","
+                        + advisor.getFaculty().getFacultyName() + ","
+                        + advisor.getDepartment().getDepartmentName() + ","
                         + advisor.getAdvisorID() + ","
                         + advisor.getAdvisorEmail();
                 buffer.write(line);
