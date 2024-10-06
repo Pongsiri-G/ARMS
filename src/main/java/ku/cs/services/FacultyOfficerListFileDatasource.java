@@ -44,7 +44,7 @@ public class FacultyOfficerListFileDatasource implements Datasource<ArrayList<Fa
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] data = line.split(",");
-                if (data.length < 7) continue;
+                if (data.length < 8) continue;
 
                 String username = data[0];
                 String password = data[1];

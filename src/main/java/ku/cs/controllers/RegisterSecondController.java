@@ -51,9 +51,9 @@ public class RegisterSecondController {
     }
 
     private void registerStudent() {
-        String username = usernameTextField.getText();
-        String password = passwordPasswordField.getText();
-        String confirmPassword = confirmPasswordPasswordField.getText();
+        String username = usernameTextField.getText().trim();
+        String password = passwordPasswordField.getText().trim();
+        String confirmPassword = confirmPasswordPasswordField.getText().trim();
 
         if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             errorLabel.setText("โปรดกรอกข้อมูลให้ครบถ้วน");

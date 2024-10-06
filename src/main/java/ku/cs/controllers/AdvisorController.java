@@ -12,6 +12,7 @@ import ku.cs.models.*;
 import ku.cs.services.Datasource;
 import ku.cs.services.FXRouter;
 import ku.cs.services.StudentListFileDatasource;
+import ku.cs.services.UserListFileDatasource;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,9 +24,12 @@ public class AdvisorController{
     @FXML private Label facultyLabel;
     @FXML private Label nameLabel;
 
-    private ArrayList<Student> students;
-    private Datasource<ArrayList<Student>> datasource;
+    private ArrayList<Student> studentList;
+    private StudentListFileDatasource datasource;
     private User user;
+    private UserList userList;
+    private UserListFileDatasource datasources;
+    private Student student;
 
     @FXML
     protected void onButtonToAdvisor() {
@@ -47,18 +51,22 @@ public class AdvisorController{
 
     @FXML
     public void initialize() {
+        datasources = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv", "departmentofficerlist.csv", "facdeplist.csv");
+        this.userList = datasources.readData();
+        // เนื่องจากการส่งข้อมูลข้ามหน้าของเราเป็น การส่ง Username มาก็เลย Cast ให้มันเป็น String เเละหาใน UserList เเล้วให้ return Object นั้นมาเพื่อใช้ในการเเสดงข้อมูลขั้นต่อไป
+        User user = userList.findUserByUsername((String) FXRouter.getData());
+        showUserInfo(user);
+        Advisor advisor = (Advisor) user;
 
-        Advisor advisor = (Advisor) FXRouter.getData();
-        showUserInfo(advisor);
-        datasource = new StudentListFileDatasource("data/test", "studentlist.csv");
-        students = datasource.readData();
-        showTable(students);
+        studentList = advisor.getDepartment().findStudentsByAdvisorName(advisor.getName());
+
+        showTable(studentList);
 
         studentListTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Student>() {
             @Override
             public void changed(ObservableValue<? extends Student> observableValue, Student oldStudent, Student newStudent) {
                 try {
-                    FXRouter.goTo("advisor-nisit", newStudent.getStudentID());
+                    FXRouter.goTo("advisor-nisit", newStudent);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -66,10 +74,11 @@ public class AdvisorController{
         });
     }
 
-    private void showUserInfo(Advisor advisor) {
+    private void showUserInfo(User user) {
+        Advisor advisor = (Advisor) user;
         nameLabel.setText(advisor.getName());
-        facultyLabel.setText(advisor.getFaculty());
-        departmentLabel.setText(advisor.getDepartment());
+        facultyLabel.setText(advisor.getFaculty().getFacultyName());
+        departmentLabel.setText(advisor.getDepartment().getDepartmentName());
         emailLabel.setText(advisor.getAdvisorEmail());
     }
     /*
@@ -79,6 +88,8 @@ public class AdvisorController{
     }*/
 
     private void showTable(ArrayList<Student> students) {
+        studentListTable.getItems().clear();
+
         TableColumn<Student, String> facultyCol = new TableColumn<>("คณะ");
         facultyCol.setCellValueFactory(student ->
                 new SimpleStringProperty(student.getValue().getEnrolledFaculty().getFacultyName())//ใช้ SimpleStringProperty ในการดึง method ที่่ return เป็น string
@@ -111,9 +122,7 @@ public class AdvisorController{
 
 
         // ใส่ข้อมูล Student ทั้งหมดจาก studentList ไปแสดงใน TableView
-        for (Student student: students) {
-            studentListTable.getItems().add(student);
-        }
+        studentListTable.getItems().addAll(students);
     }
     }
 

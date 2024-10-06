@@ -35,6 +35,11 @@ public class Advisor extends User{
         this.advisorID = advisorID;
     }
 
+    //ใช้สำหรับอ่านข้อมูลจากไฟล์เก็บเป็น object ชั่วคราวเท่านั้น
+    public Advisor(String name) {
+        super(null, null, name);
+    }
+
 
 
     //public void setStudents(ArrayList<Student> students) { this.students = students; }
@@ -46,9 +51,7 @@ public class Advisor extends User{
         return advisorID;
     }
 
-    public String getFaculty() {
-        return faculty.getFacultyName();
-    }
+    public Faculty getFaculty() {return faculty; }
 
     public boolean isFirstLogin() { return firstLogin; }
 
@@ -58,13 +61,11 @@ public class Advisor extends User{
 
     public void setDepartment(Department department) { this.department = department; }
 
-    public String getDepartment () {
-        return department.getDepartmentName();
-    }
+    public Department getDepartment () { return department; }
 
 
     public String getRole(){
-        return "Advisor";
+        return "อาจารย์";
     }
 
     @Override
