@@ -3,50 +3,56 @@ package ku.cs.controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import ku.cs.models.Advisor;
-import ku.cs.models.User;
+import ku.cs.models.*;
 import ku.cs.services.FXRouter;
+import ku.cs.services.UserListFileDatasource;
+
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 public class ChangePasswordController {
     @FXML private Label userLabel;
-    @FXML
-    private TextField confirmYourPasswordField;
-
-    @FXML
-    private Label errorPasswordLabel;
-
-    @FXML
-    private TextField newPasswordField;
-
-    @FXML private Label errorLabel;
-
+    @FXML private TextField confirmYourPasswordField;
+    @FXML private Label errorPasswordLabel;
+    @FXML private TextField newPasswordField;
     private User user;
+    private UserList userList;
+    private UserListFileDatasource datasource;
 
     @FXML
     public void initialize() {
-        user = (User) FXRouter.getData(); // รับข้อมูลผุ้ใช้ที่ส่งมาจากหน้า login
-        showUserInfo(user); // เเสดงชื่อผู้ช้ในหน้า change-password
-        //errorLabel.setText("");
+        datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv", "departmentofficerlist.csv", "facdeplist.csv");
+        this.userList = datasource.readData();
+        user = userList.findUserByUsername((String) FXRouter.getData());
+        errorPasswordLabel.setText("");
+        userLabel.setText("");
+        showUserInfo(user);
     }
 
-
     private void showUserInfo(User user) {
-        //userLabel.setText(user.getUsername());
+        userLabel.setText(user.getUsername());
     }
 
     @FXML
-    protected void onToAdvisorButtonClick() {
+    protected void onChangePasswordButtonClick() {
         try {
             String newPassword = newPasswordField.getText();
             String confirmPassword = confirmYourPasswordField.getText();
+
             if (confirmPassword.equals(newPassword)) {
-                //user.setPassword(newPassword, false); // Hash รหัสผ่านใหม่
-                // เปลี่ยนสถานะการเข้าสู่ระบบครั้งแรกให้เป็น false
-                //user.setFirstLogin(false);
-                // ส่งต่อข้อมูลไปยังหน้า advisor-view
-                //Advisor advisor = (Advisor) user;
-                FXRouter.goTo("advisor-view");
+                user.setPassword(newPassword, false);
+                user.setLastLogin(LocalDateTime.now());
+                datasource.writeData(userList);
+                String loggedInUser = userList.findUserByUsername(userLabel.getText().trim()).getUsername();
+
+
+                if (user instanceof Advisor) {
+                    FXRouter.goTo("advisor", loggedInUser);
+                } else if (user instanceof DepartmentOfficer) {
+                    FXRouter.goTo("department-request", loggedInUser);
+                } else if (user instanceof FacultyOfficer) {
+                    FXRouter.goTo("faculty-officer", loggedInUser);
+                }
             }else {
                 errorPasswordLabel.setText("Passwords do not match");
             }
@@ -63,9 +69,4 @@ public class ChangePasswordController {
             throw new RuntimeException(e);
         }
     }
-/*
-    private void clearForm() {
-        errorLabel.setText(""); // error label
-        toppingTextField.setText(""); // text field
-    }*/
 }

@@ -96,9 +96,6 @@ public class AdvOffListFileDatasource implements Datasource<ArrayList<Advisor>> 
 
         try {
             buffer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));
-            // Write the CSV headers
-            //buffer.write("username,password,name,role,suspended,isFirstLogin,lastLoginTime,profileImagePath,faculty,department,advisorID,email");
-            //buffer.newLine();
 
             // Write each advisor's data
             for (Advisor advisor : advisors) {

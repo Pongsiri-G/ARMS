@@ -51,9 +51,7 @@ public class Advisor extends User{
         return advisorID;
     }
 
-    public Faculty getFaculty() {
-        return faculty;
-    }
+    public Faculty getFaculty() {return faculty; }
 
     public boolean isFirstLogin() { return firstLogin; }
 
@@ -63,9 +61,7 @@ public class Advisor extends User{
 
     public void setDepartment(Department department) { this.department = department; }
 
-    public Department getDepartment () {
-        return department;
-    }
+    public Department getDepartment () { return department; }
 
 
     public String getRole(){
