@@ -42,23 +42,21 @@ public class UserListFileDatasource implements Datasource<UserList> {
     public UserList readData() {
         UserList users = new UserList();
         FacultyList facultyList = facDepDatasource.readData();
-        ArrayList<Student> studentList = studentDatasource.readData();
         ArrayList<Advisor> advisorList = advisorDatasource.readData();
+        ArrayList<Student> studentList = studentDatasource.readData();
         ArrayList<FacultyOfficer> facultyOfficers = facultyOfficerDatasource.readData();
         ArrayList<DepartmentOfficer> departmentOfficers = departmentOfficerDatasource.readData();
 
         users.setFacultyList(facultyList);
 
-
+        // Add advisors from advisor.csv
+        for (Advisor advisor : advisorList) {
+            users.addUser(advisor);
+        }
 
         // Add students from studentlist.csv
         for (Student student : studentList) {
             users.addUser(student);
-        }
-
-        // Add advisors from advisor.csv
-        for (Advisor advisor : advisorList) {
-            users.addUser(advisor);
         }
 
         for (FacultyOfficer facultyOfficer : facultyOfficers){
@@ -76,54 +74,6 @@ public class UserListFileDatasource implements Datasource<UserList> {
 
         return users;
     }
-
-    /*ping
-    @Override
-    public UserList readData() {
-        UserList users = new UserList();
-        String filePath = directoryName + File.separator + fileName;
-        File file = new File(filePath);
-
-        FileInputStream    fileInputStream = null;
-
-        try {
-            fileInputStream = new FileInputStream(file);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-        InputStreamReader inputStreamReader = new InputStreamReader(
-                fileInputStream,
-                StandardCharsets.UTF_8
-        );
-        BufferedReader buffer = new BufferedReader(inputStreamReader);
-
-        String line = "";
-        try {
-            while ( (line = buffer.readLine()) != null ){
-                if (line.equals("")) continue;
-
-                String[] data = line.split(", ");
-
-                // อ่านข้อมูลตาม index แล้วจัดการประเภทของข้อมูลให้เหมาะสม
-                String image = data[0].trim();
-                String username = data[1].trim();
-                String name = data[2].trim();
-                String role = data[3].trim();
-                String faculty = data[4].trim();
-                String department = data[5].trim();
-                String timeStamp = data[6].trim();
-
-                // เพิ่มข้อมูลลงใน list
-                users.addTableUser(image, username, name, role, faculty, department, timeStamp);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        return users;
-    }
-     */
 
     @Override
     public void writeData(UserList users) {

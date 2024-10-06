@@ -9,14 +9,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import ku.cs.models.Student;
-import ku.cs.models.User;
-import ku.cs.models.UserList;
+import ku.cs.models.*;
 import ku.cs.services.FXRouter;
 import ku.cs.services.UserListFileDatasource;
 
@@ -24,22 +23,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class SettingsController {
-    @FXML
-    private Label roleLabel;
+    @FXML private VBox userInfoPane;
+
+    @FXML private VBox settingPane;
+
+    @FXML private Label roleLabel;
 
     @FXML private Label nameLabel;
 
-    @FXML private Label usernameLabel;
-
     @FXML private Circle profilePictureDisplay;
 
-    @FXML private ImageView optionDropdown;
-
-    @FXML private Rectangle currentBar1;
-
-    @FXML private Rectangle currentBar2;
-
-    @FXML private ChoiceBox<String> typeRequestChoice;
 
 
     private ArrayList<String> data;
@@ -60,8 +53,41 @@ public class SettingsController {
         nameLabel.setText(user.getName());
         roleLabel.setText(user.getRole());
         setProfilePicture(user.getProfilePicturePath());
+        userPaneInitialize();
     }
 
+
+    private void userPaneInitialize(){
+        userInfoPane.getChildren().addAll(createLabel("ชื่อผู้ใช้ " + user.getUsername()));
+        if (user instanceof Student){
+            Student student = (Student) user;
+
+            userInfoPane.getChildren().addAll(
+                    createLabel("คณะ " + student.getEnrolledFaculty().getFacultyName()),
+                    createLabel("สาขาวิชา " + student.getEnrolledDepartment().getDepartmentName() + " (" + student.getEnrolledFaculty().getFacultyId() + student.getEnrolledDepartment().getDepartmentID() + ")")
+            );
+        }
+        else if (user instanceof FacultyOfficer){
+            FacultyOfficer facultyOfficer = (FacultyOfficer) user;
+            userInfoPane.getChildren().addAll(
+                    createLabel("คณะ " + facultyOfficer.getFaculty().getFacultyName())
+            );
+        }
+        else if (user instanceof DepartmentOfficer){
+            DepartmentOfficer departmentOfficer = (DepartmentOfficer) user;
+            userInfoPane.getChildren().addAll(
+                    createLabel("คณะ " + departmentOfficer.getFaculty().getFacultyName()),
+                    createLabel("สาขาวิชา " + departmentOfficer.getDepartment().getDepartmentName() + " (" + departmentOfficer.getFaculty().getFacultyId() + departmentOfficer.getDepartment().getDepartmentID() + ")")
+            );
+        }
+        else if (user instanceof Advisor) {
+            Advisor advisor = (Advisor) user;
+            userInfoPane.getChildren().addAll(
+                    createLabel("คณะ " + advisor.getFaculty()),
+                    createLabel("สาขาวิชา " + advisor.getDepartment().getDepartmentName() + " (" + advisor.getFaculty().getFacultyId() + advisor.getDepartment().getDepartmentID() + ")")
+            );
+        }
+    }
 
     private void setProfilePicture(String profilePath) {
         try {

@@ -6,9 +6,10 @@ public class Student extends User {
     private Faculty enrolledFaculty;
     private Department enrolledDepartment;
     private Advisor studentAdvisor;
+    public String advisorName;
 
 
-    //Add New Student (No Username and password
+    //เพิ่มนิสิตใหม่สำหรับฐานข้อมูลภาควิชา (ไม่มี username, password)
     public Student(String name,  Faculty faculty, Department department, String studentID, String email) {
         super(null, null, name);
         this.studentID = studentID;
@@ -17,6 +18,7 @@ public class Student extends User {
         this.enrolledDepartment = department;
     }
 
+    //สำหรับการอ่านจากไฟล์
     public Student(String username, String password, String name, Faculty faculty, Department department, String studentID, String email, boolean isHashed, boolean suspended) {
         super(username, password, name, isHashed, suspended);
         this.studentID = studentID;
@@ -25,15 +27,13 @@ public class Student extends User {
         this.enrolledDepartment = department;
     }
 
-    public Student(Faculty faculty, Department department, String name, String studentID, String email) {
-        super(null, null, name);
-        this.studentID = studentID;
-        this.enrolledFaculty = faculty;
-        this.enrolledDepartment = department;
-        this.email = email;
+
+    // สำหรับการสร้าง object ชั่วคราวก่อน initialize
+    public Student(String name, String faculty, String department, String studentID, String email) {
+        this(name,new Faculty(faculty),new Department(department),studentID,email);
     }
 
-    // เดี๋ยวแก้ที่หลังใช้ไปก่อน
+    // สำหรับการสร้าง object ชั่วคราวก่อน initialize
     public Student(String name, String faculty, String department, String studentID, String email, Advisor studentAdvisor) {
         this(name,new Faculty(faculty),new Department(department),studentID,email);
         this.studentAdvisor = studentAdvisor;
@@ -65,15 +65,16 @@ public class Student extends User {
     public Faculty getEnrolledFaculty() { return enrolledFaculty; }
     public Department getEnrolledDepartment() { return enrolledDepartment; }
     public Advisor getStudentAdvisor() { return studentAdvisor; }
+    public String getAdvisorName() { return advisorName; }
 
     @Override
     public String getRole(){
-        return "Student";
+        return "นิสิต";
     }
 
     @Override
     public String toString() {
-        return "Student: " + getName() + " (" + getUsername() + "), Faculty: " + getEnrolledFaculty().getFacultyName() + ", Department: " + getEnrolledDepartment().getDepartmentName() + ", Student ID: " + getStudentID() + ", Email: " + getEmail();
+        return "Student: " + getName() + " (" + getUsername() + "), Faculty: " + getEnrolledFaculty().getFacultyName() + ", Department: " + getEnrolledDepartment().getDepartmentName() + ", Student ID: " + getStudentID() + ", Email: " + getEmail() + "AdvisorName : " + getAdvisorName();
     }
 
 }

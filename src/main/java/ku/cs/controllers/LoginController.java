@@ -3,7 +3,6 @@ package ku.cs.controllers;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import ku.cs.models.Advisor;
 import ku.cs.models.User;
 import ku.cs.models.UserList;
 import ku.cs.services.FXRouter;
@@ -46,17 +45,9 @@ public class LoginController {
                 FXRouter.goTo("dashboard");
             } // TEMPORARY LOGIN FOR TEST ONLY
 
-            String role = userList.login(username.getText(), password.getText());
-            // เพิ่ม
-            User user = userList.findUserByUsername(username.getText());
+            String role = userList.login(username.getText().trim(), password.getText().trim());
 
             if (role != null) {
-                //System.out.println("LastLogin : " + user.getLastLogin());
-                // เเก้ไขเพิ่มเติมหากเป็น 3 role นี้เเละเข้าใช้ครั้งเเรกจะบังคับไปเปลี่ยนรหัสผ่านก่อน
-                if (user.getLastLogin() == null && (role.equals("Advisor") || role.equals("FacultyOfficer") || role.equals("DepartmentOfficer"))) {
-                    FXRouter.goTo("change-password", user);
-                    return;
-                }
                 datasource.writeData(userList);
                 redirect(role);  // Redirect based on role
             }
@@ -69,23 +60,27 @@ public class LoginController {
     // Handle redirection based on the user role
     private void redirect(String role) throws IOException {
         String loggedInUser = userList.findUserByUsername(username.getText().trim()).getUsername();
+        User user = userList.findUserByUsername(username.getText().trim());
 
         switch (role) {
             case "Admin":
                 FXRouter.goTo("dashboard");
                 break;
-            case "Advisor":
-                FXRouter.goTo("advisor", loggedInUser);
+            case "อาจารย์":
+                if (user.getLastLogin() == null) { FXRouter.goTo("change-password", loggedInUser); }
+                else { FXRouter.goTo("advisor", loggedInUser); }
                 break;
-            case "DepartmentOfficer":
-                FXRouter.goTo("department-request", loggedInUser);
+            case "เจ้าหน้าที่ภาควิชา":
+                if (user.getLastLogin() == null) { FXRouter.goTo("change-password", loggedInUser); }
+                else { FXRouter.goTo("department-request", loggedInUser); }
                 break;
-            case "Student":
+            case "นิสิต":
                 FXRouter.goTo("student-create-request", loggedInUser);
                 break;
-//            case "FacultyOfficer":  // Handling FacultyOfficer role
-//                //FXRouter.goTo("faculty-dashboard");  // Navigate to faculty dashboard (Wait for Putt Add fxml)
-//                break;
+            case "เจ้าหน้าที่คณะ":
+                if (user.getLastLogin() == null) { FXRouter.goTo("change-password", loggedInUser); }
+                else { FXRouter.goTo("faculty-dashboard"); } // Navigate to faculty dashboard (Wait for Putt Add fxml)
+               break;
             default:
                 throw new NullPointerException("Unrecognized role: " + role);
         }

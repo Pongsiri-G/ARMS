@@ -44,9 +44,9 @@ public class UserList {
     // Add Advisor
     public void addUser(Advisor advisor) {
         if (findUserByUsername(advisor.getUsername()) == null) {
-            Faculty faculty = faculties.findFacultyByName(advisor.getFaculty());
+            Faculty faculty = faculties.findFacultyByName(advisor.getFaculty().getFacultyName());
             if (faculty != null) {
-                Department department = faculty.findDepartmentByName(advisor.getDepartment());
+                Department department = faculty.findDepartmentByName(advisor.getDepartment().getDepartmentName());
                 if (department != null) {
                     advisor.setFaculty(faculty);
                     advisor.setDepartment(department);
@@ -172,11 +172,8 @@ public class UserList {
             throw new IllegalArgumentException("บัญชีผู้ใช้นี้ถูกระงับ ไม่สามารถเข้าสู่ระบบได้");
         }
 
-        //user.setLastLogin(LocalDateTime.now());
         // เช็คการตั้งค่า lastLogin
-        if ( (user instanceof Advisor || user instanceof DepartmentOfficer || user instanceof FacultyOfficer) && user.getLastLogin() == null) {
-            user.setLastLogin(null); // set ซ้ำเพราะนึกไม่ออกจะเขียนยังไงให้ประหยัด
-        } else {
+        if (!((user instanceof Advisor || user instanceof DepartmentOfficer || user instanceof FacultyOfficer) && user.getLastLogin() == null)) {
             user.setLastLogin(LocalDateTime.now());
         }
         return user.getRole();
