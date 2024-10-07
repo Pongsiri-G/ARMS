@@ -26,7 +26,7 @@
     <top>
         <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <children>
-                <Label fx:id="roleLabel" prefHeight="54.0" prefWidth="320.0" stylesheets="@../../../style/style.css" text="roleLabel">
+                <Label fx:id="roleLabel" prefHeight="54.0" prefWidth="1312.0" stylesheets="@../../../style/style.css" text="roleLabel">
                     <HBox.margin>
                         <Insets left="120.0" />
                     </HBox.margin>
@@ -37,12 +37,12 @@
             <HBox prefHeight="80.0" prefWidth="930.0" HBox.hgrow="ALWAYS" />
             <Group>
                <children>
-                  <Label fx:id="userNameLabel" alignment="CENTER_RIGHT" layoutX="45.0" layoutY="22.0" prefHeight="24.0" prefWidth="180.0" stylesheets="@../../../style/style.css" text="usernameLabel" textFill="#394954">
+                  <Label fx:id="userNameLabel" alignment="CENTER_RIGHT" layoutX="45.0" layoutY="22.0" prefHeight="26.0" prefWidth="341.0" stylesheets="@../../../style/style.css" text="usernameLabel" textFill="#394954">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <Label fx:id="nameLabel" alignment="CENTER_RIGHT" layoutX="45.0" layoutY="-5.0" prefHeight="30.0" prefWidth="180.0" stylesheets="@../../../style/style.css" text="nameLabel">
+                  <Label fx:id="nameLabel" alignment="CENTER_RIGHT" layoutX="45.0" layoutY="-5.0" prefHeight="36.0" prefWidth="339.0" stylesheets="@../../../style/style.css" text="nameLabel">
                      <font>
                         <Font size="22.0" />
                      </font>

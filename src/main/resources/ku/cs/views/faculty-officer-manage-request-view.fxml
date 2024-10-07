@@ -24,7 +24,7 @@
     <top>
         <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <children>
-                <Label fx:id="roleLabel" prefHeight="54.0" prefWidth="320.0" stylesheets="@../../../style/style.css" text="roleLabel">
+                <Label fx:id="roleLabel" prefHeight="54.0" prefWidth="864.0" stylesheets="@../../../style/style.css" text="เจ้าหน้าที่คณะ">
                     <HBox.margin>
                         <Insets left="120.0" />
                     </HBox.margin>
@@ -32,15 +32,15 @@
                         <Font size="32.0" />
                     </font>
                 </Label>
-            <HBox prefHeight="80.0" prefWidth="930.0" HBox.hgrow="ALWAYS" />
+            <HBox prefHeight="100.0" prefWidth="566.0" HBox.hgrow="ALWAYS" />
             <Group>
                <children>
-                  <Label fx:id="userNameLabel" alignment="CENTER_RIGHT" layoutX="45.0" layoutY="22.0" prefHeight="24.0" prefWidth="180.0" stylesheets="@../../../style/style.css" text="usernameLabel" textFill="#394954">
+                  <Label fx:id="userNameLabel" alignment="CENTER_RIGHT" layoutX="45.0" layoutY="22.0" prefHeight="26.0" prefWidth="323.0" stylesheets="@../../../style/style.css" text="usernameLabel" textFill="#394954">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <Label fx:id="nameLabel" alignment="CENTER_RIGHT" layoutX="45.0" layoutY="-5.0" prefHeight="30.0" prefWidth="180.0" stylesheets="@../../../style/style.css" text="nameLabel">
+                  <Label fx:id="nameLabel" alignment="CENTER_RIGHT" layoutX="45.0" layoutY="-5.0" prefHeight="36.0" prefWidth="321.0" stylesheets="@../../../style/style.css" text="nameLabel">
                      <font>
                         <Font size="22.0" />
                      </font>
@@ -154,7 +154,7 @@
                               </HBox>
                            </children>
                         </VBox>
-                        <VBox fx:id="rejectRequestScene" alignment="CENTER" disable="true" prefHeight="798.0" prefWidth="1170.0" visible="false">
+                        <VBox fx:id="rejectRequestScene" alignment="CENTER" prefHeight="798.0" prefWidth="1170.0" visible="false">
                            <children>
                               <HBox alignment="CENTER" prefHeight="837.0" prefWidth="1170.0">
                                  <children>
@@ -164,11 +164,11 @@
                                              <children>
                                                 <BorderPane prefHeight="731.0" prefWidth="986.0">
                                                    <top>
-                                                      <VBox prefHeight="102.0" prefWidth="986.0" BorderPane.alignment="CENTER">
+                                                      <VBox prefHeight="118.0" prefWidth="986.0" BorderPane.alignment="CENTER">
                                                          <children>
                                                             <Label text="ปฏิเสธคำร้อง">
                                                                <font>
-                                                                  <Font size="36.0" />
+                                                                  <Font size="48.0" />
                                                                </font>
                                                             </Label>
                                                             <Line endX="809.0" startX="-100.0" stroke="#d9d9d9" strokeWidth="5.0">
@@ -235,24 +235,15 @@
                   </StackPane>
                   <HBox alignment="CENTER_RIGHT" prefHeight="22.0" prefWidth="1109.0">
                      <children>
-                        <Label fx:id="errorLabel" disable="true" text="Error" textFill="RED" visible="false">
+                        <Label fx:id="errorLabel" disable="true" prefHeight="21.0" prefWidth="230.0" text="Error" textFill="RED" visible="false">
                            <HBox.margin>
-                              <Insets right="200.0" />
+                              <Insets />
                            </HBox.margin>
                         </Label>
                      </children>
                   </HBox>
                   <StackPane fx:id="requestDetailButtons" prefHeight="150.0" prefWidth="200.0">
                      <children>
-                        <HBox alignment="BOTTOM_LEFT" prefHeight="59.0" prefWidth="1170.0" stylesheets="@../../../style/style.css">
-                           <children>
-                              <Button mnemonicParsing="false" onMouseClicked="#onBackToAllRequestButtonClick" prefHeight="49.0" prefWidth="99.0" styleClass="back-botton" text="ย้อนกลับ">
-                                 <font>
-                                    <Font size="18.0" />
-                                 </font>
-                              </Button>
-                           </children>
-                        </HBox>
                         <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0">
                            <children>
                               <Button mnemonicParsing="false" onMouseClicked="#onRejectRequestButtonClick" prefHeight="49.0" prefWidth="99.0" styleClass="reject-botton" text="ปฏิเสธ">
@@ -273,6 +264,11 @@
                               </Button>
                            </children>
                         </HBox>
+                        <Button mnemonicParsing="false" onMouseClicked="#onBackToAllRequestButtonClick" prefHeight="49.0" prefWidth="99.0" styleClass="back-botton" text="ย้อนกลับ" StackPane.alignment="CENTER_LEFT">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Button>
                      </children>
                      <VBox.margin>
                         <Insets />

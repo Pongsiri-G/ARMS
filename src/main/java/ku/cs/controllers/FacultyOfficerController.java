@@ -11,18 +11,17 @@ import javafx.scene.shape.Rectangle;
 import ku.cs.models.FacultyOfficer;
 import ku.cs.models.Request;
 import ku.cs.models.RequestHandlingOfficer;
+import ku.cs.models.UserList;
 import ku.cs.services.FXRouter;
 import ku.cs.services.FacultyOfficerListFileDatasource;
 import ku.cs.services.RequestHandlingOfficersDataSource;
+import ku.cs.services.UserListFileDatasource;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FacultyOfficerController {
-    FacultyOfficerListFileDatasource facultyOfficerDatasource;
-    FacultyOfficer officer;
-    RequestHandlingOfficersDataSource approverDatasource;
 
     // UI Components
     @FXML
@@ -72,8 +71,11 @@ public class FacultyOfficerController {
     @FXML
     Label errorManageApproverLabel;
 
+    FacultyOfficer officer;
+    RequestHandlingOfficersDataSource approverDatasource;
+    UserListFileDatasource datasource;
+    UserList userList;
     ArrayList<Request> requests;
-
     RequestHandlingOfficer approverToEdit;
 
 
@@ -88,15 +90,21 @@ public class FacultyOfficerController {
     public void setupOfficerInfo() {
         nameLabel.setText(officer.getName());
         userNameLabel.setText(officer.getUsername());
-        roleLabel.setText(officer.getRole());
+        roleLabel.setText("เจ้าหน้าที่คณะ" + officer.getFaculty().getFacultyName());
     }
 
     private void initializeDataSources() {
-        facultyOfficerDatasource = new FacultyOfficerListFileDatasource("data/test", "faculty-officer.csv");
-//        officer = facultyOfficerDatasource.readData().getFirst();
-//        approverDatasource = new RequestHandlingOfficersDataSource("data/approver", officer.getFaculty().getFacultyName() + "-approver.csv");
+        datasource = new UserListFileDatasource("data/test",
+                                            "studentlist.csv",
+                                            "advisorlist.csv",
+                                        "facultyofficerlist.csv",
+                                    "departmentofficerlist.csv",
+                                            "facdeplist.csv");
+        userList = datasource.readData();
+        System.out.println((String) FXRouter.getData());
+        officer = (FacultyOfficer) userList.findUserByUsername((String) FXRouter.getData());
+        approverDatasource = new RequestHandlingOfficersDataSource("data/approver", officer.getFaculty().getFacultyName() + "-approver.csv");
         loadApprovers();
-        // mockup Data for Request Will implement Late
     }
 
 

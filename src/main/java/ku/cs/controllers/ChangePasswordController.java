@@ -49,7 +49,7 @@ public class ChangePasswordController {
                 if (user instanceof Advisor) {
                     FXRouter.goTo("advisor", loggedInUser);
                 } else if (user instanceof DepartmentOfficer) {
-                    FXRouter.goTo("department-request", loggedInUser);
+                    FXRouter.goTo("department-officer", loggedInUser);
                 } else if (user instanceof FacultyOfficer) {
                     FXRouter.goTo("faculty-officer", loggedInUser);
                 }
