@@ -70,7 +70,7 @@ public class UserList {
                     if (student.getStudentAdvisor() != null) {
                         student.setStudentAdvisor(department.findAdvisorByName(student.getStudentAdvisor().getName()));
                     }
-                    System.out.println("Name : " + student.getName() + "Department : " + student.getEnrolledDepartment().getDepartmentName() + "NameAdvisor : " + student.getStudentAdvisor().getName());
+                    //System.out.println("Name : " + student.getName() + "Department : " + student.getEnrolledDepartment().getDepartmentName() + "NameAdvisor : " + student.getStudentAdvisor().getName());
                     department.getStudents().add(student);
                     if (student.getUsername() != null && student.getPassword() != null) {
                         users.add(student);

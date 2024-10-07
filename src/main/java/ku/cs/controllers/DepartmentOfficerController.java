@@ -233,15 +233,20 @@ public class DepartmentOfficerController {
         setAdvisorAvailable();
         errorManageStudentLabel.setText("");
         if (studentToEdit != null){
-            studentSelectAdvisorMenuBar.setText(studentToEdit.getStudentAdvisor().getName());
             //studentImage.setImage(new Image(studentToEdit.getProfilePicturePath()));
             studentIDTextField.setText(studentToEdit.getStudentID());
             studentNameTextField.setText(studentToEdit.getName().split(" ")[0]);
             studentLastNameTextField.setText(studentToEdit.getName().split(" ")[1]);
             studentEmailTextField.setText(studentToEdit.getEmail());
-            studentFacultyLabel.setText(studentToEdit.getEnrolledFaculty().getFacultyName());
-            studentDepartmentLabel.setText(studentToEdit.getEnrolledDepartment().getDepartmentName());
-            studentAdvisorLabel.setText(studentToEdit.getStudentAdvisor().getName());
+            studentFacultyLabel.setText("คณะ: "  + studentToEdit.getEnrolledFaculty().getFacultyName());
+            studentDepartmentLabel.setText("ภาควิชา: " + studentToEdit.getEnrolledDepartment().getDepartmentName());
+            if (studentToEdit.getStudentAdvisor() != null){
+                studentSelectAdvisorMenuBar.setText(studentToEdit.getStudentAdvisor().getName());
+                studentAdvisorLabel.setText(studentToEdit.getStudentAdvisor().getName());
+            } else {
+                studentSelectAdvisorMenuBar.setText("เลือกอาจารย์ที่ปรึกษา");
+                studentAdvisorLabel.setText("ยังไม่กำหนดอาจารย์ที่ปรึกษา");
+            }
         } else{
             studentSelectAdvisorMenuBar.setText("เลือกอาจารย์ที่ปรึกษา");
             //studentImage.setImage(null);
@@ -602,7 +607,7 @@ public class DepartmentOfficerController {
         } else {
             Student student;
             if (advisor == null || advisor.equals("เลือกอาจารย์ที่ปรึกษา") || advisor.equals("ไม่ระบุ")) {
-                student = new Student(name,officer.getFaculty().getFacultyName(), officer.getDepartment().getDepartmentName(), id, email, null);
+                student = new Student(officer.getFaculty(), officer.getDepartment(), name, id, email);
             }
             else {
                 student = new Student(name,officer.getFaculty().getFacultyName(), officer.getDepartment().getDepartmentName(), id, email, officer.getDepartment().findAdvisorByName(advisor));
