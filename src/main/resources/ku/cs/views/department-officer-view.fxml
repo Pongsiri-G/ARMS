@@ -572,29 +572,28 @@
                                                                                     </Text>
                                                                                  </children>
                                                                               </StackPane>
-                                                                              <HBox prefHeight="55.0" prefWidth="376.0" spacing="30.0">
-                                                                                 <children>
-                                                                                    <Label fx:id="studentFacultyLabel" text="คณะ : xxx">
-                                                                                       <font>
-                                                                                          <Font size="18.0" />
-                                                                                       </font>
-                                                                                    </Label>
-                                                                                    <Label fx:id="studentDepartmentLabel" text="ภาควิชา : yyy">
-                                                                                       <font>
-                                                                                          <Font size="18.0" />
-                                                                                       </font>
-                                                                                    </Label>
-                                                                                 </children>
+                                                                              <Label fx:id="studentFacultyLabel" text="คณะ : xxx">
+                                                                                 <font>
+                                                                                    <Font size="18.0" />
+                                                                                 </font>
                                                                                  <VBox.margin>
                                                                                     <Insets top="-20.0" />
                                                                                  </VBox.margin>
-                                                                              </HBox>
+                                                                              </Label>
+                                                                              <Label fx:id="studentDepartmentLabel" text="ภาควิชา : yyy">
+                                                                                 <font>
+                                                                                    <Font size="18.0" />
+                                                                                 </font>
+                                                                                 <VBox.margin>
+                                                                                    <Insets top="-20.0" />
+                                                                                 </VBox.margin>
+                                                                              </Label>
                                                                               <Label fx:id="studentAdvisorLabel" text="อาจารย์ที่ปรึกษา :">
                                                                                  <font>
                                                                                     <Font size="18.0" />
                                                                                  </font>
                                                                                  <VBox.margin>
-                                                                                    <Insets top="-40.0" />
+                                                                                    <Insets top="-20.0" />
                                                                                  </VBox.margin>
                                                                               </Label>
                                                                            </children>

@@ -442,7 +442,14 @@ public class DepartmentOfficerController {
 
     public void setAdvisorAvailable() {
         studentSelectAdvisorMenuBar.getItems().clear();
-        studentSelectAdvisorMenuBar.getItems().add(new MenuItem("ไม่ระบุ"));
+        MenuItem noAdvisorItem = new MenuItem("ไม่ระบุ");
+
+        // Event handling for "ไม่ระบุ"
+        noAdvisorItem.setOnAction(e -> {
+            // Set the text of the menu button to "ไม่ระบุ" when clicked
+            studentSelectAdvisorMenuBar.setText("ไม่ระบุ");
+        });
+        studentSelectAdvisorMenuBar.getItems().add(noAdvisorItem);
         for (Advisor advisor : advisors) {
             MenuItem item = new MenuItem(advisor.getName());
             // Event handling when an item is clicked
@@ -607,7 +614,7 @@ public class DepartmentOfficerController {
         } else {
             Student student;
             if (advisor == null || advisor.equals("เลือกอาจารย์ที่ปรึกษา") || advisor.equals("ไม่ระบุ")) {
-                student = new Student(officer.getFaculty(), officer.getDepartment(), name, id, email);
+                student = new Student(name, officer.getFaculty(), officer.getDepartment(), id, email);
             }
             else {
                 student = new Student(name,officer.getFaculty().getFacultyName(), officer.getDepartment().getDepartmentName(), id, email, officer.getDepartment().findAdvisorByName(advisor));
