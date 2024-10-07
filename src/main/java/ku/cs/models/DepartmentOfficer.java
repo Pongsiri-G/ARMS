@@ -113,7 +113,7 @@ public class DepartmentOfficer extends User implements Officer {
     }
     @Override
     public String getRole(){
-        return "DepartmentOfficer";
+        return "เจ้าหน้าที่ภาควิชา";
     }
     @Override
     public String toString() {

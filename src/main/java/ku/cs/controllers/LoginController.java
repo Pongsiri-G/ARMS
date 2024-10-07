@@ -46,10 +46,12 @@ public class LoginController {
                 FXRouter.goTo("dashboard");
             } // TEMPORARY LOGIN FOR TEST ONLY
 
-            String role = userList.login(username.getText(), password.getText());
+            String role = userList.login(username.getText().trim(), password.getText().trim());
 
-            datasource.writeData(userList);
-            redirect(role);
+            if (role != null) {
+                datasource.writeData(userList);
+                redirect(role);  // Redirect based on role
+            }
         }
         catch (IllegalArgumentException e) {
             errorLabel.setText(e.getMessage());
@@ -65,20 +67,19 @@ public class LoginController {
             case "Admin":
                 FXRouter.goTo("dashboard");
                 break;
-            case "Advisor":
+            case "เจ้าหน้าที่คณะ":
+                if (user.getLastLogin() == null) { FXRouter.goTo("change-password", loggedInUser); }
+                else { FXRouter.goTo("faculty-officer"); }
+                break;
+            case "เจ้าหน้าที่ภาควิชา":
+                if (user.getLastLogin() == null) { FXRouter.goTo("change-password", loggedInUser); }
+                else { FXRouter.goTo("department-officer", loggedInUser); }
+                break;
+            case "อาจารย์":
                 if (user.getLastLogin() == null) { FXRouter.goTo("change-password", loggedInUser); }
                 else { FXRouter.goTo("advisor", loggedInUser); }
                 break;
-            case "FacultyOfficer":
-                if (user.getLastLogin() == null) { FXRouter.goTo("change-password", loggedInUser); }
-                else { FXRouter.goTo("faculty-officer", loggedInUser); }
-                break;
-            case "DepartmentOfficer":
-                if (user.getLastLogin() == null) { FXRouter.goTo("change-password", loggedInUser); }
-                else {
-                    FXRouter.goTo("department-officer", loggedInUser); }
-                break;
-            case "Student":
+            case "นิสิต":
                 FXRouter.goTo("student-create-request", loggedInUser);
                 break;
             default:

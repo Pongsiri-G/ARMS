@@ -86,7 +86,7 @@ public class FacultyOfficer extends User implements Officer {
 
     @Override
     public String getRole(){
-        return "FacultyOfficer";
+        return "เจ้าหน้าที่คณะ";
     }
 
     @Override

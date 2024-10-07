@@ -3,7 +3,6 @@ package ku.cs.models;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class UserList {
     private ArrayList<User> users;
@@ -70,7 +69,7 @@ public class UserList {
                     if (student.getStudentAdvisor() != null) {
                         student.setStudentAdvisor(department.findAdvisorByName(student.getStudentAdvisor().getName()));
                     }
-                    //System.out.println("Name : " + student.getName() + "Department : " + student.getEnrolledDepartment().getDepartmentName() + "NameAdvisor : " + student.getStudentAdvisor().getName());
+                    System.out.println("Name : " + student.getName() + "Department : " + student.getEnrolledDepartment().getDepartmentName() + "NameAdvisor : " + student.getStudentAdvisor().getName());
                     department.getStudents().add(student);
                     if (student.getUsername() != null && student.getPassword() != null) {
                         users.add(student);
@@ -148,15 +147,6 @@ public class UserList {
         return null;
     }
 
-    public DepartmentOfficer test(){
-        for (User user : users) {
-            if (user instanceof DepartmentOfficer) {
-                return (DepartmentOfficer) user;
-            }
-        }
-        return null;
-    }
-
     // Remove user from list
     public void removeUser(User user) {
         this.users.remove(user);
@@ -165,27 +155,6 @@ public class UserList {
     // Get all users
     public ArrayList<User> getAllUsers() {
         return users;
-    }
-
-    public ArrayList<Advisor> getAdvisorsByDepartment() {
-        ArrayList<Advisor> advisors = new ArrayList<>();
-        for (User user : users) {
-            if (user instanceof Advisor) {
-                advisors.add((Advisor) user);
-            }
-        }
-        return advisors;
-    }
-
-    public ArrayList<Student> getStudentByDepartment() {
-        ArrayList<Student> students = new ArrayList<>();
-        for (User user : users) {
-            if (user instanceof Student) {
-                System.out.println(((Student) user).getEnrolledDepartment().getDepartmentName());
-                students.add((Student) user);
-            }
-        }
-        return students;
     }
 
     // Login with hashed password verification
@@ -204,11 +173,8 @@ public class UserList {
             throw new IllegalArgumentException("บัญชีผู้ใช้นี้ถูกระงับ ไม่สามารถเข้าสู่ระบบได้");
         }
 
-        //user.setLastLogin(LocalDateTime.now());
         // เช็คการตั้งค่า lastLogin
-        if ( (user instanceof Advisor || user instanceof DepartmentOfficer || user instanceof FacultyOfficer) && user.getLastLogin() == null) {
-            user.setLastLogin(null); // set ซ้ำเพราะนึกไม่ออกจะเขียนยังไงให้ประหยัด
-        } else {
+        if (!((user instanceof Advisor || user instanceof DepartmentOfficer || user instanceof FacultyOfficer) && user.getLastLogin() == null)) {
             user.setLastLogin(LocalDateTime.now());
         }
         return user.getRole();
