@@ -69,17 +69,18 @@ public class LoginController {
                 if (user.getLastLogin() == null) { FXRouter.goTo("change-password", loggedInUser); }
                 else { FXRouter.goTo("advisor", loggedInUser); }
                 break;
+            case "FacultyOfficer":
+                if (user.getLastLogin() == null) { FXRouter.goTo("change-password", loggedInUser); }
+                else { FXRouter.goTo("faculty-officer", loggedInUser); }
+                break;
             case "DepartmentOfficer":
                 if (user.getLastLogin() == null) { FXRouter.goTo("change-password", loggedInUser); }
-                else { FXRouter.goTo("department-request", loggedInUser); }
+                else {
+                    FXRouter.goTo("department-officer", loggedInUser); }
                 break;
             case "Student":
                 FXRouter.goTo("student-create-request", loggedInUser);
                 break;
-            case "FacultyOfficer":  // Handling FacultyOfficer role
-                if (user.getLastLogin() == null) { FXRouter.goTo("change-password", loggedInUser); }
-                else { FXRouter.goTo("faculty-dashboard"); } // Navigate to faculty dashboard (Wait for Putt Add fxml)
-               break;
             default:
                 throw new NullPointerException("Unrecognized role: " + role);
         }

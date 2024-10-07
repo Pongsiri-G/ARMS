@@ -28,7 +28,7 @@
     <top>
         <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <children>
-                <Label fx:id="roleLabel" prefHeight="54.0" prefWidth="954.0" stylesheets="@../../../style/style.css" text="roleLabel">
+                <Label fx:id="roleLabel" prefHeight="54.0" prefWidth="1493.0" stylesheets="@../../../style/style.css" text="roleLabel">
                     <HBox.margin>
                         <Insets left="120.0" />
                     </HBox.margin>
@@ -302,7 +302,7 @@
                                                                            <children>
                                                                               <Pane prefHeight="62.0" prefWidth="380.0" style="-fx-background-color: #EAEAEA; -fx-background-radius: 30px 30px 30px 30px;">
                                                                                  <children>
-                                                                                    <MenuButton fx:id="roleSelectMunuButton" layoutX="9.0" layoutY="7.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="363.0" style="-fx-background-color: #EAEAEA;" styleClass="choice-box" text="เลือกตำแหน่ง">
+                                                                                    <MenuButton fx:id="roleSelectMenuButton" layoutX="9.0" layoutY="7.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="363.0" style="-fx-background-color: #EAEAEA;" styleClass="choice-box" text="เลือกตำแหน่ง">
                                                                                       <items>
                                                                                         <MenuItem mnemonicParsing="false" text="Action 1" />
                                                                                         <MenuItem mnemonicParsing="false" text="Action 2" />

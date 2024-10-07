@@ -167,20 +167,21 @@ public class UserList {
         return users;
     }
 
-    public ArrayList<Advisor> getAdvisorsByDepartment(String department) {
+    public ArrayList<Advisor> getAdvisorsByDepartment() {
         ArrayList<Advisor> advisors = new ArrayList<>();
         for (User user : users) {
-            if (user instanceof Advisor && Objects.equals(((Advisor) user).getDepartment(), department)) {
+            if (user instanceof Advisor) {
                 advisors.add((Advisor) user);
             }
         }
         return advisors;
     }
 
-    public ArrayList<Student> getStudentByDepartment(String department) {
+    public ArrayList<Student> getStudentByDepartment() {
         ArrayList<Student> students = new ArrayList<>();
         for (User user : users) {
-            if (user instanceof Student && Objects.equals(((Student) user).getEnrolledDepartment().getDepartmentName(), department)) {
+            if (user instanceof Student) {
+                System.out.println(((Student) user).getEnrolledDepartment().getDepartmentName());
                 students.add((Student) user);
             }
         }

@@ -4,6 +4,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -94,6 +96,8 @@ public class DepartmentOfficerController {
     @FXML
     VBox manageStudentScene;
     @FXML
+    ImageView studentImage;
+    @FXML
     TextField studentNameTextField;
     @FXML
     TextField studentLastNameTextField;
@@ -129,6 +133,8 @@ public class DepartmentOfficerController {
     @FXML
     public void initialize() {
         initializeDataSources();
+        loadData();
+        loadApprovers();
         setupOfficerInfo();
         switchToRequestScene();
     }
@@ -136,7 +142,7 @@ public class DepartmentOfficerController {
     public void setupOfficerInfo() {
         nameLabel.setText(officer.getName());
         userNameLabel.setText(officer.getUsername());
-        roleLabel.setText("เจ้าหน้าที่คณะ" + officer.getFaculty().getFacultyName());
+        roleLabel.setText("เจ้าหน้าที่ภาควิชา" + officer.getDepartment().getDepartmentName());
     }
 
     private void initializeDataSources() {
@@ -147,26 +153,19 @@ public class DepartmentOfficerController {
                 "departmentofficerlist.csv",
                 "facdeplist.csv");
         userList = datasource.readData();
-        //officer = (DepartmentOfficer) userList.findUserByUsername((String) FXRouter.getData());
-        officer = userList.test();
+        officer = (DepartmentOfficer) userList.findUserByUsername((String) FXRouter.getData());
+        //officer = userList.test();
+        advisors = officer.getDepartment().getAdvisors();
+        students = officer.getDepartment().getStudents();
         approverDatasource = new RequestHandlingOfficersDataSource("data/approver", officer.getDepartment().getDepartmentName() + "-approver.csv");
-        loadApprovers();
-        advisors = userList.getAdvisorsByDepartment(officer.getDepartment().getDepartmentName());
-        for (Advisor advisor : advisors) {
-            System.out.println(advisor);
-        }
-        System.out.println("---------------------------------------");
-        students = userList.getStudentByDepartment(officer.getDepartment().getDepartmentName());
-        for (Student student : students) {
-            System.out.println(student);
-        }
-
     }
 
-    public void loadUserList(){
+    public void loadData() {
         userList = datasource.readData();
-        advisors = userList.getAdvisorsByDepartment(officer.getDepartment().getDepartmentName());
-        students = userList.getStudentByDepartment(officer.getDepartment().getDepartmentName());
+        officer = (DepartmentOfficer) userList.findUserByUsername(officer.getUsername());
+        //officer = userList.test();
+        advisors = officer.getDepartment().getAdvisors();
+        students = officer.getDepartment().getStudents();
     }
 
 
@@ -179,9 +178,10 @@ public class DepartmentOfficerController {
         approverScene.setManaged(false);
         manageApproverScene.setVisible(false);
         manageApproverScene.setManaged(true);
-        requestListScene.setVisible(false);
-        requestListTableView.setVisible(false);
         manageStudentScene.setVisible(false);
+        studentsTableView.setVisible(false);
+        studentListScene.setVisible(false);
+
     }
 
     public void switchToRequestScene() {
@@ -233,16 +233,21 @@ public class DepartmentOfficerController {
         setAdvisorAvailable();
         errorManageStudentLabel.setText("");
         if (studentToEdit != null){
+            studentSelectAdvisorMenuBar.setText(studentToEdit.getStudentAdvisor().getName());
+            //studentImage.setImage(new Image(studentToEdit.getProfilePicturePath()));
             studentIDTextField.setText(studentToEdit.getStudentID());
-            studentNameTextField.setText(studentToEdit.getName());
+            studentNameTextField.setText(studentToEdit.getName().split(" ")[0]);
+            studentLastNameTextField.setText(studentToEdit.getName().split(" ")[1]);
             studentEmailTextField.setText(studentToEdit.getEmail());
             studentFacultyLabel.setText(studentToEdit.getEnrolledFaculty().getFacultyName());
             studentDepartmentLabel.setText(studentToEdit.getEnrolledDepartment().getDepartmentName());
             studentAdvisorLabel.setText(studentToEdit.getStudentAdvisor().getName());
         } else{
             studentSelectAdvisorMenuBar.setText("เลือกอาจารย์ที่ปรึกษา");
+            //studentImage.setImage(null);
             studentIDTextField.clear();
             studentNameTextField.clear();
+            studentLastNameTextField.clear();
             studentEmailTextField.clear();
             studentFacultyLabel.setText("");
             studentDepartmentLabel.setText("");
@@ -327,7 +332,7 @@ public class DepartmentOfficerController {
             List<Object> dataToPass = new ArrayList<>();
             dataToPass.add(selectedRequest);  // Add the Request object
             dataToPass.add(officer);  // Add the RequestHandlingOfficer object
-            FXRouter.goTo("faculty-officer-manage-request", dataToPass);  // Pass the list with both objects
+            FXRouter.goTo("department-officer-manage-request", dataToPass);  // Pass the list with both objects
         } catch (IOException e) {
             System.err.println("Route is null. Check if the route is registered properly.");
             e.printStackTrace();
@@ -365,6 +370,7 @@ public class DepartmentOfficerController {
     public void setApproverPositionAvailable() {
         roleSelectMenuButton.getItems().clear(); // Clear existing items
         ArrayList<String> positions = officer.getAvailablePositions();
+        System.out.println(positions);
 
         for (String position : positions) {
             MenuItem item = new MenuItem(position);
@@ -388,21 +394,30 @@ public class DepartmentOfficerController {
         // Column for student's ID
         studentIDTableColumn = new TableColumn<>("ID");
         studentIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("studentID"));
+        studentIDTableColumn.setMinWidth(300);
+        studentIDTableColumn.setMaxWidth(300);
 
         // Column for student's name
         studenttNameTableColumn = new TableColumn<>("ชื่อ-นามสกุล");
         studenttNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        studenttNameTableColumn.setMinWidth(300);
+        studenttNameTableColumn.setMaxWidth(300);
 
         // Column for student's email
         studentEmailTableColumn = new TableColumn<>("อีเมล");
         studentEmailTableColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
+        studentEmailTableColumn.setMinWidth(300);
+        studentEmailTableColumn.setMaxWidth(300);
 
         // Column for student's advisor (custom CellValueFactory to access Advisor's name)
         studentAdvisorTableColumn = new TableColumn<>("อาจารย์ที่ปรึกษา");
         studentAdvisorTableColumn.setCellValueFactory(cellData -> {
             Advisor advisor = cellData.getValue().getStudentAdvisor(); // Access the Advisor object
-            return new SimpleStringProperty(advisor != null ? advisor.getName() : ""); // Return advisor's name or empty string if null
+            return new SimpleStringProperty(advisor != null ? advisor.getName() : "-"); // Return advisor's name or empty string if null
         });
+        studentAdvisorTableColumn.setMinWidth(300);
+        studentAdvisorTableColumn.setMaxWidth(300);
+
 
         // Clear and set columns in the TableView
         studentsTableView.getColumns().clear();
@@ -421,6 +436,8 @@ public class DepartmentOfficerController {
     }
 
     public void setAdvisorAvailable() {
+        studentSelectAdvisorMenuBar.getItems().clear();
+        studentSelectAdvisorMenuBar.getItems().add(new MenuItem("ไม่ระบุ"));
         for (Advisor advisor : advisors) {
             MenuItem item = new MenuItem(advisor.getName());
             // Event handling when an item is clicked
@@ -519,9 +536,9 @@ public class DepartmentOfficerController {
             // Remove from the students
            // students.remove(studentToEdit);
             // Remove from userList
-            userList.removeUser(studentToEdit);
+            officer.getDepartment().getStudents().remove(studentToEdit);
             datasource.writeData(userList);
-            loadUserList();
+            loadData();
             studentToEdit = null;
             switchToStudentsScene();
         }
@@ -549,7 +566,7 @@ public class DepartmentOfficerController {
 
     public void onStudentOkButtonClick(MouseEvent mouseEvent) {
         String id = studentIDTextField.getText();
-        String name = studentNameTextField.getText();
+        String name = studentNameTextField.getText() + " " + studentLastNameTextField.getText();
         String email = studentEmailTextField.getText();
         String advisor = studentSelectAdvisorMenuBar.getText();
 
@@ -558,28 +575,17 @@ public class DepartmentOfficerController {
             errorManageStudentLabel.setText("กรุณากรอกรหัสนิสิต");
             return;
         }
-        try {
-            Integer.parseInt(id); // Check if ID is an integer
-        } catch (NumberFormatException e) {
-            errorManageStudentLabel.setText("รหัสนิสิตไม่ถูกต้อง");
-            return;
-        }
 
         // Validate Name: Check if it is null or blank
         if (name == null || name.trim().isEmpty()) {
-            errorManageStudentLabel.setText("กรุณากรอกชื่อนิสิต");
+            errorManageStudentLabel.setText("กรุณากรอกชื่อ-นามสกุลนิสิต");
             return;
         }
+
 
         // Validate Email: Check if it contains '@'
         if (email == null || !email.contains("@")) {
             errorManageStudentLabel.setText("กรุณาระบุอีเมลให้ถูกต้อง");
-            return;
-        }
-
-        // Validate Advisor: Check if it is selected or set to the default
-        if (advisor == null || advisor.equals("เลือกอาจารย์ที่ปรึกษา")) {
-            errorManageStudentLabel.setText("ระบุอาจารย์ที่ปรึกษาไม่ถูกต้อง");
             return;
         }
 
@@ -588,14 +594,24 @@ public class DepartmentOfficerController {
             studentToEdit.setStudentID(id);
             studentToEdit.setName(name);
             studentToEdit.setEmail(email);
-            studentToEdit.setStudentAdvisor(officer.getDepartment().findAdvisorByName(advisor));
+            if (advisor.equals("ไม่ระบุ")){
+                studentToEdit.setStudentAdvisor(null);
+            } else {
+                studentToEdit.setStudentAdvisor(officer.getDepartment().findAdvisorByName(advisor));
+            }
         } else {
-            Student student = new Student(name,officer.getFaculty().getFacultyName(), officer.getDepartment().getDepartmentName(), id, email, officer.getDepartment().findAdvisorByName(advisor));
-            userList.addUser(student);
+            Student student;
+            if (advisor == null || advisor.equals("เลือกอาจารย์ที่ปรึกษา") || advisor.equals("ไม่ระบุ")) {
+                student = new Student(name,officer.getFaculty().getFacultyName(), officer.getDepartment().getDepartmentName(), id, email, null);
+            }
+            else {
+                student = new Student(name,officer.getFaculty().getFacultyName(), officer.getDepartment().getDepartmentName(), id, email, officer.getDepartment().findAdvisorByName(advisor));
+            }
+            officer.getDepartment().getStudents().add(student);
         }
         datasource.writeData(userList);
-        loadUserList();
-        approverToEdit = null;
+        loadData();
+        studentToEdit = null;
         switchToStudentsScene();
     }
 

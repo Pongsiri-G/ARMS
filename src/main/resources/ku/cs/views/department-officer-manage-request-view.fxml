@@ -24,7 +24,7 @@
     <top>
         <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <children>
-                <Label fx:id="roleLabel" prefHeight="54.0" prefWidth="950.0" stylesheets="@../../../style/style.css" text="roleLabel">
+                <Label fx:id="roleLabel" prefHeight="54.0" prefWidth="1442.0" stylesheets="@../../../style/style.css" text="roleLabel">
                     <HBox.margin>
                         <Insets left="120.0" />
                     </HBox.margin>
@@ -76,7 +76,7 @@
                               <Insets right="-25.0" />
                            </StackPane.margin>
                         </Rectangle>
-                        <ImageView fitHeight="50.0" fitWidth="90.0" onMouseClicked="#onGoToRequsetSceneButtonClick" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="50.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../../images/list.png" />
                            </image>

@@ -59,11 +59,24 @@ public class DepartmentOfficer extends User implements Officer {
 
     @Override
     public ArrayList<RequestHandlingOfficer> getRequestManagers() {
-        return faculty.getRequestHandlingOfficers();
+        return department.getRequestHandlingOfficers();
     }
 
 
+    public void rejectRequest(Request request, String reason, String approver) {
+        request.setApproveName(approver);
+        request.changeStatus("rejected");
+        request.setTimeStamp();
+    }
+    public void acceptRequest(Request request,String approver) {
+        request.setApproveName(approver);
+        request.changeStatus("accepted");
+    }
 
+    public void sendRequest(Request request, String approver) {
+        request.setApproveName(approver);
+        request.changeStatus("send");
+    }
 
     // Handle Student
 //    public void addStudent(String name, String studentID, String email) {

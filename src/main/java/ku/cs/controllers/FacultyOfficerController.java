@@ -101,6 +101,7 @@ public class FacultyOfficerController {
                                     "departmentofficerlist.csv",
                                             "facdeplist.csv");
         userList = datasource.readData();
+        System.out.println((String) FXRouter.getData());
         officer = (FacultyOfficer) userList.findUserByUsername((String) FXRouter.getData());
         approverDatasource = new RequestHandlingOfficersDataSource("data/approver", officer.getFaculty().getFacultyName() + "-approver.csv");
         loadApprovers();
