@@ -12,6 +12,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import ku.cs.models.*;
@@ -146,6 +148,21 @@ public class DepartmentOfficerController {
         nameLabel.setText(officer.getName());
         userNameLabel.setText(officer.getUsername());
         roleLabel.setText("เจ้าหน้าที่ภาควิชา" + officer.getDepartment().getDepartmentName());
+        //profilePicture
+        setProfilePicture(officer.getProfilePicturePath());
+    }
+
+    private void setProfilePicture(String profilePath) {
+        try {
+            // โหลดรูปจาก profilePath
+            Image profileImage = new Image("file:" + profilePath);
+
+            profilePicture.setFill(new ImagePattern(profileImage));
+
+        } catch (Exception e) {
+            System.out.println("Error loading profile image: " + e.getMessage());
+            profilePicture.setFill(Color.GRAY);
+        }
     }
 
     private void initializeDataSources() {
@@ -570,9 +587,7 @@ public class DepartmentOfficerController {
 
     public void onGoToStudentListSceneButtonClick(MouseEvent mouseEvent) {switchToStudentsScene();}
 
-    public void onSearchBarStudentTextFieldClick(MouseEvent mouseEvent) {
-        System.out.println("click");
-        switchToStudentsScene();}
+    public void onSearchBarStudentTextFieldClick(MouseEvent mouseEvent) {switchToStudentsScene();}
 
     public void onRemoveStudentButtonClick(MouseEvent mouseEvent) {
         studentToEdit = studentsTableView.getSelectionModel().getSelectedItem();

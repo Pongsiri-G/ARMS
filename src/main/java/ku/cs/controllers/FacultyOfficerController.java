@@ -3,9 +3,12 @@ package ku.cs.controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import ku.cs.models.FacultyOfficer;
@@ -91,6 +94,21 @@ public class FacultyOfficerController {
         nameLabel.setText(officer.getName());
         userNameLabel.setText(officer.getUsername());
         roleLabel.setText("เจ้าหน้าที่คณะ" + officer.getFaculty().getFacultyName());
+        //profilePicture
+        setProfilePicture(officer.getProfilePicturePath());
+    }
+
+    private void setProfilePicture(String profilePath) {
+        try {
+            // โหลดรูปจาก profilePath
+            Image profileImage = new Image("file:" + profilePath);
+
+            profilePicture.setFill(new ImagePattern(profileImage));
+
+        } catch (Exception e) {
+            System.out.println("Error loading profile image: " + e.getMessage());
+            profilePicture.setFill(Color.GRAY);
+        }
     }
 
     private void initializeDataSources() {

@@ -5,9 +5,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import ku.cs.models.DepartmentOfficer;
 import ku.cs.models.FacultyOfficer;
@@ -76,6 +79,21 @@ public class DepartmentOfficerManageRequestController {
         nameLabel.setText(officer.getName());
         userNameLabel.setText(officer.getUsername());
         roleLabel.setText("เจ้าหน้าที่ภาควิชา" + officer.getFaculty().getFacultyName());
+        //profilePicture
+        setProfilePicture(officer.getProfilePicturePath());
+    }
+
+    private void setProfilePicture(String profilePath) {
+        try {
+            // โหลดรูปจาก profilePath
+            Image profileImage = new Image("file:" + profilePath);
+
+            profilePicture.setFill(new ImagePattern(profileImage));
+
+        } catch (Exception e) {
+            System.out.println("Error loading profile image: " + e.getMessage());
+            profilePicture.setFill(Color.GRAY);
+        }
     }
 
     public void resetSecene(){
