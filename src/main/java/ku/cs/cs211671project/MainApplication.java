@@ -1,8 +1,6 @@
 package ku.cs.cs211671project;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import ku.cs.services.*;
 
@@ -14,8 +12,10 @@ public class MainApplication extends Application {
         FXRouter.bind(this, stage, "CS211 Project", 1440, 1024);
         configRoutes();
         FXRouter.goTo("login");
-        //UserListFileDatasourceTest u = new UserListFileDatasourceTest(); //FOR TESTING ONLY
-        //u.runTests(); //FOR TESTING ONLY
+        UserListFileDatasourceTest u = new UserListFileDatasourceTest(); //FOR TESTING ONLY
+        u.runTests(); //FOR TESTING ONLY
+        RequestListFileDatasourceTest r = new RequestListFileDatasourceTest(); //FOR TESING ONLY
+        r.runTests();
     }
 
     private void configRoutes() {
