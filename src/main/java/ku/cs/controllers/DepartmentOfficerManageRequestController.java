@@ -9,10 +9,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
-import ku.cs.models.DepartmentOfficer;
-import ku.cs.models.FacultyOfficer;
-import ku.cs.models.Request;
-import ku.cs.models.RequestHandlingOfficer;
+import ku.cs.models.*;
 import ku.cs.services.FXRouter;
 
 import java.io.IOException;
@@ -90,7 +87,16 @@ public class DepartmentOfficerManageRequestController {
         resetSecene();
         requestDetailScene.setVisible(true);
         requestDetailButtons.setVisible(true);
-        requestDetail.setText(request.getText());
+        if (request instanceof LeaveOfAbsenceRequest) {
+            LeaveOfAbsenceRequest leaveOfAbsenceRequest = (LeaveOfAbsenceRequest) request;
+            requestDetail.setText(leaveOfAbsenceRequest.getReason());
+        } if (request instanceof SickLeaveRequest) {
+            SickLeaveRequest sickLeaveRequest = (SickLeaveRequest) request;
+            requestDetail.setText(sickLeaveRequest.getReason());
+        } if (request instanceof ResignationRequest) {
+            ResignationRequest resignationRequest = (ResignationRequest) request;
+            requestDetail.setText(resignationRequest.getReason());
+        }
         selectOfficerHandlingMenu.setVisible(true);
         selectOfficerHandlingMenu.setDisable(false);
         errorLabel.setVisible(true);
