@@ -21,7 +21,7 @@ public class SickLeaveRequest extends Request{
     }
 
     public SickLeaveRequest(String timestamp, String requestType, String status, String requester, String currentApprover, String numberPhone, String currentAddress, String leaveType, String fromDateLeave, String toDateLeave, String reason, String registeredCourses, String lastModifiedDate, List<String> statusLog, List<String> approverList) {
-        super(timestamp, requestType, status, requester, numberPhone, currentApprover, lastModifiedDate, statusLog, approverList);
+        super(timestamp, requestType, status, requester, currentApprover, numberPhone, lastModifiedDate, statusLog, approverList);
         this.currentAddress = currentAddress;
         this.leaveType = leaveType;
         this.reason = reason;

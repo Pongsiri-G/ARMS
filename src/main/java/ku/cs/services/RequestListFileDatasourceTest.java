@@ -41,7 +41,7 @@ public class RequestListFileDatasourceTest {
         );
 
         Request request2 = new ResignationRequest(
-                "Nich", "อาจารย์ที่ปรึกษา", "0987654321",
+                "Babie", "อาจารย์ที่ปรึกษา", "0987654321",
                 "ย้ายมหาวิทยาลัย"
         );
         Request request3 = new LeaveOfAbsenceRequest(
@@ -50,11 +50,19 @@ public class RequestListFileDatasourceTest {
                 "456 Another St", "วิชาโปรแกรมมิ่ง",
                 2, 2023, 2, 2023, 2, 2024
         );
+        Request request4 = new SickLeaveRequest(
+                "Artis", "อาจารย์ที่ปรึกษา", "1234567890",
+                "ลาป่วย", "เป็นคนหล่อ",
+                "123 Some St", "2023-01-10", "2023-01-15",
+                "วิชาคณิตศาสตร์"
+        );
+
 
 
         requestList.addRequest(request1);
         requestList.addRequest(request2);
         requestList.addRequest(request3);
+        requestList.addRequest(request4);
 
         datasource.writeData(requestList);
         return requestList;

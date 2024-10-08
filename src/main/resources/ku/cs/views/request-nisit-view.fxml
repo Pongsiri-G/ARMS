@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1024.0" prefWidth="1440.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.AdvisorRequestController">
+   <children>
+      <ImageView fitHeight="49.0" fitWidth="49.0" layoutX="106.0" layoutY="403.0" onMouseClicked="#goToAdvisor" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../images/dashboard-admin.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="49.0" fitWidth="49.0" layoutX="106.0" layoutY="463.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../images/document.png" />
+         </image>
+      </ImageView>
+      <TableView fx:id="tableRequest" layoutX="172.0" layoutY="61.0" prefHeight="964.0" prefWidth="1102.0" AnchorPane.leftAnchor="166.0" AnchorPane.rightAnchor="166.0">
+        <columns>
+          <TableColumn prefWidth="75.0" text="C1" />
+          <TableColumn prefWidth="75.0" text="C2" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>

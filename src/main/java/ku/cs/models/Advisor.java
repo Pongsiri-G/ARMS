@@ -42,7 +42,7 @@ public class Advisor extends User{
         ArrayList<Request> advisorRequests = new ArrayList<>();
         for (Request request : requests.getRequests()) {
             for (Student student : this.getDepartment().getStudents()) {
-                if (student.getUsername().equalsIgnoreCase(request.getRequester()) && student.getStudentAdvisor() != null) {
+                if (student.getUsername() != null && student.getUsername().equalsIgnoreCase(request.getRequester()) && student.getStudentAdvisor() != null) {
                     if (student.getStudentAdvisor().equals(this) && request.getCurrentApprover().equals("อาจารย์ที่ปรึกษา") && request.getStatus().equals("กำลังดำเนินการ")) {
                         advisorRequests.add(request);
                     }

@@ -109,8 +109,8 @@ public class AdminController {
     }
 
     private void showRequest(RequestList requestList) {
-        allRequestLabel.setText(String.format("%d", requestList.getAllRequest()));
-        approvedLabel.setText(String.format("%d", requestList.getApprovedRequest()));
+        allRequestLabel.setText(String.format("%d", requestList.getAllRequestCount()));
+        approvedLabel.setText(String.format("%d", requestList.getApprovedRequestsCount()));
     }
 
     private void showTotalUsers(UserList userList) {
