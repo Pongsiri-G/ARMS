@@ -254,6 +254,7 @@ public class DepartmentOfficerController {
         errorManageStudentLabel.setText("");
         if (studentToEdit != null){
             //studentImage.setImage(new Image(studentToEdit.getProfilePicturePath()));
+            studentImage.setImage(new Image("file:" + studentToEdit.getProfilePicturePath()));
             studentIDTextField.setText(studentToEdit.getStudentID());
             studentNameTextField.setText(studentToEdit.getName().split(" ")[0]);
             studentLastNameTextField.setText(studentToEdit.getName().split(" ")[1]);
@@ -262,7 +263,7 @@ public class DepartmentOfficerController {
             studentDepartmentLabel.setText("ภาควิชา: " + studentToEdit.getEnrolledDepartment().getDepartmentName());
             if (studentToEdit.getStudentAdvisor() != null){
                 studentSelectAdvisorMenuBar.setText(studentToEdit.getStudentAdvisor().getName());
-                studentAdvisorLabel.setText(studentToEdit.getStudentAdvisor().getName());
+                studentAdvisorLabel.setText("อาจารย์ที่ปรึกษา: " + studentToEdit.getStudentAdvisor().getName());
             } else {
                 studentSelectAdvisorMenuBar.setText("เลือกอาจารย์ที่ปรึกษา");
                 studentAdvisorLabel.setText("ยังไม่กำหนดอาจารย์ที่ปรึกษา");
@@ -270,6 +271,7 @@ public class DepartmentOfficerController {
         } else{
             studentSelectAdvisorMenuBar.setText("เลือกอาจารย์ที่ปรึกษา");
             //studentImage.setImage(null);
+            studentImage.setImage(new Image("file:" + "src/main/resources/images/user-svgrepo-com.png"));
             studentIDTextField.clear();
             studentNameTextField.clear();
             studentLastNameTextField.clear();
@@ -280,6 +282,7 @@ public class DepartmentOfficerController {
 
         }
     }
+
 
     public void loadRequests(){
         requests = new ArrayList<>();
