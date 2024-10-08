@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -127,23 +130,25 @@
                                 <Font name="System Bold" size="48.0" />
                             </font>
                         </Label>
-                        <TableView fx:id="userManagementTableView" layoutX="60.0" layoutY="167.0" prefHeight="670.0" prefWidth="1086.0">
+                        <TableView fx:id="userManagementTableView" layoutX="60.0" layoutY="193.0" prefHeight="644.0" prefWidth="1086.0">
                             <columns>
-                                <TableColumn prefWidth="75.0" text="ชื่อผู้ใช้" />
-                                <TableColumn prefWidth="75.0" text="ตำแหน่ง" />
-                                <TableColumn prefWidth="75.0" text="คณะ" />
-                                <TableColumn prefWidth="75.0" text="ภาควิชา" />
+                                <TableColumn prefWidth="75.0" text="รูปภาพ" />
+                                <TableColumn prefWidth="75.0" text="ชื่อผู้ใช้ระบบ" />
+                                <TableColumn prefWidth="75.0" text="ชื่อ" />
+                                <TableColumn prefWidth="75.0" text="เวลาที่เข้าใช้ล่าสุด" />
+                        <TableColumn prefWidth="75.0" text="การระงับสิทธิ์" />
                             </columns>
                             <columnResizePolicy>
                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                             </columnResizePolicy>
                         </TableView>
-                  <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="1089.0" layoutY="49.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../images/filter-edit-svgrepo-com.png" />
-                     </image>
-                  </ImageView>
-                  <Label layoutX="817.0" layoutY="36.0" prefHeight="79.0" prefWidth="238.0" text="Filter by : userLabel">
+                  <ChoiceBox fx:id="searchByRole" layoutX="899.0" layoutY="118.0" prefHeight="6.0" prefWidth="247.0">
+                     <effect>
+                        <Glow />
+                     </effect>
+                  </ChoiceBox>
+                  <TextField fx:id="searchTextField" layoutX="175.0" layoutY="120.0" prefHeight="38.0" prefWidth="712.0" promptText="name or username..." />
+                  <Label layoutX="77.0" layoutY="120.0" text="Search :">
                      <font>
                         <Font size="24.0" />
                      </font>

@@ -1,57 +1,77 @@
 package ku.cs.controllers;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import ku.cs.models.Faculty;
-import ku.cs.models.FacultyList;
+import ku.cs.models.*;
 import ku.cs.services.Datasource;
 import ku.cs.services.FXRouter;
 import ku.cs.services.FacDepListFileDatascource;
-import ku.cs.services.RequestListFileDatasource;
 
 import java.io.IOException;
 
+
+import java.io.IOException;
+import java.util.stream.Collectors;
+
 public class DepartmentAndFacultyManagementController {
-    @FXML private TableView<Faculty> facDepTableView;
+    @FXML private TableView<Faculty> facDepTableView; // ใช้ Object เนื่องจากจะมีทั้ง Faculty และ Department
     private FacultyList facultyList;
     private Datasource<FacultyList> datasource;
 
     @FXML
     public void initialize() {
-        datasource = new FacDepListFileDatascource("data/test", "department-faculty.csv");
+        datasource = new FacDepListFileDatascource("data/test", "facdeplist.csv");
         facultyList = datasource.readData();
         showTable(facultyList);
     }
 
-    @FXML
     private void showTable(FacultyList facultyList) {
+        // สร้าง TableColumn สำหรับคณะและภาควิชา
         TableColumn<Faculty, String> facultyColumn = new TableColumn<>("คณะ");
         facultyColumn.setCellValueFactory(new PropertyValueFactory<>("facultyName"));
 
-        TableColumn<Faculty, String> facultyIdColumn = new TableColumn<>("รหัสของคณะ");
+        TableColumn<Faculty, String> facultyIdColumn = new TableColumn<>("รหัสคณะ");
         facultyIdColumn.setCellValueFactory(new PropertyValueFactory<>("facultyId"));
 
         TableColumn<Faculty, String> departmentColumn = new TableColumn<>("ภาควิชา");
-        departmentColumn.setCellValueFactory(new PropertyValueFactory<>("departmentName"));
+        departmentColumn.setCellValueFactory(cellData -> {
+            Faculty faculty = cellData.getValue();
+            String departments = faculty.getDepartments().stream()
+                    .map(Department::getDepartmentName)
+                    .collect(Collectors.joining(", "));
+            return new SimpleStringProperty(departments);
+        });
 
-        TableColumn<Faculty, String> departmentIdColumn = new TableColumn<>("รหัสของภาควิชา");
-        departmentIdColumn.setCellValueFactory(new PropertyValueFactory<>("departmentId"));
+        TableColumn<Faculty, String> departmentIdColumn = new TableColumn<>("รหัสภาควิชา");
+        departmentIdColumn.setCellValueFactory(cellData -> {
+            Faculty faculty = cellData.getValue();
+            String departmentIds = faculty.getDepartments().stream()
+                    .map(Department::getDepartmentID)
+                    .collect(Collectors.joining(", "));
+            return new SimpleStringProperty(departmentIds);
+        });
 
+        // ล้างคอลัมน์เก่า
         facDepTableView.getColumns().clear();
-        facDepTableView.getColumns().add(facultyColumn);
-        facDepTableView.getColumns().add(facultyIdColumn);
-        facDepTableView.getColumns().add(departmentColumn);
-        facDepTableView.getColumns().add(departmentIdColumn);
+        // เพิ่มคอลัมน์ใหม่ทั้งหมด
+        facDepTableView.getColumns().addAll(facultyColumn, facultyIdColumn, departmentColumn, departmentIdColumn);
 
-        facDepTableView.getItems().clear();
+        // ตั้งค่าข้อมูลให้กับ TableView
+        ObservableList<Faculty> data = FXCollections.observableArrayList(facultyList.getFaculties());
+        facDepTableView.setItems(data);
 
-        for (Faculty faculty: facultyList.getFaculties()) {
-            facDepTableView.getItems().add(faculty);
-        }
     }
+
+    @FXML public void onAddFacDepButtonClick() {
+
+    }
+
     @FXML
     protected void onLogoutClick() {
         try {

@@ -139,7 +139,7 @@
                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                             </columnResizePolicy>
                         </TableView>
-                  <Button layoutX="1040.0" layoutY="50.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="103.0" styleClass="apply-botton" stylesheets="@../../../style/style.css" text="เพิ่ม +">
+                  <Button layoutX="1040.0" layoutY="50.0" mnemonicParsing="false" onAction="#onAddFacDepButtonClick" prefHeight="50.0" prefWidth="103.0" styleClass="apply-botton" stylesheets="@../../../style/style.css" text="เพิ่ม +">
                      <font>
                         <Font size="18.0" />
                      </font>

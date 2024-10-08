@@ -6,16 +6,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import ku.cs.models.RequestList;
-import ku.cs.models.Request;
-import ku.cs.models.Advisor;
-import ku.cs.models.User;
-import ku.cs.models.UserList;
+import ku.cs.models.*;
 import ku.cs.services.Datasource;
 import ku.cs.services.FXRouter;
-import ku.cs.models.FacultyOfficer;
-import ku.cs.models.DepartmentOfficer;
-import ku.cs.models.Student;
 import ku.cs.services.RequestListFileDatasource;
 import ku.cs.services.UserListFileDatasource;
 
@@ -90,6 +83,9 @@ public class AdminController {
             } else if (user instanceof Student) {
                 Student student = (Student) user;
                 return new SimpleStringProperty(student.getEnrolledDepartment().getDepartmentName());
+            } else if (user instanceof Advisor) {
+                Advisor advisor = (Advisor) user;
+                return new SimpleStringProperty(advisor.getDepartment().getDepartmentName());
             }
             return new SimpleStringProperty("-");
         });
@@ -98,12 +94,13 @@ public class AdminController {
         allUserTableView.getColumns().clear();
         allUserTableView.getColumns().add(nameColumn);
         allUserTableView.getColumns().add(roleColumn);
-        allUserTableView.getColumns().add(facultyColumn);  // Add faculty column
+        allUserTableView.getColumns().add(facultyColumn);
         allUserTableView.getColumns().add(departmentColumn);
 
         // Add users to the table
         allUserTableView.getItems().clear();
         for (User user : userList.getAllUsers()) {
+            System.out.println("User: " + user.getUsername());
             allUserTableView.getItems().add(user);
         }
     }
