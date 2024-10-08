@@ -85,7 +85,7 @@ public class AdminController {
                 return new SimpleStringProperty(student.getEnrolledDepartment().getDepartmentName());
             } else if (user instanceof Advisor) {
                 Advisor advisor = (Advisor) user;
-                return new SimpleStringProperty(advisor.getDepartment());
+                return new SimpleStringProperty(advisor.getDepartment().getDepartmentName());
             }
             return new SimpleStringProperty("-");
         });

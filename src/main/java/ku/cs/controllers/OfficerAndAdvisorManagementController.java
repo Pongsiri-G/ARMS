@@ -93,7 +93,7 @@ public class OfficerAndAdvisorManagementController {
                 return new SimpleStringProperty(depOff.getFaculty().getFacultyName());
             } else if (user instanceof Advisor) {
                 Advisor advisor = (Advisor) user;
-                return new SimpleStringProperty(advisor.getFaculty());
+                return new SimpleStringProperty(advisor.getFaculty().getFacultyName());
             }
             return new SimpleStringProperty("-");
         });
@@ -109,7 +109,7 @@ public class OfficerAndAdvisorManagementController {
                 return new SimpleStringProperty(depOff.getDepartment().getDepartmentName());
             } else if (user instanceof Advisor) {
                 Advisor advisor = (Advisor) user;
-                return new SimpleStringProperty(advisor.getDepartment());
+                return new SimpleStringProperty(advisor.getDepartment().getDepartmentName());
             }
             return new SimpleStringProperty("-");
         });

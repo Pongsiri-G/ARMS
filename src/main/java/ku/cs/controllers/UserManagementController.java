@@ -16,13 +16,18 @@ import ku.cs.services.UserListFileDatasource;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.TableCell;
-
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Button;
+import javafx.util.Callback;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
 public class UserManagementController {
     @FXML private ChoiceBox<String> searchByRole;
+    @FXML private TextField searchTextField;
     @FXML private Label roleLabel;
     @FXML private Label allRequestLabel;
     @FXML private Label approvedLabel;
@@ -46,9 +51,31 @@ public class UserManagementController {
         searchByRole.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             filterTableByRole(newValue);
         });
+
         datasource = new UserListFileDatasource(testDirectory, testStudentFileName, testAdvisorFileName, testFacultyOfficerFileName, testDepartmentFileName, testFacDepFileName);
         userList = datasource.readData();
+
+        // Print users who are suspended when the page is loaded (Debug)
+        printSuspendedUsers(userList);
         showTable(userList);
+
+        // เพิ่ม Listener ให้กับ TextField เพื่อค้นหาทันทีที่มีการเปลี่ยนแปลงข้อความ
+        searchTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                filterUsersBySearch(newValue);
+            }
+        });
+    }
+
+    // เมธอดสำหรับพิมพ์รายชื่อผู้ใช้ที่ถูกระงับ (Debug)
+    private void printSuspendedUsers(UserList userList) {
+        for (User user : userList.getAllUsers()) {
+            System.out.println("Checking user: " + user.getName() + " (" + user.getUsername() + ") - Suspended: " + user.getSuspended());
+            if (user.getSuspended()) {
+                System.out.println(user.getName() + " (" + user.getUsername() + ") ถูกระงับสิทธิ");
+            }
+        }
     }
 
     private void filterTableByRole(String role) {
@@ -70,9 +97,33 @@ public class UserManagementController {
         }
     }
 
+    private void filterUsersBySearch(String searchQuery) {
+        searchQuery = searchQuery.toLowerCase();
+        if (searchQuery.isEmpty()) {
+            showTable(userList);  // ถ้าไม่มีข้อความค้นหาให้แสดงผู้ใช้ทั้งหมด
+            return;
+        }
+
+        // สร้าง UserList ใหม่เพื่อเก็บผลลัพธ์ที่กรอง
+        UserList filteredUserList = new UserList();
+
+        for (User user : userList.getAllUsers()) {
+            // ตรวจสอบชื่อหรือชื่อผู้ใช้ที่ตรงกับคำค้นหา
+            if (user.getName().toLowerCase().contains(searchQuery) ||
+                    user.getUsername().toLowerCase().contains(searchQuery)) {
+
+                // เพิ่มผู้ใช้โดยตรงลงใน List โดยไม่ต้องผ่าน addUser
+                filteredUserList.getAllUsers().add(user);
+            }
+        }
+
+        // แสดงผลผู้ใช้ที่กรองแล้วใน TableView
+        showTable(filteredUserList);
+    }
+
     @FXML
     private void showTable(UserList userList) {
-        // Column for name
+        // Column for image
         TableColumn<User, Image> pictureColumn = new TableColumn<>("รูปภาพ");
         pictureColumn.setCellValueFactory(cellData -> {
             String imagePath = cellData.getValue().getProfilePicturePath();
@@ -102,12 +153,15 @@ public class UserManagementController {
             }
         });
 
-
-        // Column for role
-        TableColumn<User, String> usernameColumn = new TableColumn<>("ชื่อผู้ใช้");
+        // Column for username
+        TableColumn<User, String> usernameColumn = new TableColumn<>("ชื่อผู้ใช้ระบบ");
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
 
-        // Column for faculty
+        // Column for username
+        TableColumn<User, String> nameColumn = new TableColumn<>("ชื่อ");
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+
+        // Column for login time
         TableColumn<User, String> timeColumn = new TableColumn<>("เวลาที่เข้าใช้ล่าสุด");
         timeColumn.setCellValueFactory(cellData -> {
             User user = cellData.getValue();
@@ -117,18 +171,66 @@ public class UserManagementController {
             return new SimpleStringProperty("never");
         });
 
+        TableColumn<User, Void> suspendColumn = new TableColumn<>("สถานะการระงับสิทธิ");
+        Callback<TableColumn<User, Void>, TableCell<User, Void>> cellFactory = new Callback<TableColumn<User, Void>, TableCell<User, Void>>() {
+            @Override
+            public TableCell<User, Void> call(final TableColumn<User, Void> param) {
+                final TableCell<User, Void> cell = new TableCell<User, Void>() {
+                    private final Button btnSuspend = new Button();
+
+                    {
+                        btnSuspend.setOnAction(event -> {
+                            User user = getTableView().getItems().get(getIndex());
+                            System.out.println("Before suspend: " + user.getUsername() + " - Suspended: " + user.getSuspended());
+                            user.setSuspended(!user.getSuspended());
+                            System.out.println("After suspend: " + user.getUsername() + " - Suspended: " + user.getSuspended());
+                            updateButtonStyle(btnSuspend, user);
+                            datasource.writeData(userList);
+                            getTableView().refresh();
+                        });
+                    }
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            User user = getTableView().getItems().get(getIndex());
+                            updateButtonStyle(btnSuspend, user); // เรียกใช้ updateButtonStyle เพื่ออัปเดตปุ่มตามสถานะ
+                            setGraphic(btnSuspend); // แสดงปุ่ม
+                        }
+                    }
+
+                    private void updateButtonStyle(Button btn, User user) {
+                        if (user.getSuspended()) {
+                            btn.setStyle("-fx-background-color: red; -fx-text-fill: white;");
+                            btn.setText("ถูกระงับสิทธิ");
+                        } else {
+                            btn.setStyle("-fx-background-color: green; -fx-text-fill: white;");
+                            btn.setText("ปกติ");
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+        suspendColumn.setCellFactory(cellFactory);
+
         userManagementTableView.getColumns().clear();
         userManagementTableView.getColumns().add(pictureColumn);
         userManagementTableView.getColumns().add(usernameColumn);
+        userManagementTableView.getColumns().add(nameColumn);
         userManagementTableView.getColumns().add(timeColumn);
+        userManagementTableView.getColumns().add(suspendColumn);
 
         // Add users to the table
         userManagementTableView.getItems().clear();
         for (User user : userList.getAllUsers()) {
             userManagementTableView.getItems().add(user);
-            //System.out.println("Added user to TableView: " + user.getUsername());
         }
     }
+
     @FXML
     protected void onLogoutClick() {
         try {
@@ -165,3 +267,4 @@ public class UserManagementController {
         }
     }
 }
+

@@ -111,6 +111,5 @@ public class UserListFileDatasource implements Datasource<UserList> {
         advisorDatasource.writeData(advisorList);
         facultyOfficerDatasource.writeData(facultyOfficers);
         departmentOfficerDatasource.writeData(departmentOfficers);
-
     }
 }
