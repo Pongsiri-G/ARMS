@@ -368,7 +368,7 @@
                                           </Label>
                                           <Pane prefHeight="62.0" prefWidth="380.0" style="-fx-background-color: #EAEAEA; -fx-background-radius: 30px 30px 30px 30px;">
                                              <children>
-                                                <TextField fx:id="searchBarStudentTextField" alignment="TOP_LEFT" layoutX="-1.0" layoutY="19.0" prefHeight="27.0" prefWidth="374.0" promptText="ค้นหารายชื่อ" style="-fx-background-color: tranparent;" />
+                                                <TextField fx:id="searchBarStudentTextField" alignment="TOP_LEFT" layoutX="-1.0" layoutY="19.0" onMouseClicked="#onSearchBarStudentTextFieldClick" prefHeight="27.0" prefWidth="374.0" promptText="ค้นหารายชื่อ" style="-fx-background-color: tranparent;" />
                                              </children>
                                              <HBox.margin>
                                                 <Insets left="30.0" />

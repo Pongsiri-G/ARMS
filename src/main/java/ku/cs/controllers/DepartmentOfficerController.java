@@ -1,6 +1,9 @@
 package ku.cs.controllers;
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -423,7 +426,6 @@ public class DepartmentOfficerController {
         studentAdvisorTableColumn.setMinWidth(300);
         studentAdvisorTableColumn.setMaxWidth(300);
 
-
         // Clear and set columns in the TableView
         studentsTableView.getColumns().clear();
         studentsTableView.getColumns().add(studentIDTableColumn);
@@ -431,13 +433,39 @@ public class DepartmentOfficerController {
         studentsTableView.getColumns().add(studentEmailTableColumn);
         studentsTableView.getColumns().add(studentAdvisorTableColumn);
 
-        // Clear previous data
-        studentsTableView.getItems().clear();
+        // Create a FilteredList to allow filtering the students based on the search text
+        FilteredList<Student> filteredData = new FilteredList<>(FXCollections.observableArrayList(students), p -> true);
 
-        // Populate table with student data
-        for (Student student : students) {
-            studentsTableView.getItems().add(student);
-        }
+        // Add a listener to the searchBarStudentTextField to filter the list
+        searchBarStudentTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(student -> {
+                // If search field is empty, display all students
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                // Filter by student name, email, or advisor's name
+                if (student.getStudentID().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                } else if (student.getName().toLowerCase().contains(lowerCaseFilter)) {
+                    return true; // Filter matches student name
+                } else if (student.getEmail().toLowerCase().contains(lowerCaseFilter)) {
+                    return true; // Filter matches student email
+                } else if (student.getStudentAdvisor() != null && student.getStudentAdvisor().getName().toLowerCase().contains(lowerCaseFilter)) {
+                    return true; // Filter matches advisor's name
+                }
+                return false; // No match
+            });
+        });
+
+        // Use a SortedList to bind sorting to the TableView
+        SortedList<Student> sortedData = new SortedList<>(filteredData);
+        sortedData.comparatorProperty().bind(studentsTableView.comparatorProperty());
+
+        // Set the sorted and filtered data to the TableView
+        studentsTableView.setItems(sortedData);
     }
 
     public void setAdvisorAvailable() {
@@ -541,6 +569,10 @@ public class DepartmentOfficerController {
 
 
     public void onGoToStudentListSceneButtonClick(MouseEvent mouseEvent) {switchToStudentsScene();}
+
+    public void onSearchBarStudentTextFieldClick(MouseEvent mouseEvent) {
+        System.out.println("click");
+        switchToStudentsScene();}
 
     public void onRemoveStudentButtonClick(MouseEvent mouseEvent) {
         studentToEdit = studentsTableView.getSelectionModel().getSelectedItem();
