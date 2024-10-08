@@ -1,25 +1,22 @@
 package ku.cs.models;
 
-public class ResignationRequest extends Request{
-    private int semester; // ภาคเรียน
-    private int academicYear; // ปีการศึกษา
-    private String courseId; // รหัสวิชา
-    private String email;
+import java.util.List;
 
-    ResignationRequest(String email, int semester, int academicYear, String courseId, String timeStamp, String approveName, String status, String type, String text, String id, String numberPhone) {
-        super(timeStamp,approveName,status,type,text,id,numberPhone);
-        this.email = email;
-        this.semester = semester;
-        this.academicYear = academicYear;
-        this.courseId = courseId;
+public class ResignationRequest extends Request{
+    private String reason; // เหตุผลในการลาออก
+
+    public ResignationRequest(String requester, String currentApprover, String numberPhone,String reason) {
+        super("ลาออก", requester, currentApprover, numberPhone);
+        this.reason = reason;
     }
 
-    public String getEmail() { return email; }
+    public ResignationRequest(String timestamp, String requestType, String status, String requester, String currentApprover, String numberPhone, String reason, String lastModifiedDate, List<String> statusLog, List<String> approverList) {
+        super(timestamp, requestType, status, requester, currentApprover, numberPhone, lastModifiedDate, statusLog, approverList);
+        this.reason = reason;
+    }
 
-    public int getSemester() { return semester; }
-
-    public int getAcademicYear() { return academicYear; }
-
-    public String getCourseId() { return courseId; }
-
+    public String getReason() {
+        return reason;
+    }
 }
+

@@ -1,29 +1,44 @@
 package ku.cs.models;
 
+import java.util.List;
+
 public class SickLeaveRequest extends Request{
-    private String location; // ที่อยู่ปัจจุบันที่ติดต่อได้
+    private String currentAddress; // ที่อยู่ปัจจุบันที่ติดต่อได้
+    private String leaveType; //ประเภทการลา (ลาป่วย หรือ ลากิจ)
     private String fromDateLeave; // ลาตั้งเเต่วันที่
     private String toDateLeave; // ถึงวันที่
-    private String courseId; // รหัสวิชา
+    private String registeredCourses; // รายวิชาเรียนในช่วงที่ลา
     private String reason; // เหตุผลที่ลา
-    private Request request;
 
-    SickLeaveRequest(String timeStamp,String approveName, String status, String type, String text, String id, String numberPhone, String location, String fromDateLeave, String toDateLeave, String courseId, String reason) {
-        super(timeStamp,approveName, status, type, text, id, numberPhone);
-        this.location = location;
+    public SickLeaveRequest(String requester, String currentApprover, String numberPhone, String leaveType, String reason, String currentAddress, String fromDateLeave, String toDateLeave, String registeredCourses) {
+        super("ลาป่วยหรือลากิจ", requester, currentApprover, numberPhone);
+        this.currentAddress = currentAddress;
+        this.leaveType = leaveType;
+        this.reason = reason;
         this.fromDateLeave = fromDateLeave;
         this.toDateLeave = toDateLeave;
-        this.courseId = courseId;
-        this.reason = reason;
+        this.registeredCourses = registeredCourses;
     }
 
-    public String getLocation() { return location; }
+    public SickLeaveRequest(String timestamp, String requestType, String status, String requester, String currentApprover, String numberPhone, String currentAddress, String leaveType, String fromDateLeave, String toDateLeave, String reason, String registeredCourses, String lastModifiedDate, List<String> statusLog, List<String> approverList) {
+        super(timestamp, requestType, status, requester, numberPhone, currentApprover, lastModifiedDate, statusLog, approverList);
+        this.currentAddress = currentAddress;
+        this.leaveType = leaveType;
+        this.reason = reason;
+        this.fromDateLeave = fromDateLeave;
+        this.toDateLeave = toDateLeave;
+        this.registeredCourses = registeredCourses;
+    }
+
+    public String getLeaveType() { return leaveType; }
+
+    public String getCurrentAddress() { return currentAddress; }
 
     public String getFromDateLeave() { return fromDateLeave; }
 
     public String getToDateLeave() { return toDateLeave; }
 
-    public String getCourseId() { return courseId; }
+    public String getRegisteredCourses() { return registeredCourses; }
 
     public String getReason() { return reason; }
 
