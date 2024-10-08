@@ -49,9 +49,9 @@ public class FacultyOfficer extends User implements Officer {
     @Override
     public ArrayList<String> getAvailablePositions() {
         ArrayList<String> positions = new ArrayList<>();
-        positions.add("คณบดีคณะ");
-        positions.add("รองคณบดีฝ่ายบริหารคณะ");
-        positions.add("รองคณบดีฝ่ายวิชาการรคณะ");
+        positions.add("คณบดี");
+        positions.add("รองคณบดีฝ่ายบริหาร");
+        positions.add("รองคณบดีฝ่ายวิชาการ");
         positions.add("รักษาแทนการคณบดี");
         return  positions;
     }

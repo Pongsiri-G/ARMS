@@ -3,6 +3,7 @@ package ku.cs.controllers;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import ku.cs.models.Advisor;
 import ku.cs.models.User;
 import ku.cs.models.UserList;
 import ku.cs.services.FXRouter;
@@ -66,21 +67,21 @@ public class LoginController {
             case "Admin":
                 FXRouter.goTo("dashboard");
                 break;
+            case "เจ้าหน้าที่คณะ":
+                if (user.getLastLogin() == null) { FXRouter.goTo("change-password", loggedInUser); }
+                else { FXRouter.goTo("faculty-officer"); }
+                break;
+            case "เจ้าหน้าที่ภาควิชา":
+                if (user.getLastLogin() == null) { FXRouter.goTo("change-password", loggedInUser); }
+                else { FXRouter.goTo("department-officer", loggedInUser); }
+                break;
             case "อาจารย์":
                 if (user.getLastLogin() == null) { FXRouter.goTo("change-password", loggedInUser); }
                 else { FXRouter.goTo("advisor", loggedInUser); }
                 break;
-            case "เจ้าหน้าที่ภาควิชา":
-                if (user.getLastLogin() == null) { FXRouter.goTo("change-password", loggedInUser); }
-                else { FXRouter.goTo("department-request", loggedInUser); }
-                break;
             case "นิสิต":
                 FXRouter.goTo("student-create-request", loggedInUser);
                 break;
-            case "เจ้าหน้าที่คณะ":
-                if (user.getLastLogin() == null) { FXRouter.goTo("change-password", loggedInUser); }
-                else { FXRouter.goTo("faculty-dashboard"); } // Navigate to faculty dashboard (Wait for Putt Add fxml)
-               break;
             default:
                 throw new NullPointerException("Unrecognized role: " + role);
         }

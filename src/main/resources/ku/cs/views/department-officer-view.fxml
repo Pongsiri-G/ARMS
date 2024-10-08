@@ -28,7 +28,7 @@
     <top>
         <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <children>
-                <Label fx:id="roleLabel" prefHeight="54.0" prefWidth="320.0" stylesheets="@../../../style/style.css" text="roleLabel">
+                <Label fx:id="roleLabel" prefHeight="54.0" prefWidth="1493.0" stylesheets="@../../../style/style.css" text="roleLabel">
                     <HBox.margin>
                         <Insets left="120.0" />
                     </HBox.margin>
@@ -39,12 +39,12 @@
             <HBox prefHeight="80.0" prefWidth="930.0" HBox.hgrow="ALWAYS" />
             <Group>
                <children>
-                  <Label fx:id="userNameLabel" alignment="CENTER_RIGHT" layoutX="45.0" layoutY="22.0" prefHeight="24.0" prefWidth="180.0" stylesheets="@../../../style/style.css" text="usernameLabel" textFill="#394954">
+                  <Label fx:id="userNameLabel" alignment="CENTER_RIGHT" layoutX="45.0" layoutY="22.0" prefHeight="26.0" prefWidth="412.0" stylesheets="@../../../style/style.css" text="usernameLabel" textFill="#394954">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <Label fx:id="nameLabel" alignment="CENTER_RIGHT" layoutX="45.0" layoutY="-5.0" prefHeight="30.0" prefWidth="180.0" stylesheets="@../../../style/style.css" text="nameLabel">
+                  <Label fx:id="nameLabel" alignment="CENTER_RIGHT" layoutX="45.0" layoutY="-5.0" prefHeight="36.0" prefWidth="411.0" stylesheets="@../../../style/style.css" text="nameLabel">
                      <font>
                         <Font size="22.0" />
                      </font>
@@ -80,7 +80,7 @@
                               <Insets right="-25.0" />
                            </StackPane.margin>
                         </Rectangle>
-                        <ImageView fitHeight="50.0" fitWidth="90.0" onMouseClicked="#onGoToRequsetSceneButtonClick" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="50.0" fitWidth="90.0" onMouseClicked="#onGoToRequestSceneButtonClick" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../../images/list.png" />
                            </image>
@@ -89,7 +89,7 @@
                   </StackPane>
                   <StackPane prefHeight="150.0" prefWidth="200.0" VBox.vgrow="NEVER">
                      <children>
-                        <Rectangle fx:id="currentBar2" arcHeight="20.0" arcWidth="20.0" fill="#eaeaea" height="83.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-arc-height: 25; -fx-arc-width: 25;" width="94.0">
+                        <Rectangle fx:id="currentBar2" arcHeight="20.0" arcWidth="20.0" fill="#eaeaea" height="83.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-arc-height: 25; -fx-arc-width: 25;" visible="false" width="94.0">
                            <StackPane.margin>
                               <Insets right="-25.0" />
                            </StackPane.margin>
@@ -103,7 +103,7 @@
                   </StackPane>
                   <StackPane layoutX="10.0" layoutY="160.0" prefHeight="150.0" prefWidth="200.0">
                      <children>
-                        <Rectangle fx:id="currentBar3" arcHeight="20.0" arcWidth="20.0" fill="#eaeaea" height="83.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-arc-height: 25; -fx-arc-width: 25;" width="94.0">
+                        <Rectangle fx:id="currentBar3" arcHeight="20.0" arcWidth="20.0" fill="#eaeaea" height="83.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-arc-height: 25; -fx-arc-width: 25;" visible="false" width="94.0">
                            <StackPane.margin>
                               <Insets right="-25.0" />
                            </StackPane.margin>
@@ -171,7 +171,7 @@
                               <Insets top="-20.0" />
                            </StackPane.margin>
                         </VBox>
-                        <VBox fx:id="approverScene" disable="true" prefHeight="200.0" prefWidth="100.0" visible="false">
+                        <VBox fx:id="approverScene" prefHeight="200.0" prefWidth="100.0" visible="false">
                            <children>
                               <StackPane fx:id="approverMainButtons" prefHeight="62.0" prefWidth="1178.0">
                                  <children>
@@ -238,7 +238,7 @@
                                           <TableColumn prefWidth="397.0" text="วันที่แก้ไขล่าสุด" />
                                       </columns>
                                     </TableView>
-                                    <VBox fx:id="manageApproverScene" alignment="CENTER" prefHeight="798.0" prefWidth="1170.0">
+                                    <VBox fx:id="manageApproverScene" alignment="CENTER" prefHeight="798.0" prefWidth="1170.0" visible="false">
                                        <children>
                                           <HBox alignment="CENTER" prefHeight="837.0" prefWidth="1170.0">
                                              <children>
@@ -302,21 +302,12 @@
                                                                            <children>
                                                                               <Pane prefHeight="62.0" prefWidth="380.0" style="-fx-background-color: #EAEAEA; -fx-background-radius: 30px 30px 30px 30px;">
                                                                                  <children>
-                                                                                    <MenuButton fx:id="roleSelectMunuButton" layoutX="9.0" layoutY="7.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="363.0" style="-fx-background-color: #EAEAEA;" styleClass="choice-box" text="เลือกตำแหน่ง">
+                                                                                    <MenuButton fx:id="roleSelectMenuButton" layoutX="9.0" layoutY="7.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="363.0" style="-fx-background-color: #EAEAEA;" styleClass="choice-box" text="เลือกตำแหน่ง">
                                                                                       <items>
                                                                                         <MenuItem mnemonicParsing="false" text="Action 1" />
                                                                                         <MenuItem mnemonicParsing="false" text="Action 2" />
                                                                                       </items>
                                                                                     </MenuButton>
-                                                                                 </children>
-                                                                              </Pane>
-                                                                           </children>
-                                                                        </HBox>
-                                                                        <HBox alignment="CENTER" layoutX="10.0" layoutY="234.0" prefHeight="52.0" prefWidth="986.0">
-                                                                           <children>
-                                                                              <Pane prefHeight="62.0" prefWidth="380.0" style="-fx-background-color: #EAEAEA; -fx-background-radius: 30px 30px 30px 30px;">
-                                                                                 <children>
-                                                                                    <TextField fx:id="nameTilteTextField" alignment="TOP_LEFT" layoutX="6.0" layoutY="13.0" prefHeight="27.0" prefWidth="374.0" promptText="คำนำหน้าชื่อ" style="-fx-background-color: tranparent;" />
                                                                                  </children>
                                                                               </Pane>
                                                                            </children>
@@ -361,7 +352,7 @@
                               </StackPane>
                            </children>
                         </VBox>
-                        <VBox fx:id="studentListScene" disable="true" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0" visible="false">
+                        <VBox fx:id="studentListScene" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0" visible="false">
                            <children>
                               <StackPane fx:id="studentMainButtons" prefHeight="62.0" prefWidth="1178.0">
                                  <children>
@@ -431,7 +422,7 @@
                                           <TableColumn prefWidth="243.3333740234375" text="อาจารย์ที่ปรึกษา" />
                                        </columns>
                                     </TableView>
-                                    <VBox fx:id="manageStudentrScenc" alignment="CENTER" disable="true" prefHeight="798.0" prefWidth="1170.0" visible="false">
+                                    <VBox fx:id="manageStudentScene" alignment="CENTER" prefHeight="798.0" prefWidth="1170.0" visible="false">
                                        <children>
                                           <HBox alignment="CENTER" prefHeight="837.0" prefWidth="1170.0">
                                              <children>
@@ -532,7 +523,7 @@
                                                                               </StackPane>
                                                                               <StackPane alignment="TOP_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="49.0" prefWidth="376.0">
                                                                                  <children>
-                                                                                    <TextField fx:id="studentLastNameTextFiield" alignment="CENTER">
+                                                                                    <TextField fx:id="studentLastNameTextField" alignment="CENTER">
                                                                                        <opaqueInsets>
                                                                                           <Insets left="10.0" />
                                                                                        </opaqueInsets>
@@ -581,29 +572,28 @@
                                                                                     </Text>
                                                                                  </children>
                                                                               </StackPane>
-                                                                              <HBox prefHeight="55.0" prefWidth="376.0" spacing="30.0">
-                                                                                 <children>
-                                                                                    <Label fx:id="studentFacultyLable" text="คณะ : xxx">
-                                                                                       <font>
-                                                                                          <Font size="18.0" />
-                                                                                       </font>
-                                                                                    </Label>
-                                                                                    <Label fx:id="studentDepartmentLabel" text="ภาควิชา : yyy">
-                                                                                       <font>
-                                                                                          <Font size="18.0" />
-                                                                                       </font>
-                                                                                    </Label>
-                                                                                 </children>
+                                                                              <Label fx:id="studentFacultyLabel" text="คณะ : xxx">
+                                                                                 <font>
+                                                                                    <Font size="18.0" />
+                                                                                 </font>
                                                                                  <VBox.margin>
                                                                                     <Insets top="-20.0" />
                                                                                  </VBox.margin>
-                                                                              </HBox>
+                                                                              </Label>
+                                                                              <Label fx:id="studentDepartmentLabel" text="ภาควิชา : yyy">
+                                                                                 <font>
+                                                                                    <Font size="18.0" />
+                                                                                 </font>
+                                                                                 <VBox.margin>
+                                                                                    <Insets top="-20.0" />
+                                                                                 </VBox.margin>
+                                                                              </Label>
                                                                               <Label fx:id="studentAdvisorLabel" text="อาจารย์ที่ปรึกษา :">
                                                                                  <font>
                                                                                     <Font size="18.0" />
                                                                                  </font>
                                                                                  <VBox.margin>
-                                                                                    <Insets top="-40.0" />
+                                                                                    <Insets top="-20.0" />
                                                                                  </VBox.margin>
                                                                               </Label>
                                                                            </children>

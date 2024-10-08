@@ -74,7 +74,7 @@ public class FacultyOfficerRequestController {
     public void setupOfficerInfo() {
         nameLabel.setText(officer.getName());
         userNameLabel.setText(officer.getUsername());
-        roleLabel.setText(officer.getRole());
+        roleLabel.setText("เจ้าหน้าที่คณะ" + officer.getFaculty().getFacultyName());
     }
 
     public void resetSecene(){
@@ -148,8 +148,12 @@ public class FacultyOfficerRequestController {
     }
     @FXML
     public void onBackToAllRequestButtonClick(MouseEvent event) throws IOException {
-        FXRouter.goTo("faculty-officer");
-        System.out.println("8;pjid");
+        FXRouter.goTo("faculty-officer", officer.getUsername());
+    }
+
+    @FXML
+    public void onn(MouseEvent event) {
+        System.out.println("8");
     }
 
     @FXML
@@ -161,7 +165,7 @@ public class FacultyOfficerRequestController {
     @FXML
     public void onOkButtonClick(MouseEvent event) throws IOException {
         officer.rejectRequest(request, reasonForRejectTextArea.getText(), selectOfficerHandlingMenu.getText());
-        FXRouter.goTo("faculty-officer");
+        FXRouter.goTo("faculty-officer", officer.getUsername());
     }
 
 
