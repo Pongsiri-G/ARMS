@@ -26,8 +26,8 @@ public class AdvisorRequestController {
 
     public AdvisorRequestController(){
         userListDatasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
-        requestListDatasource = new RequestListFileDatasource("data/test", "requestlist.csv");
         this.userList = userListDatasource.readData();
+        requestListDatasource = new RequestListFileDatasource("data/test", "requestlist.csv", userList);
         this.requestList = requestListDatasource.readData();
     }
 

@@ -10,7 +10,7 @@ public class Request {
     private String lastModifiedDateTime; //วันเวลาที่คำขอถูกแก้ไขมากที่สุด
     private String status; //สถานะคำร้อง (กำลังดำเนินการ ปฏิเสธ เสร็จสิ้น)
     private String requestType; //ประเภทคำร้อง
-    private String requester; //username ผู้ยื่นคำร้อง
+    private Student requester; //ผู้ยื่นคำร้อง (นิสิต)
     private String currentApprover; //ผู้อนุมัติปัจจุบัน (อาจารย์ที่ปรึกษา, เจ้าหน้าที่ภาควิชา, เจ้าหน้าที่คณะ)
     private String numberPhone; //เบอร์มือถือของผู้ยื่นคำร้อง
     private List<String> statusLog; //เก็บประวัติการดำเนินการต่างๆข้องคำร้อง
@@ -19,7 +19,7 @@ public class Request {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     // Constructor for creating a new request, with automatic timestamps
-    public Request(String requestType, String requester, String currentApprover, String numberPhone) {
+    public Request(String requestType, Student requester, String currentApprover, String numberPhone) {
         this.requestType = requestType;
         this.timestamp = LocalDateTime.now().format(formatter); // Current time for new requests
         this.lastModifiedDateTime = LocalDateTime.now().format(formatter);
@@ -29,20 +29,20 @@ public class Request {
         this.currentApprover = currentApprover;
         this.numberPhone = numberPhone;
         this.status = "กำลังดำเนินการ";
-        addStatusLog("คำร้องถูกสร้างและส่งไปยังอาจารย์ที่ปรึกษา");
+        addStatusLog("ใบคำร้องใหม่");
     }
 
     // Constructor สำหรับอ่านไฟล์จาก CSV
-    public Request(String timestamp, String requestType, String status, String requester, String currentApprover, String numberPhone, String lastModifiedDateTime, List<String>statusLog, List<String> approverList) {
+    public Request(String timestamp, String requestType, String status, Student requester, String currentApprover, String numberPhone, String lastModifiedDateTime, List<String> statusLog, List<String> approverList) {
         this.requestType = requestType;
         this.timestamp = timestamp;
         this.lastModifiedDateTime = lastModifiedDateTime;
-        this.statusLog = statusLog != null ? statusLog : new ArrayList<>();
+        this.statusLog = statusLog != null ? new ArrayList<>(statusLog) : new ArrayList<>();
+        this.approverList = approverList != null ? new ArrayList<>(approverList) : new ArrayList<>();
         this.requester = requester;
         this.currentApprover = currentApprover;
         this.numberPhone = numberPhone;
         this.status = status;
-        this.approverList = approverList != null ? approverList : new ArrayList<>();
     }
 
     //ดำเนินการคำร้อง (เรียกใช้จาก method นี้)
@@ -62,17 +62,15 @@ public class Request {
     private void handleApproval(String approver) {
         if ("อาจารย์ที่ปรึกษา".equalsIgnoreCase(this.currentApprover)) {
             this.setCurrentApprover("เจ้าหน้าที่ภาควิชา");
-            this.addStatusLog("คำร้องอนุมัติโดยอาจารย์ที่ปรึกษา");
+            this.addStatusLog("อนุมัติโดยอาจารย์ที่ปรึกษา");
             this.addApprover(approver);
-            this.addStatusLog("คำขอถูกส่งต่อไปยังเจ้าหน้าที่ภาควิชา");
         } else if ("เจ้าหน้าที่ภาควิชา".equalsIgnoreCase(this.currentApprover)) {
             this.setCurrentApprover("เจ้าหน้าที่คณะ");
-            this.addStatusLog("คำร้องอนุมัติโดยเจ้าหน้าที่ภาควิชา");
+            this.addStatusLog("อนุมัติโดยหัวหน้าภาควิชา");
             this.addApprover(approver);
-            this.addStatusLog("คำขอถูกส่งต่อไปยังเจ้าหน้าที่คณะ");
         } else if ("เจ้าหน้าที่คณะ".equalsIgnoreCase(this.currentApprover)) {
             this.addApprover(approver);
-            this.addStatusLog("คำร้องอนุมัติโดยเจ้าหน้าที่คณะ");
+            this.addStatusLog("อนุมัติโดยคณบดี");
             this.setStatus("เสร็จสิ้น");
         }
     }
@@ -80,13 +78,13 @@ public class Request {
     private void handleRejection(String detail) {
         if ("อาจารย์ที่ปรึกษา".equalsIgnoreCase(this.currentApprover)) {
             this.setStatus("ปฏิเสธ");
-            this.addStatusLog("คำร้องถูกปฏิเสธโดยอาจารย์ที่ปรึกษา\nบันทึกเหตุผล: " + detail);
+            this.addStatusLog("ปฏิเสธโดยอาจารย์ที่ปรึกษา\nบันทึกเหตุผล: " + detail);
         } else if ("เจ้าหน้าที่ภาควิชา".equalsIgnoreCase(this.currentApprover)) {
             this.setStatus("ปฏิเสธ");
-            this.addStatusLog("คำร้องถูกปฏิเสธโดยเจ้าหน้าที่ภาควิชา\nบันทึกเหตุผล: " + detail);
+            this.addStatusLog("ปฏิเสธโดยหัวหน้าภาควิชา\nบันทึกเหตุผล: " + detail);
         } else if ("เจ้าหน้าที่คณะ".equalsIgnoreCase(this.currentApprover)) {
             this.setStatus("ปฏิเสธ");
-            this.addStatusLog("คำร้องถูกปฏิเสธโดยเจ้าหน้าที่คณะ\nบันทึกเหตุผล: " + detail);
+            this.addStatusLog("ปฏิเสธโดยคณบดี\nบันทึกเหตุผล: " + detail);
         }
     }
 
@@ -94,7 +92,7 @@ public class Request {
         if ("เจ้าหน้าที่ภาควิชา".equalsIgnoreCase(this.currentApprover)) {
             this.addApprover(approver);
             this.setStatus("เสร็จสิ้น");
-            this.addStatusLog("คำร้องอนุมัติโดยเจ้าหน้าที่ภาควิชา");
+            this.addStatusLog("อนุมัติโดยหัวหน้าภาควิชา");
         }
     }
 
@@ -136,7 +134,7 @@ public class Request {
         return status;
     }
 
-    public String getRequester() {
+    public Student getRequester() {
         return requester;
     }
 
@@ -168,13 +166,9 @@ public class Request {
         this.currentApprover = currentApprover;
     }
 
-    public void setStatusLog(List<String> statusLog) {
-        this.statusLog = statusLog;
-    }
-
     public void addStatusLog(String status) {
         String logTime = LocalDateTime.now().format(formatter);
         this.lastModifiedDateTime = logTime;
-        this.statusLog.add(logTime + " - " + status);
+        statusLog.add(logTime + " - " + status);
     }
 }
