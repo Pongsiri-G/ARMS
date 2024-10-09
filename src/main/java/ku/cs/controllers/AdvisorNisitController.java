@@ -1,8 +1,11 @@
 package ku.cs.controllers;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -42,7 +45,6 @@ public class AdvisorNisitController {
 
         showTable(student.getRequestsByStudent(requestList));
         showStudent(student);
-
     }
 
     private void showTable(ArrayList<Request> requests) {
@@ -53,9 +55,43 @@ public class AdvisorNisitController {
         TableColumn<Request, String> time = new TableColumn<>("วันที่");
         time.setCellValueFactory(new PropertyValueFactory<>("timestamp"));
 
+        TableColumn<Request, String> status = new TableColumn<>("สถานะ");
+        status.setCellValueFactory(new PropertyValueFactory<>("status"));
+        status.setCellFactory(column -> new TableCell<Request, String>() {
+            @Override
+            protected void updateItem(String statusLog, boolean empty) {
+                super.updateItem(statusLog, empty);
+                if (empty || statusLog == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(statusLog);
+
+                    Request request = getTableView().getItems().get(getIndex());
+                    String status = request.getStatus();
+
+                    switch (status) {
+                        case "กำลังดำเนินการ":
+                            setStyle("-fx-text-fill: #d7a700;");
+                            break;
+                        case "ปฏิเสธ":
+                            setStyle("-fx-text-fill: #be0000;");
+                            break;
+                        case "เสร็จสิ้น":
+                            setStyle("-fx-text-fill: #149100;");
+                            break;
+                        default:
+                            setStyle("");
+                            break;
+                    }
+                }
+            }
+        });
+
         // ล้าง column เดิมทั้งหมดที่มีอยู่ใน table แล้วเพิ่ม column ใหม่
         studentTable.getColumns().clear();
         studentTable.getColumns().add(type);
+        studentTable.getColumns().add(status);
         studentTable.getColumns().add(time);
 
 

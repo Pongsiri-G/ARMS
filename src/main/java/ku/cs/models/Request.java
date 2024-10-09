@@ -37,17 +37,18 @@ public class Request {
         this.requestType = requestType;
         this.timestamp = timestamp;
         this.lastModifiedDateTime = lastModifiedDateTime;
-        this.statusLog = statusLog != null ? statusLog : new ArrayList<>();
+        this.statusLog = statusLog != null ? new ArrayList<>(statusLog) : new ArrayList<>();
         this.requester = requester;
         this.currentApprover = currentApprover;
         this.numberPhone = numberPhone;
         this.status = status;
-        this.approverList = approverList != null ? approverList : new ArrayList<>();
+        this.approverList = approverList != null ? new ArrayList<>(approverList) : new ArrayList<>();
     }
 
     //ดำเนินการคำร้อง (เรียกใช้จาก method นี้)
     public void processRequest(String approver, String decision, String detail) {
         if ("อนุมัติ".equalsIgnoreCase(decision)) {
+            System.out.println(approver);
             handleApproval(approver);
         } else if ("ปฏิเสธ".equalsIgnoreCase(decision)) {
             if (detail == null || detail.trim().isEmpty()) {
@@ -80,13 +81,13 @@ public class Request {
     private void handleRejection(String detail) {
         if ("อาจารย์ที่ปรึกษา".equalsIgnoreCase(this.currentApprover)) {
             this.setStatus("ปฏิเสธ");
-            this.addStatusLog("คำร้องถูกปฏิเสธโดยอาจารย์ที่ปรึกษา\nบันทึกเหตุผล: " + detail);
+            this.addStatusLog("คำร้องถูกปฏิเสธโดยอาจารย์ที่ปรึกษา บันทึกเหตุผล: " + detail);
         } else if ("เจ้าหน้าที่ภาควิชา".equalsIgnoreCase(this.currentApprover)) {
             this.setStatus("ปฏิเสธ");
-            this.addStatusLog("คำร้องถูกปฏิเสธโดยเจ้าหน้าที่ภาควิชา\nบันทึกเหตุผล: " + detail);
+            this.addStatusLog("คำร้องถูกปฏิเสธโดยเจ้าหน้าที่ภาควิชา บันทึกเหตุผล: " + detail);
         } else if ("เจ้าหน้าที่คณะ".equalsIgnoreCase(this.currentApprover)) {
             this.setStatus("ปฏิเสธ");
-            this.addStatusLog("คำร้องถูกปฏิเสธโดยเจ้าหน้าที่คณะ\nบันทึกเหตุผล: " + detail);
+            this.addStatusLog("คำร้องถูกปฏิเสธโดยเจ้าหน้าที่คณะ บันทึกเหตุผล: " + detail);
         }
     }
 
@@ -172,9 +173,9 @@ public class Request {
         this.statusLog = statusLog;
     }
 
-    public void addStatusLog(String status) {
+    public void addStatusLog(String newStatus) {
         String logTime = LocalDateTime.now().format(formatter);
         this.lastModifiedDateTime = logTime;
-        this.statusLog.add(logTime + " - " + status);
+        this.statusLog.add(logTime + " - " + newStatus);
     }
 }

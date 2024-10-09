@@ -75,6 +75,9 @@
                            <image>
                               <Image url="@../../../images/write.png" />
                            </image>
+                           <StackPane.margin>
+                              <Insets />
+                           </StackPane.margin>
                         </ImageView>
                      </children>
                   </StackPane>

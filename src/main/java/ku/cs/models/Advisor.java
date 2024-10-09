@@ -53,13 +53,11 @@ public class Advisor extends User{
     }
 
     public void rejectRequest(Request request, String reason) {
-        request.processRequest(this.getName() + " - อาจารย์ที่ปรึกษา","ปฏิเสธ", reason);
+        request.processRequest( "อาจารย์ที่ปรึกษา","ปฏิเสธ", reason);
     }
     public void acceptRequest(Request request) {
-        request.processRequest(this.getName() + " - อาจารย์ที่ปรึกษา", "อนุมัติ", null);
+        request.processRequest("อาจารย์ที่ปรึกษา", "อนุมัติ", null);
     }
-
-    //public void setStudents(ArrayList<Student> students) { this.students = students; }
 
     public String getAdvisorEmail() { return advisorEmail; }
 

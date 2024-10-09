@@ -1,29 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1024.0" prefWidth="1440.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.AdvisorRequestController">
+<StackPane prefHeight="1024.0" prefWidth="1440.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.AdvisorRequestController">
    <children>
-      <ImageView fitHeight="49.0" fitWidth="49.0" layoutX="106.0" layoutY="403.0" onMouseClicked="#goToAdvisor" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../images/dashboard-admin.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="49.0" fitWidth="49.0" layoutX="106.0" layoutY="463.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../images/document.png" />
-         </image>
-      </ImageView>
-      <TableView fx:id="tableRequest" layoutX="172.0" layoutY="61.0" prefHeight="964.0" prefWidth="1102.0" AnchorPane.leftAnchor="166.0" AnchorPane.rightAnchor="166.0">
-        <columns>
-          <TableColumn prefWidth="75.0" text="C1" />
-          <TableColumn prefWidth="75.0" text="C2" />
-        </columns>
-      </TableView>
+      <AnchorPane prefHeight="1024.0" prefWidth="1250.0">
+         <children>
+            <ImageView fitHeight="46.0" fitWidth="38.0" layoutX="66.0" layoutY="424.0" onMouseClicked="#goToAdvisor" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../images/dashboard-admin.png" />
+               </image>
+            </ImageView>
+            <TableView fx:id="tableRequest" layoutX="156.0" layoutY="54.0" prefHeight="970.0" prefWidth="1151.0" stylesheets="@../../../style/style.css">
+              <columns>
+                <TableColumn prefWidth="254.0" text="C1" />
+                <TableColumn prefWidth="235.0" text="C2" />
+                  <TableColumn prefWidth="335.0" text="Column X" />
+                  <TableColumn prefWidth="326.0" text="Column X" />
+              </columns>
+            </TableView>
+            <ImageView fitHeight="46.0" fitWidth="47.0" layoutX="62.0" layoutY="358.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../images/document.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="ApprovePopupLabel" prefHeight="550.0" prefWidth="550.0" style="-fx-background-color: #FFFFFF;">
+         <children>
+            <Pane layoutX="223.0" layoutY="136.0" prefHeight="675.0" prefWidth="1140.0" style="-fx-border-color: 000000;" styleClass="framin" stylesheets="@../../../style/style.css" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="150.0">
+               <children>
+                  <Label fx:id="timeLabel" layoutX="287.0" layoutY="212.0" prefHeight="30.0" prefWidth="200.0" text="timeLabel">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="153.0" layoutY="212.0" prefHeight="30.0" prefWidth="92.0" text="วันที่ :">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="requesterLabel" layoutX="287.0" layoutY="89.0" prefHeight="30.0" prefWidth="155.0" text="requesterLabel">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="153.0" layoutY="89.0" text="ชื่อ - นามสกุล :">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="418.0" layoutY="14.0" text="รายละเอียดคำร้อง">
+                     <font>
+                        <Font size="32.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="153.0" layoutY="147.0" text="ประเภท :">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="requestTypeLabel" layoutX="287.0" layoutY="147.0" prefHeight="30.0" prefWidth="200.0" text="requestTypeLabel">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+            <Button layoutX="162.0" layoutY="852.0" mnemonicParsing="false" onAction="#goToBackAdvisorClick" prefHeight="36.0" prefWidth="92.0" style="-fx-background-color: #808080;" stylesheets="@../../../style/style.css" text="กลับ" />
+            <Button layoutX="1081.0" layoutY="852.0" mnemonicParsing="false" onAction="#rejectClick" prefHeight="36.0" prefWidth="92.0" style="-fx-background-color: #D30000;" stylesheets="@../../../style/style.css" text="ปฏิเสธ" />
+            <Button layoutX="1198.0" layoutY="852.0" mnemonicParsing="false" onAction="#acceptClick" prefHeight="36.0" prefWidth="92.0" stylesheets="@../../../style/style.css" text="อนุมัติ" />
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="popupReject" prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <Pane layoutX="419.0" layoutY="412.0" prefHeight="200.0" prefWidth="558.0" style="-fx-border-color: #FF0000;" styleClass="framin" stylesheets="@../../../style/style.css">
+               <children>
+                  <TextField fx:id="reasonText" layoutX="50.0" layoutY="81.0" prefHeight="53.0" prefWidth="459.0" styleClass="text-field" />
+               </children>
+            </Pane>
+            <Button layoutX="885.0" layoutY="628.0" mnemonicParsing="false" onAction="#reasonRejectToStudent" prefHeight="36.0" prefWidth="92.0" style="-fx-background-color: #FF9900;" stylesheets="@../../../style/style.css" text="ส่ง" />
+         </children>
+      </AnchorPane>
    </children>
-</AnchorPane>
+</StackPane>

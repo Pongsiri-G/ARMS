@@ -12,12 +12,12 @@
 
 <AnchorPane prefHeight="1024.0" prefWidth="1440.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.AdvisorController">
     <children>
-      <ImageView fitHeight="39.0" fitWidth="54.0" layoutX="53.0" layoutY="461.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="39.0" fitWidth="54.0" layoutX="53.0" layoutY="422.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../../images/dashboard-admin.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="39.0" fitWidth="48.0" layoutX="53.0" layoutY="514.0" onMouseClicked="#goToRequestNisit" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="39.0" fitWidth="48.0" layoutX="53.0" layoutY="500.0" onMouseClicked="#goToRequestNisit" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../../images/document.png" />
          </image>
@@ -31,7 +31,7 @@
             </ImageView>
          </graphic>
       </Button>
-          <Pane layoutX="101.0" layoutY="120.0" prefHeight="908.0" prefWidth="1336.0" style="-fx-background-color: #EAEAEA;" styleClass="frameout" stylesheets="@../../../style/style.css">
+          <Pane layoutX="101.0" layoutY="120.0" prefHeight="908.0" prefWidth="1336.0" style="-fx-background-color: #EAEAEA;" styleClass="frameout" stylesheets="@../../../style/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="101.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="116.0">
          <children>
             <Pane layoutX="51.0" layoutY="43.0" prefHeight="867.0" prefWidth="1229.0" style="-fx-background-color: #FFFFFF;" styleClass="framin">
                <children>
