@@ -61,7 +61,7 @@ public class FacultyOfficer extends User implements Officer {
         for (Request request : requests.getRequests()) {
             for (Department department : this.getFaculty().getDepartments()) {
                 for (Student student : department.getStudents()) {
-                    if (student.getUsername().equalsIgnoreCase(request.getRequester()) && request.getCurrentApprover().equals("เจ้าหน้าที่คณะ") && request.getStatus().equals("กำลังดำเนินการ")) {
+                    if (student.getUsername().equalsIgnoreCase(request.getRequester().getUsername()) && request.getCurrentApprover().equals("เจ้าหน้าที่คณะ") && request.getStatus().equals("กำลังดำเนินการ")) {
                         facultyRequests.add(request);
                     }
                 }

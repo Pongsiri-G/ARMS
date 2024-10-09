@@ -6,19 +6,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import ku.cs.models.RequestList;
-import ku.cs.models.Request;
-import ku.cs.models.LeaveOfAbsenceRequest;
-import ku.cs.models.SickLeaveRequest;
-import ku.cs.models.ResignationRequest;
+import ku.cs.models.*;
 
 public class RequestListFileDatasource implements Datasource<RequestList> {
     private String directoryName;
     private String fileName;
+    private UserList userList;
 
-    public RequestListFileDatasource(String directoryName, String fileName) {
+    public RequestListFileDatasource(String directoryName, String fileName, UserList userList) {
         this.directoryName = directoryName;
         this.fileName = fileName;
+        this.userList = userList;
         checkFileIsExisted();
     }
 
@@ -52,7 +50,7 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
                             leaveRequest.getTimestamp(),
                             leaveRequest.getRequestType(),
                             leaveRequest.getStatus(),
-                            leaveRequest.getRequester(),
+                            leaveRequest.getRequester().getUsername(),
                             leaveRequest.getCurrentApprover(),
                             leaveRequest.getNumberPhone(),
                             leaveRequest.getReason(),
@@ -75,7 +73,7 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
                             resignationRequest.getTimestamp(),
                             resignationRequest.getRequestType(),
                             resignationRequest.getStatus(),
-                            resignationRequest.getRequester(),
+                            resignationRequest.getRequester().getUsername(),
                             resignationRequest.getCurrentApprover(),
                             resignationRequest.getNumberPhone(),
                             resignationRequest.getReason(),
@@ -90,7 +88,7 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
                             sickLeaveRequest.getTimestamp(),
                             sickLeaveRequest.getRequestType(),
                             sickLeaveRequest.getStatus(),
-                            sickLeaveRequest.getRequester(),
+                            sickLeaveRequest.getRequester().getUsername(),
                             sickLeaveRequest.getCurrentApprover(),
                             sickLeaveRequest.getNumberPhone(),
                             sickLeaveRequest.getCurrentAddress(),
@@ -123,9 +121,11 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
                 String timestamp = data[0];
                 String requestType = data[1];
                 String status = data[2];
-                String requester = data[3];
+                String requesterUsername = data[3];
                 String currentApprover = data[4];
                 String numberPhone = data[5];
+
+                Student requester = (Student) userList.findUserByUsername(requesterUsername);
 
                 String approverListStr = data[data.length - 1];
                 List<String> approverList = new ArrayList<>();

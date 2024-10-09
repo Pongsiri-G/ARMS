@@ -33,7 +33,7 @@ public class Student extends User {
     public ArrayList<Request> getRequestsByStudent(RequestList requests) {
         ArrayList<Request> studentRequests = new ArrayList<>();
         for (Request request : requests.getRequests()) {
-            if (this.getUsername().equalsIgnoreCase(request.getRequester())) {
+            if (this.getUsername().equalsIgnoreCase(request.getRequester().getUsername())) {
                 studentRequests.add(request);
             }
         }
