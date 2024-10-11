@@ -26,7 +26,7 @@ public class RequestListFileDatasourceTest {
         userDatasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
         userList = userDatasource.readData();
         datasource = new RequestListFileDatasource(testDirectory, testFileName, userList);
-        RequestList requestList = datasource.readData();
+       // RequestList requestList = datasource.readData();
         //clearTestFile();
 //        Advisor advisor = (Advisor) userList.findUserByUsername("Jak");
 //        ArrayList<Request> requests = advisor.getRequestsByAdvisor(requestList);
@@ -72,6 +72,7 @@ public class RequestListFileDatasourceTest {
         requestList.addRequest(request2);
         requestList.addRequest(request3);
         requestList.addRequest(request4);
+        System.out.println(requestList);
 
         datasource.writeData(requestList);
         return requestList;

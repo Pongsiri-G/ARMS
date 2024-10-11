@@ -62,7 +62,7 @@ public class DepartmentOfficer extends User implements Officer {
         ArrayList<Request> departmentRequests = new ArrayList<>();
         for (Request request : requests.getRequests()) {
             for (Student student : this.getDepartment().getStudents()) {
-                if (student.getUsername().equalsIgnoreCase(request.getRequester().getUsername()) && request.getCurrentApprover().equals("เจ้าหน้าที่ภาควิชา") && request.getStatus().equals("กำลังดำเนินการ")) {
+                if (student.getUsername() != null && student.getUsername().equalsIgnoreCase(request.getRequester().getUsername()) && request.getCurrentApprover().equals("เจ้าหน้าที่ภาควิชา") && request.getStatus().equals("กำลังดำเนินการ")) {
                     departmentRequests.add(request);
                 }
             }

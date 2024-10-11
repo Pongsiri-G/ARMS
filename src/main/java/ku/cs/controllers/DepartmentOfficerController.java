@@ -24,6 +24,7 @@ import ku.cs.services.UserListFileDatasource;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class DepartmentOfficerController {
@@ -142,6 +143,7 @@ public class DepartmentOfficerController {
     public void initialize() {
         initializeDataSources();
         loadData();
+        loadRequests();
         loadApprovers();
         setupOfficerInfo();
         switchToRequestScene();
@@ -187,11 +189,14 @@ public class DepartmentOfficerController {
 
     public void loadData() {
         userList = datasource.readData();
-        requestList = requestDatasource.readData();
         officer = (DepartmentOfficer) userList.findUserByUsername(officer.getUsername());
-        requests = officer.getRequestsByDepartment(requestList);
         advisors = officer.getDepartment().getAdvisors();
         students = officer.getDepartment().getStudents();
+    }
+
+    public void loadRequests(){
+        requestList = requestDatasource.readData();
+        requests = officer.getRequestsByDepartment(requestList);
     }
 
 
@@ -295,38 +300,72 @@ public class DepartmentOfficerController {
     }
 
     public void updateRequestTableView() {
-        //loadRequests();
+        loadData();
 
         // Set up the columns
-        TableColumn<Request, String> typeColumn = new TableColumn<>("Type");
+        TableColumn<Request, String> typeColumn = new TableColumn<>("ประเภทคำร้อง");
 
-        typeColumn.setCellValueFactory(new PropertyValueFactory<>("requestType"));
+        typeColumn.setCellValueFactory(new PropertyValueFactory<>("requestType")); // รับประเภทคำร้องจาก Request โดยตรง
 
 
-        TableColumn<Request, String> nameColumn = new TableColumn<>("Name");
+        TableColumn<Request, String> nameColumn = new TableColumn<>("ชื่อ-นามสกุล");
         nameColumn.setCellValueFactory(cellData -> {
             Student student = cellData.getValue().getRequester();
-            return new SimpleStringProperty(student.getName());
+            return new SimpleStringProperty(student.getName()); // ดึงชื่อ-นามสกุลจากที่สิตที่สร้างคำร้อง
         });
 
-        TableColumn<Request, String> idColumn = new TableColumn<>("ID");
+        TableColumn<Request, String> idColumn = new TableColumn<>("รหัสนิสิต");
         idColumn.setCellValueFactory(cellData -> {
             Student student = cellData.getValue().getRequester();
-            return new SimpleStringProperty(student.getStudentID());
+            return new SimpleStringProperty(student.getStudentID()); // ดึงรหสนิสิตจากที่สิตที่สร้างคำร้อง
         });
 
-        TableColumn<Request, String> textColumn = new TableColumn<>("Text");
-        textColumn.setCellValueFactory(new PropertyValueFactory<>("text"));
+        TableColumn<Request, String> statusColumn = new TableColumn<>("สถานะคำร้อง");
+        statusColumn.setCellValueFactory(new PropertyValueFactory<>("recentStatusLog"));
+        statusColumn.setCellFactory(column -> new TableCell<Request, String>() {
+            @Override
+            protected void updateItem(String statusLog, boolean empty) {
+                super.updateItem(statusLog, empty);
+                if (empty || statusLog == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(statusLog);
 
-        TableColumn<Request, String> timeStampColumn = new TableColumn<>("TimeStamp");
-        timeStampColumn.setCellValueFactory(new PropertyValueFactory<>("timeStamp"));
+                    Request request = getTableView().getItems().get(getIndex());
+                    String status = request.getStatus();
+
+                    switch (status) {
+                        case "กำลังดำเนินการ":
+                            setStyle("-fx-text-fill: #d7a700;");
+                            break;
+                        case "ปฏิเสธ":
+                            setStyle("-fx-text-fill: #be0000;");
+                            break;
+                        case "เสร็จสิ้น":
+                            setStyle("-fx-text-fill: #149100;");
+                            break;
+                        default:
+                            setStyle("");
+                            break;
+                    }
+                }
+            }
+        });
+
+        TableColumn<Request, String> lastModifiedColumn = new TableColumn<>("วันที่แก้ไขล่าสุด");
+        lastModifiedColumn.setCellValueFactory(new PropertyValueFactory<>("lastModifiedDateTime"));
+
+
 
         // Clear previous columns and add the new ones
         requestListTableView.getColumns().clear();
-        requestListTableView.getColumns().addAll(typeColumn, nameColumn, idColumn, textColumn, timeStampColumn);
+        requestListTableView.getColumns().addAll(typeColumn, nameColumn, idColumn, lastModifiedColumn);
 
         // Clear the items in the table
         requestListTableView.getItems().clear();
+
+        requests.sort(Comparator.comparing(Request::getLastModifiedDateTime).reversed()); // เรียง Request ตามวันเวลา
 
         // Populate the TableView with requests
         requestListTableView.getItems().addAll(requests);
@@ -347,7 +386,9 @@ public class DepartmentOfficerController {
         // Handle the selected request (e.g., navigate to the details scene)
         try {
             List<Object> dataToPass = new ArrayList<>();
-            dataToPass.add(selectedRequest);  // Add the Request object
+            dataToPass.add(selectedRequest);
+            dataToPass.add(requestList);// Add the Request object
+            dataToPass.add(requestDatasource);
             dataToPass.add(officer);  // Add the RequestHandlingOfficer object
             FXRouter.goTo("department-officer-manage-request", dataToPass);  // Pass the list with both objects
         } catch (IOException e) {
