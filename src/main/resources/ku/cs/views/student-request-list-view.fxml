@@ -2,9 +2,12 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Group?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
@@ -47,7 +50,7 @@
                   <Insets left="20.0" />
                </HBox.margin>
             </Circle>
-            <ImageView fx:id="optionDropdown" fitHeight="40.0" fitWidth="40.0" onMouseClicked="#optionDropdown" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../images/arrow-down.png" />
                </image>
@@ -75,6 +78,9 @@
                            <image>
                               <Image url="@../../../images/write.png" />
                            </image>
+                           <StackPane.margin>
+                              <Insets />
+                           </StackPane.margin>
                         </ImageView>
                      </children>
                   </StackPane>
@@ -117,56 +123,231 @@
                   <Insets bottom="35.0" left="45.0" right="45.0" top="35.0" />
                </padding>
                <children>
-                  <HBox prefHeight="80.0" prefWidth="200.0">
+                  <StackPane prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <VBox prefHeight="200.0" prefWidth="400.0">
+                        <VBox prefHeight="200.0" prefWidth="100.0">
                            <children>
-                              <Label styleClass="title-label" stylesheets="@../../../style/style.css" text="ติดตามคำร้อง">
-                                 <font>
-                                    <Font size="24.0" />
-                                 </font>
-                                 <VBox.margin>
-                                    <Insets bottom="30.0" />
-                                 </VBox.margin>
-                              </Label>
-                              <HBox prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+                              <HBox prefHeight="80.0" prefWidth="200.0">
                                  <children>
-                                    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="green-box" stylesheets="@../../../style/style.css">
+                                    <VBox prefHeight="200.0" prefWidth="400.0">
                                        <children>
-                                          <Label fx:id="doneLabel" styleClass="status-number" stylesheets="@../../../style/style.css" text="0" textFill="#149100">
+                                          <Label styleClass="title-label" stylesheets="@../../../style/style.css" text="ติดตามคำร้อง">
+                                             <font>
+                                                <Font size="24.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets bottom="30.0" />
+                                             </VBox.margin>
+                                          </Label>
+                                          <HBox prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+                                             <children>
+                                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="green-box" stylesheets="@../../../style/style.css">
+                                                   <children>
+                                                      <Label fx:id="doneLabel" styleClass="status-number" stylesheets="@../../../style/style.css" text="0" textFill="#149100">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label stylesheets="@../../../style/style.css" text="เสร็จสิ้น" textFill="#149100">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                      </Label>
+                                                   </children>
+                                                </VBox>
+                                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="yellow-box" stylesheets="@../../../style/style.css">
+                                                   <children>
+                                                      <Label fx:id="waitLabel" styleClass="status-number" stylesheets="@../../../style/style.css" text="0" textFill="#d7a700">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label stylesheets="@../../../style/style.css" text="รอ" textFill="#d7a700">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                      </Label>
+                                                   </children>
+                                                </VBox>
+                                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="red-box" stylesheets="@../../../style/style.css">
+                                                   <children>
+                                                      <Label fx:id="rejectLabel" styleClass="status-number" stylesheets="@../../../style/style.css" text="0" textFill="#a51717">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label stylesheets="@../../../style/style.css" text="ปฏิเสธ" textFill="#a51717">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                      </Label>
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                    <HBox prefWidth="800.0" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <HBox prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                          <VBox prefHeight="100.0" prefWidth="370.0">
+                                             <children>
+                                                <HBox alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="200.0" spacing="10.0">
+                                                   <children>
+                                                      <Circle fill="#149100" radius="8.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                                                      <Label stylesheets="@../../../style/style.css" text="คำร้องดำเนินการครบถ้วน" textFill="#333652">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                      </Label>
+                                                   </children>
+                                                   <VBox.margin>
+                                                      <Insets top="20.0" />
+                                                   </VBox.margin>
+                                                </HBox>
+                                                <HBox alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="200.0" spacing="10.0">
+                                                   <children>
+                                                      <Circle fill="#d7a700" radius="8.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                                                      <Label stylesheets="@../../../style/style.css" text="คำร้องอยู่ระหว่างดำเนินการ / ส่งต่อให้ผู้เกี่ยวข้อง" textFill="#333652">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                      </Label>
+                                                   </children>
+                                                </HBox>
+                                                <HBox alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="200.0" spacing="10.0">
+                                                   <children>
+                                                      <Circle fill="#be0000" radius="8.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                                                      <Label stylesheets="@../../../style/style.css" text="คำร้องถูกปฏิเสธ" textFill="#333652">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                      </Label>
+                                                   </children>
+                                                   <VBox.margin>
+                                                      <Insets bottom="50.0" />
+                                                   </VBox.margin>
+                                                </HBox>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <TableView fx:id="requestListTableview" prefHeight="200.0" prefWidth="700.0" stylesheets="@../../../style/style.css" HBox.hgrow="ALWAYS">
+                                      <columns>
+                                        <TableColumn prefWidth="75.0" text="C1" />
+                                        <TableColumn prefWidth="75.0" text="C2" />
+                                          <TableColumn prefWidth="75.0" text="C3" />
+                                      </columns>
+                                       <columnResizePolicy>
+                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                       </columnResizePolicy>
+                                    </TableView>
+                                    <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS" />
+                                    <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="200.0" spacing="20.0">
+                                       <children>
+                                          <Label text="กรองสถานะคำร้อง">
                                              <font>
                                                 <Font size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label stylesheets="@../../../style/style.css" text="เสร็จสิ้น" textFill="#149100">
+                                          <ComboBox fx:id="statusFilterComboBox" prefWidth="150.0" />
+                                          <Label text="กรองประเภทคำร้อง">
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font>
+                                          </Label>
+                                          <ComboBox fx:id="typeFilterComboBox" prefWidth="150.0" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                                 <padding>
+                                    <Insets top="30.0" />
+                                 </padding>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <VBox fx:id="requestDetailPane" prefHeight="874.0" prefWidth="1229.0" spacing="10.0" style="-fx-background-color: white; -fx-background-radius: 25;" stylesheets="@../../../style/style.css" visible="false">
+                           <children>
+                              <HBox prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <VBox prefHeight="200.0" prefWidth="700.0" spacing="10.0">
+                                       <children>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="280.0" spacing="20.0" VBox.vgrow="ALWAYS">
+                                             <children>
+                                                <ImageView fitHeight="70.0" fitWidth="70.0" onMouseClicked="#closeRequestDetailClick" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../images/back-arrow-grey.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <Label fx:id="typeRequestLabel" text="typeRequestLabel">
+                                                   <font>
+                                                      <Font size="24.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </HBox>
+                                          <Label fx:id="nameRequesterLabel" text="nameRequesterLabel">
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                          </Label>
+                                          <HBox prefHeight="100.0" prefWidth="200.0" spacing="70.0">
+                                             <children>
+                                                <Label fx:id="facultyRequesterLabel" text="facultyRequesterLabel">
+                                                   <font>
+                                                      <Font size="18.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label fx:id="departmentRequesterLabel" text="departmentRequesterLabel">
+                                                   <font>
+                                                      <Font size="18.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </HBox>
+                                          <Label fx:id="studentIdRequesterLabel" text="studentIdRequesterLabel">
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="emailRequesterLabel" text="emailRequesterLabel">
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="phoneNumberRequesterLabel" text="phoneNumberRequesterLabel">
                                              <font>
                                                 <Font size="18.0" />
                                              </font>
                                           </Label>
                                        </children>
                                     </VBox>
-                                    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="yellow-box" stylesheets="@../../../style/style.css">
+                                    <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS" />
+                                    <VBox prefHeight="200.0" prefWidth="500.0" spacing="10.0">
                                        <children>
-                                          <Label fx:id="waitLabel" styleClass="status-number" stylesheets="@../../../style/style.css" text="0" textFill="#d7a700">
+                                          <TextArea fx:id="requestLogTextArea" editable="false" prefHeight="200.0" prefWidth="400.0">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </TextArea>
+                                          <Label fx:id="recentRequestLogLabel" prefHeight="29.0" prefWidth="500.0" text="recentRequestLogLabel" wrapText="true">
                                              <font>
                                                 <Font size="18.0" />
                                              </font>
                                           </Label>
-                                          <Label stylesheets="@../../../style/style.css" text="รอ" textFill="#d7a700">
+                                          <Label fx:id="rejectReasonLabel" prefHeight="29.0" prefWidth="500.0" text="rejectReasonLabel" visible="false" wrapText="true">
                                              <font>
                                                 <Font size="18.0" />
                                              </font>
                                           </Label>
-                                       </children>
-                                    </VBox>
-                                    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="red-box" stylesheets="@../../../style/style.css">
-                                       <children>
-                                          <Label fx:id="rejectLabel" styleClass="status-number" stylesheets="@../../../style/style.css" text="0" textFill="#a51717">
-                                             <font>
-                                                <Font size="18.0" />
-                                             </font>
-                                          </Label>
-                                          <Label stylesheets="@../../../style/style.css" text="ปฏิเสธ" textFill="#a51717">
+                                          <Label fx:id="timestampLabel" text="timestampLabel">
                                              <font>
                                                 <Font size="18.0" />
                                              </font>
@@ -175,63 +356,23 @@
                                     </VBox>
                                  </children>
                               </HBox>
-                           </children>
-                        </VBox>
-                        <HBox prefWidth="800.0" HBox.hgrow="ALWAYS">
-                           <children>
-                              <HBox prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                              <VBox prefHeight="100.0" prefWidth="370.0">
+                              <VBox prefHeight="200.0" prefWidth="100.0" spacing="30.0" VBox.vgrow="ALWAYS">
+                                 <padding>
+                                    <Insets top="40.0" />
+                                 </padding>
                                  <children>
-                                    <HBox alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="200.0" spacing="10.0">
-                                       <children>
-                                          <Circle fill="#149100" radius="8.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
-                                          <Label stylesheets="@../../../style/style.css" text="คำร้องดำเนินการเสร็จสิ้น" textFill="#333652">
-                                             <font>
-                                                <Font size="18.0" />
-                                             </font>
-                                          </Label>
-                                       </children>
-                                       <VBox.margin>
-                                          <Insets top="20.0" />
-                                       </VBox.margin>
-                                    </HBox>
-                                    <HBox alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="200.0" spacing="10.0">
-                                       <children>
-                                          <Circle fill="#d7a700" radius="8.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
-                                          <Label stylesheets="@../../../style/style.css" text="คำร้องอยู่ระหว่างดำเนินการ / ส่งต่อให้ผู้เกี่ยวข้อง" textFill="#333652">
-                                             <font>
-                                                <Font size="18.0" />
-                                             </font>
-                                          </Label>
-                                       </children>
-                                    </HBox>
-                                    <HBox alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="200.0" spacing="10.0">
-                                       <children>
-                                          <Circle fill="#be0000" radius="8.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
-                                          <Label stylesheets="@../../../style/style.css" text="คำร้องถูกปฏิเสธ" textFill="#333652">
-                                             <font>
-                                                <Font size="18.0" />
-                                             </font>
-                                          </Label>
-                                       </children>
-                                       <VBox.margin>
-                                          <Insets bottom="50.0" />
-                                       </VBox.margin>
-                                    </HBox>
+                                    <Separator prefWidth="200.0" />
+                                    <Label fx:id="requestDetailsLabel" text="requestDetailsLabel" wrapText="true">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
                                  </children>
                               </VBox>
-                           </children></HBox>
+                           </children>
+                        </VBox>
                      </children>
-                  </HBox>
-                  <TableView fx:id="requestListTableview" prefHeight="200.0" prefWidth="200.0" stylesheets="@../../../style/style.css" VBox.vgrow="ALWAYS">
-                    <columns>
-                      <TableColumn prefWidth="75.0" text="C1" />
-                      <TableColumn prefWidth="75.0" text="C2" />
-                    </columns>
-                     <VBox.margin>
-                        <Insets top="30.0" />
-                     </VBox.margin>
-                  </TableView>
+                  </StackPane>
                </children>
             </VBox>
          </children>

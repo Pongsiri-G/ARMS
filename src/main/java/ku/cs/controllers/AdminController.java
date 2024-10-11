@@ -34,8 +34,9 @@ public class AdminController {
     @FXML
     public void initialize() {
         datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
-        requestListDatasource = new RequestListFileDatasource("data/test", "all-request.csv");
         userList = datasource.readData();
+        requestListDatasource = new RequestListFileDatasource("data/test", "all-request.csv", userList);
+
         requestList = requestListDatasource.readData();
         showTable(userList);
         showRequest(requestList);
@@ -109,8 +110,8 @@ public class AdminController {
     }
 
     private void showRequest(RequestList requestList) {
-        allRequestLabel.setText(String.format("%d", requestList.getAllRequest()));
-        approvedLabel.setText(String.format("%d", requestList.getApprovedRequest()));
+        allRequestLabel.setText(String.format("%d", requestList.getAllRequestCount()));
+        approvedLabel.setText(String.format("%d", requestList.getApprovedRequestsCount()));
     }
 
     private void showTotalUsers(UserList userList) {

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class FacultyOfficer extends User implements Officer {
     private Faculty faculty;
-    private Boolean isFirstLogin = true;
 
     // Begin Constructor
     public FacultyOfficer(String username, String password, String name, Faculty faculty, boolean isHashed, boolean suspended) {
@@ -18,11 +17,6 @@ public class FacultyOfficer extends User implements Officer {
         this.faculty = new Faculty(faculty);
     }
     // End Constructor
-
-    public void setFirstLogin(Boolean isFirstLogin) {
-        this.isFirstLogin = isFirstLogin;
-    }
-
 
     @Override
     public void loadRequestManage(ArrayList<RequestHandlingOfficer> approvers) {
@@ -61,14 +55,26 @@ public class FacultyOfficer extends User implements Officer {
         return faculty.getRequestHandlingOfficers();
     }
 
-    public void rejectRequest(Request request, String reason, String approver) {
-        request.setApproveName(approver);
-        request.changeStatus("rejected");
-        request.setTimeStamp();
+    //เรียกดูรายการคำร้องที่ต้องดำเนินการของเจ้าหน้าที่คณะ
+    public ArrayList<Request> getRequestsByFaculty(RequestList requests) {
+        ArrayList<Request> facultyRequests = new ArrayList<>();
+        for (Request request : requests.getRequests()) {
+            for (Department department : this.getFaculty().getDepartments()) {
+                for (Student student : department.getStudents()) {
+                    if (student.getUsername() != null && student.getUsername().equalsIgnoreCase(request.getRequester().getUsername()) && request.getCurrentApprover().equals("เจ้าหน้าที่คณะ") && request.getStatus().equals("กำลังดำเนินการ")) {
+                        facultyRequests.add(request);
+                    }
+                }
+            }
+        }
+        return facultyRequests;
     }
-    public void acceptRequest(Request request,String approver) {
-        request.setApproveName(approver);
-        request.changeStatus("accepted");
+
+    public void rejectRequest(Request request, String approver, String reason) {
+        request.processRequest(approver, "ปฏิเสธ", reason);
+    }
+    public void acceptRequest(Request request, String approver) {
+        request.processRequest(approver, "อนุมัติ", null);
     }
 
     public void setFaculty(Faculty faculty) {
@@ -80,9 +86,6 @@ public class FacultyOfficer extends User implements Officer {
         return faculty;
     }
 
-    public Boolean isFirstLogin() {
-        return isFirstLogin;
-    }
 
     @Override
     public String getRole(){
