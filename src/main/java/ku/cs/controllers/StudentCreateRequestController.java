@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -13,9 +14,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import ku.cs.models.Student;
-import ku.cs.models.UserList;
+import ku.cs.models.*;
 import ku.cs.services.FXRouter;
+import ku.cs.services.RequestListFileDatasource;
 import ku.cs.services.UserListFileDatasource;
 
 import java.io.IOException;
@@ -23,34 +24,51 @@ import java.util.ArrayList;
 
 public class StudentCreateRequestController {
     @FXML private VBox navigation;
-
     @FXML private VBox pane;
-
     @FXML private VBox createRequestPane;
-
     @FXML private Label roleLabel;
-
     @FXML private Label nameLabel;
-
     @FXML private Label usernameLabel;
-
     @FXML private Circle profilePictureDisplay;
-
     @FXML private ImageView optionDropdown;
-
     @FXML private Rectangle currentBar1;
-
     @FXML private Rectangle currentBar2;
-
     @FXML private ChoiceBox<String> typeRequestChoice;
+    @FXML private GridPane confirmationPane;
+    @FXML private GridPane errorPane;
+    @FXML private Label errorLabel;
+
+    //For Request
+    @FXML private TextField phoneTextField;
+    @FXML private TextArea reasonTextArea;
+
+    @FXML private RadioButton sickLeaveRadio;
+    @FXML private RadioButton personalLeaveRadio;
+    @FXML private DatePicker fromDatePicker;
+    @FXML private DatePicker toDatePicker;
+    @FXML private TextArea absentSubjectTextArea;
+
+    @FXML private TextField currentSemesterTextField;
+    @FXML private TextField currentAcademicYearTextField;
+    @FXML private TextField fromSemesterTextField;
+    @FXML private TextField fromAcademicYearTextField;
+    @FXML private TextField toSemesterTextField;
+    @FXML private TextField toAcademicYearTextField;
+    @FXML private TextArea registeredCoursesTextArea;
+    @FXML private TextArea currentAddressTextArea;
 
     private UserList userList;
-    private UserListFileDatasource datasource;
+    private RequestList requestList;
+    private UserListFileDatasource userListDatasource;
+    private RequestListFileDatasource requestListDatasource;
     private Student student;
 
+
     public StudentCreateRequestController(){
-        datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
-        this.userList = datasource.readData();
+        userListDatasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
+        this.userList = userListDatasource.readData();
+        requestListDatasource = new RequestListFileDatasource("data/test", "requestlist.csv", userList);
+        this.requestList = requestListDatasource.readData();
     }
 
     @FXML
@@ -61,6 +79,8 @@ public class StudentCreateRequestController {
         nameLabel.setText(student.getName());
         usernameLabel.setText(student.getUsername());
         currentBar2.setVisible(false);
+        confirmationPane.setVisible(false);
+        errorPane.setVisible(false);
         setProfilePicture(student.getProfilePicturePath());
         System.out.println("[" + student.getName() + " " + student.getUsername() + "]");
     }
@@ -70,12 +90,16 @@ public class StudentCreateRequestController {
         typeRequestChoice.setValue("ลาป่วย หรือ ลากิจ");
 
         typeRequestChoice.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.equals("ลาป่วย หรือ ลากิจ")) {
-                showSickLeaveForm();
-            } else if (newValue.equals("ลาพักการศึกษา")) {
-                showLeaveOfAbsenceForm();
-            } else if (newValue.equals("ลาออก")) {
-                showResignationForm();
+            switch (newValue) {
+                case "ลาป่วย หรือ ลากิจ":
+                    showSickLeaveForm();
+                    break;
+                case "ลาพักการศึกษา":
+                    showLeaveOfAbsenceForm();
+                    break;
+                case "ลาออก":
+                    showResignationForm();
+                    break;
             }
         });
 
@@ -98,25 +122,35 @@ public class StudentCreateRequestController {
 
     private void showSickLeaveForm() {
         createRequestPane.getChildren().clear();
+        phoneTextField = createTextField(150);
+        HBox phoneBox = new HBox(30, createLabel("เบอร์โทรติดต่อ"), phoneTextField);
+        ToggleGroup leaveTypeGroup = new ToggleGroup();
 
-        RadioButton sickLeaveRadio = createRadioButton("ลาป่วย", true);
-        RadioButton personalLeaveRadio = createRadioButton("ลากิจ", false);
+        // Create radio buttons and add them to the ToggleGroup
+        sickLeaveRadio = createRadioButton("ลาป่วย", true);
+        personalLeaveRadio = createRadioButton("ลากิจ", false);
+
+        sickLeaveRadio.setToggleGroup(leaveTypeGroup);
+        personalLeaveRadio.setToggleGroup(leaveTypeGroup);
 
         HBox purposeBox = new HBox(50, sickLeaveRadio, personalLeaveRadio);
 
+        fromDatePicker = createDatePicker();
+        toDatePicker = createDatePicker();
         HBox dateRangeBox = new HBox(30,
-                createLabel("ตั้งแต่วันที่"), createDatePicker(),
-                createLabel("ถึงวันที่"), createDatePicker()
+                createLabel("ตั้งแต่วันที่"), fromDatePicker,
+                createLabel("ถึงวันที่"), toDatePicker
         );
 
         // Reason for leave TextArea
-        TextArea reasonTextArea = createTextArea(3, 300);
+        reasonTextArea = createTextArea(3, 300);
 
         // Absent subjects TextArea
-        TextArea absentSubjectTextArea = createTextArea(3, 300);
+        absentSubjectTextArea = createTextArea(3, 300);
 
         // Add all elements to the pane
         createRequestPane.getChildren().addAll(
+                phoneBox,
                 purposeBox,
                 dateRangeBox,
                 createLabel("เนื่องจาก"),
@@ -129,31 +163,36 @@ public class StudentCreateRequestController {
     private void showLeaveOfAbsenceForm() {
         createRequestPane.getChildren().clear();
 
-        // Current semester and academic year
+        phoneTextField = createTextField(150);
+        HBox phoneBox = new HBox(30, createLabel("เบอร์โทรติดต่อ"), phoneTextField);
+
+        currentSemesterTextField = createTextField(50);
+        currentAcademicYearTextField = createTextField(50);
         HBox currentSemesterBox = new HBox(30,
-                createLabel("ภาคการศึกษาปัจจุบัน"), createTextField(50),
-                createLabel("ปีการศึกษาปัจจุบัน"), createTextField(50)
+                createLabel("ภาคการศึกษาปัจจุบัน"), currentSemesterTextField,
+                createLabel("ปีการศึกษาปัจจุบัน"), currentAcademicYearTextField
         );
 
-        // Leave duration (from semester/year to semester/year)
+        fromSemesterTextField = createTextField(50);
+        fromAcademicYearTextField = createTextField(50);
+        toSemesterTextField = createTextField(50);
+        toAcademicYearTextField = createTextField(50);
+
         HBox leaveDurationBox = new HBox(30,
-                createLabel("ตั้งแต่ภาคการศึกษา"), createTextField(50),
-                createLabel("ปีการศึกษา"), createTextField(50),
-                createLabel("ถึงภาคการศึกษา"), createTextField(50),
-                createLabel("ปีการศึกษา"), createTextField(50)
+                createLabel("ตั้งแต่ภาคการศึกษา"), fromSemesterTextField,
+                createLabel("ปีการศึกษา"), fromAcademicYearTextField,
+                createLabel("ถึงภาคการศึกษา"), toSemesterTextField,
+                createLabel("ปีการศึกษา"), toAcademicYearTextField
         );
 
-        // Reason for leave
-        TextArea reasonTextArea = createTextArea(3, 300);
+        reasonTextArea = createTextArea(3, 300);
 
-        // Registered courses TextArea
-        TextArea registeredCoursesTextArea = createTextArea(3, 300);
+        registeredCoursesTextArea = createTextArea(3, 300);
 
-        // Current address
-        TextArea currentAddressTextArea = createTextArea(2, 300);
+        currentAddressTextArea = createTextArea(2, 300);
 
-        // Add all elements to the pane
         createRequestPane.getChildren().addAll(
+                phoneBox,
                 currentSemesterBox,
                 leaveDurationBox,
                 createLabel("เหตุผลที่ลา"),
@@ -167,12 +206,13 @@ public class StudentCreateRequestController {
 
     private void showResignationForm() {
         createRequestPane.getChildren().clear();
+        phoneTextField = createTextField(150);
+        HBox phoneBox = new HBox(30, createLabel("เบอร์โทรติดต่อ"), phoneTextField);
 
-        // Reason for resignation
-        TextArea reasonTextArea = createTextArea(3, 300);
+        reasonTextArea = createTextArea(3, 300);
 
-        // Add all elements to the pane
         createRequestPane.getChildren().addAll(
+                phoneBox,
                 createLabel("เหตุผลที่ลาออก"),
                 reasonTextArea
         );
@@ -225,6 +265,94 @@ public class StudentCreateRequestController {
         data.add(student.getUsername());
         FXRouter.goTo("settings", data);
 
+    }
+
+    @FXML void saveRequestClick(){
+        confirmationPane.setVisible(true);
+    }
+
+    @FXML void cancelCreateRequestClick(){
+        confirmationPane.setVisible(false);
+    }
+
+    @FXML
+    void confirmCreateRequestClick() throws IOException {
+        try {
+            confirmationPane.setVisible(false);
+            String selectedRequestType = typeRequestChoice.getValue();
+
+            if (selectedRequestType.equals("ลาป่วย หรือ ลากิจ")) {
+                // Handle Sick Leave or Personal Leave Request
+                String phone = phoneTextField.getText();
+                String typeLeave = sickLeaveRadio.isSelected() ? "ลาป่วย" : "ลากิจ";
+                String reason = reasonTextArea.getText();
+                String fromDate = fromDatePicker.getValue() != null ? fromDatePicker.getValue().toString() : "";
+                String toDate = toDatePicker.getValue() != null ? toDatePicker.getValue().toString() : "";
+                String absentSubject = absentSubjectTextArea.getText();
+
+                if (phone.isEmpty() || reason.isEmpty() || fromDate.isEmpty() || toDate.isEmpty() || absentSubject.isEmpty()) {
+                    throw new NullPointerException("กรุณากรอกข้อมูลให้ครบถ้วน");
+                }
+
+                SickLeaveRequest sickLeaveRequest = new SickLeaveRequest(student, phone, typeLeave, reason, fromDate, toDate, absentSubject);
+                student.createRequest(requestList, sickLeaveRequest);
+
+            } else if (selectedRequestType.equals("ลาพักการศึกษา")) {
+                String phone = phoneTextField.getText();
+                String reason = reasonTextArea.getText();
+                String registeredCourses = registeredCoursesTextArea.getText();
+                String currentAddress = currentAddressTextArea.getText();
+
+                if (phone.isEmpty() || reason.isEmpty() || registeredCourses.isEmpty() || currentAddress.isEmpty()) {
+                    throw new NullPointerException("กรุณากรอกข้อมูลให้ครบถ้วน");
+                }
+
+                // Check if all semester and academic year fields are filled
+                if (currentSemesterTextField.getText().isEmpty() || currentAcademicYearTextField.getText().isEmpty() ||
+                        fromSemesterTextField.getText().isEmpty() || fromAcademicYearTextField.getText().isEmpty() ||
+                        toSemesterTextField.getText().isEmpty() || toAcademicYearTextField.getText().isEmpty()) {
+                    throw new NullPointerException("กรุณากรอกภาคการศึกษาและปีการศึกษาให้ครบถ้วน");
+                }
+
+                int currentSemester, currentAcademicYear, fromSemester, fromAcademicYear, toSemester, toAcademicYear;
+                try {
+                    currentSemester = Integer.parseInt(currentSemesterTextField.getText());
+                    currentAcademicYear = Integer.parseInt(currentAcademicYearTextField.getText());
+                    fromSemester = Integer.parseInt(fromSemesterTextField.getText());
+                    fromAcademicYear = Integer.parseInt(fromAcademicYearTextField.getText());
+                    toSemester = Integer.parseInt(toSemesterTextField.getText());
+                    toAcademicYear = Integer.parseInt(toAcademicYearTextField.getText());
+                } catch (NumberFormatException e) {
+                    throw new NumberFormatException("กรุณากรอกภาคการศึกษาและปีการศึกษาเป็นตัวเลข");
+                }
+
+                LeaveOfAbsenceRequest leaveOfAbsenceRequest = new LeaveOfAbsenceRequest(student, phone, reason, currentAddress, registeredCourses, currentSemester, currentAcademicYear, fromSemester, fromAcademicYear, toSemester, toAcademicYear);
+                student.createRequest(requestList, leaveOfAbsenceRequest);
+
+            } else if (selectedRequestType.equals("ลาออก")) {
+                String phone = phoneTextField.getText();
+                String reason = reasonTextArea.getText();
+
+                if (phone.isEmpty() || reason.isEmpty()) {
+                    throw new NullPointerException("กรุณากรอกข้อมูลให้ครบถ้วน");
+                }
+
+                ResignationRequest resignationRequest = new ResignationRequest(student, phone, reason);
+                student.createRequest(requestList, resignationRequest);
+            }
+
+            requestListDatasource.writeData(requestList);
+            FXRouter.goTo("student-request-list-view", student.getUsername());
+
+        } catch (NullPointerException | NumberFormatException e) {
+            errorLabel.setText(e.getMessage());
+            errorPane.setVisible(true);
+        }
+    }
+
+
+    @FXML void closeErrorClick(){
+        errorPane.setVisible(false);
     }
 
     @FXML
