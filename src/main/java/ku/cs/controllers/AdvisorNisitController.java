@@ -11,6 +11,7 @@ import ku.cs.services.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AdvisorNisitController {
 
@@ -31,6 +32,7 @@ public class AdvisorNisitController {
     @FXML private TableView<Request> studentTable;
     @FXML private Label timestampLabel;
     @FXML private AnchorPane requestDetail;
+    @FXML private Label rejectReasonLabel;
     @FXML private TableColumn<Request, String> type;
     @FXML private TableColumn<Request, String> status;
     @FXML private TableColumn<Request, String> time;
@@ -117,7 +119,7 @@ public class AdvisorNisitController {
     }
 
     private void showRequestDetails(Request request) {
-        // Fill the detail pane with the request's data
+        rejectReasonLabel.setVisible(false);
         nameRequesterLabel.setText("ชื่อ-สกุล " + request.getRequester().getName());
         facultyRequesterLabel.setText("คณะ " + request.getRequester().getEnrolledFaculty().getFacultyName());
         departmentRequesterLabel.setText("ภาควิชา " + request.getRequester().getEnrolledDepartment().getDepartmentName());
@@ -125,13 +127,20 @@ public class AdvisorNisitController {
         emailRequesterLabel.setText("อีเมล " + request.getRequester().getEmail());
         phoneNumberRequesterLabel.setText("เบอร์มือถือ " + request.getNumberPhone());
         recentRequestLogLabel.setText(request.getRecentStatusLog());
+
         timestampLabel.setText("วันที่สร้างคำร้อง: " + request.getLastModifiedDateTime());
 
         StringBuilder logs = new StringBuilder();
-        for (String log : request.getStatusLog()) {
-            logs.append(log).append("\n");
+        List<String> statusLog = request.getStatusLog();
+        for (int i = statusLog.size() - 1; i >= 0; i--) {
+            logs.append(statusLog.get(i)).append("\n");
         }
         requestLogTextArea.setText(logs.toString());
+
+        if (request.getStatus().equals("ปฏิเสธ")) {
+            rejectReasonLabel.setText("บันทึกเหตุผล: " + request.getRejectionReason());
+            rejectReasonLabel.setVisible(true);
+        }
 
         requestDetailsLabel.setText(request.toString());
         requestDetail.setVisible(true);

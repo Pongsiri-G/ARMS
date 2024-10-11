@@ -13,7 +13,6 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-
 <StackPane xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.AdvisorNisitController">
    <children>
       <AnchorPane prefHeight="1024.0" prefWidth="1440.0" style="-fx-background-color: #FFFFFF;">
@@ -169,7 +168,7 @@
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <Label fx:id="timestampLabel" layoutX="797.0" layoutY="324.0" text="timestampLabel">
+                  <Label fx:id="timestampLabel" layoutX="796.0" layoutY="356.0" text="timestampLabel">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -184,6 +183,11 @@
                         <Image url="@../../../images/back-arrow-grey.png" />
                      </image>
                   </ImageView>
+                  <Label fx:id="rejectReasonLabel" layoutX="796.0" layoutY="322.0" text="rejectReasonLabel">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
                </children>
             </Pane>
          </children>
