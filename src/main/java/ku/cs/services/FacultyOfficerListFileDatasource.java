@@ -44,20 +44,18 @@ public class FacultyOfficerListFileDatasource implements Datasource<ArrayList<Fa
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] data = line.split(",");
-                if (data.length < 8) continue;
+                if (data.length < 7) continue;
 
                 String username = data[0];
                 String password = data[1];
                 String name = data[2];
-                boolean isSuspended = "suspended".equals(data[3]);
-                boolean isFirstLogin = Boolean.parseBoolean(data[4]); // การเข้าใช้งานครั้งแรก
-                LocalDateTime lastLogin = "Never".equals(data[5]) ? null : LocalDateTime.parse(data[5], formatter);
-                String profilePicturePath = data[6].isEmpty() ? User.DEFAULT_PROFILE_PICTURE_PATH : data[6];
-                String facultyName = data[7];
+                boolean isSuspended = "ระงับบัญชี".equals(data[3]);
+                LocalDateTime lastLogin = "ไม่เคยเข้าใช้งาน".equals(data[4]) ? null : LocalDateTime.parse(data[4], formatter);
+                String profilePicturePath = data[5].isEmpty() ? User.DEFAULT_PROFILE_PICTURE_PATH : data[5];
+                String facultyName = data[6];
 
                 Faculty faculty = new Faculty(facultyName);
                 FacultyOfficer facultyOfficer = new FacultyOfficer(username, password, name, faculty, true, isSuspended);
-                facultyOfficer.setFirstLogin(isFirstLogin);
                 facultyOfficer.setLastLogin(lastLogin);
                 facultyOfficer.setProfilePicturePath(profilePicturePath);
 
@@ -76,15 +74,14 @@ public class FacultyOfficerListFileDatasource implements Datasource<ArrayList<Fa
             FileWriter fileWriter = new FileWriter(directoryName + File.separator + facultyOfficerListFileName, false);
 
             for (FacultyOfficer facultyOfficer : facultyOfficers) {
-                String lastLoginStr = facultyOfficer.getLastLogin() == null ? "Never" : facultyOfficer.getLastLogin().format(formatter);
+                String lastLoginStr = facultyOfficer.getLastLogin() == null ? "ไม่เคยเข้าใช้งาน" : facultyOfficer.getLastLogin().format(formatter);
                 String profilePicturePath = facultyOfficer.getProfilePicturePath() == null ? User.DEFAULT_PROFILE_PICTURE_PATH : facultyOfficer.getProfilePicturePath();
 
                 StringBuilder line = new StringBuilder();
                 line.append(facultyOfficer.getUsername()).append(",")
                         .append(facultyOfficer.getPassword()).append(",")
                         .append(facultyOfficer.getName()).append(",")
-                        .append(facultyOfficer.getSuspended() ? "suspended" : "normal").append(",")
-                        .append(facultyOfficer.isFirstLogin()).append(",")
+                        .append(facultyOfficer.getSuspended() ? "ระงับบัญชี" : "ปกติ").append(",")
                         .append(lastLoginStr).append(",")
                         .append(profilePicturePath).append(",")
                         .append(facultyOfficer.getFaculty().getFacultyName());

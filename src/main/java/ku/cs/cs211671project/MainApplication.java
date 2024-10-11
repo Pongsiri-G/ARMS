@@ -1,8 +1,6 @@
 package ku.cs.cs211671project;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import ku.cs.services.*;
 
@@ -16,6 +14,8 @@ public class MainApplication extends Application {
         FXRouter.goTo("login");
         //UserListFileDatasourceTest u = new UserListFileDatasourceTest(); //FOR TESTING ONLY
         //u.runTests(); //FOR TESTING ONLY
+        RequestListFileDatasourceTest r = new RequestListFileDatasourceTest(); //FOR TESING ONLY
+        r.runTests();
     }
 
     private void configRoutes() {
@@ -46,6 +46,7 @@ public class MainApplication extends Application {
         FXRouter.when("faculty-officer-manage-request", viewPath + "faculty-officer-manage-request-view.fxml");
         FXRouter.when("department-officer", viewPath + "department-officer-view.fxml");
         FXRouter.when("department-officer-manage-request", viewPath + "department-officer-manage-request-view.fxml");
+        FXRouter.when("request-nisit", viewPath + "request-nisit-view.fxml");
 
     }
 

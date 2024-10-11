@@ -90,7 +90,7 @@ public class DepartmentOfficerManageRequestController {
         resetSecene();
         requestDetailScene.setVisible(true);
         requestDetailButtons.setVisible(true);
-        requestDetail.setText(request.getText());
+        //requestDetail.setText(request.get());
         selectOfficerHandlingMenu.setVisible(true);
         selectOfficerHandlingMenu.setDisable(false);
         errorLabel.setVisible(true);
@@ -143,7 +143,7 @@ public class DepartmentOfficerManageRequestController {
     @FXML
     public void onSendRequestButtonClick(MouseEvent event) throws IOException {
         if (checkValid()) {
-            officer.sendRequest(request, selectOfficerHandlingMenu.getText());
+            //officer.sendRequest(request, selectOfficerHandlingMenu.getText());
             FXRouter.goTo("department-officer");
         }
     }

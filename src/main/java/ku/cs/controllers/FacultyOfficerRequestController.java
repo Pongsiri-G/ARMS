@@ -89,7 +89,7 @@ public class FacultyOfficerRequestController {
         resetSecene();
         requestDetailScene.setVisible(true);
         requestDetailButtons.setVisible(true);
-        requestDetail.setText(request.getText());
+        //requestDetail.setText(request.getText());
         selectOfficerHandlingMenu.setVisible(true);
         selectOfficerHandlingMenu.setDisable(false);
         errorLabel.setVisible(true);

@@ -83,18 +83,6 @@ public class Department {
     }
     // End Getter
 
-    public void rejectRequest(Request request, String reason) {
-        request.changeStatus("rejected");
-        request.setTimeStamp();
-    }
-    public void acceptRequest(Request request, String reason) {
-        request.changeStatus("accepted");
-    }
-
-    public void sendRequest(Request request) {
-        request.changeStatus("sent");
-    }
-
     // หาอาจารย์ที่ปรึกษาในนิสิต
     public ArrayList<Student> findStudentsByAdvisorName(String advisorName) {
         ArrayList<Student> studentList = new ArrayList<>();
