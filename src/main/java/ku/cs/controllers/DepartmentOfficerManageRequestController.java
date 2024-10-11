@@ -125,6 +125,7 @@ public class DepartmentOfficerManageRequestController {
         selectOfficerHandlingMenu.getItems().clear();
         ArrayList<RequestHandlingOfficer> approvers = officer.getRequestManagers();
         for (RequestHandlingOfficer approver : approvers) {
+            System.out.println(approver.getFullPositoin());
             MenuItem item = new MenuItem(approver.getFullPositoin());
 
             // Event handling when an item is clicked
