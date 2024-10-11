@@ -5,11 +5,14 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -128,7 +131,7 @@
                                 <Font name="System Bold" size="48.0" />
                             </font>
                         </Label>
-                        <TableView fx:id="officerAdvisorTableView" layoutX="60.0" layoutY="167.0" prefHeight="670.0" prefWidth="1086.0">
+                        <TableView fx:id="officerAdvisorTableView" layoutX="56.0" layoutY="174.0" prefHeight="670.0" prefWidth="1086.0">
                             <columns>
                                 <TableColumn prefWidth="75.0" text="ชื่อ" />
                                 <TableColumn prefWidth="75.0" text="ชื่อผู้ใช้" />
@@ -141,11 +144,129 @@
                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                             </columnResizePolicy>
                         </TableView>
-                        <Button layoutX="1040.0" layoutY="50.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="103.0" styleClass="apply-botton" stylesheets="@../../../style/style.css" text="เพิ่ม +">
+                        <Button layoutX="1040.0" layoutY="50.0" mnemonicParsing="false" onAction="#onAddButtonClick" prefHeight="50.0" prefWidth="103.0" styleClass="apply-botton" stylesheets="@../../../style/style.css" text="เพิ่ม +">
                             <font>
                                 <Font size="18.0" />
                             </font>
                         </Button>
+                  <StackPane fx:id="addStackPane" layoutX="340.0" layoutY="151.0" prefHeight="693.0" prefWidth="562.0" style="-fx-border-radius: 50;" visible="false">
+                     <children>
+                        <Pane prefHeight="582.0" prefWidth="563.0" style="-fx-background-color: white; -fx-border-color: grey; -fx-border-radius: 30; -fx-border-width: 20;">
+                           <children>
+                              <TextField fx:id="addNameTextField" layoutX="129.0" layoutY="71.0" prefHeight="48.0" prefWidth="368.0" promptText="กรอกชื่อ..." />
+                              <TextField fx:id="addUsernameTextField" layoutX="208.0" layoutY="150.0" prefHeight="48.0" prefWidth="286.0" promptText="กรอกชื่อผู้ใช้ระบบ..." />
+                              <TextField fx:id="addPasswordTextField" layoutX="179.0" layoutY="229.0" prefHeight="48.0" prefWidth="319.0" promptText="กรอกรหัสผ่านเริ่มต้น..." />
+                              <TextField fx:id="addIdTextField" layoutX="219.0" layoutY="447.0" prefHeight="48.0" prefWidth="285.0" promptText="กรอกรหัสประจำตัว..." />
+                              <Label layoutX="66.0" layoutY="76.0" prefHeight="39.0" prefWidth="49.0" text="ชื่อ :">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="65.0" layoutY="155.0" prefHeight="39.0" prefWidth="134.0" text="ชื่อผู้ใช้ระบบ :">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="65.0" layoutY="233.0" prefHeight="39.0" prefWidth="103.0" text="รหัสผ่าน :">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="65.0" layoutY="308.0" prefHeight="39.0" prefWidth="67.0" text="คณะ :">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <Button layoutX="411.0" layoutY="595.0" mnemonicParsing="false" onAction="#onAddConfirmClick" prefHeight="50.0" prefWidth="103.0" styleClass="apply-botton" stylesheets="@../../../style/style.css" text="ยืนยัน">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Button>
+                              <Button layoutX="299.0" layoutY="595.0" mnemonicParsing="false" onAction="#onAddCancelButtonClick" prefHeight="50.0" prefWidth="103.0" style="-fx-background-color: red;" styleClass="apply-botton" stylesheets="@../../../style/style.css" text="ยกเลิก" textFill="#e10707">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Button>
+                              <Label fx:id="addErrorMessageLabel" layoutX="69.0" layoutY="532.0" text="errorMessageLabel" textFill="RED">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="65.0" layoutY="456.0" prefHeight="39.0" prefWidth="148.0" text="รหัสประจำตัว :">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="65.0" layoutY="382.0" prefHeight="39.0" prefWidth="98.0" text="ภาควิชา :">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="addDepartmentTextField" layoutX="163.0" layoutY="373.0" prefHeight="48.0" prefWidth="337.0" promptText="กรอกภาควิชา..." />
+                              <TextField fx:id="addFacultyTextField" layoutX="140.0" layoutY="299.0" prefHeight="48.0" prefWidth="360.0" promptText="กรอกคณะ..." />
+                           </children>
+                        </Pane>
+                     </children>
+                  </StackPane>
+                  <StackPane fx:id="editStackPane" layoutX="340.0" layoutY="163.0" prefHeight="693.0" prefWidth="562.0" style="-fx-border-radius: 50;">
+                     <children>
+                        <Pane prefHeight="582.0" prefWidth="563.0" style="-fx-background-color: white; -fx-border-color: grey; -fx-border-radius: 30; -fx-border-width: 20;">
+                           <children>
+                              <TextField fx:id="editNameTextField" layoutX="129.0" layoutY="71.0" prefHeight="48.0" prefWidth="368.0" promptText="กรอกชื่อ..." />
+                              <TextField fx:id="editUsernameTextField" layoutX="208.0" layoutY="150.0" prefHeight="48.0" prefWidth="286.0" promptText="กรอกชื่อผู้ใช้ระบบ..." />
+                              <TextField fx:id="editPasswordTextField" layoutX="179.0" layoutY="229.0" prefHeight="48.0" prefWidth="319.0" promptText="กรอกรหัสผ่านเริ่มต้น..." />
+                              <TextField fx:id="editIdTextField" layoutX="219.0" layoutY="447.0" prefHeight="48.0" prefWidth="285.0" promptText="กรอกรหัสประจำตัว..." />
+                              <Label layoutX="66.0" layoutY="76.0" prefHeight="39.0" prefWidth="49.0" text="ชื่อ :">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="65.0" layoutY="155.0" prefHeight="39.0" prefWidth="134.0" text="ชื่อผู้ใช้ระบบ :">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="65.0" layoutY="233.0" prefHeight="39.0" prefWidth="103.0" text="รหัสผ่าน :">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="65.0" layoutY="308.0" prefHeight="39.0" prefWidth="67.0" text="คณะ :">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <Button layoutX="411.0" layoutY="595.0" mnemonicParsing="false" onAction="#onEditConfirmClick" prefHeight="50.0" prefWidth="103.0" style="-fx-background-color: #f1c40f;" styleClass="apply-botton" stylesheets="@../../../style/style.css" text="แก้ไข">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Button>
+                              <Button layoutX="299.0" layoutY="595.0" mnemonicParsing="false" onAction="#onEditCancelButtonClick" prefHeight="50.0" prefWidth="103.0" style="-fx-background-color: red;" styleClass="apply-botton" stylesheets="@../../../style/style.css" text="ยกเลิก" textFill="#e10707">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Button>
+                              <Label fx:id="editErrorMessageLabel" layoutX="69.0" layoutY="532.0" text="errorMessageLabel" textFill="RED">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="65.0" layoutY="456.0" prefHeight="39.0" prefWidth="148.0" text="รหัสประจำตัว :">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="65.0" layoutY="382.0" prefHeight="39.0" prefWidth="98.0" text="ภาควิชา :">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="editDepartmentTextField" layoutX="163.0" layoutY="373.0" prefHeight="48.0" prefWidth="337.0" promptText="กรอกภาควิชา..." />
+                              <TextField fx:id="editFacultyTextField" layoutX="140.0" layoutY="299.0" prefHeight="48.0" prefWidth="360.0" promptText="กรอกคณะ..." />
+                           </children>
+                        </Pane>
+                     </children>
+                  </StackPane>
                     </children>
                 </AnchorPane>
             </children></AnchorPane>

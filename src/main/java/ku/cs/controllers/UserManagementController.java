@@ -229,6 +229,12 @@ public class UserManagementController {
         for (User user : userList.getAllUsers()) {
             userManagementTableView.getItems().add(user);
         }
+
+        pictureColumn.setPrefWidth(220);
+        usernameColumn.setPrefWidth(220);
+        nameColumn.setPrefWidth(220);
+        timeColumn.setPrefWidth(220);
+        suspendColumn.setPrefWidth(220);
     }
 
     @FXML

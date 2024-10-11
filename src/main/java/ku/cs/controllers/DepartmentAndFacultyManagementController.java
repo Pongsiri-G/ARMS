@@ -124,7 +124,7 @@ public class DepartmentAndFacultyManagementController {
             editErrorMessageLabel.setText("กรุณากรอกข้อมูลให้ครบถ้วน");
             return;
         }
-        // ค้นหาฟากุลที่ถูกเลือกในตาราง
+
         Faculty selectedFaculty = facDepTableView.getSelectionModel().getSelectedItem();
         if (selectedFaculty != null) {
             // อัปเดตข้อมูลของ selectedFaculty

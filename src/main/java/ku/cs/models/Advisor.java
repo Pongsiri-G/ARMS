@@ -61,6 +61,9 @@ public class Advisor extends User{
 
     public void setDepartment(Department department) { this.department = department; }
 
+    // ping : ใช้ set ข้อมูลใน text field
+    public void setAdvisorID(String advisorID) { this.advisorID = advisorID; }
+
     public Department getDepartment () { return department; }
 
 
