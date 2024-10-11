@@ -283,7 +283,6 @@ public class DepartmentOfficerController {
         }
     }
 
-
     public void loadRequests(){
         requests = new ArrayList<>();
         Request req1 = new Request("2024-09-26 10:15", "John Doe", "Pending", "Leave Request", "Requesting 2 weeks of vacation", "REQ001", "555-1234");
@@ -445,6 +444,7 @@ public class DepartmentOfficerController {
         });
         studentAdvisorTableColumn.setMinWidth(300);
         studentAdvisorTableColumn.setMaxWidth(300);
+
 
         // Clear and set columns in the TableView
         studentsTableView.getColumns().clear();

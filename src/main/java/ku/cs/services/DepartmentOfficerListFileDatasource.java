@@ -44,22 +44,20 @@ public class DepartmentOfficerListFileDatasource implements Datasource<ArrayList
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] data = line.split(",");
-                if (data.length < 9) continue;
+                if (data.length < 8) continue;
 
                 String username = data[0];
                 String password = data[1];
                 String name = data[2];
-                boolean isSuspended = "suspended".equals(data[3]);
-                boolean isFirstLogin = Boolean.parseBoolean(data[4]); // การเข้าใช้งานครั้งแรก
-                LocalDateTime lastLogin = "Never".equals(data[5]) ? null : LocalDateTime.parse(data[5], formatter);
-                String profilePicturePath = data[6].isEmpty() ? User.DEFAULT_PROFILE_PICTURE_PATH : data[6];
-                String facultyName = data[7];
-                String departmentName = data[8];
+                boolean isSuspended = "ระงับบัญชี".equals(data[3]);
+                LocalDateTime lastLogin = "ไม่เคยเข้าใช้งาน".equals(data[4]) ? null : LocalDateTime.parse(data[4], formatter);
+                String profilePicturePath = data[5].isEmpty() ? User.DEFAULT_PROFILE_PICTURE_PATH : data[5];
+                String facultyName = data[6];
+                String departmentName = data[7];
 
                 Faculty faculty = new Faculty(facultyName);
                 Department department = new Department(departmentName);
                 DepartmentOfficer departmentOfficer = new DepartmentOfficer(username, password, name, faculty, department, true, isSuspended);
-                departmentOfficer.setFirstLogin(isFirstLogin);
                 departmentOfficer.setLastLogin(lastLogin);
                 departmentOfficer.setProfilePicturePath(profilePicturePath);
 
@@ -78,15 +76,14 @@ public class DepartmentOfficerListFileDatasource implements Datasource<ArrayList
             FileWriter fileWriter = new FileWriter(directoryName + File.separator + departmentOfficerListFileName, false);
 
             for (DepartmentOfficer departmentOfficer : departmentOfficers) {
-                String lastLoginStr = departmentOfficer.getLastLogin() == null ? "Never" : departmentOfficer.getLastLogin().format(formatter);
+                String lastLoginStr = departmentOfficer.getLastLogin() == null ? "ไม่เคยเข้าใช้งาน" : departmentOfficer.getLastLogin().format(formatter);
                 String profilePicturePath = departmentOfficer.getProfilePicturePath() == null ? User.DEFAULT_PROFILE_PICTURE_PATH : departmentOfficer.getProfilePicturePath();
 
                 StringBuilder line = new StringBuilder();
                 line.append(departmentOfficer.getUsername()).append(",")
                         .append(departmentOfficer.getPassword()).append(",")
                         .append(departmentOfficer.getName()).append(",")
-                        .append(departmentOfficer.getSuspended() ? "suspended" : "normal").append(",")
-                        .append(departmentOfficer.isFirstLogin()).append(",")
+                        .append(departmentOfficer.getSuspended() ? "ระงับบัญชี" : "ปกติ").append(",")
                         .append(lastLoginStr).append(",")
                         .append(profilePicturePath).append(",")
                         .append(departmentOfficer.getFaculty().getFacultyName()).append(",")

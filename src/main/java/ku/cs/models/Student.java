@@ -1,5 +1,7 @@
 package ku.cs.models;
 
+import java.util.ArrayList;
+
 public class Student extends User {
     private String studentID;
     private String email;
@@ -25,6 +27,47 @@ public class Student extends User {
         this.email = email;
         this.enrolledFaculty = faculty;
         this.enrolledDepartment = department;
+    }
+
+    //เรียกดูรายการคำร้องที่สร้างไว้ของนิสิต
+    public ArrayList<Request> getRequestsByStudent(RequestList requests) {
+        ArrayList<Request> studentRequests = new ArrayList<>();
+        for (Request request : requests.getRequests()) {
+            if (this.getUsername().equalsIgnoreCase(request.getRequester().getUsername())) {
+                studentRequests.add(request);
+            }
+        }
+        return studentRequests;
+    }
+
+    public int getStudentPendingRequestCount(ArrayList<Request> requests){
+        int count = 0;
+        for (Request request : requests) {
+            if (request.getStatus().equals("กำลังดำเนินการ")) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public int getStudentRejectedRequestCount(ArrayList<Request> requests){
+        int count = 0;
+        for (Request request : requests) {
+            if (request.getStatus().equals("ปฏิเสธ")) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public int getStudentApprovedRequestCount(ArrayList<Request> requests){
+        int count = 0;
+        for (Request request : requests) {
+            if (request.getStatus().equals("เสร็จสิ้น")) {
+                count++;
+            }
+        }
+        return count;
     }
 
 

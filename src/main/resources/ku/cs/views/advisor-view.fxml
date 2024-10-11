@@ -12,6 +12,16 @@
 
 <AnchorPane prefHeight="1024.0" prefWidth="1440.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.AdvisorController">
     <children>
+      <ImageView fitHeight="39.0" fitWidth="54.0" layoutX="53.0" layoutY="461.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../images/dashboard-admin.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="39.0" fitWidth="48.0" layoutX="53.0" layoutY="514.0" onMouseClicked="#goToRequestNisit" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../images/document.png" />
+         </image>
+      </ImageView>
       <Button layoutX="24.0" layoutY="926.0" mnemonicParsing="false" onAction="#onButtonToAdvisor" prefHeight="49.2" prefWidth="32.0" style="-fx-background-color: #FFFFFF;">
          <graphic>
             <ImageView fitHeight="49.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
