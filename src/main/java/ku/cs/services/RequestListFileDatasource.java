@@ -5,7 +5,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import ku.cs.models.*;
 
@@ -44,7 +43,6 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath), StandardCharsets.UTF_8))) {
             for (Request request : requestList.getRequests()) {
                 String approverListStr = String.join("|", request.getApproverList());
-                String statusLogStr = String.join("|", request.getStatusLog().stream().map(this::escapeNewlines).toArray(String[]::new));
 
                 if (request instanceof LeaveOfAbsenceRequest) {
                     LeaveOfAbsenceRequest leaveRequest = (LeaveOfAbsenceRequest) request;
@@ -65,7 +63,7 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
                             String.valueOf(leaveRequest.getToSemester()),
                             String.valueOf(leaveRequest.getToAcademicYear()),
                             leaveRequest.getLastModifiedDateTime(),
-                            statusLogStr,
+                            String.join("|", leaveRequest.getStatusLog()),
                             approverListStr
                     ));
                     writer.newLine();
@@ -80,7 +78,7 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
                             resignationRequest.getNumberPhone(),
                             escapeNewlines(resignationRequest.getReason()),
                             resignationRequest.getLastModifiedDateTime(),
-                            statusLogStr,
+                            String.join("|", resignationRequest.getStatusLog()),
                             approverListStr
                     ));
                     writer.newLine();
@@ -99,7 +97,7 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
                             escapeNewlines(sickLeaveRequest.getReason()),
                             escapeNewlines(sickLeaveRequest.getRegisteredCourses()),
                             sickLeaveRequest.getLastModifiedDateTime(),
-                            statusLogStr,
+                            String.join("|", sickLeaveRequest.getStatusLog()),
                             approverListStr
                     ));
                     writer.newLine();
@@ -140,9 +138,6 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
                     approverList = Arrays.asList(approverListStr.split("\\|"));
                 }
 
-                List<String> statusLog = Arrays.asList(data[data.length - 2].split("\\|"));
-                statusLog = statusLog.stream().map(this::unescapeNewlines).collect(Collectors.toList());
-
                 if ("ลาพักการศึกษา".equalsIgnoreCase(requestType)) {
                     String reason = unescapeNewlines(data[6]);
                     String currentAddress = unescapeNewlines(data[7]);
@@ -154,6 +149,7 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
                     int toSemester = Integer.parseInt(data[13]);
                     int toAcademicYear = Integer.parseInt(data[14]);
                     String lastModifiedDate = data[15];
+                    List<String> statusLog = Arrays.asList(data[16].split("\\|"));
                     LeaveOfAbsenceRequest leaveRequest = new LeaveOfAbsenceRequest(timestamp, requestType, status, requester, currentApprover, numberPhone,
                             reason, currentAddress, registeredCourses, currentSemester, currentAcademicYear, fromSemester, fromAcademicYear, toSemester, toAcademicYear,
                             lastModifiedDate, statusLog, approverList);
@@ -162,6 +158,7 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
                 } else if ("ลาออก".equalsIgnoreCase(requestType)) {
                     String reason = unescapeNewlines(data[6]);
                     String lastModifiedDate = data[7];
+                    List<String> statusLog = Arrays.asList(data[8].split("\\|"));
                     ResignationRequest resignationRequest = new ResignationRequest(timestamp, requestType, status, requester, currentApprover, numberPhone,
                             reason, lastModifiedDate, statusLog, approverList);
                     requestList.addRequest(resignationRequest);
@@ -173,6 +170,7 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
                     String reason = unescapeNewlines(data[9]);
                     String registeredCourses = unescapeNewlines(data[10]);
                     String lastModifiedDate = data[11];
+                    List<String> statusLog = Arrays.asList(data[12].split("\\|"));
                     SickLeaveRequest sickLeaveRequest = new SickLeaveRequest(timestamp, requestType, status, requester, currentApprover, numberPhone,
                             leaveType, fromDateLeave, toDateLeave, reason, registeredCourses, lastModifiedDate, statusLog, approverList);
                     requestList.addRequest(sickLeaveRequest);

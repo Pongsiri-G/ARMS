@@ -65,6 +65,7 @@ public class StudentRequestListViewController {
     @FXML private Label phoneNumberRequesterLabel;
     @FXML private TextArea requestLogTextArea;
     @FXML private Label recentRequestLogLabel;
+    @FXML private Label rejectReasonLabel;
     @FXML private Label timestampLabel;
     @FXML private Label requestDetailsLabel;
     @FXML private ComboBox<String> statusFilterComboBox;
@@ -114,14 +115,12 @@ public class StudentRequestListViewController {
 
 
     private void initializeFilters() {
-        // Populate ComboBox with filter options
         statusFilterComboBox.getItems().addAll("ทั้งหมด", "กำลังดำเนินการ", "ปฏิเสธ", "เสร็จสิ้น");
         statusFilterComboBox.setValue("ทั้งหมด");
 
         typeFilterComboBox.getItems().addAll("ทั้งหมด", "ลาป่วยหรือลากิจ", "ลาพักการศึกษา", "ลาออก");
         typeFilterComboBox.setValue("ทั้งหมด");
 
-        // Set listeners for filtering
         statusFilterComboBox.setOnAction(event -> applyFilter());
         typeFilterComboBox.setOnAction(event -> applyFilter());
     }
@@ -133,7 +132,6 @@ public class StudentRequestListViewController {
         TableColumn<Request, String> requestStatusColumn = new TableColumn<>("สถานะคำร้อง");
         requestStatusColumn.setCellValueFactory(new PropertyValueFactory<>("recentStatusLog"));
 
-        // Set custom cell factory to style the status column
         requestStatusColumn.setCellFactory(column -> new TableCell<Request, String>() {
             @Override
             protected void updateItem(String statusLog, boolean empty) {
@@ -144,11 +142,9 @@ public class StudentRequestListViewController {
                 } else {
                     setText(statusLog);
 
-                    // Get the request associated with this row
                     Request request = getTableView().getItems().get(getIndex());
                     String status = request.getStatus();
 
-                    // Apply different styles based on the status
                     switch (status) {
                         case "กำลังดำเนินการ":
                             setStyle("-fx-text-fill: #d7a700;"); // Yellow for "in progress"
@@ -221,6 +217,7 @@ public class StudentRequestListViewController {
     }
 
     private void showRequestDetails(Request request) {
+        rejectReasonLabel.setVisible(false);
         typeRequestLabel.setText(request.getRequestType());
         nameRequesterLabel.setText("ชื่อ-สกุล " + request.getRequester().getName());
         facultyRequesterLabel.setText("คณะ " + request.getRequester().getEnrolledFaculty().getFacultyName());
@@ -229,6 +226,7 @@ public class StudentRequestListViewController {
         emailRequesterLabel.setText("อีเมล " + request.getRequester().getEmail());
         phoneNumberRequesterLabel.setText("เบอร์มือถือ " + request.getNumberPhone());
         recentRequestLogLabel.setText(request.getRecentStatusLog());
+
         timestampLabel.setText("วันที่สร้างคำร้อง: " + request.getLastModifiedDateTime());
 
         StringBuilder logs = new StringBuilder();
@@ -238,9 +236,16 @@ public class StudentRequestListViewController {
         }
         requestLogTextArea.setText(logs.toString());
 
+        if (request.getStatus().equals("ปฏิเสธ")) {
+            rejectReasonLabel.setText("บันทึกเหตุผล: " + request.getRejectionReason());
+            rejectReasonLabel.setVisible(true);
+        }
+
         requestDetailsLabel.setText(request.toString());
         requestDetailPane.setVisible(true);
     }
+
+
 
     @FXML
     public void logoutClick(MouseEvent event) throws IOException {

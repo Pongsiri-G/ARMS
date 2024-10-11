@@ -78,13 +78,13 @@ public class Request {
     private void handleRejection(String detail) {
         if ("อาจารย์ที่ปรึกษา".equalsIgnoreCase(this.currentApprover)) {
             this.setStatus("ปฏิเสธ");
-            this.addStatusLog("ปฏิเสธโดยอาจารย์ที่ปรึกษา\nบันทึกเหตุผล: " + detail);
+            this.addStatusLog("ปฏิเสธโดยอาจารย์ที่ปรึกษา  บันทึกเหตุผล: " + detail);
         } else if ("เจ้าหน้าที่ภาควิชา".equalsIgnoreCase(this.currentApprover)) {
             this.setStatus("ปฏิเสธ");
-            this.addStatusLog("ปฏิเสธโดยหัวหน้าภาควิชา\nบันทึกเหตุผล: " + detail);
+            this.addStatusLog("ปฏิเสธโดยหัวหน้าภาควิชา  บันทึกเหตุผล: " + detail);
         } else if ("เจ้าหน้าที่คณะ".equalsIgnoreCase(this.currentApprover)) {
             this.setStatus("ปฏิเสธ");
-            this.addStatusLog("ปฏิเสธโดยคณบดี\nบันทึกเหตุผล: " + detail);
+            this.addStatusLog("ปฏิเสธโดยคณบดี  บันทึกเหตุผล: " + detail);
         }
     }
 
@@ -117,7 +117,7 @@ public class Request {
 
         for (int i = statusLog.size() - 1; i >= 0; i--) {
             String lastLog = statusLog.get(i);
-            String[] parts = lastLog.split("\n");
+            String[] parts = lastLog.split(" {2}");
 
             for (String part : parts) {
                 if (!part.contains("บันทึกเหตุผล")) {
@@ -128,6 +128,17 @@ public class Request {
         }
 
         return null;
+    }
+
+    public String getRejectionReason() {
+            String logEntry = statusLog.getLast();
+            if (logEntry.contains("บันทึกเหตุผล: ")) {
+                String[] parts = logEntry.split("บันทึกเหตุผล: ", 2);
+                if (parts.length == 2) {
+                    return parts[1].trim();
+                }
+        }
+        return "-";
     }
 
     public String getStatus() {
