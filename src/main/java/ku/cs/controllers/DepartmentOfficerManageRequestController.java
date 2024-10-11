@@ -14,6 +14,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import ku.cs.models.*;
 import ku.cs.services.FXRouter;
+import ku.cs.services.RequestHandlingOfficersDataSource;
 import ku.cs.services.RequestListFileDatasource;
 
 import java.io.IOException;
@@ -51,7 +52,7 @@ public class DepartmentOfficerManageRequestController {
 
 
 
-
+    private RequestHandlingOfficersDataSource approverDatasource;
     private RequestListFileDatasource requestDatasource;
     private Request request;
     private RequestList requestList;
@@ -68,13 +69,6 @@ public class DepartmentOfficerManageRequestController {
         requestList = (RequestList) data.get(1);
         requestDatasource = (RequestListFileDatasource) data.get(2);
         officer = (DepartmentOfficer) data.get(3);  // Get the Officer object
-        ArrayList<RequestHandlingOfficer> r = officer.getRequestManagers();
-        for (RequestHandlingOfficer r1 : r) {
-            System.out.println(r1.getFullPositoin());
-        }
-        System.out.println("kukuy");
-
-
         setupOfficerInfo();
         switchToDetailScence();
     }
@@ -172,7 +166,6 @@ public class DepartmentOfficerManageRequestController {
         selectedApprove = selectOfficerHandlingMenu.getText();
         if (checkValid(selectedApprove)) {
             officer.acceptRequest(request, selectedApprove);
-            //officer.sendRequest(request, selectOfficerHandlingMenu.getText());
             updateRequest();
             FXRouter.goTo("department-officer", officer.getUsername());
         }

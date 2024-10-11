@@ -1,5 +1,6 @@
 package ku.cs.controllers;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -11,17 +12,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import ku.cs.models.FacultyOfficer;
-import ku.cs.models.Request;
-import ku.cs.models.RequestHandlingOfficer;
-import ku.cs.models.UserList;
-import ku.cs.services.FXRouter;
-import ku.cs.services.FacultyOfficerListFileDatasource;
-import ku.cs.services.RequestHandlingOfficersDataSource;
-import ku.cs.services.UserListFileDatasource;
+import ku.cs.models.*;
+import ku.cs.services.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class FacultyOfficerController {
@@ -79,6 +75,8 @@ public class FacultyOfficerController {
     UserListFileDatasource datasource;
     UserList userList;
     ArrayList<Request> requests;
+    RequestListFileDatasource requestDatasource;
+    RequestList requestList;
     RequestHandlingOfficer approverToEdit;
 
 
@@ -86,6 +84,7 @@ public class FacultyOfficerController {
     @FXML
     public void initialize() {
         initializeDataSources();
+        loadRequests();
         setupOfficerInfo();
         switchToRequestScene();
     }
@@ -119,10 +118,18 @@ public class FacultyOfficerController {
                                     "departmentofficerlist.csv",
                                             "facdeplist.csv");
         userList = datasource.readData();
-        System.out.println((String) FXRouter.getData());
+        requestDatasource = new RequestListFileDatasource("data/test", "requestlist.csv", userList);
+        requestList = requestDatasource.readData();
         officer = (FacultyOfficer) userList.findUserByUsername((String) FXRouter.getData());
+        requests = officer.getRequestsByFaculty(requestList);
         approverDatasource = new RequestHandlingOfficersDataSource("data/approver", officer.getFaculty().getFacultyName() + "-approver.csv");
         loadApprovers();
+    }
+
+
+    public void loadRequests(){
+        requestList = requestDatasource.readData();
+        requests = officer.getRequestsByFaculty(requestList);
     }
 
 
@@ -178,29 +185,75 @@ public class FacultyOfficerController {
     }
 
     public void updateRequestTableView() {
+        loadApprovers();
 
         // Set up the columns
-        TableColumn<Request, String> typeColumn = new TableColumn<>("Type");
-        typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+        TableColumn<Request, String> typeColumn = new TableColumn<>("ประเภทคำร้อง");
+        typeColumn.setCellValueFactory(new PropertyValueFactory<>("requestType")); // รับประเภทคำร้องจาก Request โดยตรง
+        typeColumn.setMinWidth(290);
 
-        TableColumn<Request, String> approverColumn = new TableColumn<>("Approver By");
-        approverColumn.setCellValueFactory(new PropertyValueFactory<>("approveName"));
+        TableColumn<Request, String> nameColumn = new TableColumn<>("ชื่อ-นามสกุล");
+        nameColumn.setCellValueFactory(cellData -> {
+            Student student = cellData.getValue().getRequester();
+            return new SimpleStringProperty(student.getName()); // ดึงชื่อ-นามสกุลจากที่สิตที่สร้างคำร้อง
+        });
+        nameColumn.setMinWidth(290);
 
-        TableColumn<Request, String> idColumn = new TableColumn<>("ID");
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        TableColumn<Request, String> idColumn = new TableColumn<>("รหัสนิสิต");
+        idColumn.setCellValueFactory(cellData -> {
+            Student student = cellData.getValue().getRequester();
+            return new SimpleStringProperty(student.getStudentID()); // ดึงรหสนิสิตจากที่สิตที่สร้างคำร้อง
+        });
+        idColumn.setMinWidth(290);
 
-        TableColumn<Request, String> textColumn = new TableColumn<>("Text");
-        textColumn.setCellValueFactory(new PropertyValueFactory<>("text"));
+        TableColumn<Request, String> statusColumn = new TableColumn<>("สถานะคำร้อง");
+        statusColumn.setCellValueFactory(new PropertyValueFactory<>("recentStatusLog"));
+        statusColumn.setMinWidth(290);
+        statusColumn.setCellFactory(column -> new TableCell<Request, String>() {
+            @Override
+            protected void updateItem(String statusLog, boolean empty) {
+                super.updateItem(statusLog, empty);
+                if (empty || statusLog == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(statusLog);
 
-        TableColumn<Request, String> timeStampColumn = new TableColumn<>("TimeStamp");
-        timeStampColumn.setCellValueFactory(new PropertyValueFactory<>("timeStamp"));
+                    Request request = getTableView().getItems().get(getIndex());
+                    String status = request.getStatus();
+
+                    switch (status) {
+                        case "กำลังดำเนินการ":
+                            setStyle("-fx-text-fill: #d7a700;");
+                            break;
+                        case "ปฏิเสธ":
+                            setStyle("-fx-text-fill: #be0000;");
+                            break;
+                        case "เสร็จสิ้น":
+                            setStyle("-fx-text-fill: #149100;");
+                            break;
+                        default:
+                            setStyle("");
+                            break;
+                    }
+                }
+            }
+        });
+
+        TableColumn<Request, String> lastModifiedColumn = new TableColumn<>("วันที่แก้ไขล่าสุด");
+        lastModifiedColumn.setCellValueFactory(new PropertyValueFactory<>("lastModifiedDateTime"));
+        lastModifiedColumn.setMinWidth(290);
+
+
 
         // Clear previous columns and add the new ones
         requestListTableView.getColumns().clear();
-        requestListTableView.getColumns().addAll(typeColumn, approverColumn, idColumn, textColumn, timeStampColumn);
+        requestListTableView.getColumns().addAll(typeColumn, nameColumn, idColumn, lastModifiedColumn);
 
         // Clear the items in the table
         requestListTableView.getItems().clear();
+
+        requests.sort(Comparator.comparing(Request::getLastModifiedDateTime).reversed()); // เรียง Request ตามวันเวลา
 
         // Populate the TableView with requests
         requestListTableView.getItems().addAll(requests);
@@ -222,6 +275,8 @@ public class FacultyOfficerController {
         try {
             List<Object> dataToPass = new ArrayList<>();
             dataToPass.add(selectedRequest);  // Add the Request object
+            dataToPass.add(requestList);// Add the Request object
+            dataToPass.add(requestDatasource);
             dataToPass.add(officer);  // Add the RequestHandlingOfficer object
             FXRouter.goTo("faculty-officer-manage-request", dataToPass);  // Pass the list with both objects
         } catch (IOException e) {

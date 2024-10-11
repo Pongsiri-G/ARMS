@@ -300,28 +300,30 @@ public class DepartmentOfficerController {
     }
 
     public void updateRequestTableView() {
-        loadData();
+        loadApprovers();
 
         // Set up the columns
         TableColumn<Request, String> typeColumn = new TableColumn<>("ประเภทคำร้อง");
-
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("requestType")); // รับประเภทคำร้องจาก Request โดยตรง
-
+        typeColumn.setMinWidth(290);
 
         TableColumn<Request, String> nameColumn = new TableColumn<>("ชื่อ-นามสกุล");
         nameColumn.setCellValueFactory(cellData -> {
             Student student = cellData.getValue().getRequester();
             return new SimpleStringProperty(student.getName()); // ดึงชื่อ-นามสกุลจากที่สิตที่สร้างคำร้อง
         });
+        nameColumn.setMinWidth(290);
 
         TableColumn<Request, String> idColumn = new TableColumn<>("รหัสนิสิต");
         idColumn.setCellValueFactory(cellData -> {
             Student student = cellData.getValue().getRequester();
             return new SimpleStringProperty(student.getStudentID()); // ดึงรหสนิสิตจากที่สิตที่สร้างคำร้อง
         });
+        idColumn.setMinWidth(290);
 
         TableColumn<Request, String> statusColumn = new TableColumn<>("สถานะคำร้อง");
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("recentStatusLog"));
+        statusColumn.setMinWidth(290);
         statusColumn.setCellFactory(column -> new TableCell<Request, String>() {
             @Override
             protected void updateItem(String statusLog, boolean empty) {
@@ -355,6 +357,7 @@ public class DepartmentOfficerController {
 
         TableColumn<Request, String> lastModifiedColumn = new TableColumn<>("วันที่แก้ไขล่าสุด");
         lastModifiedColumn.setCellValueFactory(new PropertyValueFactory<>("lastModifiedDateTime"));
+        lastModifiedColumn.setMinWidth(290);
 
 
 

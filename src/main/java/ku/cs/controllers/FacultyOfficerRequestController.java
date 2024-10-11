@@ -14,8 +14,11 @@ import javafx.scene.shape.Circle;
 import ku.cs.models.FacultyOfficer;
 import ku.cs.models.Request;
 import ku.cs.models.RequestHandlingOfficer;
+import ku.cs.models.RequestList;
 import ku.cs.services.FXRouter;
 import javafx.scene.input.MouseEvent;
+import ku.cs.services.RequestHandlingOfficersDataSource;
+import ku.cs.services.RequestListFileDatasource;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -52,8 +55,11 @@ public class FacultyOfficerRequestController {
 
 
 
+    private RequestListFileDatasource requestDatasource;
     private Request request;
+    private RequestList requestList;
     private FacultyOfficer officer;
+    private String selectedApprove;
 
     public void initialize() {
         errorLabel.setDisable(false);
@@ -61,15 +67,10 @@ public class FacultyOfficerRequestController {
         // Retrieve the passed data (List<Object>)
         List<Object> data = (List<Object>) FXRouter.getData();
 
-        // Extract Request and officer from the list
-        if (data != null && data.size() == 2) {
-            request = (Request) data.get(0);  // Get the Request object
-            officer = (FacultyOfficer) data.get(1);  // Get the Officer object;
-        }
-        else {
-            request = null;
-            officer = null;
-        }
+        request = (Request) data.get(0);  // Get the Request object
+        requestList = (RequestList) data.get(1);
+        requestDatasource = (RequestListFileDatasource) data.get(2);
+        officer = (FacultyOfficer) data.get(3);  // Get the Officer object;
         setupOfficerInfo();
         switchToDetailScence();
     }
@@ -120,6 +121,10 @@ public class FacultyOfficerRequestController {
         rejectRequestScene.setDisable(false);
     }
 
+    public void updateRequest(){
+        requestDatasource.writeData(requestList);
+    }
+
     public void fillSelectApproverMenuButtons() {
         selectOfficerHandlingMenu.getItems().clear();
         ArrayList<RequestHandlingOfficer> approvers = officer.getRequestManagers();
@@ -141,8 +146,7 @@ public class FacultyOfficerRequestController {
 
     }
 
-    public boolean checkValid(){
-        String approver = selectOfficerHandlingMenu.getText();
+    public boolean checkValid(String approver){;
         if (approver.equals("") || approver == null || approver.equals("เลือกผู้ดำเนินการ")) {
             errorLabel.setText("กรุณาเลือกผู้ดำเนินการ");
             return false;
@@ -152,14 +156,17 @@ public class FacultyOfficerRequestController {
 
     @FXML
     public void onRejectRequestButtonClick(MouseEvent event) {
-        if (checkValid()) {
+        selectedApprove = selectOfficerHandlingMenu.getText();
+        if (checkValid(selectedApprove)) {
             switchToRejectScence();
         }
     }
     @FXML
     public void onApproveRequestButtonClick(MouseEvent event) throws IOException {
-        if (checkValid()) {
-            officer.acceptRequest(request, selectOfficerHandlingMenu.getText());
+        selectedApprove = selectOfficerHandlingMenu.getText();
+        if (checkValid(selectedApprove)) {
+            officer.acceptRequest(request, selectedApprove);
+            updateRequest();
             FXRouter.goTo("faculty-officer");
         }
 
@@ -182,7 +189,8 @@ public class FacultyOfficerRequestController {
 
     @FXML
     public void onOkButtonClick(MouseEvent event) throws IOException {
-        officer.rejectRequest(request, reasonForRejectTextArea.getText(), selectOfficerHandlingMenu.getText());
+        officer.rejectRequest(request,selectedApprove, reasonForRejectTextArea.getText());
+        updateRequest();
         FXRouter.goTo("faculty-officer", officer.getUsername());
     }
 

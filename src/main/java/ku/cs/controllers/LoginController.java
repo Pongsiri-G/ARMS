@@ -69,7 +69,7 @@ public class LoginController {
                 break;
             case "เจ้าหน้าที่คณะ":
                 if (user.getLastLogin() == null) { FXRouter.goTo("change-password", loggedInUser); }
-                else { FXRouter.goTo("faculty-officer"); }
+                else { FXRouter.goTo("faculty-officer", loggedInUser); }
                 break;
             case "เจ้าหน้าที่ภาควิชา":
                 if (user.getLastLogin() == null) { FXRouter.goTo("change-password", loggedInUser); }
