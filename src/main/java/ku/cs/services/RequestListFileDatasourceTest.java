@@ -27,10 +27,6 @@ public class RequestListFileDatasourceTest {
         userList = userDatasource.readData();
         datasource = new RequestListFileDatasource(testDirectory, testFileName, userList);
         RequestList requestList = datasource.readData();
-        //clearTestFile();
-        Advisor advisor = (Advisor) userList.findUserByUsername("Jak");
-        ArrayList<Request> requests = advisor.getRequestsByAdvisor(requestList);
-        advisor.acceptRequest(requests.get(0));
     }
 
     private void clearTestFile() {

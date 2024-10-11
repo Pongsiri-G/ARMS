@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -37,11 +38,11 @@
                <children>
                   <TableView fx:id="studentListTable" layoutX="89.0" layoutY="464.0" prefHeight="403.0" prefWidth="1079.0" style="-fx-background-color: #EAEAEA;">
                     <columns>
-                      <TableColumn prefWidth="100.0" text="คณะ" />
-                      <TableColumn prefWidth="100.0" text="สาขา" />
-                        <TableColumn prefWidth="100.0" text="ชื่อ-นามสกุล" />
-                        <TableColumn prefWidth="100.0" text="รหัสนิสิต" />
-                        <TableColumn prefWidth="100.0" text="อีเมล" />
+                      <TableColumn fx:id="facultyCol" prefWidth="100.0" text="คณะ" />
+                      <TableColumn fx:id="departmentCol" prefWidth="100.0" text="สาขา" />
+                        <TableColumn fx:id="nameCol" prefWidth="100.0" text="ชื่อ-นามสกุล" />
+                        <TableColumn fx:id="idCol" prefWidth="100.0" text="รหัสนิสิต" />
+                        <TableColumn fx:id="emailCol" prefWidth="100.0" text="อีเมล" />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -62,7 +63,7 @@
                         <Font size="24.0" />
                      </font>
                   </Label>
-                  <Label graphicTextGap="20.0" layoutX="604.0" layoutY="192.0" text="ตำเเหน่ง: อาจารย์ปรึกษา">
+                  <Label graphicTextGap="20.0" layoutX="604.0" layoutY="192.0" text="ตำเเหน่ง: อาจารย์ที่ปรึกษา">
                      <font>
                         <Font size="24.0" />
                      </font>
@@ -120,5 +121,11 @@
             <Image url="@../../../images/1200px-KU_SubLogo.png" />
          </image>
       </ImageView>
+      <TextField fx:id="searchStudentField" layoutX="525.0" layoutY="40.0" prefHeight="39.0" prefWidth="440.0" />
+      <Label layoutX="115.0" layoutY="40.0" text="อาจารย์ที่ปรึกษา">
+         <font>
+            <Font size="32.0" />
+         </font>
+      </Label>
     </children>
 </AnchorPane>

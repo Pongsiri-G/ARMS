@@ -68,6 +68,8 @@ public class Advisor extends User{
 
     public Faculty getFaculty() {return faculty; }
 
+    public void setAdvisorID(String newAdvisorID) { this.advisorID = newAdvisorID; }
+
     public void setFaculty(Faculty faculty) { this.faculty = faculty; }
 
     public void setDepartment(Department department) { this.department = department; }

@@ -1,15 +1,12 @@
 package ku.cs.controllers;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.*;
 import ku.cs.models.*;
 import ku.cs.services.FXRouter;
 import ku.cs.services.RequestListFileDatasource;
@@ -18,14 +15,17 @@ import ku.cs.services.UserListFileDatasource;
 import java.io.IOException;
 import java.util.ArrayList;
 
+
 public class AdvisorRequestController {
     @FXML private TableView<Request> tableRequest;
-    @FXML private AnchorPane ApprovePopupLabel;
-    @FXML private Label requestTypeLabel;
-    @FXML private Label requesterLabel;
-    @FXML private Label timeLabel;
-    @FXML private AnchorPane popupReject;
+    @FXML private AnchorPane rejectPopupLabel;
+    @FXML private AnchorPane popupApprove;
     @FXML private TextField reasonText;
+    @FXML private TableColumn<Request, String> name;
+    @FXML private TableColumn<Request, String> type;
+    @FXML private TableColumn<Request, String> status;
+    @FXML private TableColumn<Request, String> time;
+    @FXML private Label errorLabel;
     private Advisor advisor;
     private UserList userList;
     private UserListFileDatasource userListDatasource;
@@ -45,8 +45,9 @@ public class AdvisorRequestController {
         User user = userList.findUserByUsername((String) FXRouter.getData());
         advisor = (Advisor) user;
         showTable(advisor.getRequestsByAdvisor(requestList));
-        ApprovePopupLabel.setVisible(false);
-        popupReject.setVisible(false);
+        popupApprove.setVisible(false);
+        rejectPopupLabel.setVisible(false);
+        errorLabel.setText("");
         showTextRequest();
     }
 
@@ -56,27 +57,30 @@ public class AdvisorRequestController {
         userListDatasource.writeData(userList);
         requestListDatasource.writeData(requestList);
         showTable(advisor.getRequestsByAdvisor(requestList));
-        ApprovePopupLabel.setVisible(false);
+        popupApprove.setVisible(false);
     }
 
     @FXML
     void rejectClick(ActionEvent event) {
-        ApprovePopupLabel.setVisible(false);
-        popupReject.setVisible(true);
+        popupApprove.setVisible(false);
+        rejectPopupLabel.setVisible(true);
     }
 
     @FXML
     void reasonRejectToStudent(ActionEvent event) {
+        if (reasonText.getText().isEmpty()) { errorLabel.setText("โปรดระบุเหตุผล"); }
         if (advisor != null) { advisor.rejectRequest(request, reasonText.getText()); }
+        reasonText.clear();
+        errorLabel.setText("");
         userListDatasource.writeData(userList);
         requestListDatasource.writeData(requestList);
         showTable(advisor.getRequestsByAdvisor(requestList));
-        popupReject.setVisible(false);
+        rejectPopupLabel.setVisible(false);
     }
 
     @FXML
     void goToBackAdvisorClick(ActionEvent event) {
-        ApprovePopupLabel.setVisible(false);
+        popupApprove.setVisible(false);
     }
 
     private void showTextRequest() {
@@ -84,16 +88,13 @@ public class AdvisorRequestController {
             Request selectedRequest = tableRequest.getSelectionModel().getSelectedItem();
             if (selectedRequest != null) {
                 request = selectedRequest;
-                showRequestDetails(selectedRequest);
+                showRequestDetails();
             }
         });
     }
 
-    private void showRequestDetails(Request selectedRequest) {
-        requestTypeLabel.setText(selectedRequest.getRequestType());
-        requesterLabel.setText(selectedRequest.getRequester());
-        timeLabel.setText(selectedRequest.getTimestamp());
-        ApprovePopupLabel.setVisible(true);
+    private void showRequestDetails() {
+        popupApprove.setVisible(true);
     }
 
     @FXML
@@ -103,14 +104,11 @@ public class AdvisorRequestController {
 
     private void showTable(ArrayList<Request> requests){
         tableRequest.getItems().clear();
-        TableColumn<Request, String> name = new TableColumn<>("ชื่อ-นามสกุล");
-        name.setCellValueFactory(new PropertyValueFactory<>("requester"));
-
-        TableColumn<Request, String> type = new TableColumn<>("ประเภทคำร้อง");
+        name.setCellValueFactory(request ->
+                new SimpleStringProperty(request.getValue().getRequester().getName())//ใช้ SimpleStringProperty ในการดึง method ที่่ return เป็น string
+        );
         type.setCellValueFactory(new PropertyValueFactory<>("requestType"));
-
-        TableColumn<Request, String> status = new TableColumn<>("สถานะคำร้อง");
-        status.setCellValueFactory(new PropertyValueFactory<>("status"));
+        status.setCellValueFactory(new PropertyValueFactory<>("recentStatusLog"));
         status.setCellFactory(column -> new TableCell<Request, String>() {
             @Override
             protected void updateItem(String statusLog, boolean empty) {
@@ -141,8 +139,6 @@ public class AdvisorRequestController {
                 }
             }
         });
-
-        TableColumn<Request, String> time = new TableColumn<>("วันที่");
         time.setCellValueFactory(new PropertyValueFactory<>("timestamp"));
 
         // ล้าง column เดิมทั้งหมดที่มีอยู่ใน table แล้วเพิ่ม column ใหม่
@@ -155,8 +151,5 @@ public class AdvisorRequestController {
 
         // ใส่ข้อมูล Student ทั้งหมดจาก studentList ไปแสดงใน TableView
         tableRequest.getItems().addAll(requests);
-
-
     }
-
 }

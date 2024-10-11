@@ -4,11 +4,10 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import ku.cs.models.*;
 import ku.cs.services.*;
 
@@ -22,7 +21,21 @@ public class AdvisorNisitController {
     @FXML private Label idLabel;
     @FXML private Label nameLabel;
     @FXML private Label emailLabel;
+    @FXML private Label departmentRequesterLabel;
+    @FXML private Label emailRequesterLabel;
+    @FXML private Label facultyRequesterLabel;
+    @FXML private Label nameRequesterLabel;
+    @FXML private Label phoneNumberRequesterLabel;
+    @FXML private Label recentRequestLogLabel;
+    @FXML private Label requestDetailsLabel;
+    @FXML private TextArea requestLogTextArea;
+    @FXML private Label studentIdRequesterLabel;
     @FXML private TableView<Request> studentTable;
+    @FXML private Label timestampLabel;
+    @FXML private AnchorPane requestDetail;
+    @FXML private TableColumn<Request, String> type;
+    @FXML private TableColumn<Request, String> status;
+    @FXML private TableColumn<Request, String> time;
 
     private User user;
     private UserList userList;
@@ -45,18 +58,15 @@ public class AdvisorNisitController {
 
         showTable(student.getRequestsByStudent(requestList));
         showStudent(student);
+        requestDetail.setVisible(false);
+        setupTableClickListener();
     }
 
     private void showTable(ArrayList<Request> requests) {
         studentTable.getItems().clear();
-        TableColumn<Request, String> type = new TableColumn<>("ประเภทคำร้อง");
         type.setCellValueFactory(new PropertyValueFactory<>("requestType"));
-
-        TableColumn<Request, String> time = new TableColumn<>("วันที่");
         time.setCellValueFactory(new PropertyValueFactory<>("timestamp"));
-
-        TableColumn<Request, String> status = new TableColumn<>("สถานะ");
-        status.setCellValueFactory(new PropertyValueFactory<>("status"));
+        status.setCellValueFactory(new PropertyValueFactory<>("recentStatusLog"));
         status.setCellFactory(column -> new TableCell<Request, String>() {
             @Override
             protected void updateItem(String statusLog, boolean empty) {
@@ -99,6 +109,35 @@ public class AdvisorNisitController {
         studentTable.getItems().addAll(requests);
     }
 
+    private void setupTableClickListener() {
+        studentTable.setOnMouseClicked(event -> {
+            Request selectedRequest = studentTable.getSelectionModel().getSelectedItem();
+            if (selectedRequest != null) {
+                showRequestDetails(selectedRequest);
+            }
+        });
+    }
+
+    private void showRequestDetails(Request request) {
+        // Fill the detail pane with the request's data
+        nameRequesterLabel.setText("ชื่อ-สกุล " + request.getRequester().getName());
+        facultyRequesterLabel.setText("คณะ " + request.getRequester().getEnrolledFaculty().getFacultyName());
+        departmentRequesterLabel.setText("ภาควิชา " + request.getRequester().getEnrolledDepartment().getDepartmentName());
+        studentIdRequesterLabel.setText("รหัสประจำตัวนิสิต " + request.getRequester().getStudentID());
+        emailRequesterLabel.setText("อีเมล " + request.getRequester().getEmail());
+        phoneNumberRequesterLabel.setText("เบอร์มือถือ " + request.getNumberPhone());
+        recentRequestLogLabel.setText(request.getRecentStatusLog());
+        timestampLabel.setText("วันที่สร้างคำร้อง: " + request.getLastModifiedDateTime());
+
+        StringBuilder logs = new StringBuilder();
+        for (String log : request.getStatusLog()) {
+            logs.append(log).append("\n");
+        }
+        requestLogTextArea.setText(logs.toString());
+
+        requestDetailsLabel.setText(request.toString());
+        requestDetail.setVisible(true);
+    }
     private void showStudent(Student student) {
         nameLabel.setText(student.getName());
         idLabel.setText(student.getStudentID());
@@ -115,6 +154,11 @@ public class AdvisorNisitController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @FXML
+    void closeRequestDetailClick(MouseEvent event) {
+        requestDetail.setVisible(false);
     }
 
 }
