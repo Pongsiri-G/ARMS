@@ -78,6 +78,9 @@
                            <image>
                               <Image url="@../../../images/write.png" />
                            </image>
+                           <StackPane.margin>
+                              <Insets />
+                           </StackPane.margin>
                         </ImageView>
                      </children>
                   </StackPane>
@@ -291,6 +294,9 @@
                                              <font>
                                                 <Font size="18.0" />
                                              </font>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
                                           </Label>
                                           <HBox prefHeight="100.0" prefWidth="200.0" spacing="70.0">
                                              <children>
