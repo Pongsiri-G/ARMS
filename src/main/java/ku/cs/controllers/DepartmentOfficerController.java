@@ -19,6 +19,7 @@ import javafx.scene.shape.Rectangle;
 import ku.cs.models.*;
 import ku.cs.services.FXRouter;
 import ku.cs.services.RequestHandlingOfficersDataSource;
+import ku.cs.services.RequestListFileDatasource;
 import ku.cs.services.UserListFileDatasource;
 
 import java.io.IOException;
@@ -128,6 +129,8 @@ public class DepartmentOfficerController {
     UserListFileDatasource datasource;
     UserList userList;
     ArrayList<Request> requests;
+    RequestListFileDatasource  requestDatasource;
+    RequestList requestList;
     RequestHandlingOfficer approverToEdit;
     ArrayList<Advisor> advisors;
     ArrayList<Student> students;
@@ -173,8 +176,10 @@ public class DepartmentOfficerController {
                 "departmentofficerlist.csv",
                 "facdeplist.csv");
         userList = datasource.readData();
+        requestDatasource = new RequestListFileDatasource("data/test", "requestlist.csv", userList);
+        requestList = requestDatasource.readData();
         officer = (DepartmentOfficer) userList.findUserByUsername((String) FXRouter.getData());
-        //officer = userList.test();
+        requests = officer.getRequestsByDepartment(requestList);
         advisors = officer.getDepartment().getAdvisors();
         students = officer.getDepartment().getStudents();
         approverDatasource = new RequestHandlingOfficersDataSource("data/approver", officer.getDepartment().getDepartmentName() + "-approver.csv");
@@ -182,8 +187,9 @@ public class DepartmentOfficerController {
 
     public void loadData() {
         userList = datasource.readData();
+        requestList = requestDatasource.readData();
         officer = (DepartmentOfficer) userList.findUserByUsername(officer.getUsername());
-        //officer = userList.test();
+        requests = officer.getRequestsByDepartment(requestList);
         advisors = officer.getDepartment().getAdvisors();
         students = officer.getDepartment().getStudents();
     }
@@ -283,47 +289,31 @@ public class DepartmentOfficerController {
         }
     }
 
-    public void loadRequests(){
-        requests = new ArrayList<>();
-        Request req1 = new Request("2024-09-26 10:15", "John Doe", "Pending", "Leave Request", "Requesting 2 weeks of vacation", "REQ001", "555-1234");
-        Request req2 = new Request("2024-09-25 09:45", "Jane Smith", "Pending", "Equipment Request", "Requesting new laptop for work", "REQ002", "555-5678");
-        Request req3 = new Request("2024-09-24 11:30", "Michael Brown", "Pending", "Expense Reimbursement", "Reimbursement for travel expenses", "REQ003", "555-2345");
-        Request req4 = new Request("2024-09-23 08:00", "Emily White", "Pending", "Training Request", "Requesting attendance at a conference", "REQ004", "555-8765");
-        Request req5 = new Request("2024-09-22 14:20", "Chris Green", "Pending", "Leave Request", "Requesting personal leave for medical reasons", "REQ005", "555-3456");
-        Request req6 = new Request("2024-09-21 16:45", "Anna Blue", "Pending", "Project Proposal", "Proposal for a new marketing campaign", "REQ006", "555-9876");
-        Request req7 = new Request("2024-09-20 13:10", "David Black", "Pending", "Budget Increase", "Requesting an increase in project budget", "REQ007", "555-4567");
-        Request req8 = new Request("2024-09-19 12:05", "Lisa Red", "Pending", "Salary Adjustment", "Request for salary review and adjustment", "REQ008", "555-5432");
-        Request req9 = new Request("2024-09-18 17:00", "Robert Silver", "Pending", "Job Transfer", "Request for transfer to a new department", "REQ009", "555-6789");
-        Request req10 = new Request("2024-09-17 15:30", "Sophia Gold", "Pending", "Remote Work Request", "Requesting remote work for 3 days a week", "REQ010", "555-7654");
-
-        requests.add(req1);
-        requests.add(req2);
-        requests.add(req3);
-        requests.add(req4);
-        requests.add(req5);
-        requests.add(req6);
-        requests.add(req7);
-        requests.add(req8);
-        requests.add(req9);
-        requests.add(req10);
-    }
 
     public void loadApprovers(){
         officer.loadRequestManage(approverDatasource.readData());
     }
 
     public void updateRequestTableView() {
-        loadRequests();
+        //loadRequests();
 
         // Set up the columns
         TableColumn<Request, String> typeColumn = new TableColumn<>("Type");
-        typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
 
-        TableColumn<Request, String> approverColumn = new TableColumn<>("Approver By");
-        approverColumn.setCellValueFactory(new PropertyValueFactory<>("approveName"));
+        typeColumn.setCellValueFactory(new PropertyValueFactory<>("requestType"));
+
+
+        TableColumn<Request, String> nameColumn = new TableColumn<>("Name");
+        nameColumn.setCellValueFactory(cellData -> {
+            Student student = cellData.getValue().getRequester();
+            return new SimpleStringProperty(student.getName());
+        });
 
         TableColumn<Request, String> idColumn = new TableColumn<>("ID");
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        idColumn.setCellValueFactory(cellData -> {
+            Student student = cellData.getValue().getRequester();
+            return new SimpleStringProperty(student.getStudentID());
+        });
 
         TableColumn<Request, String> textColumn = new TableColumn<>("Text");
         textColumn.setCellValueFactory(new PropertyValueFactory<>("text"));
@@ -333,7 +323,7 @@ public class DepartmentOfficerController {
 
         // Clear previous columns and add the new ones
         requestListTableView.getColumns().clear();
-        requestListTableView.getColumns().addAll(typeColumn, approverColumn, idColumn, textColumn, timeStampColumn);
+        requestListTableView.getColumns().addAll(typeColumn, nameColumn, idColumn, textColumn, timeStampColumn);
 
         // Clear the items in the table
         requestListTableView.getItems().clear();
@@ -598,7 +588,8 @@ public class DepartmentOfficerController {
             // Remove from the students
            // students.remove(studentToEdit);
             // Remove from userList
-            officer.getDepartment().getStudents().remove(studentToEdit);
+            officer.removeStudentInDep(studentToEdit);
+            //officer.getDepartment().getStudents().remove(studentToEdit);
             datasource.writeData(userList);
             loadData();
             studentToEdit = null;
@@ -659,17 +650,19 @@ public class DepartmentOfficerController {
             if (advisor.equals("ไม่ระบุ")){
                 studentToEdit.setStudentAdvisor(null);
             } else {
-                studentToEdit.setStudentAdvisor(officer.getDepartment().findAdvisorByName(advisor));
+                officer.assignAdvisor(studentToEdit, advisor);
+                //studentToEdit.setStudentAdvisor(officer.getDepartment().findAdvisorByName(advisor));
             }
         } else {
-            Student student;
+            //Student student;
             if (advisor == null || advisor.equals("เลือกอาจารย์ที่ปรึกษา") || advisor.equals("ไม่ระบุ")) {
-                student = new Student(name, officer.getFaculty(), officer.getDepartment(), id, email);
+                officer.addStudentToDep(name, id, email);
+                //student = new Student(name, officer.getFaculty(), officer.getDepartment(), id, email);
             }
             else {
-                student = new Student(name,officer.getFaculty().getFacultyName(), officer.getDepartment().getDepartmentName(), id, email, officer.getDepartment().findAdvisorByName(advisor));
+                officer.addStudentToDep(name, id, email, advisor);
+                //student = new Student(name,officer.getFaculty().getFacultyName(), officer.getDepartment().getDepartmentName(), id, email, officer.getDepartment().findAdvisorByName(advisor));
             }
-            officer.getDepartment().getStudents().add(student);
         }
         datasource.writeData(userList);
         loadData();

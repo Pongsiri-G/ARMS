@@ -80,22 +80,31 @@ public class DepartmentOfficer extends User implements Officer {
         request.processRequest(approver,"สิ้นสุด", null);
     }
 
-//     Handle Student
-//    public void addStudent(String name, String studentID, String email) {
-//        Student student = new Student(name, studentID, email);
-//        department.addStudent(student);
-//    }
-//
-//    public void removeStudent(String studentID) {
-//        Student student = department.findStudentByID(studentID);
-//        if (student != null) {
-//            department.removeStudent(student);
-//        }
-//    }
+    //Handle Student
+    public void addStudentToDep(String name, String studentID, String email) {
+        Student student = new Student(name, this.getFaculty(), this.getDepartment(), studentID, email);
+        department.getStudents().add(student);
+    }
+
+    public void addStudentToDep(String name, String studentID, String email, String advisor) {
+        Student student = new Student(name, faculty.getFacultyName(), department.getDepartmentName(), studentID, email, department.findAdvisorByName(advisor));
+        department.getStudents().add(student);
+    }
+
+    public void removeStudentInDep(Student student) {
+        if (student != null) {
+            department.getStudents().remove(student);
+        }
+    }
 
 
     public void assignAdvisor(Student student, Advisor advisor) {
         student.setStudentAdvisor(advisor);
+    }
+
+
+    public void assignAdvisor(Student student, String Advisor){
+        assignAdvisor(student, this.department.findAdvisorByName(Advisor));
     }
 
     public void setFaculty(Faculty faculty){
