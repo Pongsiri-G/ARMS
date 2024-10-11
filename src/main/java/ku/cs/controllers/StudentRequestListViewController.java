@@ -1,18 +1,16 @@
 package ku.cs.controllers;
 
+import javafx.collections.FXCollections;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
-import javafx.geometry.Bounds;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import ku.cs.models.Request;
@@ -24,7 +22,10 @@ import ku.cs.services.RequestListFileDatasource;
 import ku.cs.services.UserListFileDatasource;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 public class StudentRequestListViewController {
 
@@ -66,6 +67,8 @@ public class StudentRequestListViewController {
     @FXML private Label recentRequestLogLabel;
     @FXML private Label timestampLabel;
     @FXML private Label requestDetailsLabel;
+    @FXML private ComboBox<String> statusFilterComboBox;
+    @FXML private ComboBox<String> typeFilterComboBox;
     private UserList userList;
     private RequestList requestList;
     private UserListFileDatasource userListDatasource;
@@ -90,8 +93,8 @@ public class StudentRequestListViewController {
         doneLabel.setText(String.format("%d", student.getStudentApprovedRequestCount(student.getRequestsByStudent(requestList))));
         waitLabel.setText(String.format("%d", student.getStudentPendingRequestCount(student.getRequestsByStudent(requestList))));
         rejectLabel.setText(String.format("%d", student.getStudentRejectedRequestCount(student.getRequestsByStudent(requestList))));
+        initializeFilters();
         showTable(student.getRequestsByStudent(requestList));
-        System.out.println("[" + student.getName() + " " + student.getUsername() + "]");
         requestDetailPane.setVisible(false);
         setupTableClickListener();
     }
@@ -109,6 +112,20 @@ public class StudentRequestListViewController {
         }
     }
 
+
+    private void initializeFilters() {
+        // Populate ComboBox with filter options
+        statusFilterComboBox.getItems().addAll("ทั้งหมด", "กำลังดำเนินการ", "ปฏิเสธ", "เสร็จสิ้น");
+        statusFilterComboBox.setValue("ทั้งหมด");
+
+        typeFilterComboBox.getItems().addAll("ทั้งหมด", "ลาป่วยหรือลากิจ", "ลาพักการศึกษา", "ลาออก");
+        typeFilterComboBox.setValue("ทั้งหมด");
+
+        // Set listeners for filtering
+        statusFilterComboBox.setOnAction(event -> applyFilter());
+        typeFilterComboBox.setOnAction(event -> applyFilter());
+    }
+
     private void showTable(ArrayList<Request> requestList) {
         TableColumn<Request, String> requestTypeColumn = new TableColumn<>("ประเภทคำร้อง");
         requestTypeColumn.setCellValueFactory(new PropertyValueFactory<>("requestType"));
@@ -116,6 +133,7 @@ public class StudentRequestListViewController {
         TableColumn<Request, String> requestStatusColumn = new TableColumn<>("สถานะคำร้อง");
         requestStatusColumn.setCellValueFactory(new PropertyValueFactory<>("recentStatusLog"));
 
+        // Set custom cell factory to style the status column
         requestStatusColumn.setCellFactory(column -> new TableCell<Request, String>() {
             @Override
             protected void updateItem(String statusLog, boolean empty) {
@@ -126,18 +144,20 @@ public class StudentRequestListViewController {
                 } else {
                     setText(statusLog);
 
+                    // Get the request associated with this row
                     Request request = getTableView().getItems().get(getIndex());
                     String status = request.getStatus();
 
+                    // Apply different styles based on the status
                     switch (status) {
                         case "กำลังดำเนินการ":
-                            setStyle("-fx-text-fill: #d7a700;");
+                            setStyle("-fx-text-fill: #d7a700;"); // Yellow for "in progress"
                             break;
                         case "ปฏิเสธ":
-                            setStyle("-fx-text-fill: #be0000;");
+                            setStyle("-fx-text-fill: #be0000;"); // Red for "rejected"
                             break;
                         case "เสร็จสิ้น":
-                            setStyle("-fx-text-fill: #149100;");
+                            setStyle("-fx-text-fill: #149100;"); // Green for "completed"
                             break;
                         default:
                             setStyle("");
@@ -147,18 +167,48 @@ public class StudentRequestListViewController {
             }
         });
 
-        TableColumn<Request, String> lastModifiedColumn = new TableColumn<>("วันที่แก้ไขล่าสุด");
+        TableColumn<Request, LocalDateTime> lastModifiedColumn = new TableColumn<>("วันที่แก้ไขล่าสุด");
         lastModifiedColumn.setCellValueFactory(new PropertyValueFactory<>("lastModifiedDateTime"));
 
-        // Clear previous columns and add the new ones
-        requestListTableview.getColumns().clear();
-        requestListTableview.getColumns().add(requestTypeColumn);
-        requestListTableview.getColumns().add(requestStatusColumn);
-        requestListTableview.getColumns().add(lastModifiedColumn);
+        requestList.sort(Comparator.comparing(Request::getLastModifiedDateTime).reversed());
 
-        // Add the request list to the TableView
-        requestListTableview.getItems().clear();
-        requestListTableview.getItems().addAll(requestList);
+        requestListTableview.getColumns().clear();
+        requestListTableview.getColumns().addAll(requestTypeColumn, requestStatusColumn, lastModifiedColumn);
+
+        FilteredList<Request> filteredData = new FilteredList<>(FXCollections.observableArrayList(requestList), p -> true);
+
+        statusFilterComboBox.setOnAction(event -> filterTable(filteredData));
+        typeFilterComboBox.setOnAction(event -> filterTable(filteredData));
+
+        requestListTableview.setItems(filteredData);
+    }
+
+    private void filterTable(FilteredList<Request> filteredData) {
+        String selectedStatus = statusFilterComboBox.getValue();
+        String selectedType = typeFilterComboBox.getValue();
+
+        filteredData.setPredicate(request -> {
+            boolean statusMatches = selectedStatus.equals("ทั้งหมด") || request.getStatus().equals(selectedStatus);
+
+            boolean typeMatches = selectedType.equals("ทั้งหมด") || request.getRequestType().equals(selectedType);
+
+            return statusMatches && typeMatches;
+        });
+    }
+
+
+    @FXML
+    private void applyFilter() {
+        FilteredList<Request> filteredData = (FilteredList<Request>) requestListTableview.getItems();
+
+        String selectedStatus = statusFilterComboBox.getValue();
+        String selectedType = typeFilterComboBox.getValue();
+
+        filteredData.setPredicate(request -> {
+            boolean statusMatches = selectedStatus.equals("ทั้งหมด") || request.getStatus().equals(selectedStatus);
+            boolean typeMatches = selectedType.equals("ทั้งหมด") || request.getRequestType().equals(selectedType);
+            return statusMatches && typeMatches;
+        });
     }
 
     private void setupTableClickListener() {
@@ -171,7 +221,6 @@ public class StudentRequestListViewController {
     }
 
     private void showRequestDetails(Request request) {
-        // Fill the detail pane with the request's data
         typeRequestLabel.setText(request.getRequestType());
         nameRequesterLabel.setText("ชื่อ-สกุล " + request.getRequester().getName());
         facultyRequesterLabel.setText("คณะ " + request.getRequester().getEnrolledFaculty().getFacultyName());
@@ -183,16 +232,15 @@ public class StudentRequestListViewController {
         timestampLabel.setText("วันที่สร้างคำร้อง: " + request.getLastModifiedDateTime());
 
         StringBuilder logs = new StringBuilder();
-        for (String log : request.getStatusLog()) {
-            logs.append(log).append("\n");
+        List<String> statusLog = request.getStatusLog();
+        for (int i = statusLog.size() - 1; i >= 0; i--) {
+            logs.append(statusLog.get(i)).append("\n");
         }
         requestLogTextArea.setText(logs.toString());
 
         requestDetailsLabel.setText(request.toString());
         requestDetailPane.setVisible(true);
     }
-
-
 
     @FXML
     public void logoutClick(MouseEvent event) throws IOException {

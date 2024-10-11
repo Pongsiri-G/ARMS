@@ -19,14 +19,14 @@ public class Request {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     // Constructor for creating a new request, with automatic timestamps
-    public Request(String requestType, Student requester, String currentApprover, String numberPhone) {
+    public Request(String requestType, Student requester, String numberPhone) {
         this.requestType = requestType;
         this.timestamp = LocalDateTime.now().format(formatter); // Current time for new requests
         this.lastModifiedDateTime = LocalDateTime.now().format(formatter);
         this.statusLog = new ArrayList<>();
         this.approverList = new ArrayList<>();
         this.requester = requester;
-        this.currentApprover = currentApprover;
+        this.currentApprover = "อาจารย์ที่ปรึกษา";
         this.numberPhone = numberPhone;
         this.status = "กำลังดำเนินการ";
         addStatusLog("ใบคำร้องใหม่");
