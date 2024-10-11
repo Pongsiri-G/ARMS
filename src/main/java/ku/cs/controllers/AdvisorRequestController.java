@@ -68,14 +68,21 @@ public class AdvisorRequestController {
 
     @FXML
     void reasonRejectToStudent(ActionEvent event) {
-        if (reasonText.getText().isEmpty()) { errorLabel.setText("โปรดระบุเหตุผล"); }
-        if (advisor != null) { advisor.rejectRequest(request, reasonText.getText()); }
-        reasonText.clear();
-        errorLabel.setText("");
-        userListDatasource.writeData(userList);
-        requestListDatasource.writeData(requestList);
-        showTable(advisor.getRequestsByAdvisor(requestList));
-        rejectPopupLabel.setVisible(false);
+        try {
+            if (advisor != null) {
+                advisor.rejectRequest(request, reasonText.getText());
+                reasonText.clear();
+                errorLabel.setText("");
+                userListDatasource.writeData(userList);
+                requestListDatasource.writeData(requestList);
+                showTable(advisor.getRequestsByAdvisor(requestList));
+                rejectPopupLabel.setVisible(false);
+            }else {
+                errorLabel.setText("โปรดระบุเหตุหล");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML

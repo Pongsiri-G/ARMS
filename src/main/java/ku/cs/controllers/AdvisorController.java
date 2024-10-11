@@ -57,15 +57,6 @@ public class AdvisorController{
             throw new RuntimeException(e);
         }
     }
-    @FXML
-    protected void onButtonTBackAdvisor() {
-        try {
-            FXRouter.goTo("advisor");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 
     @FXML
     public void initialize() {
