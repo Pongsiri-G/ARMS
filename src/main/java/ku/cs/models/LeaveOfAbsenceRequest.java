@@ -15,11 +15,11 @@ public class LeaveOfAbsenceRequest extends Request {
     private int toAcademicYear; // ถึงปีการศึกษา
 
 
-    public LeaveOfAbsenceRequest(Student requester, String currentApprover, String numberPhone,String reason, String currentAddress, String registeredCourses,
+    public LeaveOfAbsenceRequest(Student requester, String numberPhone,String reason, String currentAddress, String registeredCourses,
                                  int currentSemester, int currentAcademicYear,
                                  int fromSemester, int fromAcademicYear,
                                  int toSemester, int toAcademicYear) {
-        super("ลาพักการศึกษา", requester, currentApprover, numberPhone);
+        super("ลาพักการศึกษา", requester, numberPhone);
         this.reason = reason;
         this.currentAddress = currentAddress;
         this.registeredCourses = registeredCourses;

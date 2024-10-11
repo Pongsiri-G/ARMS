@@ -53,9 +53,9 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
                             leaveRequest.getRequester().getUsername(),
                             leaveRequest.getCurrentApprover(),
                             leaveRequest.getNumberPhone(),
-                            leaveRequest.getReason(),
-                            leaveRequest.getCurrentAddress(),
-                            leaveRequest.getRegisteredCourses(),
+                            escapeNewlines(leaveRequest.getReason()),
+                            escapeNewlines(leaveRequest.getCurrentAddress()),
+                            escapeNewlines(leaveRequest.getRegisteredCourses()),
                             String.valueOf(leaveRequest.getCurrentSemester()),
                             String.valueOf(leaveRequest.getCurrentAcademicYear()),
                             String.valueOf(leaveRequest.getFromSemester()),
@@ -76,7 +76,7 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
                             resignationRequest.getRequester().getUsername(),
                             resignationRequest.getCurrentApprover(),
                             resignationRequest.getNumberPhone(),
-                            resignationRequest.getReason(),
+                            escapeNewlines(resignationRequest.getReason()),
                             resignationRequest.getLastModifiedDateTime(),
                             String.join("|", resignationRequest.getStatusLog()),
                             approverListStr
@@ -91,12 +91,11 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
                             sickLeaveRequest.getRequester().getUsername(),
                             sickLeaveRequest.getCurrentApprover(),
                             sickLeaveRequest.getNumberPhone(),
-                            sickLeaveRequest.getCurrentAddress(),
                             sickLeaveRequest.getLeaveType(),
                             sickLeaveRequest.getFromDateLeave(),
                             sickLeaveRequest.getToDateLeave(),
-                            sickLeaveRequest.getReason(),
-                            sickLeaveRequest.getRegisteredCourses(),
+                            escapeNewlines(sickLeaveRequest.getReason()),
+                            escapeNewlines(sickLeaveRequest.getRegisteredCourses()),
                             sickLeaveRequest.getLastModifiedDateTime(),
                             String.join("|", sickLeaveRequest.getStatusLog()),
                             approverListStr
@@ -109,6 +108,11 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
         }
     }
 
+    private String escapeNewlines(String input) {
+        return input != null ? input.replace("\n", "\\n") : "";
+    }
+
+
 
     @Override
     public RequestList readData() {
@@ -118,6 +122,7 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
+                if (data.length < 6) { continue; }
                 String timestamp = data[0];
                 String requestType = data[1];
                 String status = data[2];
@@ -134,9 +139,9 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
                 }
 
                 if ("ลาพักการศึกษา".equalsIgnoreCase(requestType)) {
-                    String reason = data[6];
-                    String currentAddress = data[7];
-                    String registeredCourses = data[8];
+                    String reason = unescapeNewlines(data[6]);
+                    String currentAddress = unescapeNewlines(data[7]);
+                    String registeredCourses = unescapeNewlines(data[8]);
                     int currentSemester = Integer.parseInt(data[9]);
                     int currentAcademicYear = Integer.parseInt(data[10]);
                     int fromSemester = Integer.parseInt(data[11]);
@@ -151,7 +156,7 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
                     requestList.addRequest(leaveRequest);
 
                 } else if ("ลาออก".equalsIgnoreCase(requestType)) {
-                    String reason = data[6];
+                    String reason = unescapeNewlines(data[6]);
                     String lastModifiedDate = data[7];
                     List<String> statusLog = Arrays.asList(data[8].split("\\|"));
                     ResignationRequest resignationRequest = new ResignationRequest(timestamp, requestType, status, requester, currentApprover, numberPhone,
@@ -159,15 +164,14 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
                     requestList.addRequest(resignationRequest);
 
                 } else if ("ลาป่วยหรือลากิจ".equalsIgnoreCase(requestType)) {
-                    String currentAddress = data[6];
-                    String leaveType = data[7];
-                    String fromDateLeave = data[8];
-                    String toDateLeave = data[9];
-                    String reason = data[10];
-                    String registeredCourses = data[11];
-                    String lastModifiedDate = data[12];
-                    List<String> statusLog = Arrays.asList(data[13].split("\\|"));
-                        SickLeaveRequest sickLeaveRequest = new SickLeaveRequest(timestamp, requestType, status, requester, currentApprover, numberPhone, currentAddress,
+                    String leaveType = data[6];
+                    String fromDateLeave = data[7];
+                    String toDateLeave = data[8];
+                    String reason = unescapeNewlines(data[9]);
+                    String registeredCourses = unescapeNewlines(data[10]);
+                    String lastModifiedDate = data[11];
+                    List<String> statusLog = Arrays.asList(data[12].split("\\|"));
+                    SickLeaveRequest sickLeaveRequest = new SickLeaveRequest(timestamp, requestType, status, requester, currentApprover, numberPhone,
                             leaveType, fromDateLeave, toDateLeave, reason, registeredCourses, lastModifiedDate, statusLog, approverList);
                     requestList.addRequest(sickLeaveRequest);
                 }
@@ -177,4 +181,9 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
         }
         return requestList;
     }
+
+    private String unescapeNewlines(String input) {
+        return input != null ? input.replace("\\n", "\n") : "";
+    }
+
 }

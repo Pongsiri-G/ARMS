@@ -161,7 +161,7 @@
 }
 
 .table-row-cell:selected {
-	-fx-text-background-color: blue;
+	-fx-text-background-color: -fx-primary-color;
 	-fx-background-radius: 5px;
 	-fx-background-insets: 2px;
 }

@@ -5,8 +5,8 @@ import java.util.List;
 public class ResignationRequest extends Request{
     private String reason; // เหตุผลในการลาออก
 
-    public ResignationRequest(Student requester, String currentApprover, String numberPhone,String reason) {
-        super("ลาออก", requester, currentApprover, numberPhone);
+    public ResignationRequest(Student requester, String numberPhone,String reason) {
+        super("ลาออก", requester, numberPhone);
         this.reason = reason;
     }
 
