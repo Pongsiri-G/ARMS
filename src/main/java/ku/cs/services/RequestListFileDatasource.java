@@ -122,6 +122,7 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
+                if (data.length < 6) { continue; }
                 String timestamp = data[0];
                 String requestType = data[1];
                 String status = data[2];
