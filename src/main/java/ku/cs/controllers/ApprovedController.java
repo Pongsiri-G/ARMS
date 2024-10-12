@@ -1,5 +1,6 @@
 package ku.cs.controllers;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -42,24 +43,21 @@ public class ApprovedController {
     private void showTable(RequestList requestList) {
         //System.out.println("Showing table with " + requestList.getRequests().size() + " requests");
         TableColumn<Request, String> nameColumn = new TableColumn<>("ชื่อผู้ใช้");
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        nameColumn.setCellValueFactory(cellData -> {
+            return new SimpleStringProperty(cellData.getValue().getRequester().getUsername());
+        });
 
-        TableColumn<Request, String> facultyColumn = new TableColumn<>("คณะ");
-        facultyColumn.setCellValueFactory(new PropertyValueFactory<>("faculty"));
-
-        TableColumn<Request, String> departmentColumn = new TableColumn<>("ภาควิชา");
-        departmentColumn.setCellValueFactory(new PropertyValueFactory<>("department"));
+        TableColumn<Request, String> timeColumn = new TableColumn<>("เวลาที่อนุมัติ");
+        timeColumn.setCellValueFactory(new PropertyValueFactory<>("timeStamp"));
 
         approvedTableView.getColumns().clear();
         approvedTableView.getColumns().add(nameColumn);
-        approvedTableView.getColumns().add(facultyColumn);
-        approvedTableView.getColumns().add(departmentColumn);
+        approvedTableView.getColumns().add(timeColumn);
 
         approvedTableView.getItems().clear();
 
-        // เพิ่มเฉพาะ requests ที่มีสถานะ "คำร้องถูกอนุมัติ"
         for (Request request: requestList.getRequests()) {
-            if (request.getStatus().equals("คำร้องถูกอนุมัติ")) {
+            if (request.getStatus().equals("เสร็จสิ้น")) {
                 approvedTableView.getItems().add(request);
             }
         }
@@ -67,7 +65,7 @@ public class ApprovedController {
 
     private void showRequest(RequestList requestList) {
         allRequestLabel.setText(String.format("%d", requestList.getAllRequestCount()));
-        approvedLabel.setText(String.format("%d", requestList.getAllRequestCount()));
+        approvedLabel.setText(String.format("%d", requestList.getApprovedRequestsCount()));
     }
 
     private void showTotalUsers(UserList userList) {

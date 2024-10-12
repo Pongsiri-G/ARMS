@@ -68,7 +68,6 @@ public class UserListFileDatasourceTest {
         studentList.add(new Student("ณัฐวดี ทรัพย์ธารา","วิศวกรรมศาสตร์", "วิศวกรรมคอมพิวเตอร์", "b6625500003", "studentmail4@ku.th", new Advisor("ปาณิตา พันธ์ภูผา")));
 
         datasource.writeData(studentList);
-
     }
 
     public void loadDepartmentOfficer(){

@@ -28,7 +28,7 @@ public class AdminController {
     public void initialize() {
         datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
         userList = datasource.readData();
-        requestListDatasource = new RequestListFileDatasource("data/test", "all-request.csv", userList);
+        requestListDatasource = new RequestListFileDatasource("data/test", "requestlist.csv", userList);
 
         requestList = requestListDatasource.readData();
         showTable(userList);

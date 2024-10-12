@@ -19,7 +19,7 @@ public class RequestListFileDatasourceTest {
 
     public void runTests() {
         setup();
-        //loadRequestList();
+        loadRequestList();
     }
 
     private void setup() {

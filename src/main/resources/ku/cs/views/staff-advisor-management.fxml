@@ -305,7 +305,7 @@
                               <TextField fx:id="editUsernameTextField" layoutX="205.0" layoutY="205.0" prefHeight="48.0" prefWidth="286.0" promptText="กรอกชื่อผู้ใช้ระบบ..." />
                               <TextField fx:id="editPasswordTextField" layoutX="176.0" layoutY="284.0" prefHeight="48.0" prefWidth="319.0" promptText="กรอกรหัสผ่านเริ่มต้น..." />
                               <TextField fx:id="editIdTextField" layoutX="216.0" layoutY="502.0" prefHeight="48.0" prefWidth="285.0" promptText="กรอกรหัสประจำตัว..." />
-                              <Label layoutX="63.0" layoutY="131.0" prefHeight="39.0" prefWidth="49.0" text="ชื่อ :">
+                              <Label layoutX="62.0" layoutY="131.0" prefHeight="39.0" prefWidth="49.0" text="ชื่อ :">
                                  <font>
                                     <Font size="24.0" />
                                  </font>

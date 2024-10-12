@@ -1,5 +1,6 @@
 package ku.cs.controllers;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.TableColumn;
@@ -43,21 +44,19 @@ public class AllRequestController {
     private void showTable(RequestList requestList) {
         //System.out.println("Showing table with " + requestList.getRequests().size() + " requests");
         TableColumn<Request, String> nameColumn = new TableColumn<>("ชื่อผู้ใช้");
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        nameColumn.setCellValueFactory(cellData -> {
+           return new SimpleStringProperty(cellData.getValue().getRequester().getUsername());
+        });
 
-        TableColumn<Request, String> facultyColumn = new TableColumn<>("คณะ");
-        facultyColumn.setCellValueFactory(new PropertyValueFactory<>("faculty"));
-
-        TableColumn<Request, String> departmentColumn = new TableColumn<>("ภาควิชา");
-        departmentColumn.setCellValueFactory(new PropertyValueFactory<>("department"));
+        TableColumn<Request, String> requestTypeColumn = new TableColumn<>("ประเภทคำร้อง");
+        requestTypeColumn.setCellValueFactory(new PropertyValueFactory<>("requestType"));
 
         TableColumn<Request, String> statusColumn = new TableColumn<>("สถานะคำร้อง");
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         allRequestTableView.getColumns().clear();
         allRequestTableView.getColumns().add(nameColumn);
-        allRequestTableView.getColumns().add(facultyColumn);
-        allRequestTableView.getColumns().add(departmentColumn);
+        allRequestTableView.getColumns().add(requestTypeColumn);
         allRequestTableView.getColumns().add(statusColumn);
 
         allRequestTableView.getItems().clear();
