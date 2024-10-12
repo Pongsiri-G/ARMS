@@ -61,7 +61,7 @@ public class FacDepListFileDatascource implements Datasource<FacultyList> {
                 if (line.equals("")) continue;
 
                 // split ", "
-                String[] data = line.split(", ");
+                String[] data = line.split(",");
 
                 // Read data from index and manage type
                 String fac = data[0].trim();
@@ -100,7 +100,7 @@ public class FacDepListFileDatascource implements Datasource<FacultyList> {
             for (Faculty fac : faculties.getFaculties()) {
                 // Put เพิ่ม ลูปอีกชั้นเพื่อ ดึงค่า Department ทั้งหมดที่อยู่ใน Faculty นั้น (ไม้ต้องใช้  fac.getDepartmentName() + ", " + fac.getDepartmentId() แล้ว)
                 for (Department dep : fac.getDepartments()) {
-                    String line = fac.getFacultyName() + ", " + fac.getFacultyId() + ", " + dep.getDepartmentName() + ", " + dep.getDepartmentID();
+                    String line = fac.getFacultyName() + "," + fac.getFacultyId() + "," + dep.getDepartmentName() + "," + dep.getDepartmentID();
                     bw.append(line);
                     bw.append("\n");
                 }

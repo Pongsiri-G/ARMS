@@ -12,21 +12,41 @@ import ku.cs.services.AdvOffListFileDatasource;
 import ku.cs.services.Datasource;
 import ku.cs.services.FXRouter;
 import ku.cs.services.UserListFileDatasource;
+import ku.cs.services.FacDepListFileDatascource;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class OfficerAndAdvisorManagementController {
+    @FXML private ChoiceBox<String> roleChoiceBox;
+    private String[] role = {"อาจารย์ที่ปรึกษา", "เจ้าหน้าที่คณะ", "เจ้าหน้าที่ภาควิชา"};
     @FXML private StackPane addStackPane;
     @FXML private StackPane editStackPane;
+    @FXML private StackPane advisorStackPane;
+    @FXML private StackPane facultyOfficerStackPane;
+    @FXML private StackPane departmentOfficerStackPane;
     @FXML private Label editErrorMessageLabel;
-    @FXML private Label addErrorMessageLabel;
-    @FXML private TextField addNameTextField;
-    @FXML private TextField addUsernameTextField;
-    @FXML private TextField addPasswordTextField;
-    @FXML private TextField addFacultyTextField;
-    @FXML private TextField addDepartmentTextField;
-    @FXML private TextField addIdTextField;
+    @FXML private Label advisorErrorMessageLabel;
+    @FXML private Label facultyOfficerErrorMessageLabel;
+    @FXML private Label departmentOfficerErrorMessageLabel;
+    @FXML private Label editIdLabel;
+    @FXML private Label editDepartmentLabel;
+    @FXML private Label editRoleLabel;
+    @FXML private TextField advisorNameTextField;
+    @FXML private TextField advisorUsernameTextField;
+    @FXML private TextField advisorPasswordTextField;
+    @FXML private TextField advisorFacultyTextField;
+    @FXML private TextField advisorDepartmentTextField;
+    @FXML private TextField advisorIdTextField;
+    @FXML private TextField facultyOfficerNameTextField;
+    @FXML private TextField facultyOfficerUsernameTextField;
+    @FXML private TextField facultyOfficerPasswordTextField;
+    @FXML private TextField facultyOfficerFacultyTextField;
+    @FXML private TextField departmentOfficerNameTextField;
+    @FXML private TextField departmentOfficerUsernameTextField;
+    @FXML private TextField departmentOfficerPasswordTextField;
+    @FXML private TextField departmentOfficerFacultyTextField;
+    @FXML private TextField departmentOfficerDepartmentTextField;
     @FXML private TextField editNameTextField;
     @FXML private TextField editUsernameTextField;
     @FXML private TextField editPasswordTextField;
@@ -34,17 +54,31 @@ public class OfficerAndAdvisorManagementController {
     @FXML private TextField editDepartmentTextField;
     @FXML private TextField editIdTextField;
     @FXML private TableView<User> officerAdvisorTableView;
+    private FacultyList facultyList;
     private UserList userList;
     private Datasource<UserList> datasource;
+    private Datasource<FacultyList> facultyDatasource;
 
     @FXML
     public void initialize() {
-        addErrorMessageLabel.setText("");
+        roleChoiceBox.getItems().addAll(role);
+        roleChoiceBox.setValue("อาจารย์ที่ปรึกษา");
+        advisorStackPane.setVisible(true);
+        roleChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            selectRole(newValue);
+        });
+        advisorErrorMessageLabel.setText("");
+        facultyOfficerErrorMessageLabel.setText("");
+        departmentOfficerErrorMessageLabel.setText("");
         editErrorMessageLabel.setText("");
         addStackPane.setVisible(false);
+        facultyOfficerStackPane.setVisible(false);
+        departmentOfficerStackPane.setVisible(false);
         editStackPane.setVisible(false);
         datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
         userList = datasource.readData();
+        facultyDatasource = new FacDepListFileDatascource("data/test", "facdeplist.csv");
+        facultyList = facultyDatasource.readData();
         showTable(userList);
 
         officerAdvisorTableView.setOnMouseClicked(event -> {
@@ -61,28 +95,40 @@ public class OfficerAndAdvisorManagementController {
         editStackPane.setVisible(true);
         if (user instanceof Advisor) {
             Advisor advisor = (Advisor) user;
+            editRoleLabel.setText("แก้ไขอาจารย์ที่ปรึกษา");
             editNameTextField.setText(advisor.getName());
             editUsernameTextField.setText(advisor.getUsername());
             editPasswordTextField.setText(advisor.getPassword());
+            editDepartmentTextField.setVisible(true);
+            editIdTextField.setVisible(true);
+            editDepartmentLabel.setVisible(true);
+            editIdLabel.setVisible(true);
             editFacultyTextField.setText(advisor.getFaculty().getFacultyName());
             editDepartmentTextField.setText(advisor.getDepartment().getDepartmentName());
             editIdTextField.setText(advisor.getAdvisorID());
         } else if (user instanceof  FacultyOfficer) {
             FacultyOfficer facultyOfficer = (FacultyOfficer) user;
+            editRoleLabel.setText("แก้ไขเจ้าหน้าที่คณะ");
             editNameTextField.setText(facultyOfficer.getName());
             editUsernameTextField.setText(facultyOfficer.getUsername());
             editPasswordTextField.setText(facultyOfficer.getPassword());
             editFacultyTextField.setText(facultyOfficer.getFaculty().getFacultyName());
-            editDepartmentTextField.setText("-");
-            editIdTextField.setText("-");
+            editDepartmentTextField.setVisible(false);
+            editIdTextField.setVisible(false);
+            editDepartmentLabel.setVisible(false);
+            editIdLabel.setVisible(false);
         } else if (user instanceof  DepartmentOfficer) {
             DepartmentOfficer departmentOfficer = (DepartmentOfficer) user;
+            editRoleLabel.setText("แก้ไขเจ้าหน้าที่ภาควิชา");
             editNameTextField.setText(departmentOfficer.getName());
             editUsernameTextField.setText(departmentOfficer.getUsername());
             editPasswordTextField.setText(departmentOfficer.getPassword());
             editFacultyTextField.setText(departmentOfficer.getFaculty().getFacultyName());
             editDepartmentTextField.setText(departmentOfficer.getDepartment().getDepartmentName());
-            editIdTextField.setText("-");
+            editDepartmentTextField.setVisible(true);
+            editIdTextField.setVisible(false);
+            editDepartmentLabel.setVisible(true);
+            editIdLabel.setVisible(false);
         }
     }
 
@@ -212,6 +258,22 @@ public class OfficerAndAdvisorManagementController {
         idColumn.setPrefWidth(180);
     }
 
+    public void selectRole(String role) {
+        if (role.equals("อาจารย์ที่ปรึกษา")) {
+            advisorStackPane.setVisible(true);
+            facultyOfficerStackPane.setVisible(false);
+            departmentOfficerStackPane.setVisible(false);
+        } else if (role.equals("เจ้าหน้าที่คณะ")) {
+            facultyOfficerStackPane.setVisible(true);
+            advisorStackPane.setVisible(false);
+            departmentOfficerStackPane.setVisible(false);
+        } else if (role.equals("เจ้าหน้าที่ภาควิชา")) {
+            departmentOfficerStackPane.setVisible(true);
+            advisorStackPane.setVisible(false);
+            facultyOfficerStackPane.setVisible(false);
+        }
+    }
+
     @FXML
     public void onAddButtonClick() {
         addStackPane.setVisible(true);
@@ -226,20 +288,60 @@ public class OfficerAndAdvisorManagementController {
         Department department = new Department(editDepartmentTextField.getText().trim());
         String id = editIdTextField.getText();
 
-        if (name.trim().isEmpty() || username.trim().isEmpty() || password.trim().isEmpty() || id.trim().isEmpty() || name == null || username == null || password == null || faculty == null || department == null || id == null) {
-            addErrorMessageLabel.setText("กรุณากรอกข้อมูลให้ครบถ้วน");
-            return;
-        }
-
         User selectedUser = officerAdvisorTableView.getSelectionModel().getSelectedItem();
         if (selectedUser instanceof FacultyOfficer) {
             FacultyOfficer facOff = (FacultyOfficer) selectedUser;
+            if (name.trim().isEmpty() || username.trim().isEmpty() || password.trim().isEmpty() || faculty.getFacultyName().trim().isEmpty() || name == null || username == null || password == null || faculty == null) {
+                editErrorMessageLabel.setLayoutY(440);
+                editErrorMessageLabel.setText("กรุณากรอกข้อมูลให้ครบถ้วน");
+                return;
+            }
+
+            if (userList.findUserByUsername(username) != null && !(username.equals(facOff.getUsername()))) {
+                editErrorMessageLabel.setLayoutY(440);
+                editErrorMessageLabel.setText("ชื่อผู้ใช้นี้มีอยู่ในระบบแล้ว โปรดใช้ชื่อใหม่");
+                return;
+            }
+
+            Faculty validateFaculty = facultyList.findFacultyByName(faculty.getFacultyName());
+            if (validateFaculty == null) {
+                editErrorMessageLabel.setLayoutY(440);
+                editErrorMessageLabel.setText("โปรดกรอกคณะที่มีอยู่ในระบบ");
+                return;
+            }
+
             facOff.setName(name);
             facOff.setUsername(username);
             facOff.setPassword(password, false);
             facOff.setFaculty(faculty);
         } else if (selectedUser instanceof DepartmentOfficer) {
             DepartmentOfficer depOff = (DepartmentOfficer) selectedUser;
+            if (name.trim().isEmpty() || username.trim().isEmpty() || password.trim().isEmpty() || faculty.getFacultyName().trim().isEmpty() || department.getDepartmentName().trim().isEmpty() || name == null || username == null || password == null || faculty == null || department == null) {
+                editErrorMessageLabel.setLayoutY(505);
+                editErrorMessageLabel.setText("กรุณากรอกข้อมูลให้ครบถ้วน");
+                return;
+            }
+
+            if (userList.findUserByUsername(username) != null && !(username.equals(depOff.getUsername()))) {
+                editErrorMessageLabel.setLayoutY(505);
+                editErrorMessageLabel.setText("ชื่อผู้ใช้นี้มีอยู่ในระบบแล้ว โปรดใช้ชื่อใหม่");
+                return;
+            }
+
+            Faculty validateFaculty = facultyList.findFacultyByName(faculty.getFacultyName());
+            if (validateFaculty == null) {
+                editErrorMessageLabel.setLayoutY(505);
+                editErrorMessageLabel.setText("โปรดกรอกคณะที่มีอยู่ในระบบ");
+                return;
+            }
+
+            Department validateDepartment = facultyList.findDepartmentByName(department.getDepartmentName());
+            if (validateDepartment == null) {
+                editErrorMessageLabel.setLayoutY(505);
+                editErrorMessageLabel.setText("โปรดกรอกคภาควิชาที่มีอยู่ในระบบ");
+                return;
+            }
+
             depOff.setName(name);
             depOff.setUsername(username);
             depOff.setPassword(password, false);
@@ -247,6 +349,31 @@ public class OfficerAndAdvisorManagementController {
             depOff.setDepartment(department);
         } else if (selectedUser instanceof Advisor) {
             Advisor advisor = (Advisor) selectedUser;
+            if (name.trim().isEmpty() || username.trim().isEmpty() || password.trim().isEmpty() || faculty.getFacultyName().trim().isEmpty() || department.getDepartmentName().trim().isEmpty() || id.trim().isEmpty() || name == null || username == null || password == null || faculty == null || department == null || id == null) {
+                editErrorMessageLabel.setLayoutY(580);
+                editErrorMessageLabel.setText("กรุณากรอกข้อมูลให้ครบถ้วน");
+                return;
+            }
+
+            if (userList.findUserByUsername(username) != null && !(username.equals(advisor.getUsername()))) {
+                editErrorMessageLabel.setLayoutY(580);
+                editErrorMessageLabel.setText("ชื่อผู้ใช้นี้มีอยู่ในระบบแล้ว โปรดใช้ชื่อใหม่");
+                return;
+            }
+
+            Faculty validateFaculty = facultyList.findFacultyByName(faculty.getFacultyName());
+            if (validateFaculty == null) {
+                editErrorMessageLabel.setLayoutY(580);
+                editErrorMessageLabel.setText("โปรดกรอกคณะที่มีอยู่ในระบบ");
+                return;
+            }
+
+            Department validateDepartment = facultyList.findDepartmentByName(department.getDepartmentName());
+            if (validateDepartment == null) {
+                editErrorMessageLabel.setText("โปรดกรอกคภาควิชาที่มีอยู่ในระบบ");
+                return;
+            }
+
             advisor.setName(name);
             advisor.setUsername(username);
             advisor.setPassword(password, false);
@@ -262,61 +389,117 @@ public class OfficerAndAdvisorManagementController {
 
     @FXML
     public void onAddConfirmClick() {
-        String name = addNameTextField.getText();
-        String username = addUsernameTextField.getText();
-        String password = addPasswordTextField.getText();
-        Faculty faculty = new Faculty(addFacultyTextField.getText().trim());
-        Department department = new Department(addDepartmentTextField.getText().trim());
-        String id = addIdTextField.getText();
+        String selectedRole = roleChoiceBox.getValue();
+        if (selectedRole.equals("อาจารย์ที่ปรึกษา")) {
+            String name = advisorNameTextField.getText().trim();
+            String username = advisorUsernameTextField.getText().trim();
+            String password = advisorPasswordTextField.getText().trim();
+            String facultyName = advisorFacultyTextField.getText().trim();
+            String departmentName = advisorDepartmentTextField.getText().trim();
+            String id = advisorIdTextField.getText().trim();
 
-        if (name.trim().isEmpty() || username.trim().isEmpty() || password.trim().isEmpty() || id.trim().isEmpty() || name == null || username == null || password == null || faculty == null || department == null || id == null) {
-            addErrorMessageLabel.setText("กรุณากรอกข้อมูลให้ครบถ้วน");
-            return;
-        }
+            if (name.isEmpty() || username.isEmpty() || password.isEmpty() || id.isEmpty() || facultyName.isEmpty() || departmentName.isEmpty()) {
+                advisorErrorMessageLabel.setText("กรุณากรอกข้อมูลให้ครบถ้วน");
+                return;
+            }
 
-        boolean isAdvisor = !id.equals("-");
-        boolean isFacultyOfficer = id.equals("-") && department.equals("-");
-        boolean isDepartmentOfficer = id.equals("-") && !department.equals("-");
+            if (userList.findUserByUsername(username) != null) {
+                advisorErrorMessageLabel.setText("ชื่อผู้ใช้นี้มีอยู่ในระบบแล้ว โปรดใช้ชื่อใหม่");
+                return;
+            }
 
-        if (userList.findUserByUsername(username) != null) {
-            addErrorMessageLabel.setText("ชื่อผู้ใช้นี้มีอยู่ในระบบแล้ว โปรดใช้ชื่อใหม่");
-            return;
-        }
+            Faculty faculty = facultyList.findFacultyByName(facultyName);
+            if (faculty == null) {
+                advisorErrorMessageLabel.setText("โปรดกรอกคณะที่มีอยู่ในระบบ");
+                return;
+            }
 
-        User newUser = null;
-        if (isAdvisor) {
+            Department department = facultyList.findDepartmentByName(departmentName);
+            if (department == null) {
+                advisorErrorMessageLabel.setText("โปรดกรอกภาควิชาที่มีอยู่ในระบบ");
+                return;
+            }
+
             Advisor advisor = new Advisor(name, username, password, faculty, department, id);
-            newUser = advisor;
-        } else if (isFacultyOfficer) {
-            FacultyOfficer facultyOfficer = new FacultyOfficer(username, password, name, faculty, false, false);
-            newUser = facultyOfficer;
-        } else if (isDepartmentOfficer) {
-            DepartmentOfficer departmentOfficer = new DepartmentOfficer(username, password, name, faculty, department, false, false);
-            newUser = departmentOfficer;
-        }
+            userList.addUser(advisor);
+            advisorNameTextField.setText("");
+            advisorUsernameTextField.setText("");
+            advisorPasswordTextField.setText("");
+            advisorFacultyTextField.setText("");
+            advisorDepartmentTextField.setText("");
+            advisorIdTextField.setText("");
+            advisorErrorMessageLabel.setText(""); // ล้างข้อความผิดพลาดหลังจากเพิ่มสำเร็จ
+        } else if (selectedRole.equals("เจ้าหน้าที่คณะ")) {
+            String name = facultyOfficerNameTextField.getText().trim();
+            String username = facultyOfficerUsernameTextField.getText().trim();
+            String password = facultyOfficerPasswordTextField.getText().trim();
+            String facultyName = facultyOfficerFacultyTextField.getText().trim();
 
-        if (newUser instanceof Advisor) {
-            userList.addUser((Advisor) newUser);
-        } else if (newUser instanceof FacultyOfficer) {
-            userList.addUser((FacultyOfficer) newUser);
-        } else if (newUser instanceof DepartmentOfficer) {
-            userList.addUser((DepartmentOfficer) newUser);
+            if (name.isEmpty() || username.isEmpty() || password.isEmpty() || facultyName.isEmpty()) {
+                facultyOfficerErrorMessageLabel.setText("กรุณากรอกข้อมูลให้ครบถ้วน");
+                return;
+            }
+
+            if (userList.findUserByUsername(username) != null) {
+                facultyOfficerErrorMessageLabel.setText("ชื่อผู้ใช้นี้มีอยู่ในระบบแล้ว โปรดใช้ชื่อใหม่");
+                return;
+            }
+
+            Faculty faculty = facultyList.findFacultyByName(facultyName);
+            if (faculty == null) {
+                facultyOfficerErrorMessageLabel.setText("โปรดกรอกคณะที่มีอยู่ในระบบ");
+                return;
+            }
+
+            FacultyOfficer facultyOfficer = new FacultyOfficer(username, password, name, faculty, false, false);
+            userList.addUser(facultyOfficer);
+            facultyOfficerNameTextField.setText("");
+            facultyOfficerUsernameTextField.setText("");
+            facultyOfficerPasswordTextField.setText("");
+            facultyOfficerFacultyTextField.setText("");
+            facultyOfficerErrorMessageLabel.setText("");
+        } else if (selectedRole.equals("เจ้าหน้าที่ภาควิชา")) {
+            String name = departmentOfficerNameTextField.getText().trim();
+            String username = departmentOfficerUsernameTextField.getText().trim();
+            String password = departmentOfficerPasswordTextField.getText().trim();
+            String facultyName = departmentOfficerFacultyTextField.getText().trim();
+            String departmentName = departmentOfficerDepartmentTextField.getText().trim();
+
+            if (name.isEmpty() || username.isEmpty() || password.isEmpty() || facultyName.isEmpty() || departmentName.isEmpty()) {
+                departmentOfficerErrorMessageLabel.setText("กรุณากรอกข้อมูลให้ครบถ้วน");
+                return;
+            }
+
+            if (userList.findUserByUsername(username) != null) {
+                departmentOfficerErrorMessageLabel.setText("ชื่อผู้ใช้นี้มีอยู่ในระบบแล้ว โปรดใช้ชื่อใหม่");
+                return;
+            }
+
+            Faculty faculty = facultyList.findFacultyByName(facultyName);
+            if (faculty == null) {
+                departmentOfficerErrorMessageLabel.setText("โปรดกรอกคณะที่มีอยู่ในระบบ");
+                return;
+            }
+
+            Department department = facultyList.findDepartmentByName(departmentName);
+            if (department == null) {
+                departmentOfficerErrorMessageLabel.setText("โปรดกรอกภาควิชาที่มีอยู่ในระบบ");
+                return;
+            }
+
+            DepartmentOfficer departmentOfficer = new DepartmentOfficer(username, password, name, faculty, department, false, false);
+            userList.addUser(departmentOfficer);
+            departmentOfficerNameTextField.setText("");
+            departmentOfficerUsernameTextField.setText("");
+            departmentOfficerPasswordTextField.setText("");
+            departmentOfficerFacultyTextField.setText("");
+            departmentOfficerDepartmentTextField.setText("");
+            departmentOfficerErrorMessageLabel.setText(""); // ล้างข้อความผิดพลาดหลังจากเพิ่มสำเร็จ
         }
 
         datasource.writeData(userList);
         addStackPane.setVisible(false);
         showTable(userList);
-        clearAddFields();
-    }
-
-    private void clearAddFields() {
-        addNameTextField.setText("");
-        addUsernameTextField.setText("");
-        addPasswordTextField.setText("");
-        addFacultyTextField.setText("");
-        addDepartmentTextField.setText("");
-        addIdTextField.setText("");
-        addErrorMessageLabel.setText("");
     }
 
     private void clearEditFields() {
@@ -337,8 +520,25 @@ public class OfficerAndAdvisorManagementController {
 
     @FXML
     public void onAddCancelButtonClick() {
+        advisorNameTextField.setText("");
+        advisorUsernameTextField.setText("");
+        advisorPasswordTextField.setText("");
+        advisorFacultyTextField.setText("");
+        advisorDepartmentTextField.setText("");
+        advisorIdTextField.setText("");
+        advisorErrorMessageLabel.setText("");
+        facultyOfficerNameTextField.setText("");
+        facultyOfficerUsernameTextField.setText("");
+        facultyOfficerPasswordTextField.setText("");
+        facultyOfficerFacultyTextField.setText("");
+        facultyOfficerErrorMessageLabel.setText("");
+        departmentOfficerNameTextField.setText("");
+        departmentOfficerUsernameTextField.setText("");
+        departmentOfficerPasswordTextField.setText("");
+        departmentOfficerFacultyTextField.setText("");
+        departmentOfficerDepartmentTextField.setText("");
+        departmentOfficerErrorMessageLabel.setText("");
         addStackPane.setVisible(false);
-        clearAddFields();
     }
 
     @FXML

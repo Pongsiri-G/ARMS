@@ -40,6 +40,18 @@ public class FacultyList {
         return null;
     }
 
+    //ping
+    public Department findDepartmentByName(String departmentName) {
+        for (Faculty faculty : faculties) {
+            for (Department department : faculty.getDepartments()) {
+                if (department.getDepartmentName().equals(departmentName)) {
+                    return department;
+                }
+            }
+        }
+        return null;
+    }
+
     public Faculty findFacultyByID(String facultyID) {
         for (Faculty faculty : faculties) {
             if (faculty.getFacultyId().equals(facultyID)) {
