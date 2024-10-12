@@ -51,10 +51,10 @@ public class UserListFileDatasourceTest {
     public void loadAdvisorList(){
         AdvOffListFileDatasource datasource = new AdvOffListFileDatasource("data/test", "advisorlist.csv");
         ArrayList<Advisor> advisorList = new ArrayList<>();
-        advisorList.add(new Advisor("Jak", "vXuO637", "พรรษา จักรพันธ์ประดิษฐ์", "วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "D12345", "advisor1@example.com", false, false, true));
-        advisorList.add(new Advisor("Tan", "168K5Hl", "ปวิน จันทรเกียรติ", "วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "D12346", "advisor2@example.com", false, false, true));
-        advisorList.add(new Advisor("Pang", "Ux5G63Y", "ปาณิตา พันธ์ภูผา", "วิศวกรรมศาตร์", "วิศวกรรมคอมพิวเตอร์", "A12347", "advisor3@example.com", false, false, true));
-        advisorList.add(new Advisor("Tai", "cN76A0S", "วันชัย เกียรติบวรสกุล", "วิศวกรรมศาตร์", "วิศวกรรมคอมพิวเตอร์", "A12348", "advisor4@example.com", false, false, true));
+        advisorList.add(new Advisor("Jak", "vXuO637", "พรรษา จักรพันธ์ประดิษฐ์", "วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "D12345", "advisor1@example.com", false, false));
+        advisorList.add(new Advisor("Tan", "168K5Hl", "ปวิน จันทรเกียรติ", "วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "D12346", "advisor2@example.com", false, false));
+        advisorList.add(new Advisor("Pang", "Ux5G63Y", "ปาณิตา พันธ์ภูผา", "วิศวกรรมศาสตร์", "วิศวกรรมคอมพิวเตอร์", "A12347", "advisor3@example.com", false, false));
+        advisorList.add(new Advisor("Tai", "cN76A0S", "วันชัย เกียรติบวรสกุล", "วิศวกรรมศาสตร์", "วิศวกรรมคอมพิวเตอร์", "A12348", "advisor4@example.com", false, false));
 
         datasource.writeData(advisorList);
     }
@@ -64,8 +64,8 @@ public class UserListFileDatasourceTest {
         ArrayList<Student> studentList = new ArrayList<>();
         studentList.add(new Student("อธิฐาน คมปราชญ์","วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "b6620400000", "studentmail1@ku.th", new Advisor("พรรษา จักรพันธ์ประดิษฐ์")));
         studentList.add(new Student("นิชกานต์ ประเสริฐโสม","วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "b6620400001", "studentmail2@ku.th", new Advisor("พรรษา จักรพันธ์ประดิษฐ์")));
-        studentList.add(new Student("กรีฑา พิพัฒนกุล","วิศวกรรมศาตร์", "วิศวกรรมคอมพิวเตอร์", "b6625500002", "studentmail3@ku.th", new Advisor("ปาณิตา พันธ์ภูผา")));
-        studentList.add(new Student("ณัฐวดี ทรัพย์ธารา","วิศวกรรมศาตร์", "วิศวกรรมคอมพิวเตอร์", "b6625500003", "studentmail4@ku.th", new Advisor("ปาณิตา พันธ์ภูผา")));
+        studentList.add(new Student("กรีฑา พิพัฒนกุล","วิศวกรรมศาสตร์", "วิศวกรรมคอมพิวเตอร์", "b6625500002", "studentmail3@ku.th", new Advisor("ปาณิตา พันธ์ภูผา")));
+        studentList.add(new Student("ณัฐวดี ทรัพย์ธารา","วิศวกรรมศาสตร์", "วิศวกรรมคอมพิวเตอร์", "b6625500003", "studentmail4@ku.th", new Advisor("ปาณิตา พันธ์ภูผา")));
 
         datasource.writeData(studentList);
 
@@ -76,8 +76,8 @@ public class UserListFileDatasourceTest {
         ArrayList<DepartmentOfficer> officers = new ArrayList<>();
         officers.add(new DepartmentOfficer("Rain", "cN76A0S", "อนันกร ปิติโอภาสพงศ์", "วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", false, false));
         officers.add(new DepartmentOfficer("Patrick", "fORP833", "จักร จันทรเกียรติ", "วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", false, false));
-        officers.add(new DepartmentOfficer("Pi", "2Ug6V7v", "กุลนิภา เมธากิจขจร", "วิศวกรรมศาตร์", "วิศวกรรมคอมพิวเตอร์", false, false));
-        officers.add(new DepartmentOfficer("Tuptim", "5E2r4px", "รัญชน์ นิธิธรรมรงค์", "วิศวกรรมศาตร์", "วิศวกรรมคอมพิวเตอร์", false, false));
+        officers.add(new DepartmentOfficer("Pi", "2Ug6V7v", "กุลนิภา เมธากิจขจร", "วิศวกรรมศาสตร์", "วิศวกรรมคอมพิวเตอร์", false, false));
+        officers.add(new DepartmentOfficer("Tuptim", "5E2r4px", "รัญชน์ นิธิธรรมรงค์", "วิศวกรรมศาสตร์", "วิศวกรรมคอมพิวเตอร์", false, false));
 
         datasource.writeData(officers);
     }
@@ -87,8 +87,8 @@ public class UserListFileDatasourceTest {
         ArrayList<FacultyOfficer> officers = new ArrayList<>();
         officers.add(new FacultyOfficer("Farm", "91gw9Wf", "โถมนะ สุพรรณภาคิน", "วิทยาศาสตร์", false, false));
         officers.add(new FacultyOfficer("Tame", "48eEO6X", "ปวัตร เจริญผลวัฒนา", "วิทยาศาสตร์", false, false));
-        officers.add(new FacultyOfficer("Earth", "8Y65Dbt", "ธนภัทร อุดมเดชรักษา", "วิศวกรรมศาตร์", false, false));
-        officers.add(new FacultyOfficer("At", "7V1v37r", "ตุลย์ กิตติชัยยากร", "วิศวกรรมศาตร์", false, false));
+        officers.add(new FacultyOfficer("Earth", "8Y65Dbt", "ธนภัทร อุดมเดชรักษา", "วิศวกรรมศาสตร์", false, false));
+        officers.add(new FacultyOfficer("At", "7V1v37r", "ตุลย์ กิตติชัยยากร", "วิศวกรรมศาสตร์", false, false));
 
         datasource.writeData(officers);
     }
@@ -99,7 +99,7 @@ public class UserListFileDatasourceTest {
         FacultyList facultyList = new FacultyList();
         // เพิ่มคณะ
         Faculty faculty1 = new Faculty("วิทยาศาสตร์", "01");
-        Faculty faculty2 = new Faculty("วิศวกรรมศาตร์", "02");
+        Faculty faculty2 = new Faculty("วิศวกรรมศาสตร์", "02");
         // เพิ่มสาขา
         Department department1 = new Department("วิทยาการคอมพิวเตอร์", "011");
         Department department2 = new Department("วิศวกรรมคอมพิวเตอร์", "022");

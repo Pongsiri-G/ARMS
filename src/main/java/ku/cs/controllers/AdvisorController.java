@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import ku.cs.models.*;
 import ku.cs.services.Datasource;
 import ku.cs.services.FXRouter;
@@ -26,10 +27,10 @@ public class AdvisorController{
 
     private ArrayList<Student> studentList;
     private StudentListFileDatasource datasource;
-    private User user;
     private UserList userList;
     private UserListFileDatasource datasources;
-    private Student student;
+    private Advisor advisor;
+
 
     @FXML
     protected void onButtonToAdvisor() {
@@ -56,7 +57,7 @@ public class AdvisorController{
         // เนื่องจากการส่งข้อมูลข้ามหน้าของเราเป็น การส่ง Username มาก็เลย Cast ให้มันเป็น String เเละหาใน UserList เเล้วให้ return Object นั้นมาเพื่อใช้ในการเเสดงข้อมูลขั้นต่อไป
         User user = userList.findUserByUsername((String) FXRouter.getData());
         showUserInfo(user);
-        Advisor advisor = (Advisor) user;
+        advisor = (Advisor) user;
 
         studentList = advisor.getDepartment().findStudentsByAdvisorName(advisor.getName());
 
@@ -66,12 +67,17 @@ public class AdvisorController{
             @Override
             public void changed(ObservableValue<? extends Student> observableValue, Student oldStudent, Student newStudent) {
                 try {
-                    FXRouter.goTo("advisor-nisit", newStudent);
+                    FXRouter.goTo("advisor-nisit", newStudent.getUsername());
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             }
         });
+    }
+
+    @FXML
+    void goToRequestNisit(MouseEvent event) throws IOException {
+        FXRouter.goTo("request-nisit", advisor.getUsername());
     }
 
     private void showUserInfo(User user) {
@@ -81,11 +87,6 @@ public class AdvisorController{
         departmentLabel.setText(advisor.getDepartment().getDepartmentName());
         emailLabel.setText(advisor.getAdvisorEmail());
     }
-    /*
-    private void showTable(StudentList students) {
-        studentListTable.getItems().clear();
-        studentListTable.getItems().addAll(students.getStudents());
-    }*/
 
     private void showTable(ArrayList<Student> students) {
         studentListTable.getItems().clear();

@@ -153,37 +153,13 @@ public class FacultyOfficerController {
         }
     }
 
-    public void loadRequests(){
-        requests = new ArrayList<>();
-        Request req1 = new Request("2024-09-26 10:15", "John Doe", "Pending", "Leave Request", "Requesting 2 weeks of vacation", "REQ001", "555-1234");
-        Request req2 = new Request("2024-09-25 09:45", "Jane Smith", "Pending", "Equipment Request", "Requesting new laptop for work", "REQ002", "555-5678");
-        Request req3 = new Request("2024-09-24 11:30", "Michael Brown", "Pending", "Expense Reimbursement", "Reimbursement for travel expenses", "REQ003", "555-2345");
-        Request req4 = new Request("2024-09-23 08:00", "Emily White", "Pending", "Training Request", "Requesting attendance at a conference", "REQ004", "555-8765");
-        Request req5 = new Request("2024-09-22 14:20", "Chris Green", "Pending", "Leave Request", "Requesting personal leave for medical reasons", "REQ005", "555-3456");
-        Request req6 = new Request("2024-09-21 16:45", "Anna Blue", "Pending", "Project Proposal", "Proposal for a new marketing campaign", "REQ006", "555-9876");
-        Request req7 = new Request("2024-09-20 13:10", "David Black", "Pending", "Budget Increase", "Requesting an increase in project budget", "REQ007", "555-4567");
-        Request req8 = new Request("2024-09-19 12:05", "Lisa Red", "Pending", "Salary Adjustment", "Request for salary review and adjustment", "REQ008", "555-5432");
-        Request req9 = new Request("2024-09-18 17:00", "Robert Silver", "Pending", "Job Transfer", "Request for transfer to a new department", "REQ009", "555-6789");
-        Request req10 = new Request("2024-09-17 15:30", "Sophia Gold", "Pending", "Remote Work Request", "Requesting remote work for 3 days a week", "REQ010", "555-7654");
 
-        requests.add(req1);
-        requests.add(req2);
-        requests.add(req3);
-        requests.add(req4);
-        requests.add(req5);
-        requests.add(req6);
-        requests.add(req7);
-        requests.add(req8);
-        requests.add(req9);
-        requests.add(req10);
-    }
 
     public void loadApprovers(){
         officer.loadRequestManage(approverDatasource.readData());
     }
 
     public void updateRequestTableView() {
-        loadRequests();
 
         // Set up the columns
         TableColumn<Request, String> typeColumn = new TableColumn<>("Type");

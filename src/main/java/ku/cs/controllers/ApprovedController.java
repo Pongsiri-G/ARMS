@@ -28,10 +28,11 @@ public class ApprovedController {
 
     @FXML
     public void initialize() {
-        datasource = new RequestListFileDatasource("data/test", "all-request.csv");
         userDatasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
-        requestList = datasource.readData();
         userList = userDatasource.readData();
+        datasource = new RequestListFileDatasource("data/test", "requestlist.csv", userList);
+        requestList = datasource.readData();
+
         showTable(requestList);
         showRequest(requestList);
         showTotalUsers(userList);
@@ -65,8 +66,8 @@ public class ApprovedController {
     }
 
     private void showRequest(RequestList requestList) {
-        allRequestLabel.setText(String.format("%d", requestList.getAllRequest()));
-        approvedLabel.setText(String.format("%d", requestList.getApprovedRequest()));
+        allRequestLabel.setText(String.format("%d", requestList.getAllRequestCount()));
+        approvedLabel.setText(String.format("%d", requestList.getAllRequestCount()));
     }
 
     private void showTotalUsers(UserList userList) {

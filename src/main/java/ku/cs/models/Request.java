@@ -2,64 +2,173 @@ package ku.cs.models;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Request {
-    private String timeStamp;
-    private String approveName;
-    private String status;
-    private String type;
-    private String text;
-    private String id;
-    private String numberPhone;
-    private String name;
-    private String faculty;
-    private String department;
+    private String timestamp; //วันเวลาที่คำข้อถูกสร้าง
+    private String lastModifiedDateTime; //วันเวลาที่คำขอถูกแก้ไขมากที่สุด
+    private String status; //สถานะคำร้อง (กำลังดำเนินการ ปฏิเสธ เสร็จสิ้น)
+    private String requestType; //ประเภทคำร้อง
+    private Student requester; //ผู้ยื่นคำร้อง (นิสิต)
+    private String currentApprover; //ผู้อนุมัติปัจจุบัน (อาจารย์ที่ปรึกษา, เจ้าหน้าที่ภาควิชา, เจ้าหน้าที่คณะ)
+    private String numberPhone; //เบอร์มือถือของผู้ยื่นคำร้อง
+    private List<String> statusLog; //เก็บประวัติการดำเนินการต่างๆข้องคำร้อง
+    private List<String> approverList; //เก็บรายการคนที่อนุมัติคำร้อง String (ชื่อคนอนุมัติ - ตำแหน่ง)
 
-    public Request(String timeStamp, String approveName, String status, String type, String text, String id, String numberPhone) {
-        this.timeStamp = timeStamp;
-        this.approveName = approveName;
-        this.status = status;
-        this.type = type;
-        this.text = text;
-        this.id = id;
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+    // Constructor for creating a new request, with automatic timestamps
+    public Request(String requestType, Student requester, String numberPhone) {
+        this.requestType = requestType;
+        this.timestamp = LocalDateTime.now().format(formatter); // Current time for new requests
+        this.lastModifiedDateTime = LocalDateTime.now().format(formatter);
+        this.statusLog = new ArrayList<>();
+        this.approverList = new ArrayList<>();
+        this.requester = requester;
+        this.currentApprover = "อาจารย์ที่ปรึกษา";
         this.numberPhone = numberPhone;
+        this.status = "กำลังดำเนินการ";
+        addStatusLog("ใบคำร้องใหม่");
     }
 
-    Request(String name, String faculty, String department, String status) {
-        this.name = name;
-        this.faculty = faculty;
-        this.department = department;
+    // Constructor สำหรับอ่านไฟล์จาก CSV
+    public Request(String timestamp, String requestType, String status, Student requester, String currentApprover, String numberPhone, String lastModifiedDateTime, List<String> statusLog, List<String> approverList) {
+        this.requestType = requestType;
+        this.timestamp = timestamp;
+        this.lastModifiedDateTime = lastModifiedDateTime;
+        this.statusLog = statusLog != null ? new ArrayList<>(statusLog) : new ArrayList<>();
+        this.approverList = approverList != null ? new ArrayList<>(approverList) : new ArrayList<>();
+        this.requester = requester;
+        this.currentApprover = currentApprover;
+        this.numberPhone = numberPhone;
         this.status = status;
     }
 
-    // เดี๋ยวค่อยเปลียน
-    public void setTimeStamp() {this.timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));}
-    public void setApproveName(String approveName) {this.approveName = approveName;}
-
-    public void changeStatus(String newStatus) {
-            this.status = newStatus;
+    //ดำเนินการคำร้อง (เรียกใช้จาก method นี้)
+    public void processRequest(String approver, String decision, String detail) {
+        if ("อนุมัติ".equalsIgnoreCase(decision)) {
+            handleApproval(approver);
+        } else if ("ปฏิเสธ".equalsIgnoreCase(decision)) {
+            if (detail == null || detail.trim().isEmpty()) {
+                throw new IllegalArgumentException("การปฏิเสธคำร้องต้องระบุเหตุผล");
+            }
+            handleRejection(detail);
+        } else if ("สิ้นสุด".equalsIgnoreCase(decision)) {
+            handleFinish(approver);
+        }
     }
 
-    public String getStatus() {return status;}
+    private void handleApproval(String approver) {
+        if ("อาจารย์ที่ปรึกษา".equalsIgnoreCase(this.currentApprover)) {
+            this.setCurrentApprover("เจ้าหน้าที่ภาควิชา");
+            this.addStatusLog("อนุมัติโดยอาจารย์ที่ปรึกษา");
+            this.addApprover(approver);
+        } else if ("เจ้าหน้าที่ภาควิชา".equalsIgnoreCase(this.currentApprover)) {
+            this.setCurrentApprover("เจ้าหน้าที่คณะ");
+            this.addStatusLog("อนุมัติโดยหัวหน้าภาควิชา");
+            this.addApprover(approver);
+        } else if ("เจ้าหน้าที่คณะ".equalsIgnoreCase(this.currentApprover)) {
+            this.addApprover(approver);
+            this.addStatusLog("อนุมัติโดยคณบดี");
+            this.setStatus("เสร็จสิ้น");
+        }
+    }
 
-    public String getType() {return timeStamp;}
+    private void handleRejection(String detail) {
+        if ("อาจารย์ที่ปรึกษา".equalsIgnoreCase(this.currentApprover)) {
+            this.setStatus("ปฏิเสธ");
+            this.addStatusLog("ปฏิเสธโดยอาจารย์ที่ปรึกษา\nบันทึกเหตุผล: " + detail);
+        } else if ("เจ้าหน้าที่ภาควิชา".equalsIgnoreCase(this.currentApprover)) {
+            this.setStatus("ปฏิเสธ");
+            this.addStatusLog("ปฏิเสธโดยหัวหน้าภาควิชา\nบันทึกเหตุผล: " + detail);
+        } else if ("เจ้าหน้าที่คณะ".equalsIgnoreCase(this.currentApprover)) {
+            this.setStatus("ปฏิเสธ");
+            this.addStatusLog("ปฏิเสธโดยคณบดี\nบันทึกเหตุผล: " + detail);
+        }
+    }
 
-    public String getApproveName() {return approveName;}
+    private void handleFinish(String approver) {
+        if ("เจ้าหน้าที่ภาควิชา".equalsIgnoreCase(this.currentApprover)) {
+            this.addApprover(approver);
+            this.setStatus("เสร็จสิ้น");
+            this.addStatusLog("อนุมัติโดยหัวหน้าภาควิชา");
+        }
+    }
 
-    public String getTimeStamp() {return timeStamp;}
+    // Getters
+    public String getRequestType() {
+        return requestType;
+    }
 
-    public String getName() {return name;}
+    public String getTimestamp() {
+        return timestamp;
+    }
 
-    public String getFaculty() {return faculty;}
+    public List<String> getStatusLog() {
+        return statusLog;
+    }
 
-    public String getDepartment() {return department;}
+    //ใช้สำหรับในการดึงไปแสดงในหน้า TableView
+    public String getRecentStatusLog() {
+        if (statusLog.isEmpty()) {
+            return null;
+        }
 
-    public String getText() {return text;}
+        for (int i = statusLog.size() - 1; i >= 0; i--) {
+            String lastLog = statusLog.get(i);
+            String[] parts = lastLog.split("\n");
 
-    public String getId() {return id;}
+            for (String part : parts) {
+                if (!part.contains("บันทึกเหตุผล")) {
+                    String[] logMessage = part.split(" - ", 2);
+                    return logMessage.length == 2 ? logMessage[1].trim() : logMessage[0].trim();
+                }
+            }
+        }
 
-    public String getNumberPhone() {return numberPhone;}
+        return null;
+    }
 
-    public void setStatus(String newStatus) { status = newStatus;}
+    public String getStatus() {
+        return status;
+    }
 
+    public Student getRequester() {
+        return requester;
+    }
+
+    public String getLastModifiedDateTime() {
+        return lastModifiedDateTime;
+    }
+
+    public String getCurrentApprover() {
+        return currentApprover;
+    }
+
+    public String getNumberPhone() {
+        return numberPhone;
+    }
+
+    public List<String> getApproverList(){
+        return approverList;
+    }
+
+    public void addApprover(String approver) {
+        approverList.add(approver);
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setCurrentApprover(String currentApprover) {
+        this.currentApprover = currentApprover;
+    }
+
+    public void addStatusLog(String status) {
+        String logTime = LocalDateTime.now().format(formatter);
+        this.lastModifiedDateTime = logTime;
+        statusLog.add(logTime + " - " + status);
+    }
 }
