@@ -1,6 +1,9 @@
 package ku.cs.controllers;
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -9,15 +12,19 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import ku.cs.models.*;
 import ku.cs.services.FXRouter;
 import ku.cs.services.RequestHandlingOfficersDataSource;
+import ku.cs.services.RequestListFileDatasource;
 import ku.cs.services.UserListFileDatasource;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class DepartmentOfficerController {
@@ -123,6 +130,8 @@ public class DepartmentOfficerController {
     UserListFileDatasource datasource;
     UserList userList;
     ArrayList<Request> requests;
+    RequestListFileDatasource  requestDatasource;
+    RequestList requestList;
     RequestHandlingOfficer approverToEdit;
     ArrayList<Advisor> advisors;
     ArrayList<Student> students;
@@ -134,6 +143,7 @@ public class DepartmentOfficerController {
     public void initialize() {
         initializeDataSources();
         loadData();
+        loadRequests();
         loadApprovers();
         setupOfficerInfo();
         switchToRequestScene();
@@ -143,6 +153,21 @@ public class DepartmentOfficerController {
         nameLabel.setText(officer.getName());
         userNameLabel.setText(officer.getUsername());
         roleLabel.setText("เจ้าหน้าที่ภาควิชา" + officer.getDepartment().getDepartmentName());
+        //profilePicture
+        setProfilePicture(officer.getProfilePicturePath());
+    }
+
+    private void setProfilePicture(String profilePath) {
+        try {
+            // โหลดรูปจาก profilePath
+            Image profileImage = new Image("file:" + profilePath);
+
+            profilePicture.setFill(new ImagePattern(profileImage));
+
+        } catch (Exception e) {
+            System.out.println("Error loading profile image: " + e.getMessage());
+            profilePicture.setFill(Color.GRAY);
+        }
     }
 
     private void initializeDataSources() {
@@ -153,8 +178,10 @@ public class DepartmentOfficerController {
                 "departmentofficerlist.csv",
                 "facdeplist.csv");
         userList = datasource.readData();
+        requestDatasource = new RequestListFileDatasource("data/test", "requestlist.csv", userList);
+        requestList = requestDatasource.readData();
         officer = (DepartmentOfficer) userList.findUserByUsername((String) FXRouter.getData());
-        //officer = userList.test();
+        requests = officer.getRequestsByDepartment(requestList);
         advisors = officer.getDepartment().getAdvisors();
         students = officer.getDepartment().getStudents();
         approverDatasource = new RequestHandlingOfficersDataSource("data/approver", officer.getDepartment().getDepartmentName() + "-approver.csv");
@@ -163,9 +190,13 @@ public class DepartmentOfficerController {
     public void loadData() {
         userList = datasource.readData();
         officer = (DepartmentOfficer) userList.findUserByUsername(officer.getUsername());
-        //officer = userList.test();
         advisors = officer.getDepartment().getAdvisors();
         students = officer.getDepartment().getStudents();
+    }
+
+    public void loadRequests(){
+        requestList = requestDatasource.readData();
+        requests = officer.getRequestsByDepartment(requestList);
     }
 
 
@@ -234,6 +265,7 @@ public class DepartmentOfficerController {
         errorManageStudentLabel.setText("");
         if (studentToEdit != null){
             //studentImage.setImage(new Image(studentToEdit.getProfilePicturePath()));
+            studentImage.setImage(new Image("file:" + studentToEdit.getProfilePicturePath()));
             studentIDTextField.setText(studentToEdit.getStudentID());
             studentNameTextField.setText(studentToEdit.getName().split(" ")[0]);
             studentLastNameTextField.setText(studentToEdit.getName().split(" ")[1]);
@@ -242,7 +274,7 @@ public class DepartmentOfficerController {
             studentDepartmentLabel.setText("ภาควิชา: " + studentToEdit.getEnrolledDepartment().getDepartmentName());
             if (studentToEdit.getStudentAdvisor() != null){
                 studentSelectAdvisorMenuBar.setText(studentToEdit.getStudentAdvisor().getName());
-                studentAdvisorLabel.setText(studentToEdit.getStudentAdvisor().getName());
+                studentAdvisorLabel.setText("อาจารย์ที่ปรึกษา: " + studentToEdit.getStudentAdvisor().getName());
             } else {
                 studentSelectAdvisorMenuBar.setText("เลือกอาจารย์ที่ปรึกษา");
                 studentAdvisorLabel.setText("ยังไม่กำหนดอาจารย์ที่ปรึกษา");
@@ -250,6 +282,7 @@ public class DepartmentOfficerController {
         } else{
             studentSelectAdvisorMenuBar.setText("เลือกอาจารย์ที่ปรึกษา");
             //studentImage.setImage(null);
+            studentImage.setImage(new Image("file:" + "src/main/resources/images/user-svgrepo-com.png"));
             studentIDTextField.clear();
             studentNameTextField.clear();
             studentLastNameTextField.clear();
@@ -261,34 +294,81 @@ public class DepartmentOfficerController {
         }
     }
 
+
     public void loadApprovers(){
         officer.loadRequestManage(approverDatasource.readData());
     }
 
     public void updateRequestTableView() {
+        loadApprovers();
 
         // Set up the columns
-        TableColumn<Request, String> typeColumn = new TableColumn<>("Type");
-        typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+        TableColumn<Request, String> typeColumn = new TableColumn<>("ประเภทคำร้อง");
+        typeColumn.setCellValueFactory(new PropertyValueFactory<>("requestType")); // รับประเภทคำร้องจาก Request โดยตรง
+        typeColumn.setMinWidth(290);
 
-        TableColumn<Request, String> approverColumn = new TableColumn<>("Approver By");
-        approverColumn.setCellValueFactory(new PropertyValueFactory<>("approveName"));
+        TableColumn<Request, String> nameColumn = new TableColumn<>("ชื่อ-นามสกุล");
+        nameColumn.setCellValueFactory(cellData -> {
+            Student student = cellData.getValue().getRequester();
+            return new SimpleStringProperty(student.getName()); // ดึงชื่อ-นามสกุลจากที่สิตที่สร้างคำร้อง
+        });
+        nameColumn.setMinWidth(290);
 
-        TableColumn<Request, String> idColumn = new TableColumn<>("ID");
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        TableColumn<Request, String> idColumn = new TableColumn<>("รหัสนิสิต");
+        idColumn.setCellValueFactory(cellData -> {
+            Student student = cellData.getValue().getRequester();
+            return new SimpleStringProperty(student.getStudentID()); // ดึงรหสนิสิตจากที่สิตที่สร้างคำร้อง
+        });
+        idColumn.setMinWidth(290);
 
-        TableColumn<Request, String> textColumn = new TableColumn<>("Text");
-        textColumn.setCellValueFactory(new PropertyValueFactory<>("text"));
+        TableColumn<Request, String> statusColumn = new TableColumn<>("สถานะคำร้อง");
+        statusColumn.setCellValueFactory(new PropertyValueFactory<>("recentStatusLog"));
+        statusColumn.setMinWidth(290);
+        statusColumn.setCellFactory(column -> new TableCell<Request, String>() {
+            @Override
+            protected void updateItem(String statusLog, boolean empty) {
+                super.updateItem(statusLog, empty);
+                if (empty || statusLog == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(statusLog);
 
-        TableColumn<Request, String> timeStampColumn = new TableColumn<>("TimeStamp");
-        timeStampColumn.setCellValueFactory(new PropertyValueFactory<>("timeStamp"));
+                    Request request = getTableView().getItems().get(getIndex());
+                    String status = request.getStatus();
+
+                    switch (status) {
+                        case "กำลังดำเนินการ":
+                            setStyle("-fx-text-fill: #d7a700;");
+                            break;
+                        case "ปฏิเสธ":
+                            setStyle("-fx-text-fill: #be0000;");
+                            break;
+                        case "เสร็จสิ้น":
+                            setStyle("-fx-text-fill: #149100;");
+                            break;
+                        default:
+                            setStyle("");
+                            break;
+                    }
+                }
+            }
+        });
+
+        TableColumn<Request, String> lastModifiedColumn = new TableColumn<>("วันที่แก้ไขล่าสุด");
+        lastModifiedColumn.setCellValueFactory(new PropertyValueFactory<>("lastModifiedDateTime"));
+        lastModifiedColumn.setMinWidth(290);
+
+
 
         // Clear previous columns and add the new ones
         requestListTableView.getColumns().clear();
-        requestListTableView.getColumns().addAll(typeColumn, approverColumn, idColumn, textColumn, timeStampColumn);
+        requestListTableView.getColumns().addAll(typeColumn, nameColumn, idColumn, lastModifiedColumn);
 
         // Clear the items in the table
         requestListTableView.getItems().clear();
+
+        requests.sort(Comparator.comparing(Request::getLastModifiedDateTime).reversed()); // เรียง Request ตามวันเวลา
 
         // Populate the TableView with requests
         requestListTableView.getItems().addAll(requests);
@@ -309,7 +389,9 @@ public class DepartmentOfficerController {
         // Handle the selected request (e.g., navigate to the details scene)
         try {
             List<Object> dataToPass = new ArrayList<>();
-            dataToPass.add(selectedRequest);  // Add the Request object
+            dataToPass.add(selectedRequest);
+            dataToPass.add(requestList);// Add the Request object
+            dataToPass.add(requestDatasource);
             dataToPass.add(officer);  // Add the RequestHandlingOfficer object
             FXRouter.goTo("department-officer-manage-request", dataToPass);  // Pass the list with both objects
         } catch (IOException e) {
@@ -405,13 +487,39 @@ public class DepartmentOfficerController {
         studentsTableView.getColumns().add(studentEmailTableColumn);
         studentsTableView.getColumns().add(studentAdvisorTableColumn);
 
-        // Clear previous data
-        studentsTableView.getItems().clear();
+        // Create a FilteredList to allow filtering the students based on the search text
+        FilteredList<Student> filteredData = new FilteredList<>(FXCollections.observableArrayList(students), p -> true);
 
-        // Populate table with student data
-        for (Student student : students) {
-            studentsTableView.getItems().add(student);
-        }
+        // Add a listener to the searchBarStudentTextField to filter the list
+        searchBarStudentTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(student -> {
+                // If search field is empty, display all students
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                // Filter by student name, email, or advisor's name
+                if (student.getStudentID().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                } else if (student.getName().toLowerCase().contains(lowerCaseFilter)) {
+                    return true; // Filter matches student name
+                } else if (student.getEmail().toLowerCase().contains(lowerCaseFilter)) {
+                    return true; // Filter matches student email
+                } else if (student.getStudentAdvisor() != null && student.getStudentAdvisor().getName().toLowerCase().contains(lowerCaseFilter)) {
+                    return true; // Filter matches advisor's name
+                }
+                return false; // No match
+            });
+        });
+
+        // Use a SortedList to bind sorting to the TableView
+        SortedList<Student> sortedData = new SortedList<>(filteredData);
+        sortedData.comparatorProperty().bind(studentsTableView.comparatorProperty());
+
+        // Set the sorted and filtered data to the TableView
+        studentsTableView.setItems(sortedData);
     }
 
     public void setAdvisorAvailable() {
@@ -516,13 +624,16 @@ public class DepartmentOfficerController {
 
     public void onGoToStudentListSceneButtonClick(MouseEvent mouseEvent) {switchToStudentsScene();}
 
+    public void onSearchBarStudentTextFieldClick(MouseEvent mouseEvent) {switchToStudentsScene();}
+
     public void onRemoveStudentButtonClick(MouseEvent mouseEvent) {
         studentToEdit = studentsTableView.getSelectionModel().getSelectedItem();
         if (studentToEdit != null) {
             // Remove from the students
            // students.remove(studentToEdit);
             // Remove from userList
-            officer.getDepartment().getStudents().remove(studentToEdit);
+            officer.removeStudentInDep(studentToEdit);
+            //officer.getDepartment().getStudents().remove(studentToEdit);
             datasource.writeData(userList);
             loadData();
             studentToEdit = null;
@@ -583,17 +694,19 @@ public class DepartmentOfficerController {
             if (advisor.equals("ไม่ระบุ")){
                 studentToEdit.setStudentAdvisor(null);
             } else {
-                studentToEdit.setStudentAdvisor(officer.getDepartment().findAdvisorByName(advisor));
+                officer.assignAdvisor(studentToEdit, advisor);
+                //studentToEdit.setStudentAdvisor(officer.getDepartment().findAdvisorByName(advisor));
             }
         } else {
-            Student student;
+            //Student student;
             if (advisor == null || advisor.equals("เลือกอาจารย์ที่ปรึกษา") || advisor.equals("ไม่ระบุ")) {
-                student = new Student(name, officer.getFaculty(), officer.getDepartment(), id, email);
+                officer.addStudentToDep(name, id, email);
+                //student = new Student(name, officer.getFaculty(), officer.getDepartment(), id, email);
             }
             else {
-                student = new Student(name,officer.getFaculty().getFacultyName(), officer.getDepartment().getDepartmentName(), id, email, officer.getDepartment().findAdvisorByName(advisor));
+                officer.addStudentToDep(name, id, email, advisor);
+                //student = new Student(name,officer.getFaculty().getFacultyName(), officer.getDepartment().getDepartmentName(), id, email, officer.getDepartment().findAdvisorByName(advisor));
             }
-            officer.getDepartment().getStudents().add(student);
         }
         datasource.writeData(userList);
         loadData();
