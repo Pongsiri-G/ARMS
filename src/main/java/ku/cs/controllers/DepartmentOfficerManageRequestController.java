@@ -12,11 +12,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.stage.FileChooser;
 import ku.cs.models.*;
 import ku.cs.services.FXRouter;
+import ku.cs.services.FileStorage;
 import ku.cs.services.RequestHandlingOfficersDataSource;
 import ku.cs.services.RequestListFileDatasource;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +35,7 @@ public class DepartmentOfficerManageRequestController {
     @FXML
     Circle profilePicture;
 
+
     // detail scene
     @FXML
     VBox requestDetailScene;
@@ -43,6 +47,8 @@ public class DepartmentOfficerManageRequestController {
     MenuButton selectOfficerHandlingMenu;
     @FXML
     Label errorLabel;
+    @FXML
+    Label fileLabel;
 
     //หน้าปฏิเสธคำร้อง
     @FXML
@@ -58,6 +64,9 @@ public class DepartmentOfficerManageRequestController {
     private RequestList requestList;
     private DepartmentOfficer officer;
     private String selectedApprove;
+    private Student student;
+
+    private File selectedFile;
 
     public void initialize() {
         errorLabel.setDisable(false);
@@ -69,6 +78,7 @@ public class DepartmentOfficerManageRequestController {
         requestList = (RequestList) data.get(1);
         requestDatasource = (RequestListFileDatasource) data.get(2);
         officer = (DepartmentOfficer) data.get(3);  // Get the Officer object
+        student = request.getRequester();
         setupOfficerInfo();
         switchToDetailScence();
     }
@@ -100,6 +110,7 @@ public class DepartmentOfficerManageRequestController {
         rejectRequestScene.setVisible(false);
         errorLabel.setVisible(false);
         errorLabel.setText("");
+        fileLabel.setText("");
     }
 
     public void switchToDetailScence(){
@@ -141,13 +152,25 @@ public class DepartmentOfficerManageRequestController {
 
     }
 
-    public void updateRequest(){
+    public void updateRequest() throws IOException {
+        // การอัพโหลด pdf
+        String directory = "data" + File.separator + "StudentRequests" + File.separator + student.getStudentID(); // กำหนดที่ๆ จะเก็บ
+        fileLabel.setText(selectedFile.getName());
+        String filePath = FileStorage.saveFileToDirectory(selectedFile, directory); // เอาไฟล์ที่อัพโหลดไปใส่
+        request.setPdfFilePath(filePath); // เก็บที่อยู่ pdf ใน request
+        System.out.println(request.getPdfFilePath()); //for debug
+
+        // เขียนลง csv
         requestDatasource.writeData(requestList);
     }
 
-    public boolean checkValid(String approver){;
+    public boolean checkValid(String approver){
         if (approver.equals("") || approver == null || approver.equals("เลือกผู้ดำเนินการ")) {
             errorLabel.setText("กรุณาเลือกผู้ดำเนินการ");
+            return false;
+        }
+        else if (selectedFile == null){
+            errorLabel.setText("กรุณาอัพโหลดไฟล์ PDF");
             return false;
         }
         return true;
@@ -196,6 +219,23 @@ public class DepartmentOfficerManageRequestController {
         officer.rejectRequest(request,selectedApprove, reasonForRejectTextArea.getText());
         updateRequest();
         FXRouter.goTo("department-officer", officer.getUsername());
+    }
+
+    @FXML
+    public void uploadButtonClick(MouseEvent event) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose PDF file");
+        // Filter to show only PDF files
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("PDF Files", "*.pdf")
+        );
+
+        selectedFile = fileChooser.showOpenDialog(requestDetailScene.getScene().getWindow());
+    }
+
+    @FXML
+    public void downloadButtonClick(MouseEvent event) throws IOException {
+
     }
 
 
