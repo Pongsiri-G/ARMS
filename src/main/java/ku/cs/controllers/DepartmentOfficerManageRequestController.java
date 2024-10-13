@@ -224,7 +224,7 @@ public class DepartmentOfficerManageRequestController {
     @FXML
     public void uploadButtonClick(MouseEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choose PDF file");
+        fileChooser.setTitle("Choose PDF File");
         // Filter to show only PDF files
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("PDF Files", "*.pdf")
@@ -235,6 +235,25 @@ public class DepartmentOfficerManageRequestController {
 
     @FXML
     public void downloadButtonClick(MouseEvent event) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save PDF File");
+        // Set the file extension filter to PDF files only
+        FileChooser.ExtensionFilter pdfFilter = new FileChooser.ExtensionFilter("PDF Files", "*.pdf");
+        fileChooser.getExtensionFilters().add(pdfFilter);
+
+        // Set the initial file name (optional)
+        fileChooser.setInitialFileName(student.getStudentID() + request.getRequestType() + ".pdf");
+
+        // Show the Save File dialog
+        File fileToSave = fileChooser.showSaveDialog(requestDetailScene.getScene().getWindow());
+
+        if (fileToSave != null) {
+            // Get the absolute path of the file as a String
+            String filePath = fileToSave.getAbsolutePath();
+
+            // Call the method to save the PDF using the file path String
+            LeaveOfAbsenceRequestPDF.createRequest(filePath, (LeaveOfAbsenceRequest) request);
+        }
 
     }
 
