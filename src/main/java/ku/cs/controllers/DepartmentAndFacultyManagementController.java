@@ -68,7 +68,7 @@ public class DepartmentAndFacultyManagementController {
             Faculty faculty = cellData.getValue();
             String departments = faculty.getDepartments().stream()
                     .map(Department::getDepartmentName)
-                    .collect(Collectors.joining(", "));
+                    .collect(Collectors.joining("\n"));
             return new SimpleStringProperty(departments);
         });
 
@@ -77,7 +77,7 @@ public class DepartmentAndFacultyManagementController {
             Faculty faculty = cellData.getValue();
             String departmentIds = faculty.getDepartments().stream()
                     .map(Department::getDepartmentID)
-                    .collect(Collectors.joining(", "));
+                    .collect(Collectors.joining("\n"));
             return new SimpleStringProperty(departmentIds);
         });
 
@@ -120,23 +120,33 @@ public class DepartmentAndFacultyManagementController {
         String departmentName = editDepartmentTextField.getText();
         String departmentId = editDepartmentIdTextField.getText();
 
-        if (facultyName.trim().isEmpty() || facultyId.trim().isEmpty() || departmentName.trim().isEmpty() || departmentId.trim().isEmpty() || facultyName == null || facultyId == null || departmentName == null || departmentId == null) {
+        if (facultyName.trim().isEmpty() || facultyId.trim().isEmpty() || departmentName.trim().isEmpty() || departmentId.trim().isEmpty()) {
             editErrorMessageLabel.setText("กรุณากรอกข้อมูลให้ครบถ้วน");
             return;
         }
 
         Faculty selectedFaculty = facDepTableView.getSelectionModel().getSelectedItem();
         if (selectedFaculty != null) {
-            // อัปเดตข้อมูลของ selectedFaculty
-            selectedFaculty.setFacultyName(facultyName);
-            selectedFaculty.setFacultyId(facultyId);
+            // ตรวจสอบว่ามีคณะที่เลือกหรือไม่
+            if (selectedFaculty.isFacultyName(facultyName) && selectedFaculty.isFacultyId(facultyId)) {
+                // อัปเดตภาควิชา
+                if (!selectedFaculty.getDepartments().isEmpty()) {
+                    Department department = selectedFaculty.getDepartments().get(0); // สมมุติว่ามีแค่หนึ่งภาควิชา
+                    department.setDepartmentName(departmentName);
+                    department.setDepartmentID(departmentId);
+                }
+            } else {
+                // ถ้าเปลี่ยนชื่อหรือรหัสคณะ ให้สร้างคณะใหม่
+                Faculty updatedFaculty = new Faculty(facultyName, facultyId);
+                if (!selectedFaculty.getDepartments().isEmpty()) {
+                    // ย้ายภาควิชาจากคณะเก่าไปยังคณะใหม่
+                    Department department = selectedFaculty.getDepartments().get(0); // สมมุติว่ามีแค่หนึ่งภาควิชา
+                    updatedFaculty.addDepartment(department.getDepartmentName(), department.getDepartmentID());
+                }
 
-            // อัปเดตภาควิชา (ตามที่คุณออกแบบไว้ในโมเดล)
-            // ในที่นี้สมมุติว่ามีแค่ภาควิชาเดียวที่สามารถแก้ไขได้
-            if (!selectedFaculty.getDepartments().isEmpty()) {
-                Department department = selectedFaculty.getDepartments().get(0); // สมมุติว่ามีแค่หนึ่งภาควิชา
-                department.setDepartmentName(departmentName);
-                department.setDepartmentID(departmentId);
+                // เปลี่ยนคณะที่เลือก
+                facultyList.removeFaculty(selectedFaculty);
+                facultyList.addFaculty(updatedFaculty);
             }
 
             // บันทึกข้อมูลลงไฟล์
@@ -150,7 +160,7 @@ public class DepartmentAndFacultyManagementController {
 
             // ล้างข้อมูลใน TextField
             clearEditFields();
-        } // แสดงตารางอีกครั้งเพื่อแสดงข้อมูลที่อัปเดต
+        }
     }
 
     @FXML public void onAddFacDepButtonClick() {
@@ -171,7 +181,12 @@ public class DepartmentAndFacultyManagementController {
         if(facultyName.trim().isEmpty() || facultyId.trim().isEmpty() || departmentName.trim().isEmpty() || departmentId.trim().isEmpty() || facultyName == null || facultyId == null || departmentName == null || departmentId == null) {
             errorMessageLabel.setText("กรุณากรอกข้อมูลให้ครบถ้วน");
         } else {
-            facultyList.addFaculty(facultyName, facultyId, departmentName, departmentId);
+            Faculty existingFaculty = facultyList.findFacultyByName(facultyName);
+            if (existingFaculty != null) {
+                existingFaculty.addDepartment(departmentName);
+            } else {
+                facultyList.addFaculty(facultyName, facultyId, departmentName, departmentId);
+            }
             datasource.writeData(facultyList);
             addStackPane.setVisible(false);
             showTable(facultyList);
