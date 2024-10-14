@@ -13,6 +13,7 @@ public class Request {
     private Student requester; //ผู้ยื่นคำร้อง (นิสิต)
     private String currentApprover; //ผู้อนุมัติปัจจุบัน (อาจารย์ที่ปรึกษา, เจ้าหน้าที่ภาควิชา, เจ้าหน้าที่คณะ)
     private String numberPhone; //เบอร์มือถือของผู้ยื่นคำร้อง
+    private String pdfFilePath; //เก็บ FilePath ของคำร้อง pdf ที่แนบเข้าระบบ
     private List<String> statusLog; //เก็บประวัติการดำเนินการต่างๆข้องคำร้อง
     private List<String> approverList; //เก็บรายการคนที่อนุมัติคำร้อง String (ชื่อคนอนุมัติ - ตำแหน่ง)
 
@@ -30,10 +31,11 @@ public class Request {
         this.numberPhone = numberPhone;
         this.status = "กำลังดำเนินการ";
         addStatusLog("ใบคำร้องใหม่");
+        addStatusLog("คำร้องส่งต่อให้อาจารย์ที่ปรึกษา");
     }
 
     // Constructor สำหรับอ่านไฟล์จาก CSV
-    public Request(String timestamp, String requestType, String status, Student requester, String currentApprover, String numberPhone, String lastModifiedDateTime, List<String> statusLog, List<String> approverList) {
+    public Request(String timestamp, String requestType, String status, Student requester, String currentApprover, String numberPhone, String lastModifiedDateTime, String pdfFilePath, List<String> statusLog, List<String> approverList) {
         this.requestType = requestType;
         this.timestamp = timestamp;
         this.lastModifiedDateTime = lastModifiedDateTime;
@@ -43,6 +45,7 @@ public class Request {
         this.currentApprover = currentApprover;
         this.numberPhone = numberPhone;
         this.status = status;
+        this.pdfFilePath = pdfFilePath;
     }
 
     //ดำเนินการคำร้อง (เรียกใช้จาก method นี้)
@@ -63,10 +66,12 @@ public class Request {
         if ("อาจารย์ที่ปรึกษา".equalsIgnoreCase(this.currentApprover)) {
             this.setCurrentApprover("เจ้าหน้าที่ภาควิชา");
             this.addStatusLog("อนุมัติโดยอาจารย์ที่ปรึกษา");
+            this.addStatusLog("คำร้องส่งต่อให้หัวหน้าภาควิชา");
             this.addApprover(approver);
         } else if ("เจ้าหน้าที่ภาควิชา".equalsIgnoreCase(this.currentApprover)) {
             this.setCurrentApprover("เจ้าหน้าที่คณะ");
             this.addStatusLog("อนุมัติโดยหัวหน้าภาควิชา");
+            this.addStatusLog("คำร้องส่งต่อให้คณบดี");
             this.addApprover(approver);
         } else if ("เจ้าหน้าที่คณะ".equalsIgnoreCase(this.currentApprover)) {
             this.addApprover(approver);
@@ -161,6 +166,8 @@ public class Request {
         return numberPhone;
     }
 
+    public String getPdfFilePath() { return pdfFilePath; }
+
     public List<String> getApproverList(){
         return approverList;
     }
@@ -172,6 +179,8 @@ public class Request {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public void setPdfFilePath(String filePath) { this.pdfFilePath = filePath; }
 
     public void setCurrentApprover(String currentApprover) {
         this.currentApprover = currentApprover;
