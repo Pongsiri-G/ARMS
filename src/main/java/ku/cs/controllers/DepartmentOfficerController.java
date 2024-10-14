@@ -715,7 +715,13 @@ public class DepartmentOfficerController {
     }
 
     @FXML
+    public void settingButton(MouseEvent event) throws IOException {
+        FXRouter.goTo("settings", officer.getUsername());
+    }
+
+    @FXML
     public void onLogoutButtonClick(MouseEvent event) throws IOException {
         FXRouter.goTo("login");
     }
+
 }

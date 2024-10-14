@@ -15,10 +15,13 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
 import ku.cs.models.*;
 import ku.cs.services.FXRouter;
+import ku.cs.services.FileStorage;
 import ku.cs.services.UserListFileDatasource;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -31,6 +34,8 @@ public class SettingsController {
 
     @FXML private Label nameLabel;
 
+    @FXML private Label fileUploadLabel; //แสดงชื่อไฟล์ที่อัพโหลดไป
+
     @FXML private Circle profilePictureDisplay;
 
 
@@ -40,6 +45,8 @@ public class SettingsController {
     private UserListFileDatasource datasource;
     private User user;
 
+    private File uploadedPicture;
+
 
     public SettingsController(){
         datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
@@ -48,8 +55,8 @@ public class SettingsController {
 
     @FXML
     public void initialize() {
-        data = (ArrayList<String>) FXRouter.getData();
-        user = userList.findUserByUsername(data.get(1));
+        //data = (ArrayList<String>) FXRouter.getData();
+        user = userList.findUserByUsername((String) FXRouter.getData());
         nameLabel.setText(user.getName());
         roleLabel.setText(user.getRole());
         setProfilePicture(user.getProfilePicturePath());
@@ -87,6 +94,8 @@ public class SettingsController {
                     createLabel("สาขาวิชา " + advisor.getDepartment().getDepartmentName() + " (" + advisor.getFaculty().getFacultyId() + advisor.getDepartment().getDepartmentID() + ")")
             );
         }
+
+        fileUploadLabel.setText(""); //ตังเป็นไม่แสดงก่อน
     }
 
     private void setProfilePicture(String profilePath) {
@@ -111,5 +120,47 @@ public class SettingsController {
 
     public void backButtonClick(MouseEvent event) throws IOException {
         FXRouter.goTo(data.get(0));
+    }
+
+    @FXML
+    public void uploadProfilePictureButton(MouseEvent event) throws IOException {
+        // Create a FileChooser to select an image file
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose Profile Picture");
+
+        // Filter to show only image files (JPG, PNG)
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png")
+        );
+
+        // Show open file dialog
+        uploadedPicture = fileChooser.showOpenDialog(fileUploadLabel.getScene().getWindow());
+
+        if (uploadedPicture != null) {
+            // Set the file label to the name of the uploaded picture
+            fileUploadLabel.setText(uploadedPicture.getName());
+
+            // Save the uploaded file to a directory (you can modify the directory path as needed)
+            String directory = "data" + File.separator + "user-profile-picture" + File.separator + user.getUsername();
+            String filePath = FileStorage.saveFileToDirectory(uploadedPicture, directory);
+            user.setProfilePicturePath(filePath);  // Set the profile picture path for the user
+
+            // Update the Circle profile picture display
+            setProfilePicture(filePath);
+
+            // Save changes (if necessary) and update the data source
+            datasource.writeData(userList);
+        }
+    }
+
+
+    @FXML
+    public void changeProfileToDefaultButton(MouseEvent event) throws IOException {
+        String filePath = "src/main/resources/images/profile.jpg";
+        user.setProfilePicturePath(filePath);  // Set the profile picture path for the user
+        // Update the Circle profile picture display
+        setProfilePicture(filePath);
+        // Save changes (if necessary) and update the data source
+        datasource.writeData(userList);
     }
 }
