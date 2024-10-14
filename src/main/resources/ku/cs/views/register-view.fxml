@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="1024.0" prefWidth="1440.0" styleClass="canvas" stylesheets="@../../../style/central.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.RegisterController">
+   <center>
+      <VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="300.0" prefWidth="100.0">
+         <children>
+            <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../images/document.png" />
+               </image>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </ImageView>
+            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="title-label" text="ลงทะเบียนผู้ใช้นิสิต">
+               <font>
+                  <Font name="System Bold" size="36.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="40.0" />
+               </VBox.margin>
+            </Label>
+            <StackPane prefHeight="150.0" prefWidth="200.0">
+               <children>
+                  <VBox spacing="30.0">
+                     <children>
+                        <Group>
+                           <children>
+                              <TextField fx:id="firstnameTextField" layoutX="1.0" layoutY="9.0" prefHeight="40.0" prefWidth="300.0" promptText="Enter here" styleClass="nisit-regis-text-field" />
+                              <Label layoutX="12.0" text="ชื่อ">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Group>
+                        <Group>
+                           <children>
+                              <TextField fx:id="lastnameTextField" layoutX="1.0" layoutY="9.0" prefHeight="40.0" prefWidth="300.0" promptText="Enter here" styleClass="nisit-regis-text-field" />
+                              <Label layoutX="12.0" text="นามสกุล">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Group>
+                        <Group>
+                           <children>
+                              <TextField fx:id="emailTextField" layoutX="1.0" layoutY="9.0" prefHeight="40.0" prefWidth="300.0" promptText="example.name@ku.th" styleClass="nisit-regis-text-field" />
+                              <Label layoutX="12.0" text="อีเมล">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Group>
+                        <Group>
+                           <children>
+                              <TextField fx:id="studentIdTextField" layoutX="1.0" layoutY="9.0" prefHeight="40.0" prefWidth="300.0" promptText="6XXXXXXXXX" styleClass="nisit-regis-text-field" />
+                              <Label layoutX="12.0" text="รหัสนิสิต">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Group>
+                        <HBox prefHeight="100.0" prefWidth="0.0">
+                           <children>
+                              <ImageView fitHeight="50.0" fitWidth="50.0" onMouseClicked="#toLoginPageClick" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../images/back-arrow-white.png" />
+                                 </image>
+                              </ImageView>
+                              <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS" />
+                              <ImageView fitHeight="50.0" fitWidth="50.0" onMouseClicked="#toCreateUserClick" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../images/forward-arrow-white.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox fx:id="createUserPane" prefHeight="200.0" prefWidth="100.0" spacing="30.0" styleClass="pane" visible="false">
+                     <children>
+                        <Group>
+                           <children>
+                              <TextField fx:id="usernameTextField" layoutX="1.0" layoutY="9.0" prefHeight="40.0" prefWidth="300.0" promptText="Enter here" styleClass="nisit-regis-text-field" />
+                              <Label layoutX="12.0" text="ชื่อบัญชีผู้ใช้">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Group>
+                        <Group>
+                           <children>
+                              <PasswordField fx:id="passwordPasswordField" prefHeight="40.0" prefWidth="300.0" promptText="New Password" styleClass="nisit-regis-password-field" translateY="8.0" />
+                              <Label layoutX="12.0" text="รหัสผ่านใหม่">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Group>
+                        <Group>
+                           <children>
+                              <PasswordField fx:id="confirmPasswordPasswordField" prefHeight="40.0" prefWidth="300.0" promptText="Confirm New Password" styleClass="nisit-regis-password-field" translateY="8.0" />
+                              <Label layoutX="12.0" text="ยืนยันรหัสผ่านใหม่">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Group>
+                        <Label fx:id="errorLabel" styleClass="error-label" text="errorLabel" textFill="RED">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                           <padding>
+                              <Insets bottom="-10.0" top="-20.0" />
+                           </padding>
+                        </Label>
+                        <Button mnemonicParsing="false" onAction="#checkRegister" prefHeight="38.0" prefWidth="300.0" text="ลงทะเบียน" />
+                        <ImageView fitHeight="50.0" fitWidth="50.0" onMouseClicked="#closeCreateUserClick" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../images/back-arrow-white.png" />
+                           </image>
+                           <VBox.margin>
+                              <Insets top="-20.0" />
+                           </VBox.margin>
+                        </ImageView>
+                     </children>
+                  </VBox>
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <padding>
+                  <Insets bottom="55.0" />
+               </padding>
+            </StackPane>
+         </children>
+      </VBox>
+   </center>
+   <top>
+      <Pane BorderPane.alignment="CENTER" />
+   </top>
+   <left>
+      <Pane BorderPane.alignment="CENTER" />
+   </left>
+   <bottom>
+      <Pane BorderPane.alignment="CENTER" />
+   </bottom>
+   <right>
+      <Pane BorderPane.alignment="CENTER" />
+   </right>
+</BorderPane>

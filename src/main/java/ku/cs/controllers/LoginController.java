@@ -88,6 +88,6 @@ public class LoginController {
     }
 
     public void toRegisterPageClick() throws IOException {
-        FXRouter.goTo("register-first");
+        FXRouter.goTo("register");
     }
 }

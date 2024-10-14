@@ -26,8 +26,7 @@ public class MainApplication extends Application {
         FXRouter.when("advisor", viewPath + "advisor-view.fxml");
         FXRouter.when("student-create-request", viewPath + "student-create-request.fxml");
         FXRouter.when("student-request-list-view", viewPath + "student-request-list-view.fxml");
-        FXRouter.when("register-first", viewPath + "register-first-view.fxml");
-        FXRouter.when("register-second", viewPath + "register-second-view.fxml");
+        FXRouter.when("register", viewPath + "register-view.fxml");
         FXRouter.when("department-request", viewPath + "department-request-view.fxml");
         FXRouter.when("department-request-managed", viewPath + "department-request-managed-view.fxml");
         FXRouter.when("department-request-reject", viewPath + "department-request-reject-view.fxml");
