@@ -14,6 +14,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.shape.Circle;
 import ku.cs.models.*;
 import ku.cs.services.Datasource;
 import ku.cs.services.FXRouter;
@@ -23,13 +25,20 @@ import ku.cs.services.UserListFileDatasource;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class AdvisorController{
+public class AdvisorController extends BaseController {
+    @FXML private BorderPane rootPane;
     @FXML private TableView<Student> studentListTable;
+    @FXML private Label roleLabel;
+    @FXML private Label nameLabel;
+    @FXML private Label usernameLabel;
     @FXML private Label departmentLabel;
     @FXML private Label emailLabel;
     @FXML private Label facultyLabel;
-    @FXML private Label nameLabel;
+    @FXML private Label advisorNameLabel;
     @FXML private TextField searchStudentField;
+    @FXML private Circle profilePictureDisplay;
+    @FXML private Circle advisorProfilePictureDisplay;
+
     @FXML
     private TableColumn<Student, String> departmentCol;
     @FXML
@@ -42,21 +51,10 @@ public class AdvisorController{
     private TableColumn<Student, String> nameCol;
 
     private ArrayList<Student> studentList;
-    private StudentListFileDatasource datasource;
     private UserList userList;
     private UserListFileDatasource datasources;
     private Advisor advisor;
     ObservableList<Student> studentListObservable;
-
-
-    @FXML
-    protected void onButtonToAdvisor() {
-        try {
-            FXRouter.goTo("login");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     @FXML
     public void initialize() {
@@ -65,10 +63,16 @@ public class AdvisorController{
         // เนื่องจากการส่งข้อมูลข้ามหน้าของเราเป็น การส่ง Username มาก็เลย Cast ให้มันเป็น String เเละหาใน UserList เเล้วให้ return Object นั้นมาเพื่อใช้ในการเเสดงข้อมูลขั้นต่อไป
         User user = userList.findUserByUsername((String) FXRouter.getData());
         showUserInfo(user);
+
         advisor = (Advisor) user;
+        roleLabel.setText("อาจารย์ | ภาควิชา" + advisor.getDepartment().getDepartmentName());
+        nameLabel.setText(advisor.getName());
+        usernameLabel.setText(advisor.getUsername());
+        applyThemeAndFont(rootPane);
+        setProfilePicture(profilePictureDisplay, advisor.getProfilePicturePath());
+        setProfilePicture(advisorProfilePictureDisplay, advisor.getProfilePicturePath());
 
         studentList = advisor.getDepartment().findStudentsByAdvisorName(advisor.getName());
-
         studentListObservable = FXCollections.observableArrayList(studentList);
 
         showTable(studentList);
@@ -78,7 +82,10 @@ public class AdvisorController{
             @Override
             public void changed(ObservableValue<? extends Student> observableValue, Student oldStudent, Student newStudent) {
                 try {
-                    FXRouter.goTo("advisor-nisit", newStudent.getUsername());
+                    ArrayList<String> data = new ArrayList<>();
+                    data.add(advisor.getUsername());
+                    data.add(newStudent.getStudentID());
+                    FXRouter.goTo("advisor-nisit", data);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -88,15 +95,15 @@ public class AdvisorController{
 
     @FXML
     void goToRequestNisit(MouseEvent event) throws IOException {
-        FXRouter.goTo("request-nisit", advisor.getUsername());
+        FXRouter.goTo("advisor-request-nisit", advisor.getUsername());
     }
 
     private void showUserInfo(User user) {
         Advisor advisor = (Advisor) user;
-        nameLabel.setText(advisor.getName());
-        facultyLabel.setText(advisor.getFaculty().getFacultyName());
-        departmentLabel.setText(advisor.getDepartment().getDepartmentName());
-        emailLabel.setText(advisor.getAdvisorEmail());
+        advisorNameLabel.setText("ชื่อ: " +advisor.getName());
+        facultyLabel.setText("คณะ: " +advisor.getFaculty().getFacultyName());
+        departmentLabel.setText("สาขาวิชา: " + advisor.getDepartment().getDepartmentName());
+        emailLabel.setText("อีเมล: " +advisor.getAdvisorEmail());
     }
 
     private void showTable(ArrayList<Student> students) {
@@ -153,6 +160,20 @@ public class AdvisorController{
         SortedList<Student> sortedData = new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(studentListTable.comparatorProperty());
         studentListTable.setItems(sortedData);
+    }
+
+    @FXML
+    public void settingsPageClick(MouseEvent event) throws IOException {
+        ArrayList<String> data = new ArrayList<>();
+        data.add("advisor");
+        data.add(advisor.getUsername());
+        FXRouter.goTo("settings", data);
+
+    }
+
+    @FXML
+    public void logoutClick(MouseEvent event) throws IOException {
+        FXRouter.goTo("login");
     }
     }
 

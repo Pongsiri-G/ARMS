@@ -1,16 +1,12 @@
 package ku.cs.controllers;
 
 import javafx.fxml.FXML;
-import javafx.geometry.Bounds;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -22,17 +18,13 @@ import ku.cs.services.UserListFileDatasource;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class StudentCreateRequestController {
-    @FXML private VBox navigation;
-    @FXML private VBox pane;
+public class StudentCreateRequestController extends BaseController {
+    @FXML private BorderPane rootPane;
     @FXML private VBox createRequestPane;
     @FXML private Label roleLabel;
     @FXML private Label nameLabel;
     @FXML private Label usernameLabel;
     @FXML private Circle profilePictureDisplay;
-    @FXML private ImageView optionDropdown;
-    @FXML private Rectangle currentBar1;
-    @FXML private Rectangle currentBar2;
     @FXML private ChoiceBox<String> typeRequestChoice;
     @FXML private GridPane confirmationPane;
     @FXML private GridPane errorPane;
@@ -40,7 +32,7 @@ public class StudentCreateRequestController {
 
     //For Request
     @FXML private TextField phoneTextField;
-    @FXML private TextArea reasonTextArea;
+    @FXML private TextField reasonTextField;
 
     @FXML private RadioButton sickLeaveRadio;
     @FXML private RadioButton personalLeaveRadio;
@@ -55,7 +47,7 @@ public class StudentCreateRequestController {
     @FXML private TextField toSemesterTextField;
     @FXML private TextField toAcademicYearTextField;
     @FXML private TextArea registeredCoursesTextArea;
-    @FXML private TextArea currentAddressTextArea;
+    @FXML private TextField currentAddressTextField;
 
     private UserList userList;
     private RequestList requestList;
@@ -78,20 +70,19 @@ public class StudentCreateRequestController {
         roleLabel.setText("นิสิต | ภาควิชา" + student.getEnrolledDepartment().getDepartmentName());
         nameLabel.setText(student.getName());
         usernameLabel.setText(student.getUsername());
-        currentBar2.setVisible(false);
         confirmationPane.setVisible(false);
         errorPane.setVisible(false);
-        setProfilePicture(student.getProfilePicturePath());
-        System.out.println("[" + student.getName() + " " + student.getUsername() + "]");
+        setProfilePicture(profilePictureDisplay, student.getProfilePicturePath());
+        applyThemeAndFont(rootPane);
     }
 
     private void setupChoiceBox() {
-        typeRequestChoice.getItems().addAll("ลาป่วย หรือ ลากิจ", "ลาพักการศึกษา", "ลาออก");
-        typeRequestChoice.setValue("ลาป่วย หรือ ลากิจ");
+        typeRequestChoice.getItems().addAll("ลาป่วยหรือลากิจ", "ลาพักการศึกษา", "ลาออก");
+        typeRequestChoice.setValue("ลาป่วยหรือลากิจ");
 
         typeRequestChoice.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             switch (newValue) {
-                case "ลาป่วย หรือ ลากิจ":
+                case "ลาป่วยหรือลากิจ":
                     showSickLeaveForm();
                     break;
                 case "ลาพักการศึกษา":
@@ -104,19 +95,6 @@ public class StudentCreateRequestController {
         });
 
         showSickLeaveForm();
-    }
-
-    private void setProfilePicture(String profilePath) {
-        try {
-            // โหลดรูปจาก profilePath
-            Image profileImage = new Image("file:" + profilePath);
-
-            profilePictureDisplay.setFill(new ImagePattern(profileImage));
-
-        } catch (Exception e) {
-            System.out.println("Error loading profile image: " + e.getMessage());
-            profilePictureDisplay.setFill(Color.GRAY);
-        }
     }
 
 
@@ -143,7 +121,7 @@ public class StudentCreateRequestController {
         );
 
         // Reason for leave TextArea
-        reasonTextArea = createTextArea(3, 300);
+        reasonTextField = createTextField(500);
 
         // Absent subjects TextArea
         absentSubjectTextArea = createTextArea(3, 300);
@@ -154,7 +132,7 @@ public class StudentCreateRequestController {
                 purposeBox,
                 dateRangeBox,
                 createLabel("เนื่องจาก"),
-                reasonTextArea,
+                reasonTextField,
                 createLabel("โดยมีรายวิชาที่ขอหยุดเรียน ดังนี้ (ระบุรหัสวิชา ชื่อวิชา อาจารย์ผู้สอน)"),
                 absentSubjectTextArea
         );
@@ -167,16 +145,16 @@ public class StudentCreateRequestController {
         HBox phoneBox = new HBox(30, createLabel("เบอร์โทรติดต่อ"), phoneTextField);
 
         currentSemesterTextField = createTextField(50);
-        currentAcademicYearTextField = createTextField(50);
+        currentAcademicYearTextField = createTextField(100);
         HBox currentSemesterBox = new HBox(30,
                 createLabel("ภาคการศึกษาปัจจุบัน"), currentSemesterTextField,
                 createLabel("ปีการศึกษาปัจจุบัน"), currentAcademicYearTextField
         );
 
         fromSemesterTextField = createTextField(50);
-        fromAcademicYearTextField = createTextField(50);
+        fromAcademicYearTextField = createTextField(100);
         toSemesterTextField = createTextField(50);
-        toAcademicYearTextField = createTextField(50);
+        toAcademicYearTextField = createTextField(100);
 
         HBox leaveDurationBox = new HBox(30,
                 createLabel("ตั้งแต่ภาคการศึกษา"), fromSemesterTextField,
@@ -185,22 +163,22 @@ public class StudentCreateRequestController {
                 createLabel("ปีการศึกษา"), toAcademicYearTextField
         );
 
-        reasonTextArea = createTextArea(3, 300);
+        reasonTextField = createTextField(500);
 
-        registeredCoursesTextArea = createTextArea(3, 300);
+        registeredCoursesTextArea = createTextArea(3, 200);
 
-        currentAddressTextArea = createTextArea(2, 300);
+        currentAddressTextField = createTextField(500);
 
         createRequestPane.getChildren().addAll(
                 phoneBox,
                 currentSemesterBox,
                 leaveDurationBox,
                 createLabel("เหตุผลที่ลา"),
-                reasonTextArea,
+                reasonTextField,
                 createLabel("วิชาที่ลงทะเบียนเรียนไว้"),
                 registeredCoursesTextArea,
                 createLabel("ที่อยู่ปัจจุบัน"),
-                currentAddressTextArea
+                currentAddressTextField
         );
     }
 
@@ -209,12 +187,12 @@ public class StudentCreateRequestController {
         phoneTextField = createTextField(150);
         HBox phoneBox = new HBox(30, createLabel("เบอร์โทรติดต่อ"), phoneTextField);
 
-        reasonTextArea = createTextArea(3, 300);
+        reasonTextField = createTextField(500);
 
         createRequestPane.getChildren().addAll(
                 phoneBox,
                 createLabel("เหตุผลที่ลาออก"),
-                reasonTextArea
+                reasonTextField
         );
     }
 
@@ -223,14 +201,12 @@ public class StudentCreateRequestController {
         RadioButton radioButton = new RadioButton(text);
         radioButton.setSelected(selected);
         radioButton.getStyleClass().add("radio-button");
-        radioButton.setFont(new Font("System", 18));
         return radioButton;
     }
 
     private Label createLabel(String text) {
         Label label = new Label(text);
         label.getStyleClass().add("label");
-        label.setFont(new Font("System", 18));
         return label;
     }
 
@@ -245,7 +221,6 @@ public class StudentCreateRequestController {
         textArea.setPrefRowCount(rowCount);
         textArea.setPrefWidth(width);
         textArea.getStyleClass().add("text-area");
-        textArea.setFont(new Font("System", 18));
         return textArea;
     }
 
@@ -253,18 +228,7 @@ public class StudentCreateRequestController {
         TextField textField = new TextField();
         textField.setPrefWidth(width);
         textField.getStyleClass().add("short-text-field");
-        textField.setFont(new Font("System", 18));
         return textField;
-    }
-
-
-    @FXML
-    public void optionDropdown(MouseEvent event) throws IOException {
-        ArrayList<String> data = new ArrayList<>();
-        data.add("student-create-request");
-        data.add(student.getUsername());
-        FXRouter.goTo("settings", data);
-
     }
 
     @FXML void saveRequestClick(){
@@ -281,11 +245,11 @@ public class StudentCreateRequestController {
             confirmationPane.setVisible(false);
             String selectedRequestType = typeRequestChoice.getValue();
 
-            if (selectedRequestType.equals("ลาป่วย หรือ ลากิจ")) {
+            if (selectedRequestType.equals("ลาป่วยหรือลากิจ")) {
                 // Handle Sick Leave or Personal Leave Request
                 String phone = phoneTextField.getText();
                 String typeLeave = sickLeaveRadio.isSelected() ? "ลาป่วย" : "ลากิจ";
-                String reason = reasonTextArea.getText();
+                String reason = reasonTextField.getText();
                 String fromDate = fromDatePicker.getValue() != null ? fromDatePicker.getValue().toString() : "";
                 String toDate = toDatePicker.getValue() != null ? toDatePicker.getValue().toString() : "";
                 String absentSubject = absentSubjectTextArea.getText();
@@ -299,9 +263,9 @@ public class StudentCreateRequestController {
 
             } else if (selectedRequestType.equals("ลาพักการศึกษา")) {
                 String phone = phoneTextField.getText();
-                String reason = reasonTextArea.getText();
+                String reason = reasonTextField.getText();
                 String registeredCourses = registeredCoursesTextArea.getText();
-                String currentAddress = currentAddressTextArea.getText();
+                String currentAddress = currentAddressTextField.getText();
 
                 if (phone.isEmpty() || reason.isEmpty() || registeredCourses.isEmpty() || currentAddress.isEmpty()) {
                     throw new NullPointerException("กรุณากรอกข้อมูลให้ครบถ้วน");
@@ -331,7 +295,7 @@ public class StudentCreateRequestController {
 
             } else if (selectedRequestType.equals("ลาออก")) {
                 String phone = phoneTextField.getText();
-                String reason = reasonTextArea.getText();
+                String reason = reasonTextField.getText();
 
                 if (phone.isEmpty() || reason.isEmpty()) {
                     throw new NullPointerException("กรุณากรอกข้อมูลให้ครบถ้วน");
@@ -353,6 +317,15 @@ public class StudentCreateRequestController {
 
     @FXML void closeErrorClick(){
         errorPane.setVisible(false);
+    }
+
+    @FXML
+    public void settingsPageClick(MouseEvent event) throws IOException {
+        ArrayList<String> data = new ArrayList<>();
+        data.add("student-create-request");
+        data.add(student.getUsername());
+        FXRouter.goTo("settings", data);
+
     }
 
     @FXML
