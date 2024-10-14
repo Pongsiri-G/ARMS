@@ -20,11 +20,11 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class LeaveOfAbsenceRequestPDF {
+public class SickLeaveRequestPDF {
     private static final String imagePath = "src/main/resources/images/KU.png";
     private static final String thaiFontPath = "src/main/resources/style/THSarabunNew.ttf";
 
-    public static void createRequest(String requestsDirectory, LeaveOfAbsenceRequest request) throws IOException {
+    public static void createRequest(String requestsDirectory, SickLeaveRequest request) throws IOException {
         Student student = request.getRequester();
         // Create PDF document
         File file = new File(requestsDirectory);
@@ -54,7 +54,7 @@ public class LeaveOfAbsenceRequestPDF {
         Paragraph textHeader = new Paragraph()
                 .setFixedLeading(14)
                 .add(new Paragraph().add("มหาวิทยาลัยเกษตรศาสตร์\n").setFont(thaiFont).setFontSize(24).setBold().setTextAlignment(TextAlignment.LEFT))
-                .add(new Paragraph().add("ใบขอลาพักการศึกษา /Request for Leave of Absence Request").setFont(thaiFont).setFontSize(18).setTextAlignment(TextAlignment.LEFT));
+                .add(new Paragraph().add("ใบขออณุญาตลากิจ/ลาป่วย /Request for leave/sick leave").setFont(thaiFont).setFontSize(18).setTextAlignment(TextAlignment.LEFT));
 
         //div.setHorizontalAlignment(HorizontalAlignment.LEFT); // Align elements horizontally to the left
 
@@ -121,41 +121,29 @@ public class LeaveOfAbsenceRequestPDF {
                 .add(new Tab())
                 .addTabStops(new TabStop(200, TabAlignment.LEFT))
                 .add(new Paragraph("หมายเลขโทรศัพท์: " + request.getNumberPhone()).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
-                .add(new Tab())
-                .addTabStops(new TabStop(350, TabAlignment.LEFT))
-                .add(new Paragraph("ที่อยู่ปัจจุบัน: " + request.getCurrentAddress()).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
                 .add("\n")
                 .add(new Paragraph("Major Field").setFont(thaiFont).setFontSize(10).setTextAlignment(TextAlignment.LEFT))
                 .add(new Tab())
                 .addTabStops(new TabStop(200, TabAlignment.LEFT))
                 .add(new Paragraph("Phone number").setFont(thaiFont).setFontSize(10).setTextAlignment(TextAlignment.LEFT))
-                .add(new Tab())
-                .addTabStops(new TabStop(350, TabAlignment.LEFT))
-                .add(new Paragraph("Current address").setFont(thaiFont).setFontSize(10).setTextAlignment(TextAlignment.LEFT))
                 .add("\n");
 
         Paragraph nisitReason = new Paragraph()
                 .setFixedLeading(4)
-                .add(new Paragraph("สาเหตุที่ลา: " + request.getReason()).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
+                .add(new Paragraph("สาเหตุที่ลา" + request.getLeaveType() + ": " + request.getReason()).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
                 .add("\n")
                 .add(new Paragraph("Reason for request").setFont(thaiFont).setFontSize(10).setTextAlignment(TextAlignment.LEFT))
-                .add("\n");
-        Paragraph nisitInfo3 = new Paragraph()
-                .setFixedLeading(4)
-                .add(new Paragraph("มีความประสงค์ขอลงพักการศึกษาเป็นจำนวน: " + request.calculateTotalSemesters() + " ภาคการศึกษา       ตั้งแต่ภาค: " + request.getFromSemester() + " ปีการศึกษา: " + request.getFromAcademicYear() + "    ถึงภาค: " + request.getToSemester() + " ปีการศึกษา: " + request.getToAcademicYear()).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
-                .add("\n")
-                .add(new Paragraph("Request for leave of absence for                                            Semesters               from Semester           Academic year               to Semesters                Academic year").setFont(thaiFont).setFontSize(10).setTextAlignment(TextAlignment.LEFT))
                 .add("\n");
 
         Paragraph nisitInfo4 = new Paragraph()
                 .setFixedLeading(4)
-                .add(new Paragraph("อนึ่ง ข้าพเจ้าได้ลงทะเบียนเรียนไว้ในภาค: " + request.getCurrentSemester() + " ปีการศึกษา: " + request.getCurrentAcademicYear() + " ดังนี้").setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
+                .add(new Paragraph("โดยมีรายวิชาที่ขอหยุดเรียนดังนี้").setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
                 .add("\n")
-                .add(new Paragraph("I am registered in the present semester for the following courses:").setFont(thaiFont).setFontSize(10).setTextAlignment(TextAlignment.LEFT))
+                .add(new Paragraph("The subjects that I would like to cancel are as follows:").setFont(thaiFont).setFontSize(10).setTextAlignment(TextAlignment.LEFT))
                 .add("\n");
 
         //String test = "sdafas\nlkjdsdafas\nlksdafas\nlksdafas\nlksdafas\nlksdafas\nlksdafas\nlksdafas\nlkkljfgsjojglasngdfasglkgskldjlk;sjbklejgjearjgskjgfjgsdjg;fj;zdjdfjgsdjgfsjgklsjgklsdjlsgjksfjgjodglksjgdsfljs";
-        Paragraph nisitInfo5 = new Paragraph(request.getReason()).setFixedLeading(14).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT);
+        Paragraph nisitInfo5 = new Paragraph(request.getRegisteredCourses()).setFixedLeading(14).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT);
 
         Paragraph consideration = new Paragraph()
                 .add(new Paragraph()
@@ -257,7 +245,6 @@ public class LeaveOfAbsenceRequestPDF {
         div.add(nisitInfo1);
         div.add(nisitInfo2);
         div.add(nisitReason);
-        div.add(nisitInfo3);
         div.add(nisitInfo4);
         div.add(nisitInfo5);
         div.add(consideration);

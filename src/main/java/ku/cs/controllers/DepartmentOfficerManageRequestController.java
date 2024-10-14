@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class DepartmentOfficerManageRequestController {
     // UI Components
@@ -251,8 +252,18 @@ public class DepartmentOfficerManageRequestController {
             // Get the absolute path of the file as a String
             String filePath = fileToSave.getAbsolutePath();
 
-            // Call the method to save the PDF using the file path String
-            LeaveOfAbsenceRequestPDF.createRequest(filePath, (LeaveOfAbsenceRequest) request);
+            if (Objects.equals(request.getRequestType(), "ลาป่วยหรือลากิจ")){
+                System.out.println("0");
+                SickLeaveRequestPDF.createRequest(filePath, (SickLeaveRequest) request);
+            }
+            else if (Objects.equals(request.getRequestType(), "ลาพักการศึกษา")){
+                System.out.println("1");
+                LeaveOfAbsenceRequestPDF.createRequest(filePath, (LeaveOfAbsenceRequest) request);
+            }
+            else if (Objects.equals(request.getRequestType(), "ลาออก")) {
+                System.out.println("2");
+                ResignationRequestPDF.createRequest(filePath, (ResignationRequest) request);
+            }
         }
 
     }
