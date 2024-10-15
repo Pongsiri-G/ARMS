@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
@@ -128,16 +129,23 @@
                                     </Label>
                                  </children>
                               </HBox>
-                              <TextArea fx:id="requestDetail" editable="false" prefHeight="611.0" prefWidth="1170.0" text="เนื้อเพลง มหาลัยวัวชน วงพัทลุง&#10;ไม่รู้อิทำพรือได้แค่หยบแล&#10;เข้า แค่ แค่ ก็ไม่กล้า&#10;รักเกิดจากใจ อยากให้รู้ว่า&#10;เวลาเห็นหน้าแล้วมันตื่นเต้น&#10;&#10;ได้แต่มองแล้วเดินผ่านไป&#10;ไม่โร้ตอใดได้บอกให้ฟัง&#10;ว่าใครคนหนึ่งชอบเธอจัง&#10;แต่ภาพของฉัน ไม่น่ามอง&#10;&#10;เป็นเด็กบ้าน บ้าน เป็นเด็กเลี้ยงวัว&#10;เนื้อตัวไม่ใสสะอาด&#10;ไม่ได้ถือกระดาษ พี่ถือเคียวตัดหญ้า&#10;มหาลัยวัวชน&#10;&#10;* ตื่นเช้าเดินตามยาวหนน จูงวัวชน คนกับวัว&#10;น้องสาวคงไม่รู้ตัว ว่าทำเด็กแลวัวนั้นหวั่นไหว&#10;เธอมองมาแต่ละที ทำพี่บัดสีก้มหน้าเร็วไว&#10;มีแต่วัวที่เป็นเพื่อนรู้ใจ อยากจะบอกใครแต่ใจไม่กล้า&#10;&#10;** เราเด็กบ้าน บ้าน เราเด็กเลี้ยงวัว&#10;สากลัวเธอไม่สนใจ&#10;เราเด็กบ้าน บ้าน คงไม่สาไหร่&#10;ไม่ถูกใจเหมือนเด็กหาดใหญ่ในหลาด&#10;&#10;*** แค่เด็กบ้าน บ้าน ที่ไม่เจียมตัว&#10;ก็โร้ตัวก็รักเธอเหม็ดใจ&#10;แค่เด็ก บ้าน บ้าน ที่รักเธอมากหวาใคร&#10;จะบอกออกไปแต่ใจไม่กล้า&#10;&#10;**** ก็เป็นแค่เด็ก บ้าน บ้าน&#10;&#10;solo&#10;&#10;&#10;ซ้ำ * / ** / *** / ** / *** / ****&#10;">
-                                 <font>
-                                    <Font size="18.0" />
-                                 </font>
-                                 <VBox.margin>
-                                    <Insets top="10.0" />
-                                 </VBox.margin>
-                              </TextArea>
+                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="1170.0" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <ScrollPane fx:id="requestDetail" pannable="true" prefHeight="591.0" prefWidth="1240.0" />
+                                 </children>
+                              </HBox>
                               <HBox alignment="TOP_RIGHT" prefHeight="50.0" prefWidth="1170.0">
                                  <children>
+                                    <Button mnemonicParsing="false" onMouseClicked="#downloadButtonClick" text="ดาวโหลดไฟล์คำร้อง">
+                                       <HBox.margin>
+                                          <Insets right="20.0" top="10.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                    <Button mnemonicParsing="false" onMouseClicked="#uploadButtonClick" text="อัพโหลดไฟล์คำร้อง">
+                                       <HBox.margin>
+                                          <Insets right="20.0" top="10.0" />
+                                       </HBox.margin>
+                                    </Button>
                                     <MenuButton fx:id="selectOfficerHandlingMenu" mnemonicParsing="false" prefHeight="46.0" prefWidth="234.0" style="-fx-background-color: white; -fx-border-color: black;" styleClass="choice-box" stylesheets="@../../../style/style.css" text="เลือกผู้ดำเนินการ" textAlignment="CENTER" wrapText="true">
                                       <items>
                                         <MenuItem mnemonicParsing="false" text="Action 1" />
@@ -235,6 +243,7 @@
                   </StackPane>
                   <HBox alignment="CENTER_RIGHT" prefHeight="22.0" prefWidth="1109.0">
                      <children>
+                        <Label fx:id="fileLabel" prefHeight="21.0" prefWidth="206.0" text="Label" />
                         <Label fx:id="errorLabel" disable="true" prefHeight="21.0" prefWidth="230.0" text="Error" textFill="RED" visible="false">
                            <HBox.margin>
                               <Insets />

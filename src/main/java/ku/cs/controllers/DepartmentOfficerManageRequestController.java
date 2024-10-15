@@ -1,6 +1,5 @@
 package ku.cs.controllers;
 
-import com.itextpdf.kernel.pdf.PdfDocument;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -29,7 +28,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class DepartmentOfficerManageRequestController {
     // UI Components
@@ -87,9 +85,8 @@ public class DepartmentOfficerManageRequestController {
         officer = (DepartmentOfficer) data.get(3);  // Get the Officer object
         student = request.getRequester();
         setupOfficerInfo();
-        switchToDetailScence();
+        switchToDetailScene();
         setShowPDF(request.getPdfFilePath());
-        System.out.println(request.getPdfFilePath());
     }
 
     public void setupOfficerInfo() {
@@ -149,7 +146,7 @@ public class DepartmentOfficerManageRequestController {
     }
 
 
-    public void resetSecene(){
+    public void resetScene(){
         requestDetailScene.setVisible(false);
         requestDetailButtons.setVisible(false);
         rejectRequestScene.setVisible(false);
@@ -158,8 +155,8 @@ public class DepartmentOfficerManageRequestController {
         fileLabel.setText("");
     }
 
-    public void switchToDetailScence(){
-        resetSecene();
+    public void switchToDetailScene(){
+        resetScene();
         requestDetailScene.setVisible(true);
         requestDetailButtons.setVisible(true);
         //requestDetail.setText(request.get());
@@ -169,8 +166,8 @@ public class DepartmentOfficerManageRequestController {
         fillSelectApproverMenuButtons();
     }
 
-    public void switchToRejectScence(){
-        resetSecene();
+    public void switchToRejectScene(){
+        resetScene();
         rejectRequestScene.setVisible(true);
         rejectRequestScene.setDisable(false);
     }
@@ -208,12 +205,12 @@ public class DepartmentOfficerManageRequestController {
         requestDatasource.writeData(requestList);
     }
 
-    public boolean checkValid(String approver){
+    public boolean checkValid(String approver, boolean isUseFile){
         if (approver.equals("") || approver == null || approver.equals("เลือกผู้ดำเนินการ")) {
             errorLabel.setText("กรุณาเลือกผู้ดำเนินการ");
             return false;
         }
-        else if (selectedFile == null){
+        else if (isUseFile && selectedFile == null){
             errorLabel.setText("กรุณาอัพโหลดไฟล์ PDF");
             return false;
         }
@@ -223,15 +220,15 @@ public class DepartmentOfficerManageRequestController {
     @FXML
     public void onRejectRequestButtonClick(MouseEvent event) {
         selectedApprove = selectOfficerHandlingMenu.getText();
-        if (checkValid(selectedApprove)) {
-            switchToRejectScence();
+        if (checkValid(selectedApprove, false)) {
+            switchToRejectScene();
         }
     }
 
     @FXML
     public void onSendRequestButtonClick(MouseEvent event) throws IOException {
         selectedApprove = selectOfficerHandlingMenu.getText();
-        if (checkValid(selectedApprove)) {
+        if (checkValid(selectedApprove, true)) {
             officer.acceptRequest(request, selectedApprove);
             updateRequest();
             FXRouter.goTo("department-officer", officer.getUsername());
@@ -241,7 +238,7 @@ public class DepartmentOfficerManageRequestController {
     @FXML
     public void onApproveRequestButtonClick(MouseEvent event) throws IOException {
         selectedApprove = selectOfficerHandlingMenu.getText();
-        if (checkValid(selectedApprove)) {
+        if (checkValid(selectedApprove, true)) {
             officer.acceptRequest(request, selectedApprove);
             updateRequest();
             FXRouter.goTo("department-officer", officer.getUsername());
@@ -254,14 +251,15 @@ public class DepartmentOfficerManageRequestController {
 
     @FXML
     public void onBackToDetailButtonClick(MouseEvent event) {
-        switchToDetailScence();
+        switchToDetailScene();
         selectOfficerHandlingMenu.setText("เลือกผู้ดำเนินการ");
     }
 
     @FXML
     public void onOkButtonClick(MouseEvent event) throws IOException {
         officer.rejectRequest(request,selectedApprove, reasonForRejectTextArea.getText());
-        updateRequest();
+        // เขียนลง csv
+        requestDatasource.writeData(requestList);
         FXRouter.goTo("department-officer", officer.getUsername());
     }
 

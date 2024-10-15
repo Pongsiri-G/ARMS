@@ -1,26 +1,30 @@
 package ku.cs.controllers;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
-import ku.cs.models.FacultyOfficer;
-import ku.cs.models.Request;
-import ku.cs.models.RequestHandlingOfficer;
-import ku.cs.models.RequestList;
+import javafx.stage.FileChooser;
+import ku.cs.models.*;
 import ku.cs.services.FXRouter;
 import javafx.scene.input.MouseEvent;
-import ku.cs.services.RequestHandlingOfficersDataSource;
+import ku.cs.services.FileStorage;
 import ku.cs.services.RequestListFileDatasource;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.PDFRenderer;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,13 +43,15 @@ public class FacultyOfficerRequestController {
     @FXML
     VBox requestDetailScene;
     @FXML
-    TextArea requestDetail;
-    @FXML
     StackPane requestDetailButtons;
     @FXML
     MenuButton selectOfficerHandlingMenu;
     @FXML
     Label errorLabel;
+    @FXML
+    Label fileLabel;
+    @FXML
+    ScrollPane requestDetail;
 
     //หน้าปฏิเสธคำร้อง
     @FXML
@@ -60,8 +66,11 @@ public class FacultyOfficerRequestController {
     private RequestList requestList;
     private FacultyOfficer officer;
     private String selectedApprove;
+    private Student student;
 
-    public void initialize() {
+    private File selectedFile;
+
+    public void initialize() throws IOException {
         errorLabel.setDisable(false);
         System.out.println("---------------------------------------");
         // Retrieve the passed data (List<Object>)
@@ -71,8 +80,10 @@ public class FacultyOfficerRequestController {
         requestList = (RequestList) data.get(1);
         requestDatasource = (RequestListFileDatasource) data.get(2);
         officer = (FacultyOfficer) data.get(3);  // Get the Officer object;
+        student = request.getRequester();
         setupOfficerInfo();
-        switchToDetailScence();
+        switchToDetailScene();
+        setShowPDF(request.getPdfFilePath());
     }
 
     public void setupOfficerInfo() {
@@ -96,16 +107,52 @@ public class FacultyOfficerRequestController {
         }
     }
 
-    public void resetSecene(){
+    public void setShowPDF(String pdfFilePath) throws IOException {
+        // Load PDF document
+        PDDocument document = PDDocument.load(new File(pdfFilePath));
+
+        // Create a PDFRenderer to render the PDF
+        PDFRenderer pdfRenderer = new PDFRenderer(document);
+
+        // Create a VBox to hold all the pages (images)
+        VBox vbox = new VBox(10); // 10px spacing between images
+        vbox.setStyle("-fx-alignment: center;"); // Center content in VBox horizontally
+
+        // Loop through all pages and render them as images
+        for (int page = 0; page < document.getNumberOfPages(); page++) {
+            // Render each page as a BufferedImage
+            BufferedImage bufferedImage = pdfRenderer.renderImageWithDPI(page, 150);;
+
+            // Convert BufferedImage to JavaFX Image
+            Image fxImage = SwingFXUtils.toFXImage(bufferedImage, null);
+
+            // Create an ImageView for each page
+            ImageView imageView = new ImageView(fxImage);
+            imageView.setFitWidth(1240);  // Adjust width to fit the view
+            imageView.setPreserveRatio(true); // Maintain aspect ratio
+
+            // Add the ImageView to the VBox
+            vbox.getChildren().add(imageView);
+        }
+
+        // Set the VBox as the content of the ScrollPane
+        requestDetail.setContent(vbox);
+
+        // Close the PDF document after rendering all pages
+        document.close();
+    }
+
+    public void resetScene(){
         requestDetailScene.setVisible(false);
         requestDetailButtons.setVisible(false);
         rejectRequestScene.setVisible(false);
         errorLabel.setVisible(false);
         errorLabel.setText("");
+        fileLabel.setText("");
     }
 
-    public void switchToDetailScence(){
-        resetSecene();
+    public void switchToDetailScene(){
+        resetScene();
         requestDetailScene.setVisible(true);
         requestDetailButtons.setVisible(true);
         //requestDetail.setText(request.getText());
@@ -115,15 +162,12 @@ public class FacultyOfficerRequestController {
         fillSelectApproverMenuButtons();
     }
 
-    public void switchToRejectScence(){
-        resetSecene();
+    public void switchToRejectScene(){
+        resetScene();
         rejectRequestScene.setVisible(true);
         rejectRequestScene.setDisable(false);
     }
 
-    public void updateRequest(){
-        requestDatasource.writeData(requestList);
-    }
 
     public void fillSelectApproverMenuButtons() {
         selectOfficerHandlingMenu.getItems().clear();
@@ -146,9 +190,24 @@ public class FacultyOfficerRequestController {
 
     }
 
-    public boolean checkValid(String approver){;
+    public void updateRequest() throws IOException {
+        // การอัพโหลด pdf
+        fileLabel.setText(selectedFile.getName());
+        String filePath = FileStorage.replaceFileWithTimestamp(selectedFile, request.getPdfFilePath()); // เอาไฟล์ที่อัพโหลดไปใส่
+        request.setPdfFilePath(filePath); // เก็บที่อยู่ pdf ใน request
+        //System.out.println(request.getPdfFilePath()); //for debug
+
+        // เขียนลง csv
+        requestDatasource.writeData(requestList);
+    }
+
+    public boolean checkValid(String approver, boolean isUseFile){
         if (approver.equals("") || approver == null || approver.equals("เลือกผู้ดำเนินการ")) {
             errorLabel.setText("กรุณาเลือกผู้ดำเนินการ");
+            return false;
+        }
+        else if (isUseFile && selectedFile == null){
+            errorLabel.setText("กรุณาอัพโหลดไฟล์ PDF");
             return false;
         }
         return true;
@@ -157,14 +216,14 @@ public class FacultyOfficerRequestController {
     @FXML
     public void onRejectRequestButtonClick(MouseEvent event) {
         selectedApprove = selectOfficerHandlingMenu.getText();
-        if (checkValid(selectedApprove)) {
-            switchToRejectScence();
+        if (checkValid(selectedApprove, false)) {
+            switchToRejectScene();
         }
     }
     @FXML
     public void onApproveRequestButtonClick(MouseEvent event) throws IOException {
         selectedApprove = selectOfficerHandlingMenu.getText();
-        if (checkValid(selectedApprove)) {
+        if (checkValid(selectedApprove, true)) {
             officer.acceptRequest(request, selectedApprove);
             updateRequest();
             FXRouter.goTo("faculty-officer");
@@ -176,22 +235,65 @@ public class FacultyOfficerRequestController {
         FXRouter.goTo("faculty-officer", officer.getUsername());
     }
 
-    @FXML
-    public void onn(MouseEvent event) {
-        System.out.println("8");
-    }
 
     @FXML
     public void onBackToDetailButtonClick(MouseEvent event) {
-        switchToDetailScence();
+        switchToDetailScene();
         selectOfficerHandlingMenu.setText("เลือกผู้ดำเนินการ");
     }
 
     @FXML
     public void onOkButtonClick(MouseEvent event) throws IOException {
         officer.rejectRequest(request,selectedApprove, reasonForRejectTextArea.getText());
-        updateRequest();
+        // เขียนลง csv
+        requestDatasource.writeData(requestList);
         FXRouter.goTo("faculty-officer", officer.getUsername());
+    }
+
+    @FXML
+    public void uploadButtonClick(MouseEvent event) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose PDF File");
+        // Filter to show only PDF files
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("PDF Files", "*.pdf")
+        );
+
+        selectedFile = fileChooser.showOpenDialog(requestDetailScene.getScene().getWindow());
+    }
+
+    @FXML
+    public void downloadButtonClick(MouseEvent event) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save PDF File");
+
+        // Set the file extension filter to PDF files only
+        FileChooser.ExtensionFilter pdfFilter = new FileChooser.ExtensionFilter("PDF Files", "*.pdf");
+        fileChooser.getExtensionFilters().add(pdfFilter);
+
+        // Set the initial file name (optional)
+        fileChooser.setInitialFileName(student.getStudentID() + request.getRequestType() + ".pdf");
+
+        // Show the Save File dialog
+        File fileToSave = fileChooser.showSaveDialog(requestDetailScene.getScene().getWindow());
+
+        if (fileToSave != null) {
+            // Get the absolute path of the file as a String
+            String filePath = fileToSave.getAbsolutePath();
+
+            // Get the path of the existing PDF file
+            Path sourcePath = Path.of(request.getPdfFilePath());  // Assuming this returns a valid path
+            Path destinationPath = Path.of(filePath);
+
+            try {
+                // Copy the existing PDF to the new location
+                Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+                System.out.println("PDF copied successfully to: " + filePath);
+            } catch (IOException e) {
+                System.err.println("Error copying the PDF file: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
     }
 
 
