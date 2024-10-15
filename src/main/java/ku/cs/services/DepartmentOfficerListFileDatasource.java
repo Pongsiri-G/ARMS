@@ -44,7 +44,7 @@ public class DepartmentOfficerListFileDatasource implements Datasource<ArrayList
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] data = line.split(",");
-                if (data.length < 8) continue;
+                if (data.length < 9) continue;
 
                 String username = data[0];
                 String password = data[1];
@@ -54,12 +54,14 @@ public class DepartmentOfficerListFileDatasource implements Datasource<ArrayList
                 String profilePicturePath = data[5].isEmpty() ? User.DEFAULT_PROFILE_PICTURE_PATH : data[5];
                 String facultyName = data[6];
                 String departmentName = data[7];
+                String defaultPassword = data[8];
 
                 Faculty faculty = new Faculty(facultyName);
                 Department department = new Department(departmentName);
                 DepartmentOfficer departmentOfficer = new DepartmentOfficer(username, password, name, faculty, department, true, isSuspended);
                 departmentOfficer.setLastLogin(lastLogin);
                 departmentOfficer.setProfilePicturePath(profilePicturePath);
+                departmentOfficer.setDefaultPassword(defaultPassword);
 
                 departmentOfficers.add(departmentOfficer);
             }
@@ -78,6 +80,7 @@ public class DepartmentOfficerListFileDatasource implements Datasource<ArrayList
             for (DepartmentOfficer departmentOfficer : departmentOfficers) {
                 String lastLoginStr = departmentOfficer.getLastLogin() == null ? "ไม่เคยเข้าใช้งาน" : departmentOfficer.getLastLogin().format(formatter);
                 String profilePicturePath = departmentOfficer.getProfilePicturePath() == null ? User.DEFAULT_PROFILE_PICTURE_PATH : departmentOfficer.getProfilePicturePath();
+                String defaultPassword = departmentOfficer.getDefaultPassword();
 
                 StringBuilder line = new StringBuilder();
                 line.append(departmentOfficer.getUsername()).append(",")
@@ -87,7 +90,8 @@ public class DepartmentOfficerListFileDatasource implements Datasource<ArrayList
                         .append(lastLoginStr).append(",")
                         .append(profilePicturePath).append(",")
                         .append(departmentOfficer.getFaculty().getFacultyName()).append(",")
-                        .append(departmentOfficer.getDepartment().getDepartmentName());
+                        .append(departmentOfficer.getDepartment().getDepartmentName()).append(",")
+                        .append(departmentOfficer.getDefaultPassword());
 
                 fileWriter.write(line.toString() + "\n");
             }

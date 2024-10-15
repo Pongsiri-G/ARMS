@@ -65,6 +65,7 @@ public class Department {
 
     public void increaseApprovedDepartmentRequest() {
         this.approvedDepartmentRequest++;
+        System.out.println("Approved requests increased for department: " + this.departmentName + ", new count: " + this.approvedDepartmentRequest);
     }
 
 

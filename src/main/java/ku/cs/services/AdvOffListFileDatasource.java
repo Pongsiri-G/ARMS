@@ -51,7 +51,7 @@ public class AdvOffListFileDatasource implements Datasource<ArrayList<Advisor>> 
                 String[] data = line.split(","); // แบ่งข้อมูลด้วยเครื่องหมายจุลภาค
 
                 // ตรวจสอบจำนวนคอลัมน์ว่าถูกต้อง
-                if (data.length != 10) continue;
+                if (data.length != 11) continue;
 
                 String username = data[0]; // ชื่อผู้ใช้
                 String password = data[1]; // รหัสผ่าน
@@ -63,11 +63,13 @@ public class AdvOffListFileDatasource implements Datasource<ArrayList<Advisor>> 
                 String department = data[7]; // ภาควิชา
                 String advisorID = data[8]; // รหัสอาจารย์
                 String advisorEmail = data[9]; // อีเมล
+                String defaultPassword = data[10];
 
                 // เพิ่ม Advisor ไปยัง list ด้วยวิธี addNewAdvisor
                 Advisor a = new Advisor(username, password, name, new Faculty(faculty), new Department(department), advisorID, advisorEmail, true, suspended);
                 a.setLastLogin(lastLogin); // กำหนดค่า lastLogin
                 a.setProfilePicturePath(profilePicturePath); // กำหนดค่าพาธรูปโปรไฟล์
+                a.setDefaultPassword(defaultPassword);
                 advisors.add(a);
             }
         } catch (IOException e) {
@@ -99,6 +101,7 @@ public class AdvOffListFileDatasource implements Datasource<ArrayList<Advisor>> 
             for (Advisor advisor : advisors) {
                 String lastLoginStr = advisor.getLastLogin() == null ? "ไม่เคยเข้าใช้งาน" : advisor.getLastLogin().format(formatter);
                 String profilePicturePath = advisor.getProfilePicturePath() == null ? User.DEFAULT_PROFILE_PICTURE_PATH : advisor.getProfilePicturePath();
+                String defaultPassword = advisor.getDefaultPassword() == null ? "" : advisor.getDefaultPassword();
                 String line = advisor.getUsername() + ","
                         + advisor.getPassword() + ","
                         + advisor.getName() + ","
@@ -108,7 +111,8 @@ public class AdvOffListFileDatasource implements Datasource<ArrayList<Advisor>> 
                         + advisor.getFaculty().getFacultyName() + ","
                         + advisor.getDepartment().getDepartmentName() + ","
                         + advisor.getAdvisorID() + ","
-                        + advisor.getAdvisorEmail();
+                        + advisor.getAdvisorEmail() + ","
+                        + advisor.getDefaultPassword();
                 buffer.write(line);
                 buffer.newLine();
             }

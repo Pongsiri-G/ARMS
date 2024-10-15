@@ -2,6 +2,9 @@ package ku.cs.controllers;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -24,6 +27,7 @@ import javafx.util.Callback;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.Comparator;
 
 public class UserManagementController {
     @FXML private ChoiceBox<String> searchByRole;
@@ -55,8 +59,6 @@ public class UserManagementController {
         datasource = new UserListFileDatasource(testDirectory, testStudentFileName, testAdvisorFileName, testFacultyOfficerFileName, testDepartmentFileName, testFacDepFileName);
         userList = datasource.readData();
 
-        // Print users who are suspended when the page is loaded (Debug)
-        printSuspendedUsers(userList);
         showTable(userList);
 
         // เพิ่ม Listener ให้กับ TextField เพื่อค้นหาทันทีที่มีการเปลี่ยนแปลงข้อความ
@@ -66,16 +68,6 @@ public class UserManagementController {
                 filterUsersBySearch(newValue);
             }
         });
-    }
-
-    // เมธอดสำหรับพิมพ์รายชื่อผู้ใช้ที่ถูกระงับ (Debug)
-    private void printSuspendedUsers(UserList userList) {
-        for (User user : userList.getAllUsers()) {
-            System.out.println("Checking user: " + user.getName() + " (" + user.getUsername() + ") - Suspended: " + user.getSuspended());
-            if (user.getSuspended()) {
-                System.out.println(user.getName() + " (" + user.getUsername() + ") ถูกระงับสิทธิ");
-            }
-        }
     }
 
     private void filterTableByRole(String role) {
@@ -157,7 +149,7 @@ public class UserManagementController {
         TableColumn<User, String> usernameColumn = new TableColumn<>("ชื่อผู้ใช้ระบบ");
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
 
-        // Column for username
+        // Column for name
         TableColumn<User, String> nameColumn = new TableColumn<>("ชื่อ");
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
@@ -168,9 +160,10 @@ public class UserManagementController {
             if (user.getLastLogin() != null) {
                 return new SimpleStringProperty(user.getLastLogin().toString());
             }
-            return new SimpleStringProperty("never");
+            return new SimpleStringProperty("ไม่เคยเข้าใช้งาน");
         });
 
+        // Column for suspend status
         TableColumn<User, Void> suspendColumn = new TableColumn<>("สถานะการระงับสิทธิ");
         Callback<TableColumn<User, Void>, TableCell<User, Void>> cellFactory = new Callback<TableColumn<User, Void>, TableCell<User, Void>>() {
             @Override
@@ -218,18 +211,37 @@ public class UserManagementController {
         suspendColumn.setCellFactory(cellFactory);
 
         userManagementTableView.getColumns().clear();
-        userManagementTableView.getColumns().add(pictureColumn);
-        userManagementTableView.getColumns().add(usernameColumn);
-        userManagementTableView.getColumns().add(nameColumn);
-        userManagementTableView.getColumns().add(timeColumn);
-        userManagementTableView.getColumns().add(suspendColumn);
+        userManagementTableView.getColumns().addAll(pictureColumn, usernameColumn, nameColumn, timeColumn, suspendColumn);
 
-        // Add users to the table
-        userManagementTableView.getItems().clear();
-        for (User user : userList.getAllUsers()) {
-            userManagementTableView.getItems().add(user);
-        }
+        // สร้าง ObservableList จาก userList
+        ObservableList<User> observableUserList = FXCollections.observableArrayList(userList.getAllUsers());
 
+        // สร้าง SortedList และกำหนด Comparator
+        SortedList<User> sortedList = new SortedList<>(observableUserList, new Comparator<User>() {
+            @Override
+            public int compare(User u1, User u2) {
+                if (u1.getLastLogin() == null && u2.getLastLogin() == null) {
+                    return 0;
+                } else if (u1.getLastLogin() == null) {
+                    return 1; // u1 ไม่มีการเข้าสู่ระบบล่าสุด, จัดหลัง
+                } else if (u2.getLastLogin() == null) {
+                    return -1; // u2 ไม่มีการเข้าสู่ระบบล่าสุด, จัดหลัง
+                } else {
+                    return u2.getLastLogin().compareTo(u1.getLastLogin()); // เรียง descending
+                }
+            }
+        });
+
+        // ตั้งค่า SortedList ให้กับ TableView
+        userManagementTableView.setItems(sortedList);
+
+        // ตั้งค่าการเรียงลำดับเริ่มต้น
+        userManagementTableView.getSortOrder().clear();
+        userManagementTableView.getSortOrder().add(timeColumn);
+        timeColumn.setSortType(TableColumn.SortType.DESCENDING);
+        userManagementTableView.sort();
+
+        // กำหนดความกว้างคอลัมน์
         pictureColumn.setPrefWidth(220);
         usernameColumn.setPrefWidth(220);
         nameColumn.setPrefWidth(220);

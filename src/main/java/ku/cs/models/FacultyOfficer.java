@@ -4,17 +4,20 @@ import java.util.ArrayList;
 
 public class FacultyOfficer extends User implements Officer {
     private Faculty faculty;
+    private String defaultPassword;
 
     // Begin Constructor
     public FacultyOfficer(String username, String password, String name, Faculty faculty, boolean isHashed, boolean suspended) {
         super(username, password, name, isHashed, suspended);
         this.faculty = faculty;
+        this.defaultPassword = password;
     }
 
     // ใข้ไปก่อนเดี๋ยวแก้ที่หลัง
     public FacultyOfficer(String username, String password, String name, String faculty, boolean isHashed, boolean suspended) {
         super(username, password, name, isHashed, suspended);
         this.faculty = new Faculty(faculty);
+        this.defaultPassword = password;
     }
     // End Constructor
 
@@ -75,6 +78,12 @@ public class FacultyOfficer extends User implements Officer {
     }
     public void acceptRequest(Request request, String approver) {
         request.processRequest(approver, "อนุมัติ", null);
+    }
+
+    public String getDefaultPassword() {return defaultPassword;}
+
+    public void setDefaultPassword(String defaultPassword) {
+        this.defaultPassword = defaultPassword;
     }
 
     public void setFaculty(Faculty faculty) {

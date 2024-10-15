@@ -5,12 +5,14 @@ import java.util.ArrayList;
 public class DepartmentOfficer extends User implements Officer {
     private Faculty faculty;
     private Department department;
+    private String defaultPassword;
 
     // Begin Constructor
     public DepartmentOfficer(String username, String password, String name, Faculty faculty, Department department, boolean isHashed, boolean suspended) {
         super(username, password, name, isHashed, suspended);
         this.faculty = faculty;
         this.department = department;
+        this.defaultPassword = password;
     }
 
     // ใข้ไปก่อนเดี๋ยวแก้ที่หลัง
@@ -18,6 +20,7 @@ public class DepartmentOfficer extends User implements Officer {
         super(username, password, name, isHashed, suspended);
         this.faculty = new Faculty(faculty);
         this.department = new Department(department);
+        this.defaultPassword = password;
     }
     // End Constructor
 
@@ -105,6 +108,12 @@ public class DepartmentOfficer extends User implements Officer {
 
     public void assignAdvisor(Student student, String Advisor){
         assignAdvisor(student, this.department.findAdvisorByName(Advisor));
+    }
+
+    public String getDefaultPassword() {return defaultPassword;}
+
+    public void setDefaultPassword(String defaultPassword) {
+        this.defaultPassword = defaultPassword;
     }
 
     public void setFaculty(Faculty faculty){
