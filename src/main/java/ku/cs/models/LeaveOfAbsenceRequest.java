@@ -1,5 +1,9 @@
 package ku.cs.models;
 
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 // ขอลาพักการศึกษา
@@ -29,6 +33,15 @@ public class LeaveOfAbsenceRequest extends Request {
         this.toSemester = toSemester;
         this.fromAcademicYear = fromAcademicYear;
         this.toAcademicYear = toAcademicYear;
+
+        String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss")); // timestamp ช่วยแก้ปัญหาชื่อไฟล์ซ้ำกันได้
+        String requestPdfPath = "data" + File.separator + "students_requests" + File.separator + requester.getStudentID() + File.separator + requester.getStudentID() + "-" + "คำร้องลาพักการศึกษา" + "_" + timeStamp + ".png";
+        try {
+            LeaveOfAbsenceRequestPDF.createRequest(requestPdfPath, this); //สร้างไฟล์ pdf
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        this.setPdfFilePath(requestPdfPath);
     }
 
     public LeaveOfAbsenceRequest(String timestamp, String requestType, String status, Student requester, String currentApprover, String numberPhone, String reason, String currentAddress, String registeredCourses, int currentSemester, int currentAcademicYear, int fromSemester, int fromAcademicYear, int toSemester, int toAcademicYear, String lastModifiedDateTime, String pdfFilePath, List<String>statusLog, List<String> approverList) {

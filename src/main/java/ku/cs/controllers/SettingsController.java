@@ -141,8 +141,18 @@ public class SettingsController {
             fileUploadLabel.setText(uploadedPicture.getName());
 
             // Save the uploaded file to a directory (you can modify the directory path as needed)
-            String directory = "data" + File.separator + "user-profile-picture" + File.separator + user.getUsername();
-            String filePath = FileStorage.saveFileToDirectory(uploadedPicture, directory);
+            String directory = "data" + File.separator + "user-profile-picture" + File.separator;
+
+            // Ensure the directory exists
+            File dir = new File(directory);
+            if (!dir.exists()) {
+                dir.mkdirs(); // Create the directory if it doesn't exist
+            }
+
+            String extension = uploadedPicture.getName().substring(uploadedPicture.getName().lastIndexOf(".")); //ตัวบอกว่าไฟล์ที่อัพไปมีนามสกุลอะไร
+            String filePath = directory + user.getUsername() + extension;
+
+            FileStorage.saveFileToDirectory(uploadedPicture, filePath);
             user.setProfilePicturePath(filePath);  // Set the profile picture path for the user
 
             // Update the Circle profile picture display

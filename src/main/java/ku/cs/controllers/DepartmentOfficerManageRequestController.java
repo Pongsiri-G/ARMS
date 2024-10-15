@@ -24,6 +24,9 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -85,7 +88,8 @@ public class DepartmentOfficerManageRequestController {
         student = request.getRequester();
         setupOfficerInfo();
         switchToDetailScence();
-        setShowPDF("data/StudentRequests/b6620400000/b6620400000ลาออก.pdf");
+        setShowPDF(request.getPdfFilePath());
+        System.out.println(request.getPdfFilePath());
     }
 
     public void setupOfficerInfo() {
@@ -195,11 +199,10 @@ public class DepartmentOfficerManageRequestController {
 
     public void updateRequest() throws IOException {
         // การอัพโหลด pdf
-        String directory = "data" + File.separator + "StudentRequests" + File.separator + student.getStudentID(); // กำหนดที่ๆ จะเก็บ
         fileLabel.setText(selectedFile.getName());
-        String filePath = FileStorage.saveFileToDirectory(selectedFile, directory); // เอาไฟล์ที่อัพโหลดไปใส่
+        String filePath = FileStorage.replaceFileWithTimestamp(selectedFile, request.getPdfFilePath()); // เอาไฟล์ที่อัพโหลดไปใส่
         request.setPdfFilePath(filePath); // เก็บที่อยู่ pdf ใน request
-        System.out.println(request.getPdfFilePath()); //for debug
+        //System.out.println(request.getPdfFilePath()); //for debug
 
         // เขียนลง csv
         requestDatasource.writeData(requestList);
@@ -278,6 +281,7 @@ public class DepartmentOfficerManageRequestController {
     public void downloadButtonClick(MouseEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save PDF File");
+
         // Set the file extension filter to PDF files only
         FileChooser.ExtensionFilter pdfFilter = new FileChooser.ExtensionFilter("PDF Files", "*.pdf");
         fileChooser.getExtensionFilters().add(pdfFilter);
@@ -292,24 +296,19 @@ public class DepartmentOfficerManageRequestController {
             // Get the absolute path of the file as a String
             String filePath = fileToSave.getAbsolutePath();
 
-            if (Objects.equals(request.getRequestType(), "ลาป่วยหรือลากิจ")){
-                System.out.println("0");
-                SickLeaveRequestPDF.createRequest(filePath, (SickLeaveRequest) request);
-            }
-            else if (Objects.equals(request.getRequestType(), "ลาพักการศึกษา")){
-                System.out.println("1");
-                LeaveOfAbsenceRequestPDF.createRequest(filePath, (LeaveOfAbsenceRequest) request);
-            }
-            else if (Objects.equals(request.getRequestType(), "ลาออก")) {
-                System.out.println("2");
-                ResignationRequestPDF.createRequest(filePath, (ResignationRequest) request);
+            // Get the path of the existing PDF file
+            Path sourcePath = Path.of(request.getPdfFilePath());  // Assuming this returns a valid path
+            Path destinationPath = Path.of(filePath);
+
+            try {
+                // Copy the existing PDF to the new location
+                Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+                System.out.println("PDF copied successfully to: " + filePath);
+            } catch (IOException e) {
+                System.err.println("Error copying the PDF file: " + e.getMessage());
+                e.printStackTrace();
             }
         }
-
     }
-
-
-
-
 
 }
