@@ -44,6 +44,33 @@
             <artifactId>bcrypt</artifactId>
             <version>${bcrypt.version}</version>
         </dependency>
+        <!-- Core kernel library for PDF operations -->
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>kernel</artifactId>
+            <version>8.0.5</version>
+        </dependency>
+
+        <!-- Layout module for high-level PDF document creation -->
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>layout</artifactId>
+            <version>8.0.5</version>
+        </dependency>
+
+        <!-- Forms module for handling PDF forms and AcroForms -->
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>forms</artifactId>
+            <version>8.0.5</version>
+        </dependency>
+
+        <!-- Optional: If you're using fonts or other advanced features -->
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>font-asian</artifactId>
+            <version>8.0.5</version>
+        </dependency>
     </dependencies>
 
     <build>

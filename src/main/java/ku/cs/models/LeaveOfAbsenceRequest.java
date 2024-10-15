@@ -31,8 +31,8 @@ public class LeaveOfAbsenceRequest extends Request {
         this.toAcademicYear = toAcademicYear;
     }
 
-    public LeaveOfAbsenceRequest(String timestamp, String requestType, String status, Student requester, String currentApprover, String numberPhone, String reason, String currentAddress, String registeredCourses, int currentSemester, int currentAcademicYear, int fromSemester, int fromAcademicYear, int toSemester, int toAcademicYear, String lastModifiedDateTime, List<String>statusLog, List<String> approverList) {
-        super(timestamp, requestType, status, requester, currentApprover, numberPhone, lastModifiedDateTime, statusLog, approverList);
+    public LeaveOfAbsenceRequest(String timestamp, String requestType, String status, Student requester, String currentApprover, String numberPhone, String reason, String currentAddress, String registeredCourses, int currentSemester, int currentAcademicYear, int fromSemester, int fromAcademicYear, int toSemester, int toAcademicYear, String lastModifiedDateTime, String pdfFilePath, List<String>statusLog, List<String> approverList) {
+        super(timestamp, requestType, status, requester, currentApprover, numberPhone, lastModifiedDateTime, pdfFilePath, statusLog, approverList);
         this.reason = reason;
         this.currentAddress = currentAddress;
         this.registeredCourses = registeredCourses;
