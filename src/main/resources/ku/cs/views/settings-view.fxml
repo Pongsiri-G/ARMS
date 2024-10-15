@@ -110,7 +110,7 @@
                <children>
                   <Button mnemonicParsing="false" onMouseClicked="#uploadProfilePictureButton" text="อัพโหลดรูปโปรไฟล์" />
                   <Button mnemonicParsing="false" onMouseClicked="#changeProfileToDefaultButton" text="เปลี่ยนเป็นโปรไฟล์์พื้นฐาน" />
-                  <Label fx:id="fileUploadLabel" text="ชื่อไฟล์ที่อัพโหลด" />
+                  <Label text="ชื่อไฟล์ที่อัพโหลด" />
                </children>
             </VBox>
          </children>

@@ -1,11 +1,11 @@
 package ku.cs.controllers;
 
+import com.itextpdf.kernel.pdf.PdfDocument;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -18,7 +18,10 @@ import ku.cs.services.FXRouter;
 import ku.cs.services.FileStorage;
 import ku.cs.services.RequestHandlingOfficersDataSource;
 import ku.cs.services.RequestListFileDatasource;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.PDFRenderer;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,8 +44,6 @@ public class DepartmentOfficerManageRequestController {
     @FXML
     VBox requestDetailScene;
     @FXML
-    TextArea requestDetail;
-    @FXML
     StackPane requestDetailButtons;
     @FXML
     MenuButton selectOfficerHandlingMenu;
@@ -50,6 +51,8 @@ public class DepartmentOfficerManageRequestController {
     Label errorLabel;
     @FXML
     Label fileLabel;
+    @FXML
+    ScrollPane requestDetail;
 
     //หน้าปฏิเสธคำร้อง
     @FXML
@@ -69,7 +72,7 @@ public class DepartmentOfficerManageRequestController {
 
     private File selectedFile;
 
-    public void initialize() {
+    public void initialize() throws IOException {
         errorLabel.setDisable(false);
         System.out.println("---------------------------------------");
         // Retrieve the passed data (List<Object>)
@@ -82,6 +85,7 @@ public class DepartmentOfficerManageRequestController {
         student = request.getRequester();
         setupOfficerInfo();
         switchToDetailScence();
+        setShowPDF("data/StudentRequests/b6620400000/b6620400000ลาออก.pdf");
     }
 
     public void setupOfficerInfo() {
@@ -92,7 +96,7 @@ public class DepartmentOfficerManageRequestController {
         setProfilePicture(officer.getProfilePicturePath());
     }
 
-    private void setProfilePicture(String profilePath) {
+    public void setProfilePicture(String profilePath) {
         try {
             // โหลดรูปจาก profilePath
             Image profileImage = new Image("file:" + profilePath);
@@ -104,6 +108,42 @@ public class DepartmentOfficerManageRequestController {
             profilePicture.setFill(Color.GRAY);
         }
     }
+
+    public void setShowPDF(String pdfFilePath) throws IOException {
+        // Load PDF document
+        PDDocument document = PDDocument.load(new File(pdfFilePath));
+
+        // Create a PDFRenderer to render the PDF
+        PDFRenderer pdfRenderer = new PDFRenderer(document);
+
+        // Create a VBox to hold all the pages (images)
+        VBox vbox = new VBox(10); // 10px spacing between images
+        vbox.setStyle("-fx-alignment: center;"); // Center content in VBox horizontally
+
+        // Loop through all pages and render them as images
+        for (int page = 0; page < document.getNumberOfPages(); page++) {
+            // Render each page as a BufferedImage
+            BufferedImage bufferedImage = pdfRenderer.renderImageWithDPI(page, 150);;
+
+            // Convert BufferedImage to JavaFX Image
+            Image fxImage = SwingFXUtils.toFXImage(bufferedImage, null);
+
+            // Create an ImageView for each page
+            ImageView imageView = new ImageView(fxImage);
+            imageView.setFitWidth(1240);  // Adjust width to fit the view
+            imageView.setPreserveRatio(true); // Maintain aspect ratio
+
+            // Add the ImageView to the VBox
+            vbox.getChildren().add(imageView);
+        }
+
+        // Set the VBox as the content of the ScrollPane
+        requestDetail.setContent(vbox);
+
+        // Close the PDF document after rendering all pages
+        document.close();
+    }
+
 
     public void resetSecene(){
         requestDetailScene.setVisible(false);
