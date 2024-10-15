@@ -1,30 +1,39 @@
 package ku.cs.controllers;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.chart.PieChart;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
-import ku.cs.models.Request;
-import ku.cs.models.RequestList;
-import ku.cs.models.UserList;
-import ku.cs.services.Datasource;
-import ku.cs.services.FXRouter;
-import ku.cs.services.RequestListFileDatasource;
-import ku.cs.services.UserListFileDatasource;
+import ku.cs.models.*;
+import ku.cs.services.*;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ApprovedController {
+    @FXML private ChoiceBox<String> selectedFaculty;
+    @FXML private ChoiceBox<String> selectedDepartment;
     @FXML private Label userLabel;
     @FXML private Label allRequestLabel;
     @FXML private Label approvedLabel;
-
-    @FXML private TableView<Request> approvedTableView;
+    @FXML private Label facultyLabel;
+    @FXML private Label departmentLabel;
+    @FXML private Label approvedCountLabel;
     private RequestList requestList;
+    private FacultyList facultyList;
     private UserList userList;
     private Datasource<RequestList> datasource;
     private Datasource<UserList> userDatasource;
+    private Datasource<FacultyList> facdepDatasource;
 
     @FXML
     public void initialize() {
@@ -32,42 +41,121 @@ public class ApprovedController {
         userList = userDatasource.readData();
         datasource = new RequestListFileDatasource("data/test", "requestlist.csv", userList);
         requestList = datasource.readData();
+        facdepDatasource = new FacDepListFileDatascource("data/test", "facdeplist.csv");
+        facultyList = facdepDatasource.readData();
 
-        showTable(requestList);
+        addChoiceBoxListeners();
+        populateFacultyChoiceBox();
+
+        selectedFaculty.getSelectionModel().select("วิทยาศาสตร์");
+        selectedDepartment.getSelectionModel().select("All");
+
         showRequest(requestList);
         showTotalUsers(userList);
     }
 
-    @FXML
-    private void showTable(RequestList requestList) {
-        //System.out.println("Showing table with " + requestList.getRequests().size() + " requests");
-        TableColumn<Request, String> nameColumn = new TableColumn<>("ชื่อผู้ใช้");
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+    private void populateFacultyChoiceBox() {
+        selectedFaculty.getItems().clear(); // ล้างรายการคณะเก่า
 
-        TableColumn<Request, String> facultyColumn = new TableColumn<>("คณะ");
-        facultyColumn.setCellValueFactory(new PropertyValueFactory<>("faculty"));
+        // เพิ่มชื่อคณะจาก FacultyList ลงใน ChoiceBox
+        for (Faculty faculty : facultyList.getFaculties()) {
+            selectedFaculty.getItems().add(faculty.getFacultyName()); // เพิ่มชื่อคณะ
+        }
 
-        TableColumn<Request, String> departmentColumn = new TableColumn<>("ภาควิชา");
-        departmentColumn.setCellValueFactory(new PropertyValueFactory<>("department"));
+        // ตั้งค่าเริ่มต้นให้เลือกเป็น "คณะวิทยาศาสตร์"
+        selectedFaculty.getSelectionModel().select("วิทยาศาสตร์");
+        populateDepartmentChoiceBox(selectedFaculty.getSelectionModel().getSelectedItem());
 
-        approvedTableView.getColumns().clear();
-        approvedTableView.getColumns().add(nameColumn);
-        approvedTableView.getColumns().add(facultyColumn);
-        approvedTableView.getColumns().add(departmentColumn);
+        // เพิ่ม Listener เพื่ออัปเดตสาขาเมื่อมีการเลือกคณะ
+        selectedFaculty.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    populateDepartmentChoiceBox(newValue);
+                    facultyLabel.setText(newValue); // อัปเดตป้ายชื่อคณะ
+                }
+        );
+    }
 
-        approvedTableView.getItems().clear();
 
-        // เพิ่มเฉพาะ requests ที่มีสถานะ "คำร้องถูกอนุมัติ"
-        for (Request request: requestList.getRequests()) {
-            if (request.getStatus().equals("คำร้องถูกอนุมัติ")) {
-                approvedTableView.getItems().add(request);
+    private void populateDepartmentChoiceBox(String selectedFacultyName) {
+        selectedDepartment.getItems().clear(); // ล้างรายการสาขาเก่า
+        selectedDepartment.getItems().add("All"); // เพิ่มตัวเลือก "All"
+
+        Faculty selectedFaculty = facultyList.findFacultyByName(selectedFacultyName);
+        if (selectedFaculty != null) {
+            // เพิ่มสาขาทั้งหมดในคณะที่เลือกลงใน ChoiceBox
+            for (Department department : selectedFaculty.getDepartments()) {
+                System.out.println("Adding department: " + department.getDepartmentName()); // Debugging
+                selectedDepartment.getItems().add(department.getDepartmentName());
+            }
+
+            // ตั้งค่าเริ่มต้นให้เลือกเป็น "All"
+            selectedDepartment.getSelectionModel().select("All");
+        } else {
+            System.out.println("Faculty not found: " + selectedFacultyName); // Debugging
+        }
+    }
+
+    private void addChoiceBoxListeners() {
+        selectedFaculty.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    if (newValue.equals("All")) {
+                        selectedDepartment.getSelectionModel().select("All"); // ตั้งค่า selectedDepartment เป็น "All"
+                    } else {
+                        populateDepartmentChoiceBox(newValue); // ปรับอัปเดตสาขา
+                    }
+                    facultyLabel.setText(newValue); // อัปเดตป้ายชื่อคณะ
+                }
+        );
+
+        selectedDepartment.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    departmentLabel.setText(newValue); // อัปเดตป้ายชื่อสาขา
+                    updateApprovedRequestCount(newValue);
+                }
+        );
+    }
+
+    private void updateApprovedRequestCount(String departmentName) {
+        String selectedFac = selectedFaculty.getSelectionModel().getSelectedItem();
+        int approvedCount = 0;
+
+        // ตรวจสอบว่าถ้า selectedDepartment เป็น "All"
+        if (departmentName.equals("All")) {
+            Faculty selectedFacultyObj = facultyList.findFacultyByName(selectedFac);
+            if (selectedFacultyObj != null) {
+                // วนลูปเช็คคำร้องของทุกสาขาในคณะที่เลือก
+                for (Department department : selectedFacultyObj.getDepartments()) {
+                    approvedCount += countApprovedRequestsByDepartment(department.getDepartmentName());
+                }
+            }
+        } else {
+            // ถ้าเลือกสาขาเฉพาะก็ให้คำนวณเฉพาะสาขานั้น
+            approvedCount = countApprovedRequestsByDepartment(departmentName);
+        }
+
+        // อัปเดต approvedCountLabel ด้วยจำนวนคำร้องที่ได้รับการอนุมัติ
+        approvedCountLabel.setText(String.format("%d", approvedCount));
+    }
+
+    private int countApprovedRequestsByDepartment(String departmentName) {
+        int count = 0;
+
+        for (Request request : requestList.getRequests()) {
+            Department department = request.getRequester().getEnrolledDepartment();
+
+            // ตรวจสอบว่าคำร้องมาจากสาขาที่เลือก และมีสถานะเป็น "เสร็จสิ้น"
+            if (department != null && department.getDepartmentName().equals(departmentName)
+                    && request.getStatus().equals("เสร็จสิ้น")) {
+                count++;
             }
         }
+
+        return count;
     }
 
     private void showRequest(RequestList requestList) {
         allRequestLabel.setText(String.format("%d", requestList.getAllRequestCount()));
-        approvedLabel.setText(String.format("%d", requestList.getAllRequestCount()));
+        approvedLabel.setText(String.format("%d", requestList.getApprovedRequestsCount()));
     }
 
     private void showTotalUsers(UserList userList) {

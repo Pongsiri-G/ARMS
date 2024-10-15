@@ -11,6 +11,7 @@ import ku.cs.models.*;
 import ku.cs.services.Datasource;
 import ku.cs.services.FXRouter;
 import ku.cs.services.FacDepListFileDatascource;
+import ku.cs.services.UserListFileDatasource;
 
 import java.io.IOException;
 
@@ -33,7 +34,8 @@ public class DepartmentAndFacultyManagementController {
     @FXML private Label editErrorMessageLabel;
     @FXML private TableView<Faculty> facDepTableView; // ใช้ Object เนื่องจากจะมีทั้ง Faculty และ Department
     private FacultyList facultyList;
-    private Datasource<FacultyList> datasource;
+    private UserList userList;
+    private Datasource<UserList> datasource;
 
     @FXML
     public void initialize() {
@@ -41,8 +43,9 @@ public class DepartmentAndFacultyManagementController {
         editErrorMessageLabel.setText("");
         addStackPane.setVisible(false);
         editStackPane.setVisible(false);
-        datasource = new FacDepListFileDatascource("data/test", "facdeplist.csv");
-        facultyList = datasource.readData();
+        datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
+        userList = datasource.readData();
+        facultyList = userList.getFacultyList();
         showTable(facultyList);
 
         facDepTableView.setOnMouseClicked(event -> {
@@ -66,19 +69,15 @@ public class DepartmentAndFacultyManagementController {
         TableColumn<Faculty, String> departmentColumn = new TableColumn<>("ภาควิชา");
         departmentColumn.setCellValueFactory(cellData -> {
             Faculty faculty = cellData.getValue();
-            String departments = faculty.getDepartments().stream()
-                    .map(Department::getDepartmentName)
-                    .collect(Collectors.joining(", "));
-            return new SimpleStringProperty(departments);
+            // คืนค่าชื่อภาควิชา
+            return new SimpleStringProperty(faculty.getDepartments().get(0).getDepartmentName());
         });
 
         TableColumn<Faculty, String> departmentIdColumn = new TableColumn<>("รหัสภาควิชา");
         departmentIdColumn.setCellValueFactory(cellData -> {
             Faculty faculty = cellData.getValue();
-            String departmentIds = faculty.getDepartments().stream()
-                    .map(Department::getDepartmentID)
-                    .collect(Collectors.joining(", "));
-            return new SimpleStringProperty(departmentIds);
+            // คืนค่ารหัสภาควิชา
+            return new SimpleStringProperty(faculty.getDepartments().get(0).getDepartmentID());
         });
 
         // ล้างคอลัมน์เก่า
@@ -86,8 +85,19 @@ public class DepartmentAndFacultyManagementController {
         // เพิ่มคอลัมน์ใหม่ทั้งหมด
         facDepTableView.getColumns().addAll(facultyColumn, facultyIdColumn, departmentColumn, departmentIdColumn);
 
+        // สร้าง ObservableList ใหม่สำหรับแสดงผล
+        ObservableList<Faculty> data = FXCollections.observableArrayList();
+
+        // เพิ่มข้อมูลใหม่โดยการแยกแถวสำหรับแต่ละภาควิชา
+        for (Faculty faculty : facultyList.getFaculties()) {
+            for (Department department : faculty.getDepartments()) {
+                Faculty newFaculty = new Faculty(faculty.getFacultyName(), faculty.getFacultyId());
+                newFaculty.addDepartment(department.getDepartmentName(), department.getDepartmentID());
+                data.add(newFaculty);
+            }
+        }
+
         // ตั้งค่าข้อมูลให้กับ TableView
-        ObservableList<Faculty> data = FXCollections.observableArrayList(facultyList.getFaculties());
         facDepTableView.setItems(data);
     }
 
@@ -112,7 +122,6 @@ public class DepartmentAndFacultyManagementController {
         clearEditFields();
     }
 
-    // คุณสามารถเพิ่มฟังก์ชันสำหรับการบันทึกการแก้ไขได้ที่นี่
     @FXML
     public void onEditClick() {
         String facultyName = editFacultyTextField.getText();
@@ -120,37 +129,63 @@ public class DepartmentAndFacultyManagementController {
         String departmentName = editDepartmentTextField.getText();
         String departmentId = editDepartmentIdTextField.getText();
 
-        if (facultyName.trim().isEmpty() || facultyId.trim().isEmpty() || departmentName.trim().isEmpty() || departmentId.trim().isEmpty() || facultyName == null || facultyId == null || departmentName == null || departmentId == null) {
+        if (facultyName.trim().isEmpty() || facultyId.trim().isEmpty() || departmentName.trim().isEmpty() || departmentId.trim().isEmpty()) {
             editErrorMessageLabel.setText("กรุณากรอกข้อมูลให้ครบถ้วน");
             return;
         }
 
         Faculty selectedFaculty = facDepTableView.getSelectionModel().getSelectedItem();
-        if (selectedFaculty != null) {
-            // อัปเดตข้อมูลของ selectedFaculty
-            selectedFaculty.setFacultyName(facultyName);
-            selectedFaculty.setFacultyId(facultyId);
+        Faculty originFaculty = facultyList.findFacultyByName(selectedFaculty.getFacultyName());
 
-            // อัปเดตภาควิชา (ตามที่คุณออกแบบไว้ในโมเดล)
-            // ในที่นี้สมมุติว่ามีแค่ภาควิชาเดียวที่สามารถแก้ไขได้
-            if (!selectedFaculty.getDepartments().isEmpty()) {
-                Department department = selectedFaculty.getDepartments().get(0); // สมมุติว่ามีแค่หนึ่งภาควิชา
-                department.setDepartmentName(departmentName);
-                department.setDepartmentID(departmentId);
+        for (Faculty faculty : facultyList.getFaculties()) {
+            if (faculty.getFacultyName().equals(facultyName) && !(facultyName.equals(selectedFaculty.getFacultyName()))) {
+                editErrorMessageLabel.setText("คณะนี้มีอยู่แล้วในระบบ");
+                return;
             }
+        }
 
+        for (Faculty faculty : facultyList.getFaculties()) {
+            if (!faculty.getFacultyName().equals(selectedFaculty.getFacultyName()) && facultyId.equals(faculty.getFacultyId())) {
+                editErrorMessageLabel.setText("รหัสคณะนี้มีอยู่แล้วในระบบ");
+                return;
+            }
+        }
+
+        for (Faculty faculty : facultyList.getFaculties()) {
+            for (Department department : faculty.getDepartments()) {
+                if (department.getDepartmentName().equals(departmentName) && !(departmentName.equals(selectedFaculty.getDepartments().get(0).getDepartmentName()))) {
+                    editErrorMessageLabel.setText("ภาควิชานี้มีอยู่แล้วในระบบ");
+                    return;
+                }
+            }
+        }
+
+        // ตรวจสอบว่ารหัสภาควิชาซ้ำหรือไม่
+        for (Faculty faculty : facultyList.getFaculties()) {
+            for (Department department : faculty.getDepartments()) {
+                if (!department.getDepartmentName().equals(selectedFaculty.getDepartments().get(0).getDepartmentName())
+                        && departmentId.equals(department.getDepartmentID())) {
+                    editErrorMessageLabel.setText("รหัสภาควิชานี้มีอยู่แล้วในระบบ");
+                    return;
+                }
+            }
+        }
+
+        if (selectedFaculty != null) {
+            Department selectedDepartment = selectedFaculty.getDepartments().get(0); // เนื่องจากแต่ละแถวมีหนึ่งภาควิชา
+            Department originDepartment = originFaculty.findDepartmentByName(selectedDepartment.getDepartmentName());
+            originDepartment.setDepartmentName(departmentName);
+            originDepartment.setDepartmentID(departmentId);
+            originFaculty.setFacultyName(facultyName);
+            originFaculty.setFacultyId(facultyId);
             // บันทึกข้อมูลลงไฟล์
-            datasource.writeData(facultyList);
-
-            // ซ่อน editStackPane
-            editStackPane.setVisible(false);
-
-            // อัปเดตตารางเพื่อแสดงข้อมูลที่อัปเดต
+            datasource.writeData(userList);
             showTable(facultyList);
-
-            // ล้างข้อมูลใน TextField
+            // ซ่อน pane และรีเฟรชตาราง
+            editStackPane.setVisible(false);
+            //showTable(facultyList);
             clearEditFields();
-        } // แสดงตารางอีกครั้งเพื่อแสดงข้อมูลที่อัปเดต
+        }
     }
 
     @FXML public void onAddFacDepButtonClick() {
@@ -162,21 +197,59 @@ public class DepartmentAndFacultyManagementController {
         clearAddFields();
     }
 
-    @FXML public void onConfirmClick() {
+    @FXML
+    public void onConfirmClick() {
         String facultyName = facultyTextField.getText();
         String facultyId = facultyIdTextField.getText();
         String departmentName = departmentTextField.getText();
         String departmentId = departmentIdTextField.getText();
 
-        if(facultyName.trim().isEmpty() || facultyId.trim().isEmpty() || departmentName.trim().isEmpty() || departmentId.trim().isEmpty() || facultyName == null || facultyId == null || departmentName == null || departmentId == null) {
+        // ตรวจสอบข้อมูล
+        if (facultyName.trim().isEmpty() || facultyId.trim().isEmpty() || departmentName.trim().isEmpty() || departmentId.trim().isEmpty()) {
             errorMessageLabel.setText("กรุณากรอกข้อมูลให้ครบถ้วน");
+            errorMessageLabel.setVisible(true); // แสดง errorMessageLabel
+            return; // หยุดการทำงาน
         } else {
-            facultyList.addFaculty(facultyName, facultyId, departmentName, departmentId);
-            datasource.writeData(facultyList);
-            addStackPane.setVisible(false);
-            showTable(facultyList);
-            clearAddFields();
+            errorMessageLabel.setVisible(false); // ซ่อน errorMessageLabel เมื่อข้อมูลถูกต้อง
         }
+
+        if (facultyList.findFacultyByName(facultyName) != null && (!facultyList.findFacultyByName(facultyName).getFacultyId().equals(facultyId))) {
+            errorMessageLabel.setText("โปรดกรอกรหัสคณะให้ถูกต้อง");
+            errorMessageLabel.setVisible(true);
+            return;
+        }
+
+        for (Faculty faculty : facultyList.getFaculties()) {
+            if (facultyId.equals(faculty.getFacultyId())) {
+                errorMessageLabel.setText("รหัสคณะนี้มีอยู่แล้วในระบบ");
+                errorMessageLabel.setVisible(true);
+                return;
+            }
+        }
+        // ตรวจสอบว่ารหัสภาควิชาซ้ำหรือไม่
+        for (Faculty faculty : facultyList.getFaculties()) {
+            for (Department department : faculty.getDepartments()) {
+                if (departmentId.equals(department.getDepartmentID())) {
+                    errorMessageLabel.setText("รหัสภาควิชานี้มีอยู่แล้วในระบบ");
+                    errorMessageLabel.setVisible(true);
+                    return;
+                }
+            }
+        }
+
+        // เพิ่มคณะหรือภาควิชาใหม่ (ถ้ามีการตรวจสอบใน FacultyList แล้ว)
+        boolean added = facultyList.addFaculty(facultyName, facultyId, departmentName, departmentId);
+        if (!added) {
+            errorMessageLabel.setText("ภาควิชานี้มีอยู่แล้วในคณะนี้");
+            errorMessageLabel.setVisible(true);
+            return;
+        }
+
+        // บันทึกข้อมูลลงไฟล์
+        datasource.writeData(userList);
+        addStackPane.setVisible(false);
+        showTable(facultyList);
+        clearAddFields();
     }
 
     private void clearAddFields() {

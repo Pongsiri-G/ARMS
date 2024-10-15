@@ -15,6 +15,12 @@ public class RequestList {
     public void addRequest(Request request) {
         requests.add(request);
         allRequestCount++;
+        if ("เสร็จสิ้น".equalsIgnoreCase(request.getStatus())) {
+            Department department = request.getRequester().getEnrolledDepartment();
+            if (department != null) {
+                department.increaseApprovedDepartmentRequest();
+            }
+        }
     }
 
     public ArrayList<Request> getRequests() {
@@ -28,7 +34,7 @@ public class RequestList {
     public int getApprovedRequestsCount() {
         int count = 0;
         for (Request request : requests) {
-            if ("สำเร็จ".equalsIgnoreCase(request.getStatus())) {
+            if ("เสร็จสิ้น".equalsIgnoreCase(request.getStatus())) {
                 count++;
             }
         }

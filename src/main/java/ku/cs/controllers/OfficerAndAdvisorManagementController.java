@@ -98,7 +98,7 @@ public class OfficerAndAdvisorManagementController {
             editRoleLabel.setText("แก้ไขอาจารย์ที่ปรึกษา");
             editNameTextField.setText(advisor.getName());
             editUsernameTextField.setText(advisor.getUsername());
-            editPasswordTextField.setText(advisor.getPassword());
+            editPasswordTextField.setText(advisor.getDefaultPassword());
             editDepartmentTextField.setVisible(true);
             editIdTextField.setVisible(true);
             editDepartmentLabel.setVisible(true);
@@ -111,7 +111,7 @@ public class OfficerAndAdvisorManagementController {
             editRoleLabel.setText("แก้ไขเจ้าหน้าที่คณะ");
             editNameTextField.setText(facultyOfficer.getName());
             editUsernameTextField.setText(facultyOfficer.getUsername());
-            editPasswordTextField.setText(facultyOfficer.getPassword());
+            editPasswordTextField.setText(facultyOfficer.getDefaultPassword());
             editFacultyTextField.setText(facultyOfficer.getFaculty().getFacultyName());
             editDepartmentTextField.setVisible(false);
             editIdTextField.setVisible(false);
@@ -122,7 +122,7 @@ public class OfficerAndAdvisorManagementController {
             editRoleLabel.setText("แก้ไขเจ้าหน้าที่ภาควิชา");
             editNameTextField.setText(departmentOfficer.getName());
             editUsernameTextField.setText(departmentOfficer.getUsername());
-            editPasswordTextField.setText(departmentOfficer.getPassword());
+            editPasswordTextField.setText(departmentOfficer.getDefaultPassword());
             editFacultyTextField.setText(departmentOfficer.getFaculty().getFacultyName());
             editDepartmentTextField.setText(departmentOfficer.getDepartment().getDepartmentName());
             editDepartmentTextField.setVisible(true);
@@ -174,13 +174,13 @@ public class OfficerAndAdvisorManagementController {
 
             if (user instanceof FacultyOfficer) {
                 FacultyOfficer facOff = (FacultyOfficer) user;
-                return new SimpleStringProperty(facOff.getPassword());
+                return new SimpleStringProperty(facOff.getDefaultPassword());
             } else if (user instanceof DepartmentOfficer) {
                 DepartmentOfficer depOff = (DepartmentOfficer) user;
-                return new SimpleStringProperty(depOff.getPassword());
+                return new SimpleStringProperty(depOff.getDefaultPassword());
             } else if (user instanceof Advisor) {
                 Advisor advisor = (Advisor) user;
-                return new SimpleStringProperty(advisor.getPassword());
+                return new SimpleStringProperty(advisor.getDefaultPassword());
             }
             return new SimpleStringProperty("-");
         });
@@ -312,7 +312,7 @@ public class OfficerAndAdvisorManagementController {
 
             facOff.setName(name);
             facOff.setUsername(username);
-            facOff.setPassword(password, false);
+            facOff.setDefaultPassword(password);
             facOff.setFaculty(faculty);
         } else if (selectedUser instanceof DepartmentOfficer) {
             DepartmentOfficer depOff = (DepartmentOfficer) selectedUser;
@@ -335,7 +335,7 @@ public class OfficerAndAdvisorManagementController {
                 return;
             }
 
-            Department validateDepartment = facultyList.findDepartmentByName(department.getDepartmentName());
+            Department validateDepartment = facultyList.findFacultyByName(validateFaculty.getFacultyName()).findDepartmentByName(department.getDepartmentName());
             if (validateDepartment == null) {
                 editErrorMessageLabel.setLayoutY(505);
                 editErrorMessageLabel.setText("โปรดกรอกคภาควิชาที่มีอยู่ในระบบ");
@@ -344,7 +344,7 @@ public class OfficerAndAdvisorManagementController {
 
             depOff.setName(name);
             depOff.setUsername(username);
-            depOff.setPassword(password, false);
+            depOff.setDefaultPassword(password);
             depOff.setFaculty(faculty);
             depOff.setDepartment(department);
         } else if (selectedUser instanceof Advisor) {
@@ -368,7 +368,7 @@ public class OfficerAndAdvisorManagementController {
                 return;
             }
 
-            Department validateDepartment = facultyList.findDepartmentByName(department.getDepartmentName());
+            Department validateDepartment = facultyList.findFacultyByName(validateFaculty.getFacultyName()).findDepartmentByName(department.getDepartmentName());
             if (validateDepartment == null) {
                 editErrorMessageLabel.setText("โปรดกรอกคภาควิชาที่มีอยู่ในระบบ");
                 return;
@@ -376,7 +376,7 @@ public class OfficerAndAdvisorManagementController {
 
             advisor.setName(name);
             advisor.setUsername(username);
-            advisor.setPassword(password, false);
+            advisor.setDefaultPassword(password);
             advisor.setFaculty(faculty);
             advisor.setDepartment(department);
             advisor.setAdvisorID(id);
@@ -414,7 +414,7 @@ public class OfficerAndAdvisorManagementController {
                 return;
             }
 
-            Department department = facultyList.findDepartmentByName(departmentName);
+            Department department = facultyList.findFacultyByName(faculty.getFacultyName()).findDepartmentByName(departmentName);
             if (department == null) {
                 advisorErrorMessageLabel.setText("โปรดกรอกภาควิชาที่มีอยู่ในระบบ");
                 return;
@@ -481,7 +481,7 @@ public class OfficerAndAdvisorManagementController {
                 return;
             }
 
-            Department department = facultyList.findDepartmentByName(departmentName);
+            Department department = facultyList.findFacultyByName(faculty.getFacultyName()).findDepartmentByName(departmentName);
             if (department == null) {
                 departmentOfficerErrorMessageLabel.setText("โปรดกรอกภาควิชาที่มีอยู่ในระบบ");
                 return;

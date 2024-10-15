@@ -7,6 +7,7 @@ public class Advisor extends User{
     private Department department;
     private String advisorID;
     private String advisorEmail;
+    private String defaultPassword;
 
     public Advisor(String username, String password, String name, Faculty faculty, Department department, String advisorID, String advisorEmail, boolean isHashed, boolean suspended) {
         super(username, password, name, isHashed, suspended);
@@ -14,6 +15,7 @@ public class Advisor extends User{
         this.department = department;
         this.advisorID = advisorID;
         this.advisorEmail = advisorEmail;
+        this.defaultPassword = password;
     }
 
     // ใช้้ไปก่อนเดี๋ยวแก้ที่หลัง
@@ -23,6 +25,7 @@ public class Advisor extends User{
         this.department = new Department(department);
         this.advisorID = advisorID;
         this.advisorEmail = advisorEmail;
+        this.defaultPassword = password;
     }
 
     public Advisor(String name, String username, String password, Faculty faculty, Department department, String advisorID) {
@@ -30,6 +33,7 @@ public class Advisor extends User{
         this.faculty = faculty;
         this.department = department;
         this.advisorID = advisorID;
+        this.defaultPassword = password;
     }
 
     //ใช้สำหรับอ่านข้อมูลจากไฟล์เก็บเป็น object ชั่วคราวเท่านั้น
@@ -66,16 +70,19 @@ public class Advisor extends User{
         return advisorID;
     }
 
-    public Faculty getFaculty() {return faculty; }
+    public String getDefaultPassword() {return defaultPassword;}
+
+    public void setDefaultPassword(String defaultPassword) {
+        this.defaultPassword = defaultPassword;
+    }
+
+    public Faculty getFaculty() {return faculty;}
 
     public void setAdvisorID(String newAdvisorID) { this.advisorID = newAdvisorID; }
 
     public void setFaculty(Faculty faculty) { this.faculty = faculty; }
 
     public void setDepartment(Department department) { this.department = department; }
-
-    // ping : ใช้ set ข้อมูลใน text field
-    public void setAdvisorID(String advisorID) { this.advisorID = advisorID; }
 
     public Department getDepartment () { return department; }
 
