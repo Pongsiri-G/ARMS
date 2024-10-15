@@ -10,8 +10,8 @@ public class ResignationRequest extends Request{
         this.reason = reason;
     }
 
-    public ResignationRequest(String timestamp, String requestType, String status, Student requester, String currentApprover, String numberPhone, String reason, String lastModifiedDate, List<String> statusLog, List<String> approverList) {
-        super(timestamp, requestType, status, requester, currentApprover, numberPhone, lastModifiedDate, statusLog, approverList);
+    public ResignationRequest(String timestamp, String requestType, String status, Student requester, String currentApprover, String numberPhone, String reason, String lastModifiedDate, String pdfFilePath, List<String> statusLog, List<String> approverList) {
+        super(timestamp, requestType, status, requester, currentApprover, numberPhone, lastModifiedDate, pdfFilePath, statusLog, approverList);
         this.reason = reason;
     }
 

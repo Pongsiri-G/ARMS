@@ -124,10 +124,4 @@ public class AdvOffListFileDatasource implements Datasource<ArrayList<Advisor>> 
             }
         }
     }
-
-    public void displayAdvisors(ArrayList<Advisor> advisors) {
-        for (Advisor advisor : advisors) {
-            System.out.println("Advisor: " + advisor.getName() + ", " + advisor.getFaculty() + ", " + advisor.getDepartment() + ", " + advisor.getAdvisorEmail() + ", " + advisor.getAdvisorID());
-        }
-    }
 }

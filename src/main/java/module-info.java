@@ -4,7 +4,10 @@ module ku.cs {
     requires java.desktop;
     requires bcrypt;
     requires java.sql;
-    requires java.base; // add
+    requires java.base;
+    requires kernel;
+    requires layout;
+    requires io; // add
 
 
     // Open models package to javafx.base for reflection access

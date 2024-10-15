@@ -45,6 +45,15 @@ public class RequestList {
         return count;
     }
 
+    // test
+    public Request getRequestByTimestamp(String timestamp) {
+        for (Request request : requests) {
+            if (request.getTimestamp() != null && request.getTimestamp().equals(timestamp)) {
+                return request;
+            }
+        }return null;
+    }
+
     public int getRejectedRequestsCount() {
         int count = 0;
         for (Request request : requests) {

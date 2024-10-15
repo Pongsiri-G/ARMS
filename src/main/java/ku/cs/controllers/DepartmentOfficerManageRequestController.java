@@ -5,19 +5,25 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
-import ku.cs.models.DepartmentOfficer;
-import ku.cs.models.FacultyOfficer;
-import ku.cs.models.Request;
-import ku.cs.models.RequestHandlingOfficer;
+import javafx.stage.FileChooser;
+import ku.cs.models.*;
 import ku.cs.services.FXRouter;
+import ku.cs.services.FileStorage;
+import ku.cs.services.RequestHandlingOfficersDataSource;
+import ku.cs.services.RequestListFileDatasource;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class DepartmentOfficerManageRequestController {
     // UI Components
@@ -30,6 +36,7 @@ public class DepartmentOfficerManageRequestController {
     @FXML
     Circle profilePicture;
 
+
     // detail scene
     @FXML
     VBox requestDetailScene;
@@ -41,6 +48,8 @@ public class DepartmentOfficerManageRequestController {
     MenuButton selectOfficerHandlingMenu;
     @FXML
     Label errorLabel;
+    @FXML
+    Label fileLabel;
 
     //หน้าปฏิเสธคำร้อง
     @FXML
@@ -50,8 +59,15 @@ public class DepartmentOfficerManageRequestController {
 
 
 
+    private RequestHandlingOfficersDataSource approverDatasource;
+    private RequestListFileDatasource requestDatasource;
     private Request request;
+    private RequestList requestList;
     private DepartmentOfficer officer;
+    private String selectedApprove;
+    private Student student;
+
+    private File selectedFile;
 
     public void initialize() {
         errorLabel.setDisable(false);
@@ -59,15 +75,11 @@ public class DepartmentOfficerManageRequestController {
         // Retrieve the passed data (List<Object>)
         List<Object> data = (List<Object>) FXRouter.getData();
 
-        // Extract Request and officer from the list
-        if (data != null && data.size() == 2) {
-            request = (Request) data.get(0);  // Get the Request object
-            officer = (DepartmentOfficer) data.get(1);  // Get the Officer object;
-        }
-        else {
-            request = null;
-            officer = null;
-        }
+        request = (Request) data.get(0);  // Get the Request object
+        requestList = (RequestList) data.get(1);
+        requestDatasource = (RequestListFileDatasource) data.get(2);
+        officer = (DepartmentOfficer) data.get(3);  // Get the Officer object
+        student = request.getRequester();
         setupOfficerInfo();
         switchToDetailScence();
     }
@@ -76,6 +88,21 @@ public class DepartmentOfficerManageRequestController {
         nameLabel.setText(officer.getName());
         userNameLabel.setText(officer.getUsername());
         roleLabel.setText("เจ้าหน้าที่ภาควิชา" + officer.getFaculty().getFacultyName());
+        //profilePicture
+        setProfilePicture(officer.getProfilePicturePath());
+    }
+
+    private void setProfilePicture(String profilePath) {
+        try {
+            // โหลดรูปจาก profilePath
+            Image profileImage = new Image("file:" + profilePath);
+
+            profilePicture.setFill(new ImagePattern(profileImage));
+
+        } catch (Exception e) {
+            System.out.println("Error loading profile image: " + e.getMessage());
+            profilePicture.setFill(Color.GRAY);
+        }
     }
 
     public void resetSecene(){
@@ -84,6 +111,7 @@ public class DepartmentOfficerManageRequestController {
         rejectRequestScene.setVisible(false);
         errorLabel.setVisible(false);
         errorLabel.setText("");
+        fileLabel.setText("");
     }
 
     public void switchToDetailScence(){
@@ -107,6 +135,7 @@ public class DepartmentOfficerManageRequestController {
         selectOfficerHandlingMenu.getItems().clear();
         ArrayList<RequestHandlingOfficer> approvers = officer.getRequestManagers();
         for (RequestHandlingOfficer approver : approvers) {
+            System.out.println(approver.getFullPositoin());
             MenuItem item = new MenuItem(approver.getFullPositoin());
 
             // Event handling when an item is clicked
@@ -124,10 +153,25 @@ public class DepartmentOfficerManageRequestController {
 
     }
 
-    public boolean checkValid(){
-        String approver = selectOfficerHandlingMenu.getText();
+    public void updateRequest() throws IOException {
+        // การอัพโหลด pdf
+        String directory = "data" + File.separator + "StudentRequests" + File.separator + student.getStudentID(); // กำหนดที่ๆ จะเก็บ
+        fileLabel.setText(selectedFile.getName());
+        String filePath = FileStorage.saveFileToDirectory(selectedFile, directory); // เอาไฟล์ที่อัพโหลดไปใส่
+        request.setPdfFilePath(filePath); // เก็บที่อยู่ pdf ใน request
+        System.out.println(request.getPdfFilePath()); //for debug
+
+        // เขียนลง csv
+        requestDatasource.writeData(requestList);
+    }
+
+    public boolean checkValid(String approver){
         if (approver.equals("") || approver == null || approver.equals("เลือกผู้ดำเนินการ")) {
             errorLabel.setText("กรุณาเลือกผู้ดำเนินการ");
+            return false;
+        }
+        else if (selectedFile == null){
+            errorLabel.setText("กรุณาอัพโหลดไฟล์ PDF");
             return false;
         }
         return true;
@@ -135,24 +179,29 @@ public class DepartmentOfficerManageRequestController {
 
     @FXML
     public void onRejectRequestButtonClick(MouseEvent event) {
-        if (checkValid()) {
+        selectedApprove = selectOfficerHandlingMenu.getText();
+        if (checkValid(selectedApprove)) {
             switchToRejectScence();
         }
     }
 
     @FXML
     public void onSendRequestButtonClick(MouseEvent event) throws IOException {
-        if (checkValid()) {
-            //officer.sendRequest(request, selectOfficerHandlingMenu.getText());
-            FXRouter.goTo("department-officer");
+        selectedApprove = selectOfficerHandlingMenu.getText();
+        if (checkValid(selectedApprove)) {
+            officer.acceptRequest(request, selectedApprove);
+            updateRequest();
+            FXRouter.goTo("department-officer", officer.getUsername());
         }
     }
 
     @FXML
     public void onApproveRequestButtonClick(MouseEvent event) throws IOException {
-        if (checkValid()) {
-            officer.acceptRequest(request, selectOfficerHandlingMenu.getText());
-            FXRouter.goTo("department-officer");
+        selectedApprove = selectOfficerHandlingMenu.getText();
+        if (checkValid(selectedApprove)) {
+            officer.acceptRequest(request, selectedApprove);
+            updateRequest();
+            FXRouter.goTo("department-officer", officer.getUsername());
         }
     }
     @FXML
@@ -168,8 +217,55 @@ public class DepartmentOfficerManageRequestController {
 
     @FXML
     public void onOkButtonClick(MouseEvent event) throws IOException {
-        officer.rejectRequest(request, reasonForRejectTextArea.getText(), selectOfficerHandlingMenu.getText());
+        officer.rejectRequest(request,selectedApprove, reasonForRejectTextArea.getText());
+        updateRequest();
         FXRouter.goTo("department-officer", officer.getUsername());
+    }
+
+    @FXML
+    public void uploadButtonClick(MouseEvent event) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose PDF File");
+        // Filter to show only PDF files
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("PDF Files", "*.pdf")
+        );
+
+        selectedFile = fileChooser.showOpenDialog(requestDetailScene.getScene().getWindow());
+    }
+
+    @FXML
+    public void downloadButtonClick(MouseEvent event) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save PDF File");
+        // Set the file extension filter to PDF files only
+        FileChooser.ExtensionFilter pdfFilter = new FileChooser.ExtensionFilter("PDF Files", "*.pdf");
+        fileChooser.getExtensionFilters().add(pdfFilter);
+
+        // Set the initial file name (optional)
+        fileChooser.setInitialFileName(student.getStudentID() + request.getRequestType() + ".pdf");
+
+        // Show the Save File dialog
+        File fileToSave = fileChooser.showSaveDialog(requestDetailScene.getScene().getWindow());
+
+        if (fileToSave != null) {
+            // Get the absolute path of the file as a String
+            String filePath = fileToSave.getAbsolutePath();
+
+            if (Objects.equals(request.getRequestType(), "ลาป่วยหรือลากิจ")){
+                System.out.println("0");
+                SickLeaveRequestPDF.createRequest(filePath, (SickLeaveRequest) request);
+            }
+            else if (Objects.equals(request.getRequestType(), "ลาพักการศึกษา")){
+                System.out.println("1");
+                LeaveOfAbsenceRequestPDF.createRequest(filePath, (LeaveOfAbsenceRequest) request);
+            }
+            else if (Objects.equals(request.getRequestType(), "ลาออก")) {
+                System.out.println("2");
+                ResignationRequestPDF.createRequest(filePath, (ResignationRequest) request);
+            }
+        }
+
     }
 
 
