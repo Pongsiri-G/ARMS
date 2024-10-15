@@ -13,7 +13,6 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -174,11 +173,7 @@
                                                             </ImageView>
                                                          </children>
                                                       </HBox>
-                                                      <ScrollPane fx:id="requestDetailScrollPane" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-                                                        <content>
-                                                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
-                                                        </content>
-                                                      </ScrollPane>
+                                                      <ScrollPane fx:id="requestDetailScrollPane" VBox.vgrow="ALWAYS" />
                                                    </children>
                                                 </VBox>
                                                 <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS" />
@@ -187,8 +182,30 @@
                                                       <TextArea fx:id="requestLogTextArea" editable="false" prefHeight="300.0" prefWidth="400.0" />
                                                       <Label fx:id="timestampLabel" text="timestampLabel" />
                                                       <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                                                      <VBox alignment="CENTER_RIGHT" spacing="10.0">
+                                                      <VBox alignment="CENTER_RIGHT" spacing="20.0">
                                                          <children>
+                                                            <Button mnemonicParsing="false" prefHeight="50.0" text="แนบไฟล์เอกสาร PDF">
+                                                               <graphic>
+                                                                  <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                                                     <image>
+                                                                        <Image url="@../../../images/attach.png" />
+                                                                     </image>
+                                                                  </ImageView>
+                                                               </graphic>
+                                                            </Button>
+                                                            <Button mnemonicParsing="false" prefHeight="50.0" text="ดาวน์โหลดไฟล์เอกสาร PDF">
+                                                               <VBox.margin>
+                                                                  <Insets bottom="20.0" />
+                                                               </VBox.margin>
+                                                               <graphic>
+                                                                  <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                                                     <image>
+                                                                        <Image url="@../../../images/download.png" />
+                                                                     </image>
+                                                                  </ImageView>
+                                                               </graphic>
+                                                            </Button>
+                                                            <Label fx:id="errorLabel" disable="true" styleClass="error-label" text="ErrorLabel" textFill="RED" visible="false" />
                                                             <MenuButton fx:id="selectOfficerHandlingMenu" mnemonicParsing="false" prefHeight="46.0" prefWidth="234.0" styleClass="choice-box" text="เลือกผู้ดำเนินการ" textAlignment="CENTER" wrapText="true">
                                                                <items>
                                                                   <MenuItem mnemonicParsing="false" text="Action 1" />
