@@ -26,12 +26,12 @@
    <top>
       <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Label fx:id="roleLabel" prefHeight="54.0" prefWidth="650.0" styleClass="header" text="roleLabel">
+            <Label fx:id="roleLabel" prefHeight="54.0" prefWidth="1000.0" styleClass="header" text="roleLabel">
                <HBox.margin>
                   <Insets left="120.0" />
                </HBox.margin>
             </Label>
-            <HBox prefHeight="80.0" prefWidth="500.0" HBox.hgrow="ALWAYS" />
+            <HBox prefHeight="80.0" HBox.hgrow="ALWAYS" />
             <Group>
                <children>
                   <Label fx:id="usernameLabel" alignment="CENTER_RIGHT" layoutX="45.0" layoutY="22.0" prefHeight="24.0" prefWidth="320.0" text="usernameLabel" textFill="#394954" />
@@ -210,7 +210,7 @@
                            <children>
                               <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0" styleClass="popup-pane" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                  <children>
-                                    <TextField fx:id="reasonTextField" promptText="ระบุเหตุผล" styleClass="text-field">
+                                    <TextField fx:id="reasonTextField" promptText="ระบุเหตุผล" styleClass="capsule-text-field">
                                        <VBox.margin>
                                           <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                                        </VBox.margin>

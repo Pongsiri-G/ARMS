@@ -28,13 +28,7 @@ public class MainApplication extends Application {
         FXRouter.when("advisor-request-nisit", viewPath + "advisor-request-nisit-view.fxml");
         FXRouter.when("student-create-request", viewPath + "student-create-request.fxml");
         FXRouter.when("student-request-list-view", viewPath + "student-request-list-view.fxml");
-        FXRouter.when("register", viewPath + "register-view.fxml");
-        FXRouter.when("department-request", viewPath + "department-request-view.fxml");
-        FXRouter.when("department-request-managed", viewPath + "department-request-managed-view.fxml");
-        FXRouter.when("department-request-reject", viewPath + "department-request-reject-view.fxml");
-        FXRouter.when("department-approver", viewPath + "department-approver-view.fxml");
-        FXRouter.when("department-approver-add", viewPath + "department-approver-add-view.fxml");
-        FXRouter.when("department-student-manage", viewPath + "department-student-manage-view.fxml");
+        FXRouter.when("register", viewPath + "register-view.fxml");;
         FXRouter.when("user-management", viewPath + "user-management.fxml");
         FXRouter.when("staff-advisor-management", viewPath + "staff-advisor-management.fxml");
         FXRouter.when("department-faculty-management", viewPath + "department-faculty-management.fxml");

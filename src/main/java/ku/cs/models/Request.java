@@ -16,7 +16,6 @@ public class Request {
     private String pdfFilePath; //เก็บ FilePath ของคำร้อง pdf ที่แนบเข้าระบบ
     private List<String> statusLog; //เก็บประวัติการดำเนินการต่างๆข้องคำร้อง
     private List<String> approverList; //เก็บรายการคนที่อนุมัติคำร้อง String (ชื่อคนอนุมัติ - ตำแหน่ง)
-    private String pdfFilePath; //เก็บตัวคำร้องที่เป็นไฟล์ pdf จริงๆ
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
@@ -167,8 +166,6 @@ public class Request {
         return numberPhone;
     }
 
-    public String getPdfFilePath() { return pdfFilePath; }
-
     public List<String> getApproverList(){
         return approverList;
     }
@@ -185,10 +182,6 @@ public class Request {
 
     public void setCurrentApprover(String currentApprover) {
         this.currentApprover = currentApprover;
-    }
-
-    public void setPdfFilePath(String filePath){
-        this.pdfFilePath = filePath;
     }
 
     public String getPdfFilePath() {

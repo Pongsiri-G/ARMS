@@ -203,6 +203,19 @@
     -fx-text-fill: #FFFFFF;
     -fx-font-weight: bold;
 }
+.middle-button {
+    -fx-background-radius: 20;
+    -fx-background-color: -fx-middle-color;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+}
+.capsule-text-field{
+    -fx-background-color: -fx-secondary-color;
+    -fx-background-radius: 30;
+    -fx-text-fill: -fx-contrast-color;
+    -fx-padding: 10 10 10 10;
+    -fx-text-box-border: transparent;
+}
 .table-view,
 .table-view .column-header,
 .table-view .column-header-background .filler,
@@ -231,7 +244,9 @@
     -fx-padding: 0.0em;
 }
 .table-row-cell:selected {
+    -fx-background-color: -fx-primary-color;
     -fx-text-background-color: -fx-primary-color;
+    -fx-text-fill: -fx-contrast-color;
 }
 .table-view .virtual-flow .scroll-bar:vertical,
 .table-view .virtual-flow .scroll-bar:vertical .track,

@@ -10,12 +10,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
+import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import ku.cs.models.*;
 import ku.cs.services.FXRouter;
 import ku.cs.services.RequestHandlingOfficersDataSource;
@@ -27,24 +23,26 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class DepartmentOfficerController {
+public class DepartmentOfficerController extends BaseController {
 
 
     // UI Components
     @FXML
+    BorderPane rootPane;
+    @FXML
     Label nameLabel;
     @FXML
-    Label userNameLabel;
+    Label usernameLabel;
     @FXML
     Label roleLabel;
     @FXML
-    Circle profilePicture;
+    Circle profilePictureDisplay;
     @FXML
-    Rectangle currentBar1;
+    Pane currentMenu1;
     @FXML
-    Rectangle currentBar2;
+    Pane currentMenu2;
     @FXML
-    Rectangle currentBar3;
+    Pane currentMenu3;
 
     // Request Scene
     @FXML
@@ -55,8 +53,6 @@ public class DepartmentOfficerController {
     // Approver Scene UI
     @FXML
     VBox approverScene;
-    @FXML
-    StackPane approverMainButtons;
     @FXML
     TextField searchBarApproverTextField;
     @FXML
@@ -71,7 +67,7 @@ public class DepartmentOfficerController {
 
     // Manage Approver Scene UI
     @FXML
-    VBox manageApproverScene;
+    GridPane manageApproverScene;
     @FXML
     MenuButton roleSelectMenuButton;
     @FXML
@@ -84,8 +80,6 @@ public class DepartmentOfficerController {
     // all nisit scene
     @FXML
     VBox studentListScene;
-    @FXML
-    StackPane studentMainButtons;
     @FXML
     TextField searchBarStudentTextField;
     @FXML
@@ -101,9 +95,7 @@ public class DepartmentOfficerController {
 
     // manage nisit scene
     @FXML
-    VBox manageStudentScene;
-    @FXML
-    ImageView studentImage;
+    GridPane manageStudentScene;
     @FXML
     TextField studentNameTextField;
     @FXML
@@ -151,23 +143,11 @@ public class DepartmentOfficerController {
 
     public void setupOfficerInfo() {
         nameLabel.setText(officer.getName());
-        userNameLabel.setText(officer.getUsername());
-        roleLabel.setText("เจ้าหน้าที่ภาควิชา" + officer.getDepartment().getDepartmentName());
+        usernameLabel.setText(officer.getUsername());
+        roleLabel.setText("เจ้าหน้าที่ | ภาควิชา" + officer.getDepartment().getDepartmentName());
         //profilePicture
-        setProfilePicture(officer.getProfilePicturePath());
-    }
-
-    private void setProfilePicture(String profilePath) {
-        try {
-            // โหลดรูปจาก profilePath
-            Image profileImage = new Image("file:" + profilePath);
-
-            profilePicture.setFill(new ImagePattern(profileImage));
-
-        } catch (Exception e) {
-            System.out.println("Error loading profile image: " + e.getMessage());
-            profilePicture.setFill(Color.GRAY);
-        }
+        applyThemeAndFont(rootPane);
+        setProfilePicture(profilePictureDisplay, officer.getProfilePicturePath());
     }
 
     private void initializeDataSources() {
@@ -201,9 +181,9 @@ public class DepartmentOfficerController {
 
 
     public void resetScene() {
-        currentBar1.setVisible(false);
-        currentBar2.setVisible(false);
-        currentBar3.setVisible(false);
+        currentMenu1.setVisible(false);
+        currentMenu2.setVisible(false);
+        currentMenu3.setVisible(false);
         requestListScene.setVisible(false);
         approverScene.setVisible(false);
         approverScene.setManaged(false);
@@ -217,7 +197,7 @@ public class DepartmentOfficerController {
 
     public void switchToRequestScene() {
         resetScene();
-        currentBar1.setVisible(true);
+        currentMenu1.setVisible(true);
         requestListScene.setVisible(true);
         requestListScene.setManaged(true);
         updateRequestTableView();
@@ -225,17 +205,15 @@ public class DepartmentOfficerController {
 
     public void switchToApproverScene() {
         resetScene();
-        currentBar2.setVisible(true);
+        currentMenu2.setVisible(true);
         approverScene.setVisible(true);
         approverScene.setManaged(true);
-        approverMainButtons.setDisable(false);
         updateApproverTableView();
     }
 
     public void switchToManageApproverScene() {
         manageApproverScene.setVisible(true);
         manageApproverScene.setManaged(true);
-        approverMainButtons.setDisable(true);
         setApproverPositionAvailable();
         errorManageApproverLabel.setText("");
         if (approverToEdit != null) {
@@ -252,7 +230,7 @@ public class DepartmentOfficerController {
 
     public void switchToStudentsScene(){
         resetScene();
-        currentBar3.setVisible(true);
+        currentMenu3.setVisible(true);
         studentListScene.setVisible(true);
         studentsTableView.setVisible(true);
         //studentMainButtons.setDisable(false);
@@ -264,8 +242,6 @@ public class DepartmentOfficerController {
         setAdvisorAvailable();
         errorManageStudentLabel.setText("");
         if (studentToEdit != null){
-            //studentImage.setImage(new Image(studentToEdit.getProfilePicturePath()));
-            studentImage.setImage(new Image("file:" + studentToEdit.getProfilePicturePath()));
             studentIDTextField.setText(studentToEdit.getStudentID());
             studentNameTextField.setText(studentToEdit.getName().split(" ")[0]);
             studentLastNameTextField.setText(studentToEdit.getName().split(" ")[1]);
@@ -281,8 +257,6 @@ public class DepartmentOfficerController {
             }
         } else{
             studentSelectAdvisorMenuBar.setText("เลือกอาจารย์ที่ปรึกษา");
-            //studentImage.setImage(null);
-            studentImage.setImage(new Image("file:" + "src/main/resources/images/user-svgrepo-com.png"));
             studentIDTextField.clear();
             studentNameTextField.clear();
             studentLastNameTextField.clear();
@@ -339,13 +313,13 @@ public class DepartmentOfficerController {
 
                     switch (status) {
                         case "กำลังดำเนินการ":
-                            setStyle("-fx-text-fill: #d7a700;");
+                            setStyle("-fx-text-fill: #d7a700; -fx-font-weight: bold;");
                             break;
                         case "ปฏิเสธ":
-                            setStyle("-fx-text-fill: #be0000;");
+                            setStyle("-fx-text-fill: #be0000; -fx-font-weight: bold;");
                             break;
                         case "เสร็จสิ้น":
-                            setStyle("-fx-text-fill: #149100;");
+                            setStyle("-fx-text-fill: #149100; -fx-font-weight: bold;");
                             break;
                         default:
                             setStyle("");
@@ -408,10 +382,10 @@ public class DepartmentOfficerController {
         approverRoleTableColumn = new TableColumn<>("ตำแหน่ง");
         approverRoleTableColumn.setCellValueFactory(new PropertyValueFactory<>("position"));
         approverRoleTableColumn.setMinWidth(360);
-        approverNameTableColumn = new TableColumn<>("ขื่อ-นามสกุล");
+        approverNameTableColumn = new TableColumn<>("ชื่อ-นามสกุล");
         approverNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         approverNameTableColumn.setMinWidth(420);
-        approverLastUpdateTableColumn = new TableColumn<>("วัน-เวลา แก้ไขล่าสุด");
+        approverLastUpdateTableColumn = new TableColumn<>("วันที่แก้ไขล่าสุด");
         approverLastUpdateTableColumn.setCellValueFactory(new PropertyValueFactory<>("lastUpdate"));
         approverLastUpdateTableColumn.setMinWidth(400);
 
@@ -453,7 +427,7 @@ public class DepartmentOfficerController {
     public void updateStudentTableView() {
 
         // Column for student's ID
-        studentIDTableColumn = new TableColumn<>("ID");
+        studentIDTableColumn = new TableColumn<>("รหัสประจำตัวนิสิต");
         studentIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("studentID"));
         studentIDTableColumn.setMinWidth(300);
         studentIDTableColumn.setMaxWidth(300);
@@ -715,7 +689,16 @@ public class DepartmentOfficerController {
     }
 
     @FXML
-    public void onLogoutButtonClick(MouseEvent event) throws IOException {
+    public void settingsPageClick(MouseEvent event) throws IOException {
+        ArrayList<String> data = new ArrayList<>();
+        data.add("department-officer");
+        data.add(officer.getUsername());
+        FXRouter.goTo("settings", data);
+
+    }
+
+    @FXML
+    public void logoutClick(MouseEvent event) throws IOException {
         FXRouter.goTo("login");
     }
 }
