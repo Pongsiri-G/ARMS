@@ -148,6 +148,16 @@
                               </TextArea>
                               <HBox alignment="TOP_RIGHT" prefHeight="50.0" prefWidth="1170.0">
                                  <children>
+                                    <Button mnemonicParsing="false" onMouseClicked="#downloadButtonClick" text="ดาวโหลดไฟล์คำร้อง">
+                                       <HBox.margin>
+                                          <Insets right="20.0" top="10.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                    <Button mnemonicParsing="false" onMouseClicked="#uploadButtonClick" text="อัพโหลดไฟล์คำร้อง">
+                                       <HBox.margin>
+                                          <Insets right="20.0" top="10.0" />
+                                       </HBox.margin>
+                                    </Button>
                                     <MenuButton fx:id="selectOfficerHandlingMenu" mnemonicParsing="false" prefHeight="46.0" prefWidth="234.0" style="-fx-background-color: white; -fx-border-color: black;" styleClass="choice-box" stylesheets="@../../../style/style.css" text="เลือกผู้ดำเนินการ" textAlignment="CENTER" wrapText="true">
                                       <items>
                                         <MenuItem mnemonicParsing="false" text="Action 1" />
@@ -245,6 +255,11 @@
                   </StackPane>
                   <HBox alignment="CENTER_RIGHT" prefHeight="22.0" prefWidth="1109.0">
                      <children>
+                        <Label fx:id="fileLabel" prefHeight="21.0" prefWidth="206.0" text="Label">
+                           <HBox.margin>
+                              <Insets right="20.0" />
+                           </HBox.margin>
+                        </Label>
                         <Label fx:id="errorLabel" disable="true" prefHeight="21.0" prefWidth="234.0" text="Error" textFill="RED" visible="false">
                            <HBox.margin>
                               <Insets />
