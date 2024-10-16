@@ -58,7 +58,7 @@ public class AdvOffListFileDatasource implements Datasource<ArrayList<Advisor>> 
                 String name = data[2]; // ชื่อ
                 boolean suspended = "ระงับบัญชี".equals(data[3]); // สถานะพักการใช้งาน
                 LocalDateTime lastLogin = "ไม่เคยเข้าใช้งาน".equals(data[4]) ? null : LocalDateTime.parse(data[4], formatter); // ถ้าเป็น "ไม่เคยเข้าใช้งาน" ให้ค่าเป็น null
-                String profilePicturePath = data[5].isEmpty() ? User.DEFAULT_PROFILE_PICTURE_PATH : data[5]; // ค่าพาธรูปโปรไฟล์
+                String profilePicturePath = data[5].equals("ไม่มีรูปประจำตัว") ? null : data[5]; // ค่าพาธรูปโปรไฟล์
                 String faculty = data[6]; // คณะ
                 String department = data[7]; // ภาควิชา
                 String advisorID = data[8]; // รหัสอาจารย์
@@ -100,7 +100,7 @@ public class AdvOffListFileDatasource implements Datasource<ArrayList<Advisor>> 
             // Write each advisor's data
             for (Advisor advisor : advisors) {
                 String lastLoginStr = advisor.getLastLogin() == null ? "ไม่เคยเข้าใช้งาน" : advisor.getLastLogin().format(formatter);
-                String profilePicturePath = advisor.getProfilePicturePath() == null ? User.DEFAULT_PROFILE_PICTURE_PATH : advisor.getProfilePicturePath();
+                String profilePicturePath = advisor.getProfilePicturePath() == null ? "ไม่มีรูปประจำตัว" : advisor.getProfilePicturePath();
                 String defaultPassword = advisor.getDefaultPassword() == null ? "" : advisor.getDefaultPassword();
                 String line = advisor.getUsername() + ","
                         + advisor.getPassword() + ","

@@ -2,10 +2,12 @@ package ku.cs.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -20,18 +22,21 @@ import ku.cs.models.UserList;
 import ku.cs.services.FXRouter;
 import ku.cs.services.RequestListFileDatasource;
 import ku.cs.services.UserListFileDatasource;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.PDFRenderer;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class StudentRequestListViewController {
+public class StudentRequestListViewController extends BaseController {
 
 
-    @FXML
-    private ImageView optionDropdown;
+    @FXML private BorderPane rootPane;
 
     @FXML private Label roleLabel;
 
@@ -45,14 +50,9 @@ public class StudentRequestListViewController {
 
     @FXML private Label rejectLabel;
 
-    @FXML private Rectangle currentBar1;
-
-    @FXML private Rectangle currentBar2;
-
     @FXML private TableView<Request> requestListTableview;
 
     @FXML private Circle profilePictureDisplay;
-
 
     //Part of Request Detail Pane
     @FXML private VBox requestDetailPane;
@@ -70,11 +70,15 @@ public class StudentRequestListViewController {
     @FXML private Label requestDetailsLabel;
     @FXML private ComboBox<String> statusFilterComboBox;
     @FXML private ComboBox<String> typeFilterComboBox;
+    @FXML private VBox pdfPopupPane;
+    @FXML private ScrollPane requestDetailScrollPane;
+    @FXML private Button pdfRequestViewButton;
     private UserList userList;
     private RequestList requestList;
     private UserListFileDatasource userListDatasource;
     private RequestListFileDatasource requestListDatasource;
     private Student student;
+    private Request selectedRequest;
 
     public StudentRequestListViewController(){
         userListDatasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
@@ -89,30 +93,17 @@ public class StudentRequestListViewController {
         roleLabel.setText("นิสิต | ภาควิชา" + student.getEnrolledDepartment().getDepartmentName());
         nameLabel.setText(student.getName());
         usernameLabel.setText(student.getUsername());
-        currentBar1.setVisible(false);
-        setProfilePicture(student.getProfilePicturePath());
+        setProfilePicture(profilePictureDisplay, student.getProfilePicturePath());
+        applyThemeAndFont(rootPane);
         doneLabel.setText(String.format("%d", student.getStudentApprovedRequestCount(student.getRequestsByStudent(requestList))));
         waitLabel.setText(String.format("%d", student.getStudentPendingRequestCount(student.getRequestsByStudent(requestList))));
         rejectLabel.setText(String.format("%d", student.getStudentRejectedRequestCount(student.getRequestsByStudent(requestList))));
         initializeFilters();
         showTable(student.getRequestsByStudent(requestList));
         requestDetailPane.setVisible(false);
+        pdfPopupPane.setVisible(false);
         setupTableClickListener();
     }
-
-    private void setProfilePicture(String profilePath) {
-        try {
-            // โหลดรูปจาก profilePath
-            Image profileImage = new Image("file:" + profilePath);
-
-            profilePictureDisplay.setFill(new ImagePattern(profileImage));
-
-        } catch (Exception e) {
-            System.out.println("Error loading profile image: " + e.getMessage());
-            profilePictureDisplay.setFill(Color.GRAY);
-        }
-    }
-
 
     private void initializeFilters() {
         statusFilterComboBox.getItems().addAll("ทั้งหมด", "กำลังดำเนินการ", "ปฏิเสธ", "เสร็จสิ้น");
@@ -147,13 +138,13 @@ public class StudentRequestListViewController {
 
                     switch (status) {
                         case "กำลังดำเนินการ":
-                            setStyle("-fx-text-fill: #d7a700;"); // Yellow for "in progress"
+                            setStyle("-fx-text-fill: #d7a700; -fx-font-weight: bold;"); // Yellow for "in progress"
                             break;
                         case "ปฏิเสธ":
-                            setStyle("-fx-text-fill: #be0000;"); // Red for "rejected"
+                            setStyle("-fx-text-fill: #be0000; -fx-font-weight: bold;"); // Red for "rejected"
                             break;
                         case "เสร็จสิ้น":
-                            setStyle("-fx-text-fill: #149100;"); // Green for "completed"
+                            setStyle("-fx-text-fill: #149100; -fx-font-weight: bold;"); // Green for "completed"
                             break;
                         default:
                             setStyle("");
@@ -209,8 +200,9 @@ public class StudentRequestListViewController {
 
     private void setupTableClickListener() {
         requestListTableview.setOnMouseClicked(event -> {
-            Request selectedRequest = requestListTableview.getSelectionModel().getSelectedItem();
-            if (selectedRequest != null) {
+            Request selected = requestListTableview.getSelectionModel().getSelectedItem();
+            if (selected != null) {
+                this.selectedRequest = selected;
                 showRequestDetails(selectedRequest);
             }
         });
@@ -218,6 +210,7 @@ public class StudentRequestListViewController {
 
     private void showRequestDetails(Request request) {
         rejectReasonLabel.setVisible(false);
+        pdfRequestViewButton.setVisible(false);
         typeRequestLabel.setText(request.getRequestType());
         nameRequesterLabel.setText("ชื่อ-สกุล " + request.getRequester().getName());
         facultyRequesterLabel.setText("คณะ " + request.getRequester().getEnrolledFaculty().getFacultyName());
@@ -241,15 +234,57 @@ public class StudentRequestListViewController {
             rejectReasonLabel.setVisible(true);
         }
 
+        if (!selectedRequest.getCurrentApprover().equals("อาจารย์ที่ปรึกษา")) {
+            pdfRequestViewButton.setVisible(true);
+        }
+
         requestDetailsLabel.setText(request.toString());
         requestDetailPane.setVisible(true);
     }
 
+    public void setShowPDF(String pdfFilePath, ScrollPane pdfScrollPane) throws IOException {
+        PDDocument document = PDDocument.load(new File(pdfFilePath));
+        PDFRenderer pdfRenderer = new PDFRenderer(document);
 
+        VBox vbox = new VBox(10);
+        vbox.setStyle("-fx-alignment: center;");
+
+        for (int page = 0; page < document.getNumberOfPages(); page++) {
+            BufferedImage bufferedImage = pdfRenderer.renderImageWithDPI(page, 150);
+
+            Image fxImage = SwingFXUtils.toFXImage(bufferedImage, null);
+
+            ImageView imageView = new ImageView(fxImage);
+            imageView.setFitWidth(1240);
+            imageView.setPreserveRatio(true);
+
+            vbox.getChildren().add(imageView);
+        }
+
+        pdfScrollPane.setContent(null);
+        pdfScrollPane.setContent(vbox);
+
+        document.close();
+    }
+
+    @FXML
+    public void pdfRequestView() throws IOException {
+        setShowPDF(selectedRequest.getPdfFilePath(), requestDetailScrollPane);
+        pdfPopupPane.setVisible(true);
+    }
 
     @FXML
     public void logoutClick(MouseEvent event) throws IOException {
         FXRouter.goTo("login");
+    }
+
+    @FXML
+    public void settingsPageClick(MouseEvent event) throws IOException {
+        ArrayList<String> data = new ArrayList<>();
+        data.add("student-create-request");
+        data.add(student.getUsername());
+        FXRouter.goTo("settings", data);
+
     }
 
     @FXML
@@ -260,5 +295,10 @@ public class StudentRequestListViewController {
     @FXML
     public void closeRequestDetailClick(MouseEvent event) {
         requestDetailPane.setVisible(false);
+    }
+
+    @FXML
+    public void closeRequestDetailPdfClick(MouseEvent event){
+        pdfPopupPane.setVisible(false);
     }
 }
