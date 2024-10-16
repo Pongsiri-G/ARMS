@@ -82,9 +82,11 @@ public class AdvisorRequestController extends BaseController {
     }
 
     @FXML
-    void acceptClick(ActionEvent event) {
+    void acceptClick(ActionEvent event) throws Exception {
         if (advisor != null) { advisor.acceptRequest(request); }
         userListDatasource.writeData(userList);
+        request.createRequest();
+
         requestListDatasource.writeData(requestList);
         showTable(advisor.getRequestsByAdvisor(requestList));
         requestDetailPane.setVisible(false);
