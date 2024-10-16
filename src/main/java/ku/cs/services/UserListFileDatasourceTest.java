@@ -24,6 +24,7 @@ public class UserListFileDatasourceTest {
         loadFacultyOfficer();
         loadAdvisorList();
         loadDepartmentOfficer();
+        loadAdmin();
     }
 
     private void setup() {
@@ -117,5 +118,11 @@ public class UserListFileDatasourceTest {
         facultyList.addFaculty(faculty2);
 
         datasource.writeData(facultyList);
+    }
+
+    public void loadAdmin() {
+        AdminPasswordFileDataSource adminPasswordFileDataSource = new AdminPasswordFileDataSource("data/test", "admin.csv");
+        Admin admin = new Admin("1111", false, false);
+        adminPasswordFileDataSource.writeData(admin);
     }
 }

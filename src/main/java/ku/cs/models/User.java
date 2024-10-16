@@ -21,16 +21,6 @@ public abstract class User {
         this(username, password, name, false, false);
     }
 
-    // Constructor for cases when only the name is provided (when creating a temporary user)
-    public User(String name) {
-        this.username = null;
-        this.password = null;
-        this.name = name;
-        this.suspended = false;
-        this.lastLogin = null;
-        this.profilePicturePath = DEFAULT_PROFILE_PICTURE_PATH;
-    }
-
     // Constructor for users loaded from a file (password is either hashed or plaintext)
     public User(String username, String password, String name, boolean isHashed, boolean suspended) {
         this.username = username;

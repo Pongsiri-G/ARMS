@@ -1,12 +1,8 @@
 package ku.cs.controllers;
 
-import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.StackPane;
 import ku.cs.models.*;
 import ku.cs.services.*;
@@ -31,13 +27,15 @@ public class AdminController {
     @FXML private Label totalLabel;
     @FXML private StackPane roleStackPane;
     @FXML private StackPane facDepStackPane;
-    @FXML private TableView<User> allUserTableView;
+
     private RequestList requestList;
     private UserList userList;
     private FacultyList facultyList;
+    private Admin admin; // ประกาศตัวแปร admin
     private Datasource<UserList> datasource;
     private Datasource<RequestList> requestListDatasource;
     private Datasource<FacultyList> facultyListDatasource;
+    private Datasource<Admin> adminDatasource; // ประกาศ Datasource สำหรับ Admin
 
     @FXML
     public void initialize() {
@@ -54,32 +52,82 @@ public class AdminController {
         userList = datasource.readData();
         requestListDatasource = new RequestListFileDatasource("data/test", "requestlist.csv", userList);
         requestList = requestListDatasource.readData();
-        facultyListDatasource = new FacDepListFileDatascource("data/test", "facdeplist.csv"); // แก้ไขชื่อคลาสและไฟล์ให้ถูกต้อง
+        facultyListDatasource = new FacDepListFileDatascource("data/test", "facdeplist.csv");
         facultyList = facultyListDatasource.readData();
+        adminDatasource = new AdminPasswordFileDataSource("data/test", "admin.csv");
+        admin = adminDatasource.readData();
 
         addChoiceBoxListeners();
-        // อัปเดตจำนวนผู้ใช้ในคณะและสาขาเริ่มต้น
-        updateFacultyUser(selectedFaculty.getValue()); // อัปเดตจำนวนผู้ใช้ในคณะ
-        updateDepartmentUser(selectedDepartment.getValue()); // อัปเดตจำนวนผู้ใช้ในสาขา
 
+        for (User user : userList.getAllUsers()) {
+            admin.increaseUserCount(user);
+            if (user instanceof Student) {
+                Student student = (Student) user;
+                if (student.getEnrolledFaculty() != null) {
+                    admin.increaseFacultyUserCount(student.getEnrolledFaculty().getFacultyName());
+                } if (student.getEnrolledDepartment() != null) {
+                    admin.increaseDepartmentUserCount(student.getEnrolledDepartment().getDepartmentName());
+                }
+            } else if (user instanceof Advisor) {
+                Advisor advisor = (Advisor) user;
+                if (advisor.getFaculty() != null) {
+                    admin.increaseFacultyUserCount(advisor.getFaculty().getFacultyName());
+                }if (advisor.getDepartment() != null) {
+                    admin.increaseDepartmentUserCount(advisor.getDepartment().getDepartmentName());
+                }
+            } else if (user instanceof FacultyOfficer) {
+                FacultyOfficer facultyOfficer = (FacultyOfficer) user;
+                if (facultyOfficer.getFaculty() != null) {
+                    admin.increaseFacultyUserCount(facultyOfficer.getFaculty().getFacultyName());
+                }
+            } else if (user instanceof DepartmentOfficer) {
+                DepartmentOfficer departmentOfficer = (DepartmentOfficer) user;
+                if (departmentOfficer.getFaculty() != null) {
+                    admin.increaseFacultyUserCount(departmentOfficer.getFaculty().getFacultyName());
+                }if (departmentOfficer.getDepartment() != null) {
+                    admin.increaseDepartmentUserCount(departmentOfficer.getDepartment().getDepartmentName());
+                }
+            }
+        }
+
+        for (Request request : requestList.getRequests()) {
+            admin.increaseRequestCount(request);
+        }
+
+        // อัปเดตจำนวนผู้ใช้ในคณะและสาขาเริ่มต้น
         populateFacultyChoiceBox();
         populateDepartmentChoiceBox("All");
 
         // ตั้งค่าเลือกเริ่มต้น
-        selectedFaculty.getSelectionModel().select("วิทยาศาสตร์");
-        selectedDepartment.getSelectionModel().select("All");
+        selectedFaculty.getSelectionModel().select("เลือกคณะ");
+        selectedDepartment.getSelectionModel().select("เลือกภาควิชา");
 
         facultyLabel.setText(selectedFaculty.getValue()); // อัปเดต label คณะ
         departmentLabel.setText(selectedDepartment.getValue()); // อัปเดต label สาขา
 
-        // นับจำนวนผู้ใช้ตามบทบาท
+        // นับจำนวนผู้ใช้ตามบทบาทและเพิ่มข้อมูลลงใน admin
         countUserByRole();
 
         // แสดงข้อมูลคำร้องขอ
-        showRequest(requestList);
+        showRequest();
 
         // แสดงจำนวนผู้ใช้ทั้งหมด
-        showTotalUsers(userList);
+        showTotalUsers();
+    }
+
+    private void countUserByRole() {
+        if (admin != null) {
+            countStudent.setText(String.valueOf(admin.getAllStudents()));
+            countAdvisor.setText(String.valueOf(admin.getAllAdvisors()));
+            countFacOff.setText(String.valueOf(admin.getAllFacultyOfficers()));
+            countDepOff.setText(String.valueOf(admin.getAllDepartmentOfficers()));
+        } else {
+            // กรณีที่ admin ยังไม่ถูกกำหนดค่า
+            countStudent.setText("0");
+            countAdvisor.setText("0");
+            countFacOff.setText("0");
+            countDepOff.setText("0");
+        }
     }
 
     private void populateFacultyChoiceBox() {
@@ -90,6 +138,7 @@ public class AdminController {
                         .map(Faculty::getFacultyName)
                         .collect(Collectors.toList())
         );
+        selectedFaculty.getItems().add(0, "เลือกคณะ"); // เพิ่มตัวเลือก "เลือกคณะ" ที่ด้านบน
     }
 
     private void populateDepartmentChoiceBox(String facultyName) {
@@ -112,26 +161,6 @@ public class AdminController {
         selectedDepartment.getSelectionModel().select("All");
     }
 
-
-    private void countUserByRole() {
-        int allStudent = 0;
-        int allAdvisor = 0;
-        int allFacOff = 0;
-        int allDepOff = 0;
-
-        for (User user : userList.getAllUsers()) {
-            if (user instanceof Student) { allStudent++; }
-            else if (user instanceof Advisor) { allAdvisor++; }
-            else if (user instanceof FacultyOfficer) { allFacOff++; }
-            else if (user instanceof DepartmentOfficer) { allDepOff++; }
-        }
-
-        countStudent.setText(String.valueOf(allStudent));
-        countAdvisor.setText(String.valueOf(allAdvisor));
-        countFacOff.setText(String.valueOf(allFacOff));
-        countDepOff.setText(String.valueOf(allDepOff));
-    }
-
     private void addChoiceBoxListeners() {
         // Listener สำหรับ selectedChoiceBox เพื่อแสดง/hide StackPane ตามการเลือก
         selectedChoiceBox.getSelectionModel().selectedItemProperty().addListener(
@@ -148,9 +177,11 @@ public class AdminController {
 
         selectedFaculty.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> {
-                    if (newValue != null) {
+                    if (newValue != null && !newValue.equals("เลือกคณะ")) {
                         populateDepartmentChoiceBox(newValue);
                         facultyLabel.setText(newValue); // อัปเดตป้ายชื่อคณะ
+                    } else {
+                        facultyLabel.setText(""); // ล้างป้ายชื่อคณะถ้าเลือก "เลือกคณะ"
                     }
                 }
         );
@@ -158,7 +189,12 @@ public class AdminController {
         selectedDepartment.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> {
                     if (newValue != null) {
-                        departmentLabel.setText(newValue); // อัปเดตป้ายชื่อสาขา
+                        if (!newValue.equals("All")) {
+                            departmentLabel.setText(newValue); // อัปเดตป้ายชื่อสาขา
+                        } else {
+                            departmentLabel.setText("ทั้งหมด"); // แสดง "ทั้งหมด" เมื่อเลือก "All"
+                        }
+
                         if ("All".equals(newValue)) {
                             updateFacultyUser(selectedFaculty.getSelectionModel().getSelectedItem()); // อัปเดตจำนวนผู้ใช้ในคณะที่เลือกทั้งหมด
                         } else {
@@ -170,75 +206,36 @@ public class AdminController {
     }
 
     private void updateFacultyUser(String facultyName) {
-        int totalFacUser = 0;
-
-        // นับจำนวนผู้ใช้ในคณะที่เลือกทั้งหมด
-        for (User user : userList.getAllUsers()) {
-            if (user instanceof Student) {
-                Student student = (Student) user;
-                if (student.getEnrolledFaculty() != null && student.getEnrolledFaculty().getFacultyName().equals(facultyName)) {
-                    totalFacUser++;
-                }
-            } else if (user instanceof Advisor) {
-                Advisor advisor = (Advisor) user;
-                if (advisor.getFaculty() != null && advisor.getFaculty().getFacultyName().equals(facultyName)) {
-                    totalFacUser++;
-                }
-            } else if (user instanceof FacultyOfficer) {
-                FacultyOfficer officer = (FacultyOfficer) user;
-                if (officer.getFaculty() != null && officer.getFaculty().getFacultyName().equals(facultyName)) {
-                    totalFacUser++;
-                }
-            } else if (user instanceof DepartmentOfficer) {
-                DepartmentOfficer officer = (DepartmentOfficer) user;
-                if (officer.getFaculty() != null && officer.getFaculty().getFacultyName().equals(facultyName)) {
-                    totalFacUser++;
-                }
-            }
+        if (facultyName == null || facultyName.equals("เลือกคณะ")) {
+            totalLabel.setText("0");
+            return;
         }
-
-        // อัปเดตจำนวนผู้ใช้ทั้งหมดใน Label
+        int totalFacUser = admin.getAllFacultyUsers(facultyName);
         totalLabel.setText(String.valueOf(totalFacUser));
     }
 
     private void updateDepartmentUser(String departmentName) {
         String selectedFac = selectedFaculty.getSelectionModel().getSelectedItem();
-        int totalDepUser = 0;
-
-        // นับจำนวนผู้ใช้ในภาควิชาที่เลือกภายในคณะที่เลือก
-        for (User user : userList.getAllUsers()) {
-            if (user instanceof Student) {
-                Student student = (Student) user;
-                if (student.getEnrolledFaculty() != null && student.getEnrolledFaculty().getFacultyName().equals(selectedFac) &&
-                        student.getEnrolledDepartment() != null && student.getEnrolledDepartment().getDepartmentName().equals(departmentName)) {
-                    totalDepUser++;
-                }
-            } else if (user instanceof Advisor) {
-                Advisor advisor = (Advisor) user;
-                if (advisor.getFaculty() != null && advisor.getFaculty().getFacultyName().equals(selectedFac) &&
-                        advisor.getDepartment() != null && advisor.getDepartment().getDepartmentName().equals(departmentName)) {
-                    totalDepUser++;
-                }
-            } else if (user instanceof DepartmentOfficer) {
-                DepartmentOfficer officer = (DepartmentOfficer) user;
-                if (officer.getFaculty() != null && officer.getFaculty().getFacultyName().equals(selectedFac) &&
-                        officer.getDepartment() != null && officer.getDepartment().getDepartmentName().equals(departmentName)) {
-                    totalDepUser++;
-                }
-            }
+        if (selectedFac == null || selectedFac.equals("เลือกคณะ")) {
+            totalLabel.setText("0");
+            return;
         }
 
-        // อัปเดตจำนวนผู้ใช้ทั้งหมดใน Label
+        int totalDepUser = admin.getAllDepartmentUsers(departmentName);
         totalLabel.setText(String.valueOf(totalDepUser));
     }
 
-    private void showRequest(RequestList requestList) {
-        allRequestLabel.setText(String.format("%d", requestList.getAllRequestCount()));
-        approvedLabel.setText(String.format("%d", requestList.getApprovedRequestsCount()));
+    private void showRequest() {
+        allRequestLabel.setText(String.format("%d", admin.getAllRequests()));
+        approvedLabel.setText(String.format("%d", admin.getAllApprovedRequests()));
     }
 
-    private void showTotalUsers(UserList userList) {
-        userLabel.setText(String.format("%d", userList.getAllUsers().size()));
+    private void showTotalUsers() {
+        if (admin != null) {
+            userLabel.setText(String.valueOf(admin.getTotalUsers()));
+        } else {
+            userLabel.setText("0");
+        }
     }
 
     @FXML

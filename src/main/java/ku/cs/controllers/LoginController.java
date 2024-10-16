@@ -3,9 +3,11 @@ package ku.cs.controllers;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import ku.cs.models.Admin;
 import ku.cs.models.Advisor;
 import ku.cs.models.User;
 import ku.cs.models.UserList;
+import ku.cs.services.AdminPasswordFileDataSource;
 import ku.cs.services.FXRouter;
 
 import javafx.fxml.FXML;
@@ -26,11 +28,15 @@ public class LoginController {
     private Label errorLabel;
 
     private UserList userList;
+    private Admin admin;
     private UserListFileDatasource datasource;
+    private AdminPasswordFileDataSource adminPasswordFileDataSource;
 
     public LoginController() {
         datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
         this.userList = datasource.readData();
+        adminPasswordFileDataSource = new AdminPasswordFileDataSource("data/test", "admin.csv");
+        admin = adminPasswordFileDataSource.readData();
     }
 
     public void initialize() {
@@ -40,9 +46,10 @@ public class LoginController {
 
     public void userLogin() throws IOException {
         try {
+            String adminPassword = password.getText().trim();
             //System.out.println("Loaded users: " + userList.getAllUsers()); // Debugging Only, will remove later
-
-            if ((username.getText().trim().equals("Admin")) && (password.getText().trim().equals("0000"))) {
+            System.out.println(admin.getPassword());
+            if ((username.getText().trim().equals("Admin")) && (admin.validatePassword(adminPassword))) {
                 FXRouter.goTo("dashboard");
             } // TEMPORARY LOGIN FOR TEST ONLY
 
@@ -64,7 +71,7 @@ public class LoginController {
         User user = userList.findUserByUsername(username.getText().trim());
 
         switch (role) {
-            case "Admin":
+            case "ผู้ดูแลระบบ":
                 FXRouter.goTo("dashboard");
                 break;
             case "เจ้าหน้าที่คณะ":
@@ -89,5 +96,14 @@ public class LoginController {
 
     public void toRegisterPageClick() throws IOException {
         FXRouter.goTo("register-first");
+    }
+
+    @FXML
+    protected void onCreatorClick() {
+        try {
+            FXRouter.goTo("creator");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

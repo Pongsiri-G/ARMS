@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
@@ -71,23 +72,52 @@ public class UserManagementController {
     }
 
     private void filterTableByRole(String role) {
-        userManagementTableView.getItems().clear(); // Clear current items
-
-        for (User user : userList.getAllUsers()) {
-            // Filter based on the selected role
-            if (role.equals("Students") && user instanceof Student) {
-                userManagementTableView.getItems().add(user);
-            } else if (role.equals("Advisors") && user instanceof Advisor) {
-                userManagementTableView.getItems().add(user);
-            } else if (role.equals("Faculty Officers") && user instanceof FacultyOfficer) {
-                userManagementTableView.getItems().add(user);
-            } else if (role.equals("Department Officers") && user instanceof DepartmentOfficer) {
-                userManagementTableView.getItems().add(user);
-            } else if (role.equals("All")) {
-                userManagementTableView.getItems().add(user);
+        // สร้าง FilteredList จาก userList
+        ObservableList<User> observableUserList = FXCollections.observableArrayList(userList.getAllUsers());
+        FilteredList<User> filteredList = new FilteredList<>(observableUserList, user -> {
+            switch (role) {
+                case "Students":
+                    return user instanceof Student;
+                case "Advisors":
+                    return user instanceof Advisor;
+                case "Faculty Officers":
+                    return user instanceof FacultyOfficer;
+                case "Department Officers":
+                    return user instanceof DepartmentOfficer;
+                case "All":
+                    try {
+                        FXRouter.goTo("user-management");
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                default:
+                    return true;
             }
-        }
+        });
+
+        // สร้าง SortedList จาก filteredList
+        SortedList<User> sortedData = new SortedList<>(filteredList, new Comparator<User>() {
+            @Override
+            public int compare(User u1, User u2) {
+                if (u1.getLastLogin() == null && u2.getLastLogin() == null) {
+                    return 0;
+                } else if (u1.getLastLogin() == null) {
+                    return 1;
+                } else if (u2.getLastLogin() == null) {
+                    return -1;
+                } else {
+                    return u2.getLastLogin().compareTo(u1.getLastLogin());
+                }
+            }
+        });
+
+        // ผูกคอมเปอเรเตอร์ของ sortedData เข้ากับ tableView
+        sortedData.comparatorProperty().bind(userManagementTableView.comparatorProperty());
+
+        // ตั้งค่าข้อมูลที่กรองและจัดเรียงแล้วให้กับ TableView
+        userManagementTableView.setItems(sortedData);
     }
+
 
     private void filterUsersBySearch(String searchQuery) {
         searchQuery = searchQuery.toLowerCase();
