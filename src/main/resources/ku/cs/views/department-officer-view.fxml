@@ -137,11 +137,11 @@
                      <children>
                         <VBox fx:id="requestListScene" prefHeight="200.0" prefWidth="1178.0" spacing="30.0">
                            <children>
-                              <StackPane>
+                              <StackPane VBox.vgrow="ALWAYS">
                                  <children>
                                     <VBox spacing="30.0">
                                        <children>
-                                          <Label styleClass="title-label" text="รายการคำร้อง">
+                                          <Label styleClass="title-label" text="รายการคำร้องรอพิจารณา">
                                              <font>
                                                 <Font name="System Bold" size="36.0" />
                                              </font>
@@ -158,11 +158,11 @@
                                           </TableView>
                                        </children>
                                     </VBox>
-                                    <VBox fx:id="requestDetailPane" prefHeight="874.0" prefWidth="1229.0" spacing="10.0" styleClass="inner-pane">
+                                    <VBox fx:id="requestDetailPane" prefHeight="874.0" prefWidth="1229.0" spacing="10.0" styleClass="inner-pane" visible="false">
                                        <children>
                                           <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                                              <children>
-                                                <VBox prefHeight="200.0" prefWidth="700.0" spacing="10.0">
+                                                <VBox prefWidth="700.0" spacing="10.0" HBox.hgrow="ALWAYS">
                                                    <children>
                                                       <HBox prefWidth="280.0" spacing="20.0">
                                                          <children>
@@ -179,12 +179,13 @@
                                                 <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS" />
                                                 <VBox prefHeight="200.0" prefWidth="500.0" spacing="30.0">
                                                    <children>
-                                                      <TextArea fx:id="requestLogTextArea" editable="false" prefHeight="300.0" prefWidth="400.0" />
+                                                      <TextArea fx:id="requestLogTextArea" editable="false" prefHeight="300.0" prefWidth="400.0" VBox.vgrow="ALWAYS" />
                                                       <Label fx:id="timestampLabel" text="timestampLabel" />
                                                       <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                                                      <VBox alignment="CENTER_RIGHT" spacing="20.0">
+                                                      <VBox alignment="CENTER_RIGHT" spacing="20.0" VBox.vgrow="ALWAYS">
                                                          <children>
-                                                            <Button mnemonicParsing="false" prefHeight="50.0" text="แนบไฟล์เอกสาร PDF">
+                                                            <Label fx:id="fileLabel" text="fileLabel" visible="false" />
+                                                            <Button mnemonicParsing="false" onMouseClicked="#uploadButtonClick" prefHeight="50.0" text="แนบไฟล์เอกสาร PDF">
                                                                <graphic>
                                                                   <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                                                      <image>
@@ -193,7 +194,7 @@
                                                                   </ImageView>
                                                                </graphic>
                                                             </Button>
-                                                            <Button mnemonicParsing="false" prefHeight="50.0" text="ดาวน์โหลดไฟล์เอกสาร PDF">
+                                                            <Button mnemonicParsing="false" onMouseClicked="#downloadButtonClick" prefHeight="50.0" text="ดาวน์โหลดไฟล์เอกสาร PDF">
                                                                <VBox.margin>
                                                                   <Insets bottom="20.0" />
                                                                </VBox.margin>
@@ -205,19 +206,21 @@
                                                                   </ImageView>
                                                                </graphic>
                                                             </Button>
-                                                            <Label fx:id="errorLabel" disable="true" styleClass="error-label" text="ErrorLabel" textFill="RED" visible="false" />
-                                                            <MenuButton fx:id="selectOfficerHandlingMenu" mnemonicParsing="false" prefHeight="46.0" prefWidth="234.0" styleClass="choice-box" text="เลือกผู้ดำเนินการ" textAlignment="CENTER" wrapText="true">
+                                                            <Label fx:id="errorLabel" styleClass="error-label" text="ErrorLabel" textFill="RED" visible="false" />
+                                                            <MenuButton fx:id="selectOfficerHandlingMenu" alignment="CENTER" mnemonicParsing="false" prefHeight="46.0" prefWidth="350.0" styleClass="choice-box" text="เลือกผู้ดำเนินการ" textAlignment="CENTER" wrapText="true">
                                                                <items>
                                                                   <MenuItem mnemonicParsing="false" text="Action 1" />
                                                                   <MenuItem mnemonicParsing="false" text="Action 2" />
                                                                </items>
-                                                               <font>
-                                                                  <Font size="24.0" />
-                                                               </font>
                                                             </MenuButton>
                                                             <HBox alignment="CENTER_RIGHT" prefWidth="200.0" spacing="30.0" styleClass="tit">
                                                                <children>
                                                                   <Button mnemonicParsing="false" onMouseClicked="#onRejectRequestButtonClick" prefHeight="49.0" prefWidth="99.0" styleClass="red-button" text="ปฏิเสธ">
+                                                                     <font>
+                                                                        <Font size="18.0" />
+                                                                     </font>
+                                                                  </Button>
+                                                                  <Button mnemonicParsing="false" onMouseClicked="#onSendRequestButtonClick" prefHeight="50.0" prefWidth="100.0" styleClass="yellow-button" text="ส่งต่อ">
                                                                      <font>
                                                                         <Font size="18.0" />
                                                                      </font>
@@ -237,6 +240,35 @@
                                           </HBox>
                                        </children>
                                     </VBox>
+                                    <GridPane fx:id="rejectPopupPane" visible="false">
+                                       <columnConstraints>
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
+                                       <children>
+                                          <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0" styleClass="popup-pane" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                             <children>
+                                                <TextField fx:id="reasonTextField" promptText="ระบุเหตุผล" styleClass="capsule-text-field">
+                                                   <VBox.margin>
+                                                      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <Label fx:id="rejectionErrorLabel" alignment="CENTER" styleClass="error-label" text="โปรดระบุเหตุผล" textAlignment="CENTER" visible="false">
+                                                   <padding>
+                                                      <Insets top="-30.0" />
+                                                   </padding>
+                                                </Label>
+                                                <Button mnemonicParsing="false" onMouseClicked="#onReasonRejectToStudentClick" prefHeight="38.0" prefWidth="130.0" styleClass="yellow-button" text="ส่ง" />
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </GridPane>
                                  </children>
                               </StackPane>
                            </children>
@@ -254,8 +286,6 @@
                                                       <Font name="System Bold" size="36.0" />
                                                    </font>
                                                 </Label>
-                                                <VBox HBox.hgrow="ALWAYS" />
-                                                <TextField fx:id="searchBarApproverTextField" alignment="TOP_LEFT" prefHeight="27.0" prefWidth="374.0" promptText="ค้นหารายชื่อ" HBox.hgrow="ALWAYS" />
                                                 <VBox HBox.hgrow="ALWAYS" />
                                                 <Button mnemonicParsing="false" onMouseClicked="#onRemoveApproverButtonClick" prefWidth="100.0" styleClass="red-button" text="ลบ -">
                                                 </Button>
@@ -307,9 +337,6 @@
                                                 <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                                                    <children>
                                                       <Label fx:id="errorManageApproverLabel" alignment="CENTER_RIGHT" contentDisplay="CENTER" prefHeight="27.0" prefWidth="300.0" styleClass="error-label" text="errorManageApproverLabel" textFill="RED">
-                                                         <font>
-                                                            <Font size="18.0" />
-                                                         </font>
                                                       </Label>
                                                       <Button mnemonicParsing="false" onMouseClicked="#onBackButtonClick" prefHeight="50.0" prefWidth="100.0" styleClass="middle-button" text="ยกเลิก" />
                                                       <Button mnemonicParsing="false" onMouseClicked="#onOkButtonClick" prefHeight="46.0" prefWidth="99.0" text="ตกลง" />
