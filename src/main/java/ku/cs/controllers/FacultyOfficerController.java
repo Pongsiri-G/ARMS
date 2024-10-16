@@ -147,14 +147,37 @@ public class FacultyOfficerController extends BaseController{
         approverScene.setManaged(false);
         manageApproverScene.setVisible(false);
         manageApproverScene.setManaged(true);
+        rejectPopupPane.setVisible(false);
+        requestDetailPane.setVisible(false);
     }
 
     public void switchToRequestScene() {
         resetScene();
+        selectedRequest = null;
         currentMenu1.setVisible(true);
         requestListScene.setVisible(true);
         requestListScene.setManaged(true);
+        requests = officer.getRequestsByFaculty(requestList);
         updateRequestTableView();
+    }
+
+    public void switchToManageRequestScene() {
+        StringBuilder logs = new StringBuilder();
+        List<String> statusLog = selectedRequest.getStatusLog();
+        for (int i = statusLog.size() - 1; i >= 0; i--) {
+            logs.append(statusLog.get(i)).append("\n");
+        }
+        requestLogTextArea.setText(logs.toString());
+        timestampLabel.setText(("วันที่สร้างคำร้อง: " + selectedRequest.getTimestamp()));
+
+        try {
+            fillSelectApproverMenuButtons();
+            setShowPDF(selectedRequest.getPdfFilePath(), requestDetailScrollPane);
+            requestDetailPane.setVisible(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void switchToApproverScene() {
@@ -164,6 +187,7 @@ public class FacultyOfficerController extends BaseController{
         approverScene.setManaged(true);
         updateApproverTableView();
     }
+
 
     public void switchToManageApproverScene() {
         manageApproverScene.setVisible(true);
@@ -228,28 +252,9 @@ public class FacultyOfficerController extends BaseController{
         requestListTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 selectedRequest = newValue;
-
-                handleSelectedRequest(selectedRequest);
+                switchToManageRequestScene();
             }
         });
-    }
-
-    private void handleSelectedRequest(Request selectedRequest) {
-        StringBuilder logs = new StringBuilder();
-        List<String> statusLog = selectedRequest.getStatusLog();
-        for (int i = statusLog.size() - 1; i >= 0; i--) {
-            logs.append(statusLog.get(i)).append("\n");
-        }
-        requestLogTextArea.setText(logs.toString());
-        timestampLabel.setText("วันที่สร้างคำร้อง: " + selectedRequest.getTimestamp());
-
-        try {
-            fillSelectApproverMenuButtons();
-            setShowPDF(selectedRequest.getPdfFilePath(), requestDetailScrollPane);
-            requestDetailPane.setVisible(true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public void setShowPDF(String pdfFilePath, ScrollPane pdfScrollPane) throws IOException {
@@ -278,8 +283,8 @@ public class FacultyOfficerController extends BaseController{
     }
 
     public void closeRequestDetailClick(){
-        requestDetailPane.setVisible(false);
-        rejectPopupPane.setVisible(false);
+        System.out.println("kuy");
+        switchToRequestScene();
     }
 
     public void fillSelectApproverMenuButtons() {
@@ -296,6 +301,7 @@ public class FacultyOfficerController extends BaseController{
             });
 
             selectOfficerHandlingMenu.getItems().add(item);
+            selectOfficerHandlingMenu.setText("เลือกผู้ดำเนินการ");
         }
     }
 
@@ -347,7 +353,7 @@ public class FacultyOfficerController extends BaseController{
     @FXML
     public void onRejectRequestButtonClick(MouseEvent event) {
         selectedApprover = selectOfficerHandlingMenu.getText();
-        if (checkValid(selectedApprover, true)) {
+        if (checkValid(selectedApprover, false)) {
             rejectPopupPane.setVisible(true);
 
         }
@@ -359,9 +365,8 @@ public class FacultyOfficerController extends BaseController{
         }
         else {
             officer.rejectRequest(selectedRequest, selectedApprover, reasonTextField.getText().trim());
-            updateRequest();
-            rejectPopupPane.setVisible(false);
-            requestDetailPane.setVisible(false);
+            requestDatasource.writeData(requestList);
+            switchToRequestScene();
         }
     }
 
@@ -371,7 +376,7 @@ public class FacultyOfficerController extends BaseController{
         if (checkValid(selectedApprover, true)) {
             officer.acceptRequest(selectedRequest, selectedApprover);
             updateRequest();
-            requestDetailPane.setVisible(false);
+            switchToRequestScene();
         }
     }
 
@@ -383,8 +388,6 @@ public class FacultyOfficerController extends BaseController{
 
         // เขียนลง csv
         requestDatasource.writeData(requestList);
-        loadRequests();
-        updateRequestTableView();
     }
 
     public boolean checkValid(String approver, boolean isUseFile){

@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Request {
+public abstract class Request {
     private String timestamp; //วันเวลาที่คำข้อถูกสร้าง
     private String lastModifiedDateTime; //วันเวลาที่คำขอถูกแก้ไขมากที่สุด
     private String status; //สถานะคำร้อง (กำลังดำเนินการ ปฏิเสธ เสร็จสิ้น)
@@ -193,4 +193,6 @@ public class Request {
         this.lastModifiedDateTime = logTime;
         statusLog.add(logTime + " - " + status);
     }
+
+    public abstract void createRequest() throws Exception;
 }

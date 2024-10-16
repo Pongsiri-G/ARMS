@@ -214,10 +214,33 @@ public class DepartmentOfficerController extends BaseController {
 
     public void switchToRequestScene() {
         resetScene();
+        selectedRequest = null;
         currentMenu1.setVisible(true);
         requestListScene.setVisible(true);
         requestListScene.setManaged(true);
+        rejectPopupPane.setVisible(false);
+        requests = officer.getRequestsByDepartment(requestList);
         updateRequestTableView();
+    }
+
+
+    public void switchToManageRequestScene() {
+        StringBuilder logs = new StringBuilder();
+        List<String> statusLog = selectedRequest.getStatusLog();
+        for (int i = statusLog.size() - 1; i >= 0; i--) {
+            logs.append(statusLog.get(i)).append("\n");
+        }
+        requestLogTextArea.setText(logs.toString());
+        timestampLabel.setText(("วันที่สร้างคำร้อง: " + selectedRequest.getTimestamp()));
+
+        try {
+            fillSelectApproverMenuButtons();
+            setShowPDF(selectedRequest.getPdfFilePath(), requestDetailScrollPane);
+            requestDetailPane.setVisible(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void switchToApproverScene() {
@@ -326,33 +349,13 @@ public class DepartmentOfficerController extends BaseController {
         requestListTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 selectedRequest = newValue;
-
-                handleSelectedRequest(selectedRequest);
+                switchToManageRequestScene();
             }
         });
     }
 
-    private void handleSelectedRequest(Request selectedRequest) {
-        StringBuilder logs = new StringBuilder();
-        List<String> statusLog = selectedRequest.getStatusLog();
-        for (int i = statusLog.size() - 1; i >= 0; i--) {
-            logs.append(statusLog.get(i)).append("\n");
-        }
-        requestLogTextArea.setText(logs.toString());
-        timestampLabel.setText("วันที่สร้างคำร้อง: " + selectedRequest.getTimestamp());
-
-        try {
-            fillSelectApproverMenuButtons();
-            setShowPDF(selectedRequest.getPdfFilePath(), requestDetailScrollPane);
-            requestDetailPane.setVisible(true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void closeRequestDetailClick(){
-        requestDetailPane.setVisible(false);
-        rejectPopupPane.setVisible(false);
+        switchToRequestScene();
     }
 
     public void setShowPDF(String pdfFilePath, ScrollPane pdfScrollPane) throws IOException {
@@ -381,21 +384,25 @@ public class DepartmentOfficerController extends BaseController {
     }
 
     public void fillSelectApproverMenuButtons() {
-        selectOfficerHandlingMenu.getItems().clear();
+        selectOfficerHandlingMenu.getItems().clear(); // Clear existing items
         ArrayList<RequestHandlingOfficer> approvers = officer.getRequestManagers();
+
         for (RequestHandlingOfficer approver : approvers) {
-            System.out.println(approver.getFullPositoin());
             MenuItem item = new MenuItem(approver.getFullPositoin());
 
+            // Event handling when an item is clicked
             item.setOnAction(e -> {
-                String selectedPosition = item.getText();
+                // Set the selected position
+                String selectedApprover = item.getText();
 
-                selectOfficerHandlingMenu.setText(selectedPosition);
+                // Set the text of the roleSelectMenuButton to the selected position
+                selectOfficerHandlingMenu.setText(selectedApprover);
             });
 
+            // Add the item to the menu button
             selectOfficerHandlingMenu.getItems().add(item);
+            selectOfficerHandlingMenu.setText("เลือกผู้ดำเนินการ");
         }
-
     }
 
     @FXML
@@ -448,7 +455,6 @@ public class DepartmentOfficerController extends BaseController {
         selectedApprover = selectOfficerHandlingMenu.getText();
         if (checkValid(selectedApprover, false)) {
             rejectPopupPane.setVisible(true);
-
         }
     }
 
@@ -458,9 +464,8 @@ public class DepartmentOfficerController extends BaseController {
         }
         else {
             officer.rejectRequest(selectedRequest, selectedApprover, reasonTextField.getText().trim());
-            //updateRequest();
-            rejectPopupPane.setVisible(false);
-            requestDetailPane.setVisible(false);
+            requestDatasource.writeData(requestList);
+            switchToRequestScene();
         }
     }
 
@@ -470,7 +475,7 @@ public class DepartmentOfficerController extends BaseController {
         if (checkValid(selectedApprover, true)) {
             officer.acceptRequest(selectedRequest, selectedApprover);
             updateRequest();
-            requestDetailPane.setVisible(false);
+            switchToRequestScene();
         }
     }
 
@@ -480,7 +485,7 @@ public class DepartmentOfficerController extends BaseController {
         if (checkValid(selectedApprover, true)) {
             officer.acceptRequest(selectedRequest, selectedApprover);
             updateRequest();
-            requestDetailPane.setVisible(false);
+            switchToRequestScene();
         }
     }
 
@@ -492,8 +497,6 @@ public class DepartmentOfficerController extends BaseController {
 
         // เขียนลง csv
         requestDatasource.writeData(requestList);
-        loadRequests();
-        updateRequestTableView();
     }
 
     public boolean checkValid(String approver, boolean isUseFile){
@@ -503,7 +506,7 @@ public class DepartmentOfficerController extends BaseController {
             return false;
         }
         else if (isUseFile && selectedFile == null){
-            errorLabel.setText("กรุณาแนบเอกสารไฟล์ PDF");
+            errorLabel.setText("กรุณาอัพโหลดไฟล์ PDF");
             errorLabel.setVisible(true);
             return false;
         }
@@ -514,13 +517,13 @@ public class DepartmentOfficerController extends BaseController {
         loadApprovers();
         approverRoleTableColumn = new TableColumn<>("ตำแหน่ง");
         approverRoleTableColumn.setCellValueFactory(new PropertyValueFactory<>("position"));
-        approverRoleTableColumn.setMinWidth(360);
+        approverRoleTableColumn.setMinWidth(300);
         approverNameTableColumn = new TableColumn<>("ชื่อ-นามสกุล");
         approverNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        approverNameTableColumn.setMinWidth(420);
+        approverNameTableColumn.setMinWidth(300);
         approverLastUpdateTableColumn = new TableColumn<>("วันที่แก้ไขล่าสุด");
         approverLastUpdateTableColumn.setCellValueFactory(new PropertyValueFactory<>("lastUpdate"));
-        approverLastUpdateTableColumn.setMinWidth(400);
+        approverLastUpdateTableColumn.setMinWidth(300);
 
         approverTableView.getColumns().clear();
         approverTableView.getColumns().add(approverRoleTableColumn);
@@ -536,7 +539,6 @@ public class DepartmentOfficerController extends BaseController {
     public void setApproverPositionAvailable() {
         roleSelectMenuButton.getItems().clear(); // Clear existing items
         ArrayList<String> positions = officer.getAvailablePositions();
-        System.out.println(positions);
 
         for (String position : positions) {
             MenuItem item = new MenuItem(position);
