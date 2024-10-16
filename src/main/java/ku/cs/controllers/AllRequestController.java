@@ -8,14 +8,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
-import ku.cs.models.Request;
-import ku.cs.models.RequestList;
-import ku.cs.models.User;
-import ku.cs.models.UserList;
-import ku.cs.services.Datasource;
-import ku.cs.services.FXRouter;
-import ku.cs.services.RequestListFileDatasource;
-import ku.cs.services.UserListFileDatasource;
+import ku.cs.models.*;
+import ku.cs.services.*;
 
 import java.io.IOException;
 
@@ -29,8 +23,10 @@ public class AllRequestController {
     @FXML private TableView<Request> allRequestTableView;
     private RequestList requestList;
     private UserList userList;
+    private Admin admin;
     private Datasource<RequestList> datasource;
     private Datasource<UserList> userDatasource;
+    private Datasource<Admin> adminDatasource;
 
     @FXML
     public void initialize() {
@@ -38,24 +34,32 @@ public class AllRequestController {
         userList = userDatasource.readData();
         datasource = new RequestListFileDatasource("data/test", "requestlist.csv", userList);
         requestList = datasource.readData();
-        showRequestStatusCount(requestList);
-        showRequest(requestList);
-        showTotalUsers(userList);
+        adminDatasource = new AdminPasswordFileDataSource("data/test", "admin.csv");
+        admin = adminDatasource.readData();
+        for (Request request : requestList.getRequests()) {
+            admin.increaseRequestCount(request);
+        }
+        for (User user : userList.getAllUsers()) {
+            admin.increaseUserCount(user);
+        }
+        showRequestStatusCount(admin);
+        showRequest();
+        showTotalUsers();
     }
 
-    private void showRequestStatusCount(RequestList requestList) {
-        successLabel.setText(requestList.getApprovedRequestsCount() + "");
-        pendingLabel.setText(requestList.getPendingRequestCount() + "");
-        deniedLabel.setText(requestList.getRejectedRequestsCount() + "");
+    private void showRequestStatusCount(Admin admin) {
+        successLabel.setText(admin.getAllApprovedRequests() + "");
+        pendingLabel.setText(admin.getAllPendingRequests() + "");
+        deniedLabel.setText(admin.getAllRejectRequests() + "");
     }
 
-    private void showRequest(RequestList requestList) {
-        allRequestLabel.setText(String.format("%d", requestList.getAllRequestCount()));
-        approvedLabel.setText(String.format("%d", requestList.getApprovedRequestsCount()));
+    private void showRequest() {
+        allRequestLabel.setText(String.format("%d", admin.getAllRequests()));
+        approvedLabel.setText(String.format("%d", admin.getAllApprovedRequests()));
     }
 
-    private void showTotalUsers(UserList userList) {
-        userLabel.setText(String.format("%d", userList.getAllUsers().size()));
+    private void showTotalUsers() {
+        userLabel.setText(String.format("%d", admin.getTotalUsers()));
     }
 
     @FXML
@@ -107,6 +111,15 @@ public class AllRequestController {
     protected void onApprovedClick() {
         try {
             FXRouter.goTo("approved-request");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
+    protected void onSettingButtonClick() {
+        try {
+            FXRouter.goTo("settings");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

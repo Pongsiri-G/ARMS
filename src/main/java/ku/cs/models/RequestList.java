@@ -4,51 +4,18 @@ import java.util.ArrayList;
 
 public class RequestList {
     private ArrayList<Request> requests;
-    private int allRequestCount;
 
     // Constructor
     public RequestList() {
         requests = new ArrayList<>();
-        allRequestCount = 0;
     }
 
     public void addRequest(Request request) {
         requests.add(request);
-        allRequestCount++;
-        if ("เสร็จสิ้น".equalsIgnoreCase(request.getStatus())) {
-            Department department = request.getRequester().getEnrolledDepartment();
-            if (department != null) {
-                department.increaseApprovedDepartmentRequest();
-            }
-        }
     }
 
     public ArrayList<Request> getRequests() {
         return requests;
-    }
-
-    public int getAllRequestCount() {
-        return allRequestCount;
-    }
-
-    public int getApprovedRequestsCount() {
-        int count = 0;
-        for (Request request : requests) {
-            if ("เสร็จสิ้น".equalsIgnoreCase(request.getStatus())) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    public int getPendingRequestCount() {
-        int count = 0;
-        for (Request request : requests) {
-            if ("กำลังดำเนินการ".equalsIgnoreCase(request.getStatus())) {
-                count++;
-            }
-        }
-        return count;
     }
 
     // test
@@ -58,15 +25,5 @@ public class RequestList {
                 return request;
             }
         }return null;
-    }
-
-    public int getRejectedRequestsCount() {
-        int count = 0;
-        for (Request request : requests) {
-            if("ปฏิเสธ".equalsIgnoreCase(request.getStatus())) {
-                count++;
-            }
-        }
-        return count;
     }
 }

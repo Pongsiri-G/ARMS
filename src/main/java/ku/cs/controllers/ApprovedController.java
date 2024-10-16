@@ -31,9 +31,11 @@ public class ApprovedController {
     private RequestList requestList;
     private FacultyList facultyList;
     private UserList userList;
+    private Admin admin;
     private Datasource<RequestList> datasource;
     private Datasource<UserList> userDatasource;
     private Datasource<FacultyList> facdepDatasource;
+    private Datasource<Admin> adminDatasource;
 
     @FXML
     public void initialize() {
@@ -43,6 +45,14 @@ public class ApprovedController {
         requestList = datasource.readData();
         facdepDatasource = new FacDepListFileDatascource("data/test", "facdeplist.csv");
         facultyList = facdepDatasource.readData();
+        adminDatasource = new AdminPasswordFileDataSource("data/test", "admin.csv");
+        admin = adminDatasource.readData();
+        for (Request request : requestList.getRequests()) {
+            admin.increaseRequestCount(request);
+        }
+        for (User user : userList.getAllUsers()) {
+            admin.increaseUserCount(user);
+        }
 
         addChoiceBoxListeners();
         populateFacultyChoiceBox();
@@ -50,8 +60,8 @@ public class ApprovedController {
         selectedFaculty.getSelectionModel().select("วิทยาศาสตร์");
         selectedDepartment.getSelectionModel().select("All");
 
-        showRequest(requestList);
-        showTotalUsers(userList);
+        showRequest();
+        showTotalUsers();
     }
 
     private void populateFacultyChoiceBox() {
@@ -153,13 +163,13 @@ public class ApprovedController {
         return count;
     }
 
-    private void showRequest(RequestList requestList) {
-        allRequestLabel.setText(String.format("%d", requestList.getAllRequestCount()));
-        approvedLabel.setText(String.format("%d", requestList.getApprovedRequestsCount()));
+    private void showRequest() {
+        allRequestLabel.setText(String.format("%d", admin.getAllRequests()));
+        approvedLabel.setText(String.format("%d", admin.getAllApprovedRequests()));
     }
 
-    private void showTotalUsers(UserList userList) {
-        userLabel.setText(String.format("%d", userList.getAllUsers().size()));
+    private void showTotalUsers() {
+        userLabel.setText(String.format("%d", admin.getTotalUsers()));
     }
 
     @FXML
@@ -211,6 +221,15 @@ public class ApprovedController {
     protected void onStaffClick() {
         try {
             FXRouter.goTo("staff-advisor-management");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
+    protected void onSettingButtonClick() {
+        try {
+            FXRouter.goTo("settings");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -79,7 +79,6 @@ public class UserList {
         }
     }
 
-
     // Setters and Getters
     public void setUsers(ArrayList<User> users) {
         this.users.clear();
