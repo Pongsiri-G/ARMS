@@ -1,12 +1,23 @@
 package ku.cs.controllers;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.Label;
+import javafx.scene.control.cell.PropertyValueFactory;
 import ku.cs.models.*;
 import ku.cs.services.*;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ApprovedController {
     @FXML private ChoiceBox<String> selectedFaculty;
@@ -17,7 +28,6 @@ public class ApprovedController {
     @FXML private Label facultyLabel;
     @FXML private Label departmentLabel;
     @FXML private Label approvedCountLabel;
-
     private RequestList requestList;
     private FacultyList facultyList;
     private UserList userList;
@@ -37,13 +47,8 @@ public class ApprovedController {
         facultyList = facdepDatasource.readData();
         adminDatasource = new AdminPasswordFileDataSource("data/test", "admin.csv");
         admin = adminDatasource.readData();
-
         for (Request request : requestList.getRequests()) {
             admin.increaseRequestCount(request);
-            String facultyName = request.getRequester().getEnrolledFaculty().getFacultyName();
-            String departmentName = request.getRequester().getEnrolledDepartment().getDepartmentName();
-            admin.increaseFacultyApprovedRequests(facultyName);
-            admin.increaseDepartmentApprovedRequests(departmentName);
         }
         for (User user : userList.getAllUsers()) {
             admin.increaseUserCount(user);
@@ -52,10 +57,11 @@ public class ApprovedController {
         addChoiceBoxListeners();
         populateFacultyChoiceBox();
 
-        selectedFaculty.getSelectionModel().select("เลือกคณะ");
-        selectedDepartment.getSelectionModel().select("เลือกภาควิชา");
+        selectedFaculty.getSelectionModel().select("วิทยาศาสตร์");
+        selectedDepartment.getSelectionModel().select("All");
 
-        showCounts();
+        showRequest();
+        showTotalUsers();
     }
 
     private void populateFacultyChoiceBox() {
@@ -66,8 +72,8 @@ public class ApprovedController {
             selectedFaculty.getItems().add(faculty.getFacultyName()); // เพิ่มชื่อคณะ
         }
 
-        // ตั้งค่าเริ่มต้นให้เลือกเป็น "เลือกคณะ"
-        selectedFaculty.getSelectionModel().select("เลือกคณะ");
+        // ตั้งค่าเริ่มต้นให้เลือกเป็น "คณะวิทยาศาสตร์"
+        selectedFaculty.getSelectionModel().select("วิทยาศาสตร์");
         populateDepartmentChoiceBox(selectedFaculty.getSelectionModel().getSelectedItem());
 
         // เพิ่ม Listener เพื่ออัปเดตสาขาเมื่อมีการเลือกคณะ
@@ -75,10 +81,10 @@ public class ApprovedController {
                 (observable, oldValue, newValue) -> {
                     populateDepartmentChoiceBox(newValue);
                     facultyLabel.setText(newValue); // อัปเดตป้ายชื่อคณะ
-                    updateFacultyApprovedRequestCount(selectedDepartment.getSelectionModel().getSelectedItem());
                 }
         );
     }
+
 
     private void populateDepartmentChoiceBox(String selectedFacultyName) {
         selectedDepartment.getItems().clear(); // ล้างรายการสาขาเก่า
@@ -88,68 +94,81 @@ public class ApprovedController {
         if (selectedFaculty != null) {
             // เพิ่มสาขาทั้งหมดในคณะที่เลือกลงใน ChoiceBox
             for (Department department : selectedFaculty.getDepartments()) {
+                System.out.println("Adding department: " + department.getDepartmentName()); // Debugging
                 selectedDepartment.getItems().add(department.getDepartmentName());
             }
 
             // ตั้งค่าเริ่มต้นให้เลือกเป็น "All"
             selectedDepartment.getSelectionModel().select("All");
+        } else {
+            System.out.println("Faculty not found: " + selectedFacultyName); // Debugging
         }
     }
 
     private void addChoiceBoxListeners() {
         selectedFaculty.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> {
-                    if (newValue != null && !newValue.equals("เลือกคณะ")) {
-                        populateDepartmentChoiceBox(newValue);
-                        facultyLabel.setText(newValue); // อัปเดตป้ายชื่อคณะ
+                    if (newValue.equals("All")) {
+                        selectedDepartment.getSelectionModel().select("All"); // ตั้งค่า selectedDepartment เป็น "All"
                     } else {
-                        facultyLabel.setText(""); // ล้างป้ายชื่อคณะถ้าเลือก "เลือกคณะ"
+                        populateDepartmentChoiceBox(newValue); // ปรับอัปเดตสาขา
                     }
+                    facultyLabel.setText(newValue); // อัปเดตป้ายชื่อคณะ
                 }
         );
 
         selectedDepartment.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> {
-                    if (newValue != null) {
-                        if (!newValue.equals("All")) {
-                            departmentLabel.setText(newValue); // อัปเดตป้ายชื่อสาขา
-                        } else {
-                            departmentLabel.setText("ทั้งหมด"); // แสดง "ทั้งหมด" เมื่อเลือก "All"
-                        }
-
-                        if ("All".equals(newValue)) {
-                            updateFacultyApprovedRequestCount(selectedFaculty.getSelectionModel().getSelectedItem()); // อัปเดตจำนวนผู้ใช้ในคณะที่เลือกทั้งหมด
-                        } else {
-                            updateDepartmentApproved(newValue);
-                        }
-                    }
+                    departmentLabel.setText(newValue); // อัปเดตป้ายชื่อสาขา
+                    updateApprovedRequestCount(newValue);
                 }
         );
     }
 
-    private void updateFacultyApprovedRequestCount(String facultyName) {
-        if (facultyName == null || facultyName.equals("เลือกคณะ")) {
-            approvedCountLabel.setText("0");
-            return;
-        }
-        int totalFacApproved = admin.getFacultyApprovedRequests(facultyName);
-        approvedCountLabel.setText(String.valueOf(totalFacApproved));
-    }
-
-    private void updateDepartmentApproved(String departmentName) {
+    private void updateApprovedRequestCount(String departmentName) {
         String selectedFac = selectedFaculty.getSelectionModel().getSelectedItem();
-        if (selectedFac == null || selectedFac.equals("เลือกคณะ")) {
-            approvedCountLabel.setText("0");
-            return;
+        int approvedCount = 0;
+
+        // ตรวจสอบว่าถ้า selectedDepartment เป็น "All"
+        if (departmentName.equals("All")) {
+            Faculty selectedFacultyObj = facultyList.findFacultyByName(selectedFac);
+            if (selectedFacultyObj != null) {
+                // วนลูปเช็คคำร้องของทุกสาขาในคณะที่เลือก
+                for (Department department : selectedFacultyObj.getDepartments()) {
+                    approvedCount += countApprovedRequestsByDepartment(department.getDepartmentName());
+                }
+            }
+        } else {
+            // ถ้าเลือกสาขาเฉพาะก็ให้คำนวณเฉพาะสาขานั้น
+            approvedCount = countApprovedRequestsByDepartment(departmentName);
         }
 
-        int totalFacApproved = admin.getDepartmentApprovedRequests(departmentName);
-        approvedCountLabel.setText(String.valueOf(totalFacApproved));
+        // อัปเดต approvedCountLabel ด้วยจำนวนคำร้องที่ได้รับการอนุมัติ
+        approvedCountLabel.setText(String.format("%d", approvedCount));
     }
 
-    private void showCounts() {
+    private int countApprovedRequestsByDepartment(String departmentName) {
+        int count = 0;
+
+        for (Request request : requestList.getRequests()) {
+            Department department = request.getRequester().getEnrolledDepartment();
+
+            // ตรวจสอบว่าคำร้องมาจากสาขาที่เลือก และมีสถานะเป็น "เสร็จสิ้น"
+            if (department != null && department.getDepartmentName().equals(departmentName)
+                    && request.getStatus().equals("เสร็จสิ้น")) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    private void showRequest() {
         allRequestLabel.setText(String.format("%d", admin.getAllRequests()));
         approvedLabel.setText(String.format("%d", admin.getAllApprovedRequests()));
+    }
+
+    private void showTotalUsers() {
         userLabel.setText(String.format("%d", admin.getTotalUsers()));
     }
 

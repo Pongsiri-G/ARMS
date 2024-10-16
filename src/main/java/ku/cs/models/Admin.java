@@ -60,14 +60,6 @@ public class Admin extends User {
         departmentUserCount.put(departmentName, departmentUserCount.getOrDefault(departmentName, 0) + 1);
     }
 
-    public void increaseFacultyApprovedRequests(String facultyName) {
-        facultyApprovedRequests.put(facultyName, facultyApprovedRequests.getOrDefault(facultyName, 0) + 1);
-    }
-
-    public void increaseDepartmentApprovedRequests(String departmentName) {
-        departmentApprovedRequests.put(departmentName, departmentApprovedRequests.getOrDefault(departmentName, 0) + 1);
-    }
-
     public int getTotalUsers() {
         return allStudents + allAdvisors + allFacultyOfficers + allDepartmentOfficers;
     }
@@ -110,14 +102,6 @@ public class Admin extends User {
 
     public int getAllDepartmentUsers(String departmentName) {
         return departmentUserCount.getOrDefault(departmentName, 0);
-    }
-
-    public int getFacultyApprovedRequests(String facultyName) {
-        return facultyApprovedRequests.getOrDefault(facultyName, 0);
-    }
-
-    public int getDepartmentApprovedRequests(String departmentName) {
-        return departmentApprovedRequests.getOrDefault(departmentName, 0);
     }
 
     @Override
