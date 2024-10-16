@@ -51,7 +51,7 @@ public class FacultyOfficerListFileDatasource implements Datasource<ArrayList<Fa
                 String name = data[2];
                 boolean isSuspended = "ระงับบัญชี".equals(data[3]);
                 LocalDateTime lastLogin = "ไม่เคยเข้าใช้งาน".equals(data[4]) ? null : LocalDateTime.parse(data[4], formatter);
-                String profilePicturePath = data[5].isEmpty() ? User.DEFAULT_PROFILE_PICTURE_PATH : data[5];
+                String profilePicturePath = data[5].equals("ไม่มีรูปประจำตัว") ? null : data[5];
                 String facultyName = data[6];
 
                 Faculty faculty = new Faculty(facultyName);
@@ -75,7 +75,7 @@ public class FacultyOfficerListFileDatasource implements Datasource<ArrayList<Fa
 
             for (FacultyOfficer facultyOfficer : facultyOfficers) {
                 String lastLoginStr = facultyOfficer.getLastLogin() == null ? "ไม่เคยเข้าใช้งาน" : facultyOfficer.getLastLogin().format(formatter);
-                String profilePicturePath = facultyOfficer.getProfilePicturePath() == null ? User.DEFAULT_PROFILE_PICTURE_PATH : facultyOfficer.getProfilePicturePath();
+                String profilePicturePath = facultyOfficer.getProfilePicturePath() == null ? "ไม่มีรูปประจำตัว" : facultyOfficer.getProfilePicturePath();
 
                 StringBuilder line = new StringBuilder();
                 line.append(facultyOfficer.getUsername()).append(",")

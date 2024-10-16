@@ -442,7 +442,7 @@ public class DepartmentOfficerController extends BaseController {
     @FXML
     public void onRejectRequestButtonClick(MouseEvent event) {
         selectedApprover = selectOfficerHandlingMenu.getText();
-        if (checkValid(selectedApprover, true)) {
+        if (checkValid(selectedApprover, false)) {
             rejectPopupPane.setVisible(true);
 
         }
@@ -454,7 +454,7 @@ public class DepartmentOfficerController extends BaseController {
         }
         else {
             officer.rejectRequest(selectedRequest, selectedApprover, reasonTextField.getText().trim());
-            updateRequest();
+            //updateRequest();
             rejectPopupPane.setVisible(false);
             requestDetailPane.setVisible(false);
         }

@@ -14,8 +14,6 @@ public abstract class User {
     // test การเข้าใช้งานครั้งเเรกให้มีการเปลี่ยนรหัสผ่านสำหรับอาจารย์ที่ปรึกษา
     //private boolean isFirstLogin;
 
-    public static final String DEFAULT_PROFILE_PICTURE_PATH = "src/main/resources/images/profile.jpg";
-
     // Constructor for new users (password is hashed)
     public User(String username, String password, String name) {
         this(username, password, name, false, false);
@@ -28,7 +26,6 @@ public abstract class User {
         this.name = name;
         this.suspended = false;
         this.lastLogin = null;
-        this.profilePicturePath = DEFAULT_PROFILE_PICTURE_PATH;
     }
 
     // Constructor for users loaded from a file (password is either hashed or plaintext)
@@ -46,7 +43,6 @@ public abstract class User {
         this.name = name;
         this.suspended = suspended;
         this.lastLogin = null;
-        this.profilePicturePath = DEFAULT_PROFILE_PICTURE_PATH;
     }
 
     /*
