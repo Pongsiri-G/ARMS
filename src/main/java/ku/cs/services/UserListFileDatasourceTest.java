@@ -51,11 +51,11 @@ public class UserListFileDatasourceTest {
     public void loadAdvisorList(){
         AdvOffListFileDatasource datasource = new AdvOffListFileDatasource("data/test", "advisorlist.csv");
         ArrayList<Advisor> advisorList = new ArrayList<>();
-        advisorList.add(new Advisor("Jak", "vXuO637", "พรรษา จักรพันธ์ประดิษฐ์", "วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "D12345", "advisor1@example.com", false, false));
-        advisorList.add(new Advisor("Tan", "168K5Hl", "ปวิน จันทรเกียรติ", "วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "D12346", "advisor2@example.com", false, false));
-        advisorList.add(new Advisor("Pang", "Ux5G63Y", "ปาณิตา พันธ์ภูผา", "วิศวกรรมศาสตร์", "วิศวกรรมคอมพิวเตอร์", "A12347", "advisor3@example.com", false, false));
-        advisorList.add(new Advisor("Tai", "cN76A0S", "วันชัย เกียรติบวรสกุล", "วิศวกรรมศาสตร์", "วิศวกรรมคอมพิวเตอร์", "A12348", "advisor4@example.com", false, false));
-        advisorList.add(new Advisor("Tar", "cN76A0S", "เตชิต จุลาอำพันธ์", "วิทยาศาสตร์", "เคมี", "D32142", "advisor5@example.com", false, false));
+        advisorList.add(new Advisor("Jak", "vXuO637", "พรรษา จักรพันธ์ประดิษฐ์", "วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "D12345", false, false));
+        advisorList.add(new Advisor("Tan", "168K5Hl", "ปวิน จันทรเกียรติ", "วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "D12346", false, false));
+        advisorList.add(new Advisor("Pang", "Ux5G63Y", "ปาณิตา พันธ์ภูผา", "วิศวกรรมศาสตร์", "วิศวกรรมคอมพิวเตอร์", "A12347", false, false));
+        advisorList.add(new Advisor("Tai", "cN76A0S", "วันชัย เกียรติบวรสกุล", "วิศวกรรมศาสตร์", "วิศวกรรมคอมพิวเตอร์", "A12348", false, false));
+        advisorList.add(new Advisor("Tar", "cN76A0S", "เตชิต จุลาอำพันธ์", "วิทยาศาสตร์", "เคมี", "D32142", false, false));
 
 
         datasource.writeData(advisorList);
@@ -64,11 +64,11 @@ public class UserListFileDatasourceTest {
     public void loadStudent(){
         StudentListFileDatasource datasource = new StudentListFileDatasource("data/test", "studentlist.csv");
         ArrayList<Student> studentList = new ArrayList<>();
-        studentList.add(new Student("อธิฐาน คมปราชญ์","วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "b6620400000", "studentmail1@ku.th", new Advisor("พรรษา จักรพันธ์ประดิษฐ์")));
-        studentList.add(new Student("นิชกานต์ ประเสริฐโสม","วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "b6620400001", "studentmail2@ku.th", new Advisor("พรรษา จักรพันธ์ประดิษฐ์")));
-        studentList.add(new Student("กรีฑา พิพัฒนกุล","วิศวกรรมศาสตร์", "วิศวกรรมคอมพิวเตอร์", "b6625500002", "studentmail3@ku.th", new Advisor("ปาณิตา พันธ์ภูผา")));
-        studentList.add(new Student("ณัฐวดี ทรัพย์ธารา","วิศวกรรมศาสตร์", "วิศวกรรมคอมพิวเตอร์", "b6625500003", "studentmail4@ku.th", new Advisor("ปาณิตา พันธ์ภูผา")));
-        studentList.add(new Student("ตะวัน พลแสน","วิทยาศาสตร์", "เคมี", "b6620400004", "studentmail5@ku.th", new Advisor("เตชิต จุลาอำพันธ์")));
+        studentList.add(new Student("อธิฐาน คมปราชญ์","วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "6620400000", "studentmail1@ku.th", new Advisor("พรรษา จักรพันธ์ประดิษฐ์")));
+        studentList.add(new Student("นิชกานต์ ประเสริฐโสม","วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "6620400001", "studentmail2@ku.th", new Advisor("พรรษา จักรพันธ์ประดิษฐ์")));
+        studentList.add(new Student("กรีฑา พิพัฒนกุล","วิศวกรรมศาสตร์", "วิศวกรรมคอมพิวเตอร์", "6625500002", "studentmail3@ku.th", new Advisor("ปาณิตา พันธ์ภูผา")));
+        studentList.add(new Student("ณัฐวดี ทรัพย์ธารา","วิศวกรรมศาสตร์", "วิศวกรรมคอมพิวเตอร์", "6625500003", "studentmail4@ku.th", new Advisor("ปาณิตา พันธ์ภูผา")));
+        studentList.add(new Student("ตะวัน พลแสน","วิทยาศาสตร์", "เคมี", "6620400004", "studentmail5@ku.th", new Advisor("เตชิต จุลาอำพันธ์")));
 
 
         datasource.writeData(studentList);

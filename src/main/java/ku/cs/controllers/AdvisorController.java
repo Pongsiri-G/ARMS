@@ -17,10 +17,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.shape.Circle;
 import ku.cs.models.*;
-import ku.cs.services.Datasource;
-import ku.cs.services.FXRouter;
-import ku.cs.services.StudentListFileDatasource;
-import ku.cs.services.UserListFileDatasource;
+import ku.cs.services.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,7 +29,7 @@ public class AdvisorController extends BaseController {
     @FXML private Label nameLabel;
     @FXML private Label usernameLabel;
     @FXML private Label departmentLabel;
-    @FXML private Label emailLabel;
+    @FXML private Label advisorIdLabel;
     @FXML private Label facultyLabel;
     @FXML private Label advisorNameLabel;
     @FXML private TextField searchStudentField;
@@ -55,11 +52,15 @@ public class AdvisorController extends BaseController {
     private UserListFileDatasource datasources;
     private Advisor advisor;
     ObservableList<Student> studentListObservable;
+    private UserPreferencesListFileDatasource preferencesListFileDatasource;
+
 
     @FXML
     public void initialize() {
         datasources = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv", "departmentofficerlist.csv", "facdeplist.csv");
         this.userList = datasources.readData();
+        preferencesListFileDatasource = new UserPreferencesListFileDatasource("data/test", "preferences.csv", userList);
+        this.preferencesListFileDatasource.readData();
         // เนื่องจากการส่งข้อมูลข้ามหน้าของเราเป็น การส่ง Username มาก็เลย Cast ให้มันเป็น String เเละหาใน UserList เเล้วให้ return Object นั้นมาเพื่อใช้ในการเเสดงข้อมูลขั้นต่อไป
         User user = userList.findUserByUsername((String) FXRouter.getData());
         showUserInfo(user);
@@ -68,7 +69,7 @@ public class AdvisorController extends BaseController {
         roleLabel.setText("อาจารย์ | ภาควิชา" + advisor.getDepartment().getDepartmentName());
         nameLabel.setText(advisor.getName());
         usernameLabel.setText(advisor.getUsername());
-        applyThemeAndFont(rootPane);
+        applyThemeAndFont(rootPane, advisor.getPreferences().getTheme(), advisor.getPreferences().getFontFamily(), advisor.getPreferences().getFontSize());
         setProfilePicture(profilePictureDisplay, advisor.getProfilePicturePath());
         setProfilePicture(advisorProfilePictureDisplay, advisor.getProfilePicturePath());
 
@@ -103,7 +104,7 @@ public class AdvisorController extends BaseController {
         advisorNameLabel.setText("ชื่อ: " +advisor.getName());
         facultyLabel.setText("คณะ: " +advisor.getFaculty().getFacultyName());
         departmentLabel.setText("สาขาวิชา: " + advisor.getDepartment().getDepartmentName());
-        emailLabel.setText("อีเมล: " +advisor.getAdvisorEmail());
+        advisorIdLabel.setText("รหัสประจำตัวอาจารย์: " + advisor.getAdvisorID());
     }
 
     private void showTable(ArrayList<Student> students) {

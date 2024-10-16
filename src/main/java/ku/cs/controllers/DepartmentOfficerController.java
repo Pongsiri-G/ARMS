@@ -139,6 +139,8 @@ public class DepartmentOfficerController extends BaseController {
     ArrayList<Advisor> advisors;
     ArrayList<Student> students;
     Student studentToEdit;
+    private UserPreferencesListFileDatasource preferencesListFileDatasource;
+
 
     private String selectedApprover;
     private Request selectedRequest;
@@ -158,7 +160,7 @@ public class DepartmentOfficerController extends BaseController {
         nameLabel.setText(officer.getName());
         usernameLabel.setText(officer.getUsername());
         roleLabel.setText("เจ้าหน้าที่ | ภาควิชา" + officer.getDepartment().getDepartmentName());
-        applyThemeAndFont(rootPane);
+        applyThemeAndFont(rootPane, officer.getPreferences().getTheme(), officer.getPreferences().getFontFamily(), officer.getPreferences().getFontSize());
         setProfilePicture(profilePictureDisplay, officer.getProfilePicturePath());
     }
 
@@ -177,6 +179,8 @@ public class DepartmentOfficerController extends BaseController {
         advisors = officer.getDepartment().getAdvisors();
         students = officer.getDepartment().getStudents();
         approverDatasource = new RequestHandlingOfficersDataSource("data/approver", officer.getDepartment().getDepartmentName() + "-approver.csv");
+        preferencesListFileDatasource = new UserPreferencesListFileDatasource("data/test", "preferences.csv", userList);
+        this.preferencesListFileDatasource.readData();
     }
 
     public void loadData() {

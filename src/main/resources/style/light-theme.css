@@ -11,6 +11,18 @@
 }
 
 @font-face {
+    font-family: 'Noto Sans Thai Looped';
+    src: url('../fonts/NotoSansThaiLooped-Regular.ttf') format('truetype');
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: 'Noto Sans Thai Looped';
+    src: url('../fonts/NotoSansThaiLooped-SemiBold.ttf') format('truetype');
+    font-weight: bold;
+}
+
+@font-face {
     font-family: 'Bai Jamjuree';
     src: url('../fonts/BaiJamjuree-Regular.ttf') format('truetype');
     font-weight: bold;
@@ -36,15 +48,15 @@
     -fx-font-size: 18px;
     -fx-font-family: 'Noto Sans Thai';
 }
-.small-font {
+.Small {
     -fx-font-size: 16px;
 }
 
-.medium-font {
+.Medium {
     -fx-font-size: 18px;
 }
 
-.large-font {
+.Large {
     -fx-font-size: 21px;
 }
 .pane {

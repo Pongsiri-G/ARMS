@@ -62,6 +62,8 @@ public class AdvisorNisitController extends BaseController {
     private Student student;
     private Advisor advisor;
     private Request selectedRequest;
+    private UserPreferencesListFileDatasource preferencesListFileDatasource;
+
 
 
     public AdvisorNisitController(){
@@ -69,6 +71,8 @@ public class AdvisorNisitController extends BaseController {
         this.userList = userListDatasource.readData();
         requestListDatasource = new RequestListFileDatasource("data/test", "requestlist.csv", userList);
         this.requestList = requestListDatasource.readData();
+        preferencesListFileDatasource = new UserPreferencesListFileDatasource("data/test", "preferences.csv", userList);
+        this.preferencesListFileDatasource.readData();
     }
 
     @FXML
@@ -80,7 +84,7 @@ public class AdvisorNisitController extends BaseController {
         roleLabel.setText("อาจารย์ | ภาควิชา" + advisor.getDepartment().getDepartmentName());
         nameLabel.setText(advisor.getName());
         usernameLabel.setText(advisor.getUsername());
-        applyThemeAndFont(rootPane);
+        applyThemeAndFont(rootPane, advisor.getPreferences().getTheme(), advisor.getPreferences().getFontFamily(), advisor.getPreferences().getFontSize());
         setProfilePicture(profilePictureDisplay, advisor.getProfilePicturePath());
 
         showTable(student.getRequestsByStudent(requestList));

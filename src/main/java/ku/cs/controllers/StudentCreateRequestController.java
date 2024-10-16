@@ -14,6 +14,7 @@ import ku.cs.models.*;
 import ku.cs.services.FXRouter;
 import ku.cs.services.RequestListFileDatasource;
 import ku.cs.services.UserListFileDatasource;
+import ku.cs.services.UserPreferencesListFileDatasource;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,6 +57,7 @@ public class StudentCreateRequestController extends BaseController {
     private RequestList requestList;
     private UserListFileDatasource userListDatasource;
     private RequestListFileDatasource requestListDatasource;
+    private UserPreferencesListFileDatasource preferencesListFileDatasource;
     private Student student;
 
 
@@ -64,6 +66,8 @@ public class StudentCreateRequestController extends BaseController {
         this.userList = userListDatasource.readData();
         requestListDatasource = new RequestListFileDatasource("data/test", "requestlist.csv", userList);
         this.requestList = requestListDatasource.readData();
+        preferencesListFileDatasource = new UserPreferencesListFileDatasource("data/test", "preferences.csv", userList);
+        this.preferencesListFileDatasource.readData();
     }
 
     @FXML
@@ -76,7 +80,7 @@ public class StudentCreateRequestController extends BaseController {
         confirmationPane.setVisible(false);
         errorPane.setVisible(false);
         setProfilePicture(profilePictureDisplay, student.getProfilePicturePath());
-        applyThemeAndFont(rootPane);
+        applyThemeAndFont(rootPane, student.getPreferences().getTheme(), student.getPreferences().getFontFamily(), student.getPreferences().getFontSize());
     }
 
     private void setupChoiceBox() {

@@ -22,6 +22,7 @@ import ku.cs.models.UserList;
 import ku.cs.services.FXRouter;
 import ku.cs.services.RequestListFileDatasource;
 import ku.cs.services.UserListFileDatasource;
+import ku.cs.services.UserPreferencesListFileDatasource;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
@@ -77,6 +78,8 @@ public class StudentRequestListViewController extends BaseController {
     private RequestList requestList;
     private UserListFileDatasource userListDatasource;
     private RequestListFileDatasource requestListDatasource;
+    private UserPreferencesListFileDatasource preferencesListFileDatasource;
+
     private Student student;
     private Request selectedRequest;
 
@@ -85,6 +88,8 @@ public class StudentRequestListViewController extends BaseController {
         this.userList = userListDatasource.readData();
         requestListDatasource = new RequestListFileDatasource("data/test", "requestlist.csv", userList);
         this.requestList = requestListDatasource.readData();
+        preferencesListFileDatasource = new UserPreferencesListFileDatasource("data/test", "preferences.csv", userList);
+        this.preferencesListFileDatasource.readData();
     }
 
     @FXML
@@ -103,6 +108,7 @@ public class StudentRequestListViewController extends BaseController {
         requestDetailPane.setVisible(false);
         pdfPopupPane.setVisible(false);
         setupTableClickListener();
+        applyThemeAndFont(rootPane, student.getPreferences().getTheme(), student.getPreferences().getFontFamily(), student.getPreferences().getFontSize());
     }
 
     private void initializeFilters() {

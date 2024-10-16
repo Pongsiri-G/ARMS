@@ -51,7 +51,7 @@ public class AdvOffListFileDatasource implements Datasource<ArrayList<Advisor>> 
                 String[] data = line.split(","); // แบ่งข้อมูลด้วยเครื่องหมายจุลภาค
 
                 // ตรวจสอบจำนวนคอลัมน์ว่าถูกต้อง
-                if (data.length != 11) continue;
+                if (data.length != 10) continue;
 
                 String username = data[0]; // ชื่อผู้ใช้
                 String password = data[1]; // รหัสผ่าน
@@ -62,11 +62,10 @@ public class AdvOffListFileDatasource implements Datasource<ArrayList<Advisor>> 
                 String faculty = data[6]; // คณะ
                 String department = data[7]; // ภาควิชา
                 String advisorID = data[8]; // รหัสอาจารย์
-                String advisorEmail = data[9]; // อีเมล
-                String defaultPassword = data[10];
+                String defaultPassword = data[9];
 
                 // เพิ่ม Advisor ไปยัง list ด้วยวิธี addNewAdvisor
-                Advisor a = new Advisor(username, password, name, new Faculty(faculty), new Department(department), advisorID, advisorEmail, true, suspended);
+                Advisor a = new Advisor(username, password, name, new Faculty(faculty), new Department(department), advisorID, true, suspended);
                 a.setLastLogin(lastLogin); // กำหนดค่า lastLogin
                 a.setProfilePicturePath(profilePicturePath); // กำหนดค่าพาธรูปโปรไฟล์
                 a.setDefaultPassword(defaultPassword);
@@ -111,7 +110,6 @@ public class AdvOffListFileDatasource implements Datasource<ArrayList<Advisor>> 
                         + advisor.getFaculty().getFacultyName() + ","
                         + advisor.getDepartment().getDepartmentName() + ","
                         + advisor.getAdvisorID() + ","
-                        + advisor.getAdvisorEmail() + ","
                         + advisor.getDefaultPassword();
                 buffer.write(line);
                 buffer.newLine();

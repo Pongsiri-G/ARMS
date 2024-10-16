@@ -8,24 +8,21 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 
 public class BaseController {
-    private String lightTheme = getClass().getResource("/style/light-theme.css").toExternalForm();
-    private String darkTheme = getClass().getResource("/style/dark-theme.css").toExternalForm();
-    private String currentTheme = darkTheme;
-    private String fontSize = "large-font";
+    private String currentTheme = "Light";
+    private String fontSize = "Medium";
     protected String fontFamily = "Noto Sans Thai";
 
     private void setTheme(BorderPane rootPane, String theme) {
         rootPane.getStylesheets().clear();
-        rootPane.getStylesheets().add(theme);
+        rootPane.getStylesheets().add(getClass().getResource("/style/" + theme + "-theme.css").toExternalForm());
     }
     private void setFontSize(BorderPane rootPane, String fontSize) {
-        rootPane.getStyleClass().removeAll("small-font", "medium-font", "large-font");
+        rootPane.getStyleClass().removeAll("Small", "Medium", "Large");
         rootPane.getStyleClass().add(fontSize);
     }
 
-    private void setFontFamily(BorderPane rootPane, String fontClass) {
-        rootPane.getStyleClass().removeAll("Noto Sans Thai", "Bai Jamjuree");
-        rootPane.getStyleClass().add(fontClass);
+    private void setFontFamily(BorderPane rootPane, String fontFamily) {
+        rootPane.setStyle("-fx-font-family: '" + fontFamily + "';");
     }
 
     @FXML
