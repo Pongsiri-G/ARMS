@@ -150,7 +150,7 @@ public class ResignationRequestPDF {
         Paragraph studentSignature = new Paragraph()
                 .setFixedLeading(14)
                 .setTextAlignment(TextAlignment.RIGHT)
-                .add(new Paragraph("ลงนามนิสิต/ผู้ดำเนินการแทน _______________________\nStudent/Person Requesting Signature").setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT));
+                .add(new Paragraph("ลงนามนิสิต/ผู้ดำเนินการแทน " + request.getRequester().getName() + "\nStudent/Person Requesting Signature").setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT));
 
         Paragraph headOfDepartment = new Paragraph()
                 .setFixedLeading(5)
@@ -162,11 +162,11 @@ public class ResignationRequestPDF {
                 .add("\n")
                 .add(new Paragraph("[ ] ไม่อนุมัติ Denied").setPaddingLeft(20).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
                 .add("\n")
-                .add(new Paragraph("ลงนาม/ Signature_______________").setFixedLeading(20).setPaddingLeft(60).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.RIGHT)
+                .add(new Paragraph("ลงนาม/ Signature " + request.getRequester().getAdvisorName()).setFixedLeading(20).setPaddingLeft(60).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.RIGHT)
                         .add("\n")
-                        .add("(_______________)")
+                        .add("( +" + request.getRequester().getAdvisorName() + " )")
                         .add("\n")
-                        .add("_____/_____/_____")
+                        .add("" + LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yy")))
                         .add("\n")
                         .add("อาจารย์ที่ปรึกษา Advisor    "));
 

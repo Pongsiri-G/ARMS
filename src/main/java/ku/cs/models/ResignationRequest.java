@@ -12,20 +12,22 @@ public class ResignationRequest extends Request{
     public ResignationRequest(Student requester, String numberPhone,String reason) {
         super("ลาออก", requester, numberPhone);
         this.reason = reason;
+    }
 
+    public ResignationRequest(String timestamp, String requestType, String status, Student requester, String currentApprover, String numberPhone, String reason, String lastModifiedDate, String pdfFilePath, List<String> statusLog, List<String> approverList) {
+        super(timestamp, requestType, status, requester, currentApprover, numberPhone, lastModifiedDate, pdfFilePath, statusLog, approverList);
+        this.reason = reason;
+    }
+
+    public void createRequest(){
         String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss")); // timestamp ช่วยแก้ปัญหาชื่อไฟล์ซ้ำกันได้
-        String requestPdfPath = "data" + File.separator + "students_requests" + File.separator + requester.getStudentID() + File.separator + requester.getStudentID() + "-" + "คำร้องลาออก" + "_" + timeStamp + ".pdf";
+        String requestPdfPath = "data" + File.separator + "students_requests" + File.separator + getRequester().getStudentID() + File.separator + getRequester().getStudentID() + "-" + "คำร้องลาออก" + "_" + timeStamp + ".pdf";
         try {
             ResignationRequestPDF.createRequest(requestPdfPath, this); //สร้างไฟล์ pdf
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         this.setPdfFilePath(requestPdfPath);
-    }
-
-    public ResignationRequest(String timestamp, String requestType, String status, Student requester, String currentApprover, String numberPhone, String reason, String lastModifiedDate, String pdfFilePath, List<String> statusLog, List<String> approverList) {
-        super(timestamp, requestType, status, requester, currentApprover, numberPhone, lastModifiedDate, pdfFilePath, statusLog, approverList);
-        this.reason = reason;
     }
 
     public String getReason() {
