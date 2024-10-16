@@ -303,4 +303,13 @@ public class DepartmentAndFacultyManagementController {
             throw new RuntimeException(e);
         }
     }
+
+    @FXML
+    protected void onSettingButtonClick() {
+        try {
+            FXRouter.goTo("settings");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
