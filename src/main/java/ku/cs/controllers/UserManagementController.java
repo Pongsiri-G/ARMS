@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
@@ -36,7 +37,7 @@ public class UserManagementController {
     @FXML private Label allRequestLabel;
     @FXML private Label approvedLabel;
     @FXML private TableView<User> userManagementTableView;
-    private String[] role = {"All", "Students", "Advisors", "Faculty Officers", "Department Officers"};
+    private String[] role = {"ทั้งหมด", "นิสิต", "อาจารย์", "เจ้าหน้าที่คณะ", "เจ้าหน้าที่ภาควิชา"};
     private UserList userList;
     private Datasource<UserList> datasource;
     private Datasource<RequestList> requestListDatasource;
@@ -51,7 +52,7 @@ public class UserManagementController {
     @FXML
     public void initialize() {
         searchByRole.getItems().addAll(role);
-        searchByRole.setValue("All");
+        searchByRole.setValue("ทั้งหมด");
         searchByRole.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             filterTableByRole(newValue);
         });
@@ -71,22 +72,30 @@ public class UserManagementController {
     }
 
     private void filterTableByRole(String role) {
-        userManagementTableView.getItems().clear(); // Clear current items
-
-        for (User user : userList.getAllUsers()) {
+        // Create a FilteredList from the original ObservableList
+        ObservableList<User> observableUserList = FXCollections.observableArrayList(userList.getAllUsers());
+        FilteredList<User> filteredList = new FilteredList<>(observableUserList, user -> {
             // Filter based on the selected role
-            if (role.equals("Students") && user instanceof Student) {
-                userManagementTableView.getItems().add(user);
-            } else if (role.equals("Advisors") && user instanceof Advisor) {
-                userManagementTableView.getItems().add(user);
-            } else if (role.equals("Faculty Officers") && user instanceof FacultyOfficer) {
-                userManagementTableView.getItems().add(user);
-            } else if (role.equals("Department Officers") && user instanceof DepartmentOfficer) {
-                userManagementTableView.getItems().add(user);
-            } else if (role.equals("All")) {
-                userManagementTableView.getItems().add(user);
+            if (role.equals("ทั้งหมด")) {
+                return true; // Show all users
+            } else if (role.equals("นิสิต") && user instanceof Student) {
+                return true;
+            } else if (role.equals("อาจารย์") && user instanceof Advisor) {
+                return true;
+            } else if (role.equals("เจ้าหน้าที่ภาควิชา") && user instanceof FacultyOfficer) {
+                return true;
+            } else if (role.equals("เจ้าหน้าที่คณะ") && user instanceof DepartmentOfficer) {
+                return true;
             }
-        }
+            return false;
+        });
+
+        // Wrap FilteredList with a SortedList and bind the comparator to the TableView's comparator
+        SortedList<User> sortedList = new SortedList<>(filteredList);
+        sortedList.comparatorProperty().bind(userManagementTableView.comparatorProperty());
+
+        // Set the items of the TableView to the SortedList
+        userManagementTableView.setItems(sortedList);
     }
 
     private void filterUsersBySearch(String searchQuery) {
@@ -119,13 +128,12 @@ public class UserManagementController {
         TableColumn<User, Image> pictureColumn = new TableColumn<>("รูปภาพ");
         pictureColumn.setCellValueFactory(cellData -> {
             String imagePath = cellData.getValue().getProfilePicturePath();
-            File file = new File(imagePath);
             Image image;
-            if (file.exists()) {
-                image = new Image(file.toURI().toString(), 50, 50, true, true); // กำหนดขนาดตามต้องการ
+            if (imagePath != null) {
+                image = new Image("file:" + imagePath); // กำหนดขนาดตามต้องการ
             } else {
                 // ใช้รูปภาพเริ่มต้นถ้าไม่พบไฟล์
-                image = new Image(getClass().getResourceAsStream("/images/default-profile.png"), 50, 50, true, true);
+                image = new Image(getClass().getResourceAsStream("/images/profile.jpg"), 50, 50, true, true);
             }
             return new SimpleObjectProperty<>(image);
         });

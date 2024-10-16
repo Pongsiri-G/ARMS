@@ -1,16 +1,23 @@
 package ku.cs.controllers;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import ku.cs.models.*;
 import ku.cs.services.*;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.PDFRenderer;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +51,9 @@ public class AdvisorNisitController extends BaseController {
     @FXML private TableColumn<Request, String> type;
     @FXML private TableColumn<Request, String> status;
     @FXML private TableColumn<Request, String> time;
+    @FXML private VBox pdfPopupPane;
+    @FXML private ScrollPane requestDetailScrollPane;
+    @FXML private Button pdfRequestViewButton;
 
     private UserList userList;
     private UserListFileDatasource userListDatasource;
@@ -51,6 +61,8 @@ public class AdvisorNisitController extends BaseController {
     private RequestList requestList;
     private Student student;
     private Advisor advisor;
+    private Request selectedRequest;
+
 
     public AdvisorNisitController(){
         userListDatasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
@@ -126,8 +138,9 @@ public class AdvisorNisitController extends BaseController {
 
     private void setupTableClickListener() {
         studentTable.setOnMouseClicked(event -> {
-            Request selectedRequest = studentTable.getSelectionModel().getSelectedItem();
-            if (selectedRequest != null) {
+            Request selected = studentTable.getSelectionModel().getSelectedItem();
+            if (selected != null) {
+                selectedRequest = selected;
                 showRequestDetails(selectedRequest);
             }
         });
@@ -135,6 +148,7 @@ public class AdvisorNisitController extends BaseController {
 
     private void showRequestDetails(Request request) {
         rejectReasonLabel.setVisible(false);
+        pdfRequestViewButton.setVisible(false);
         typeRequestLabel.setText(request.getRequestType());
         nameRequesterLabel.setText("ชื่อ-สกุล " + request.getRequester().getName());
         facultyRequesterLabel.setText("คณะ " + request.getRequester().getEnrolledFaculty().getFacultyName());
@@ -158,9 +172,45 @@ public class AdvisorNisitController extends BaseController {
             rejectReasonLabel.setVisible(true);
         }
 
+        if (!selectedRequest.getCurrentApprover().equals("อาจารย์ที่ปรึกษา")) {
+            pdfRequestViewButton.setVisible(true);
+        }
+
         requestDetailsLabel.setText(request.toString());
         requestDetailPane.setVisible(true);
     }
+
+    public void setShowPDF(String pdfFilePath, ScrollPane pdfScrollPane) throws IOException {
+        PDDocument document = PDDocument.load(new File(pdfFilePath));
+        PDFRenderer pdfRenderer = new PDFRenderer(document);
+
+        VBox vbox = new VBox(10);
+        vbox.setStyle("-fx-alignment: center;");
+
+        for (int page = 0; page < document.getNumberOfPages(); page++) {
+            BufferedImage bufferedImage = pdfRenderer.renderImageWithDPI(page, 150);
+
+            Image fxImage = SwingFXUtils.toFXImage(bufferedImage, null);
+
+            ImageView imageView = new ImageView(fxImage);
+            imageView.setFitWidth(1240);
+            imageView.setPreserveRatio(true);
+
+            vbox.getChildren().add(imageView);
+        }
+
+        pdfScrollPane.setContent(null);
+        pdfScrollPane.setContent(vbox);
+
+        document.close();
+    }
+
+    @FXML
+    public void pdfRequestView() throws IOException {
+        setShowPDF(selectedRequest.getPdfFilePath(), requestDetailScrollPane);
+        pdfPopupPane.setVisible(true);
+    }
+
     private void showStudent(Student student) {
         studentNameLabel.setText("ชื่อ: " + student.getName());
         idLabel.setText("รหัสประจำตัวนิสิต: " + student.getStudentID());
@@ -197,6 +247,11 @@ public class AdvisorNisitController extends BaseController {
     @FXML
     void backToAdvisor(MouseEvent event) throws IOException {
         FXRouter.goTo("advisor", advisor.getUsername());
+    }
+
+    @FXML
+    public void closeRequestDetailPdfClick(MouseEvent event){
+        pdfPopupPane.setVisible(false);
     }
 }
 

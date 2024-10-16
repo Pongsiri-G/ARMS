@@ -394,7 +394,7 @@ public class FacultyOfficerController extends BaseController{
             return false;
         }
         else if (isUseFile && selectedFile == null){
-            errorLabel.setText("กรุณาอัพโหลดไฟล์ PDF");
+            errorLabel.setText("กรุณาแนบเอกสารไฟล์ PDF");
             errorLabel.setVisible(true);
             return false;
         }

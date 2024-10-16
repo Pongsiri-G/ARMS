@@ -51,7 +51,7 @@ public class DepartmentOfficerListFileDatasource implements Datasource<ArrayList
                 String name = data[2];
                 boolean isSuspended = "ระงับบัญชี".equals(data[3]);
                 LocalDateTime lastLogin = "ไม่เคยเข้าใช้งาน".equals(data[4]) ? null : LocalDateTime.parse(data[4], formatter);
-                String profilePicturePath = data[5].isEmpty() ? User.DEFAULT_PROFILE_PICTURE_PATH : data[5];
+                String profilePicturePath = data[5].equals("ไม่มีรูปประจำตัว") ? null : data[5];
                 String facultyName = data[6];
                 String departmentName = data[7];
                 String defaultPassword = data[8];
@@ -79,7 +79,7 @@ public class DepartmentOfficerListFileDatasource implements Datasource<ArrayList
 
             for (DepartmentOfficer departmentOfficer : departmentOfficers) {
                 String lastLoginStr = departmentOfficer.getLastLogin() == null ? "ไม่เคยเข้าใช้งาน" : departmentOfficer.getLastLogin().format(formatter);
-                String profilePicturePath = departmentOfficer.getProfilePicturePath() == null ? User.DEFAULT_PROFILE_PICTURE_PATH : departmentOfficer.getProfilePicturePath();
+                String profilePicturePath = departmentOfficer.getProfilePicturePath() == null ? "ไม่มีรูปประจำตัว" : departmentOfficer.getProfilePicturePath();
                 String defaultPassword = departmentOfficer.getDefaultPassword();
 
                 StringBuilder line = new StringBuilder();

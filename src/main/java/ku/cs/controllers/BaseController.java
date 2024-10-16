@@ -32,8 +32,13 @@ public class BaseController {
     public void setProfilePicture(Circle profilePictureDisplay, String profilePath) {
         try {
             // โหลดรูปจาก profilePath
-            Image profileImage = new Image("file:" + profilePath);
-
+            Image profileImage;
+            if (profilePath == null) {
+                profileImage = new Image(getClass().getResource("/images/profile.jpg").toExternalForm());
+            }
+            else {
+                profileImage = new Image("file:" + profilePath);
+            }
             profilePictureDisplay.setFill(new ImagePattern(profileImage));
 
         } catch (Exception e) {
