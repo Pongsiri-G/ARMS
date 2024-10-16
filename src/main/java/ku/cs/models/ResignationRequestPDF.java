@@ -18,6 +18,7 @@ import com.itextpdf.layout.properties.UnitValue;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class ResignationRequestPDF {
@@ -147,10 +148,14 @@ public class ResignationRequestPDF {
                 .add("\n")
                 .add(new Paragraph("This resignation is effective immediately. I have no outstanding debt.").setFont(thaiFont).setFontSize(10).setTextAlignment(TextAlignment.LEFT));
 
-        Paragraph studentSignature = new Paragraph()
-                .setFixedLeading(14)
+        Paragraph studentDigitalSignature = new Paragraph()
                 .setTextAlignment(TextAlignment.RIGHT)
-                .add(new Paragraph("ลงนามนิสิต/ผู้ดำเนินการแทน _______________________\nStudent/Person Requesting Signature").setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT));
+                .setFixedLeading(10)
+                .add(new Paragraph("ลายมือชื่อดิจิทัลนี้ถูกลงชื่อจากระบบคำร้อง\nโดย " + request.getRequester().getName() + " เมื่อวันที่ " + request.getTimestamp() ).setFont(thaiFont).setFontSize(10).setFixedLeading(10)); //ลายเซ็นนิสิต
+
+        Paragraph studentSignature = new Paragraph()
+                .setTextAlignment(TextAlignment.RIGHT)
+                .add(new Paragraph("ลงนามนิสิต/ผู้ดำเนินการแทน " + request.getRequester().getName() + "\nStudent/Person Requesting Signature").setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT).setFixedLeading(14));
 
         Paragraph headOfDepartment = new Paragraph()
                 .setFixedLeading(5)
@@ -158,17 +163,18 @@ public class ResignationRequestPDF {
                 .add("\n")
                 .add(new Paragraph("To Head of department").setFont(thaiFont).setFontSize(10).setTextAlignment(TextAlignment.LEFT))
                 .add("\n")
-                .add(new Paragraph("[ ] อนุมัติ Approved").setPaddingLeft(20).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
+                .add(new Paragraph("อนุมัติ (Approved)").setPaddingLeft(20).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
+                //.add("\n")
+                //.add(new Paragraph("[ ] ไม่อนุมัติ Denied").setPaddingLeft(20).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
                 .add("\n")
-                .add(new Paragraph("[ ] ไม่อนุมัติ Denied").setPaddingLeft(20).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
-                .add("\n")
-                .add(new Paragraph("ลงนาม/ Signature_______________").setFixedLeading(20).setPaddingLeft(60).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.RIGHT)
+                .add(new Paragraph("ลงนาม/ Signature " + request.getRequester().getStudentAdvisor().getName()).setFixedLeading(20).setPaddingLeft(60).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.RIGHT)
                         .add("\n")
-                        .add("(_______________)")
+                        .add("( " + request.getRequester().getStudentAdvisor().getName() + " )")
                         .add("\n")
-                        .add("_____/_____/_____")
+                        .add("" + LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yy")))
                         .add("\n")
-                        .add("อาจารย์ที่ปรึกษา Advisor    "));
+                        .add("อาจารย์ที่ปรึกษา Advisor    "))
+                .add(new Paragraph("ลายมือชื่อดิจิทัลนี้ถูกลงชื่อจากระบบคำร้อง\nโดย " + request.getRequester().getStudentAdvisor().getName() + " เมื่อวันที่ " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) ).setTextAlignment(TextAlignment.LEFT).setFont(thaiFont).setFontSize(10).setFixedLeading(10));
 
         Paragraph dean = new Paragraph()
                 .setFixedLeading(5)
@@ -241,6 +247,7 @@ public class ResignationRequestPDF {
         div.add(nisitInfo3);
         div.add(nisitReason);
         div.add(nisitInfo4);
+        div.add(studentDigitalSignature);
         div.add(studentSignature);
         div.add(approvalTable);
         // Add the div to the document

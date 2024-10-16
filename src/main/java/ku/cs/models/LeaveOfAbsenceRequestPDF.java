@@ -18,6 +18,7 @@ import com.itextpdf.layout.properties.UnitValue;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class LeaveOfAbsenceRequestPDF {
@@ -136,7 +137,7 @@ public class LeaveOfAbsenceRequestPDF {
 
         Paragraph nisitReason = new Paragraph()
                 .setFixedLeading(4)
-                .add(new Paragraph("สาเหตุที่ลา: " + request.getReason()).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
+                .add(new Paragraph("สาเหตุที่ลา : " + request.getReason()).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
                 .add("\n")
                 .add(new Paragraph("Reason for request").setFont(thaiFont).setFontSize(10).setTextAlignment(TextAlignment.LEFT))
                 .add("\n");
@@ -153,22 +154,22 @@ public class LeaveOfAbsenceRequestPDF {
                 .add("\n")
                 .add(new Paragraph("I am registered in the present semester for the following courses:").setFont(thaiFont).setFontSize(10).setTextAlignment(TextAlignment.LEFT))
                 .add("\n");
-
-        //String test = "sdafas\nlkjdsdafas\nlksdafas\nlksdafas\nlksdafas\nlksdafas\nlksdafas\nlksdafas\nlkkljfgsjojglasngdfasglkgskldjlk;sjbklejgjearjgskjgfjgsdjg;fj;zdjdfjgsdjgfsjgklsjgklsdjlsgjksfjgjodglksjgdsfljs";
         Paragraph nisitInfo5 = new Paragraph(request.getReason()).setFixedLeading(14).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT);
 
         Paragraph consideration = new Paragraph()
                 .add(new Paragraph()
                         .setFixedLeading(14)
                         .add("จึงเรียนมาเพื่อโปรดพิจารณา\n").setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT).setPaddingLeft(20)
-                        .add("Request for consideration \n").setFont(thaiFont).setFontSize(10).setTextAlignment(TextAlignment.LEFT).setPaddingLeft(20)
-                );
+                        .add("Request for consideration \n").setFont(thaiFont).setFontSize(10).setTextAlignment(TextAlignment.LEFT).setPaddingLeft(20));
 
+        Paragraph studentDigitalSignature = new Paragraph()
+                .setTextAlignment(TextAlignment.RIGHT)
+                .setFixedLeading(10)
+                .add(new Paragraph("ลายมือชื่อดิจิทัลนี้ถูกลงชื่อจากระบบคำร้อง\nโดย " + request.getRequester().getName() + " เมื่อวันที่ " + request.getTimestamp() ).setFont(thaiFont).setFontSize(10).setFixedLeading(10)); //ลายเซ็นนิสิต
 
         Paragraph studentSignature = new Paragraph()
-                .setFixedLeading(14)
                 .setTextAlignment(TextAlignment.RIGHT)
-                .add(new Paragraph("ลงนามนิสิต/ผู้ดำเนินการแทน _______________________\nStudent/Person Requesting Signature").setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT));
+                .add(new Paragraph("ลงนามนิสิต/ผู้ดำเนินการแทน " + request.getRequester().getName() + "\nStudent/Person Requesting Signature").setFont(thaiFont).setFontSize(14).setFixedLeading(14));
 
         Paragraph headOfDepartment = new Paragraph()
                 .setFixedLeading(5)
@@ -176,17 +177,18 @@ public class LeaveOfAbsenceRequestPDF {
                 .add("\n")
                 .add(new Paragraph("To Head of department").setFont(thaiFont).setFontSize(10).setTextAlignment(TextAlignment.LEFT))
                 .add("\n")
-                .add(new Paragraph("[ ] อนุมัติ Approved").setPaddingLeft(20).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
+                .add(new Paragraph("อนุมัติ (Approved)").setPaddingLeft(20).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
+                //.add("\n")
+                //.add(new Paragraph("[ ] ไม่อนุมัติ Denied").setPaddingLeft(20).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
                 .add("\n")
-                .add(new Paragraph("[ ] ไม่อนุมัติ Denied").setPaddingLeft(20).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
-                .add("\n")
-                .add(new Paragraph("ลงนาม/ Signature_______________").setFixedLeading(20).setPaddingLeft(60).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.RIGHT)
+                .add(new Paragraph("ลงนาม/ Signature " + request.getRequester().getStudentAdvisor().getName()).setFixedLeading(20).setPaddingLeft(60).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.RIGHT)
                         .add("\n")
-                        .add("(_______________)")
+                        .add("( " + request.getRequester().getStudentAdvisor().getName() + " )")
                         .add("\n")
-                        .add("_____/_____/_____")
+                        .add("" + LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yy")))
                         .add("\n")
-                        .add("อาจารย์ที่ปรึกษา Advisor    "));
+                        .add("อาจารย์ที่ปรึกษา Advisor    "))
+                .add(new Paragraph("ลายมือชื่อดิจิทัลนี้ถูกลงชื่อจากระบบคำร้อง\nโดย " + request.getRequester().getStudentAdvisor().getName() + " เมื่อวันที่ " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) ).setTextAlignment(TextAlignment.LEFT).setFont(thaiFont).setFontSize(10).setFixedLeading(10));
 
         Paragraph dean = new Paragraph()
                 .setFixedLeading(5)
@@ -261,6 +263,7 @@ public class LeaveOfAbsenceRequestPDF {
         div.add(nisitInfo4);
         div.add(nisitInfo5);
         div.add(consideration);
+        div.add(studentDigitalSignature);
         div.add(studentSignature);
         div.add(approvalTable);
         // Add the div to the document

@@ -1,5 +1,9 @@
 package ku.cs.models;
 
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class ResignationRequest extends Request{
@@ -13,6 +17,17 @@ public class ResignationRequest extends Request{
     public ResignationRequest(String timestamp, String requestType, String status, Student requester, String currentApprover, String numberPhone, String reason, String lastModifiedDate, String pdfFilePath, List<String> statusLog, List<String> approverList) {
         super(timestamp, requestType, status, requester, currentApprover, numberPhone, lastModifiedDate, pdfFilePath, statusLog, approverList);
         this.reason = reason;
+    }
+
+    public void createRequest(){
+        String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss")); // timestamp ช่วยแก้ปัญหาชื่อไฟล์ซ้ำกันได้
+        String requestPdfPath = "data" + File.separator + "students_requests" + File.separator + getRequester().getStudentID() + File.separator + getRequester().getStudentID() + "-" + "คำร้องลาออก" + "_" + timeStamp + ".pdf";
+        try {
+            ResignationRequestPDF.createRequest(requestPdfPath, this); //สร้างไฟล์ pdf
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        this.setPdfFilePath(requestPdfPath);
     }
 
     public String getReason() {

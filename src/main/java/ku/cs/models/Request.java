@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Request {
+public abstract class Request {
     private String timestamp; //วันเวลาที่คำข้อถูกสร้าง
     private String lastModifiedDateTime; //วันเวลาที่คำขอถูกแก้ไขมากที่สุด
     private String status; //สถานะคำร้อง (กำลังดำเนินการ ปฏิเสธ เสร็จสิ้น)
@@ -13,7 +13,7 @@ public class Request {
     private Student requester; //ผู้ยื่นคำร้อง (นิสิต)
     private String currentApprover; //ผู้อนุมัติปัจจุบัน (อาจารย์ที่ปรึกษา, เจ้าหน้าที่ภาควิชา, เจ้าหน้าที่คณะ)
     private String numberPhone; //เบอร์มือถือของผู้ยื่นคำร้อง
-    private String pdfFilePath; //เก็บ FilePath ของคำร้อง pdf ที่แนบเข้าระบบ
+    private String pdfFilePath; //เก็บตัวคำร้องที่เป็นไฟล์ pdf จริงๆ
     private List<String> statusLog; //เก็บประวัติการดำเนินการต่างๆข้องคำร้อง
     private List<String> approverList; //เก็บรายการคนที่อนุมัติคำร้อง String (ชื่อคนอนุมัติ - ตำแหน่ง)
 
@@ -182,9 +182,7 @@ public class Request {
         this.currentApprover = currentApprover;
     }
 
-    public void setPdfFilePath(String filePath){
-        this.pdfFilePath = filePath;
-    }
+    public void setPdfFilePath(String pdfFilePath) { this.pdfFilePath = pdfFilePath; }
 
     public String getPdfFilePath() {
         return pdfFilePath;
@@ -195,4 +193,6 @@ public class Request {
         this.lastModifiedDateTime = logTime;
         statusLog.add(logTime + " - " + status);
     }
+
+    public abstract void createRequest() throws Exception;
 }

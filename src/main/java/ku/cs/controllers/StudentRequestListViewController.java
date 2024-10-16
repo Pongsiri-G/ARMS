@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -27,11 +28,10 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class StudentRequestListViewController {
+public class StudentRequestListViewController extends BaseController {
 
 
-    @FXML
-    private ImageView optionDropdown;
+    @FXML private BorderPane rootPane;
 
     @FXML private Label roleLabel;
 
@@ -44,10 +44,6 @@ public class StudentRequestListViewController {
     @FXML private Label waitLabel;
 
     @FXML private Label rejectLabel;
-
-    @FXML private Rectangle currentBar1;
-
-    @FXML private Rectangle currentBar2;
 
     @FXML private TableView<Request> requestListTableview;
 
@@ -89,8 +85,8 @@ public class StudentRequestListViewController {
         roleLabel.setText("นิสิต | ภาควิชา" + student.getEnrolledDepartment().getDepartmentName());
         nameLabel.setText(student.getName());
         usernameLabel.setText(student.getUsername());
-        currentBar1.setVisible(false);
-        setProfilePicture(student.getProfilePicturePath());
+        setProfilePicture(profilePictureDisplay, student.getProfilePicturePath());
+        applyThemeAndFont(rootPane);
         doneLabel.setText(String.format("%d", student.getStudentApprovedRequestCount(student.getRequestsByStudent(requestList))));
         waitLabel.setText(String.format("%d", student.getStudentPendingRequestCount(student.getRequestsByStudent(requestList))));
         rejectLabel.setText(String.format("%d", student.getStudentRejectedRequestCount(student.getRequestsByStudent(requestList))));
@@ -99,20 +95,6 @@ public class StudentRequestListViewController {
         requestDetailPane.setVisible(false);
         setupTableClickListener();
     }
-
-    private void setProfilePicture(String profilePath) {
-        try {
-            // โหลดรูปจาก profilePath
-            Image profileImage = new Image("file:" + profilePath);
-
-            profilePictureDisplay.setFill(new ImagePattern(profileImage));
-
-        } catch (Exception e) {
-            System.out.println("Error loading profile image: " + e.getMessage());
-            profilePictureDisplay.setFill(Color.GRAY);
-        }
-    }
-
 
     private void initializeFilters() {
         statusFilterComboBox.getItems().addAll("ทั้งหมด", "กำลังดำเนินการ", "ปฏิเสธ", "เสร็จสิ้น");
@@ -147,13 +129,13 @@ public class StudentRequestListViewController {
 
                     switch (status) {
                         case "กำลังดำเนินการ":
-                            setStyle("-fx-text-fill: #d7a700;"); // Yellow for "in progress"
+                            setStyle("-fx-text-fill: #d7a700; -fx-font-weight: bold;"); // Yellow for "in progress"
                             break;
                         case "ปฏิเสธ":
-                            setStyle("-fx-text-fill: #be0000;"); // Red for "rejected"
+                            setStyle("-fx-text-fill: #be0000; -fx-font-weight: bold;"); // Red for "rejected"
                             break;
                         case "เสร็จสิ้น":
-                            setStyle("-fx-text-fill: #149100;"); // Green for "completed"
+                            setStyle("-fx-text-fill: #149100; -fx-font-weight: bold;"); // Green for "completed"
                             break;
                         default:
                             setStyle("");
@@ -250,6 +232,15 @@ public class StudentRequestListViewController {
     @FXML
     public void logoutClick(MouseEvent event) throws IOException {
         FXRouter.goTo("login");
+    }
+
+    @FXML
+    public void settingsPageClick(MouseEvent event) throws IOException {
+        ArrayList<String> data = new ArrayList<>();
+        data.add("student-create-request");
+        data.add(student.getUsername());
+        FXRouter.goTo("settings", data);
+
     }
 
     @FXML
