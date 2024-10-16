@@ -1,31 +1,42 @@
 package ku.cs.controllers;
 
+import javafx.collections.FXCollections;
+import javafx.collections.transformation.FilteredList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
-import javafx.geometry.Bounds;
-import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import ku.cs.models.Request;
+import ku.cs.models.RequestList;
 import ku.cs.models.Student;
 import ku.cs.models.UserList;
 import ku.cs.services.FXRouter;
+import ku.cs.services.RequestListFileDatasource;
 import ku.cs.services.UserListFileDatasource;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.PDFRenderer;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
-public class StudentRequestListViewController {
+public class StudentRequestListViewController extends BaseController {
 
 
-    @FXML
-    private ImageView optionDropdown;
+    @FXML private BorderPane rootPane;
 
     @FXML private Label roleLabel;
 
@@ -33,19 +44,47 @@ public class StudentRequestListViewController {
 
     @FXML private Label usernameLabel;
 
-    @FXML private Rectangle currentBar1;
+    @FXML private Label doneLabel;
 
-    @FXML private Rectangle currentBar2;
+    @FXML private Label waitLabel;
+
+    @FXML private Label rejectLabel;
+
+    @FXML private TableView<Request> requestListTableview;
 
     @FXML private Circle profilePictureDisplay;
 
+    //Part of Request Detail Pane
+    @FXML private VBox requestDetailPane;
+    @FXML private Label typeRequestLabel;
+    @FXML private Label nameRequesterLabel;
+    @FXML private Label facultyRequesterLabel;
+    @FXML private Label departmentRequesterLabel;
+    @FXML private Label studentIdRequesterLabel;
+    @FXML private Label emailRequesterLabel;
+    @FXML private Label phoneNumberRequesterLabel;
+    @FXML private TextArea requestLogTextArea;
+    @FXML private Label recentRequestLogLabel;
+    @FXML private Label rejectReasonLabel;
+    @FXML private Label timestampLabel;
+    @FXML private Label requestDetailsLabel;
+    @FXML private ComboBox<String> statusFilterComboBox;
+    @FXML private ComboBox<String> typeFilterComboBox;
+    @FXML private VBox pdfPopupPane;
+    @FXML private ScrollPane requestDetailScrollPane;
+    @FXML private Button pdfRequestViewButton;
     private UserList userList;
-    private UserListFileDatasource datasource;
+    private RequestList requestList;
+    private UserListFileDatasource userListDatasource;
+    private RequestListFileDatasource requestListDatasource;
     private Student student;
+    private Request selectedRequest;
 
     public StudentRequestListViewController(){
-        datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
-        this.userList = datasource.readData();
+        userListDatasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
+        this.userList = userListDatasource.readData();
+        requestListDatasource = new RequestListFileDatasource("data/test", "requestlist.csv", userList);
+        this.requestList = requestListDatasource.readData();
     }
 
     @FXML
@@ -54,22 +93,184 @@ public class StudentRequestListViewController {
         roleLabel.setText("นิสิต | ภาควิชา" + student.getEnrolledDepartment().getDepartmentName());
         nameLabel.setText(student.getName());
         usernameLabel.setText(student.getUsername());
-        currentBar1.setVisible(false);
-        setProfilePicture(student.getProfilePicturePath());
-        System.out.println("[" + student.getName() + " " + student.getUsername() + "]");
+        setProfilePicture(profilePictureDisplay, student.getProfilePicturePath());
+        applyThemeAndFont(rootPane);
+        doneLabel.setText(String.format("%d", student.getStudentApprovedRequestCount(student.getRequestsByStudent(requestList))));
+        waitLabel.setText(String.format("%d", student.getStudentPendingRequestCount(student.getRequestsByStudent(requestList))));
+        rejectLabel.setText(String.format("%d", student.getStudentRejectedRequestCount(student.getRequestsByStudent(requestList))));
+        initializeFilters();
+        showTable(student.getRequestsByStudent(requestList));
+        requestDetailPane.setVisible(false);
+        pdfPopupPane.setVisible(false);
+        setupTableClickListener();
     }
 
-    private void setProfilePicture(String profilePath) {
-        try {
-            // โหลดรูปจาก profilePath
-            Image profileImage = new Image("file:" + profilePath);
+    private void initializeFilters() {
+        statusFilterComboBox.getItems().addAll("ทั้งหมด", "กำลังดำเนินการ", "ปฏิเสธ", "เสร็จสิ้น");
+        statusFilterComboBox.setValue("ทั้งหมด");
 
-            profilePictureDisplay.setFill(new ImagePattern(profileImage));
+        typeFilterComboBox.getItems().addAll("ทั้งหมด", "ลาป่วยหรือลากิจ", "ลาพักการศึกษา", "ลาออก");
+        typeFilterComboBox.setValue("ทั้งหมด");
 
-        } catch (Exception e) {
-            System.out.println("Error loading profile image: " + e.getMessage());
-            profilePictureDisplay.setFill(Color.GRAY);
+        statusFilterComboBox.setOnAction(event -> applyFilter());
+        typeFilterComboBox.setOnAction(event -> applyFilter());
+    }
+
+    private void showTable(ArrayList<Request> requestList) {
+        TableColumn<Request, String> requestTypeColumn = new TableColumn<>("ประเภทคำร้อง");
+        requestTypeColumn.setCellValueFactory(new PropertyValueFactory<>("requestType"));
+
+        TableColumn<Request, String> requestStatusColumn = new TableColumn<>("สถานะคำร้อง");
+        requestStatusColumn.setCellValueFactory(new PropertyValueFactory<>("recentStatusLog"));
+
+        requestStatusColumn.setCellFactory(column -> new TableCell<Request, String>() {
+            @Override
+            protected void updateItem(String statusLog, boolean empty) {
+                super.updateItem(statusLog, empty);
+                if (empty || statusLog == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(statusLog);
+
+                    Request request = getTableView().getItems().get(getIndex());
+                    String status = request.getStatus();
+
+                    switch (status) {
+                        case "กำลังดำเนินการ":
+                            setStyle("-fx-text-fill: #d7a700; -fx-font-weight: bold;"); // Yellow for "in progress"
+                            break;
+                        case "ปฏิเสธ":
+                            setStyle("-fx-text-fill: #be0000; -fx-font-weight: bold;"); // Red for "rejected"
+                            break;
+                        case "เสร็จสิ้น":
+                            setStyle("-fx-text-fill: #149100; -fx-font-weight: bold;"); // Green for "completed"
+                            break;
+                        default:
+                            setStyle("");
+                            break;
+                    }
+                }
+            }
+        });
+
+        TableColumn<Request, LocalDateTime> lastModifiedColumn = new TableColumn<>("วันที่แก้ไขล่าสุด");
+        lastModifiedColumn.setCellValueFactory(new PropertyValueFactory<>("lastModifiedDateTime"));
+
+        requestList.sort(Comparator.comparing(Request::getLastModifiedDateTime).reversed());
+
+        requestListTableview.getColumns().clear();
+        requestListTableview.getColumns().addAll(requestTypeColumn, requestStatusColumn, lastModifiedColumn);
+
+        FilteredList<Request> filteredData = new FilteredList<>(FXCollections.observableArrayList(requestList), p -> true);
+
+        statusFilterComboBox.setOnAction(event -> filterTable(filteredData));
+        typeFilterComboBox.setOnAction(event -> filterTable(filteredData));
+
+        requestListTableview.setItems(filteredData);
+    }
+
+    private void filterTable(FilteredList<Request> filteredData) {
+        String selectedStatus = statusFilterComboBox.getValue();
+        String selectedType = typeFilterComboBox.getValue();
+
+        filteredData.setPredicate(request -> {
+            boolean statusMatches = selectedStatus.equals("ทั้งหมด") || request.getStatus().equals(selectedStatus);
+
+            boolean typeMatches = selectedType.equals("ทั้งหมด") || request.getRequestType().equals(selectedType);
+
+            return statusMatches && typeMatches;
+        });
+    }
+
+
+    @FXML
+    private void applyFilter() {
+        FilteredList<Request> filteredData = (FilteredList<Request>) requestListTableview.getItems();
+
+        String selectedStatus = statusFilterComboBox.getValue();
+        String selectedType = typeFilterComboBox.getValue();
+
+        filteredData.setPredicate(request -> {
+            boolean statusMatches = selectedStatus.equals("ทั้งหมด") || request.getStatus().equals(selectedStatus);
+            boolean typeMatches = selectedType.equals("ทั้งหมด") || request.getRequestType().equals(selectedType);
+            return statusMatches && typeMatches;
+        });
+    }
+
+    private void setupTableClickListener() {
+        requestListTableview.setOnMouseClicked(event -> {
+            Request selected = requestListTableview.getSelectionModel().getSelectedItem();
+            if (selected != null) {
+                this.selectedRequest = selected;
+                showRequestDetails(selectedRequest);
+            }
+        });
+    }
+
+    private void showRequestDetails(Request request) {
+        rejectReasonLabel.setVisible(false);
+        pdfRequestViewButton.setVisible(false);
+        typeRequestLabel.setText(request.getRequestType());
+        nameRequesterLabel.setText("ชื่อ-สกุล " + request.getRequester().getName());
+        facultyRequesterLabel.setText("คณะ " + request.getRequester().getEnrolledFaculty().getFacultyName());
+        departmentRequesterLabel.setText("ภาควิชา " + request.getRequester().getEnrolledDepartment().getDepartmentName());
+        studentIdRequesterLabel.setText("รหัสประจำตัวนิสิต " + request.getRequester().getStudentID());
+        emailRequesterLabel.setText("อีเมล " + request.getRequester().getEmail());
+        phoneNumberRequesterLabel.setText("เบอร์มือถือ " + request.getNumberPhone());
+        recentRequestLogLabel.setText(request.getRecentStatusLog());
+
+        timestampLabel.setText("วันที่สร้างคำร้อง: " + request.getLastModifiedDateTime());
+
+        StringBuilder logs = new StringBuilder();
+        List<String> statusLog = request.getStatusLog();
+        for (int i = statusLog.size() - 1; i >= 0; i--) {
+            logs.append(statusLog.get(i)).append("\n");
         }
+        requestLogTextArea.setText(logs.toString());
+
+        if (request.getStatus().equals("ปฏิเสธ")) {
+            rejectReasonLabel.setText("บันทึกเหตุผล: " + request.getRejectionReason());
+            rejectReasonLabel.setVisible(true);
+        }
+
+        if (!selectedRequest.getCurrentApprover().equals("อาจารย์ที่ปรึกษา")) {
+            pdfRequestViewButton.setVisible(true);
+        }
+
+        requestDetailsLabel.setText(request.toString());
+        requestDetailPane.setVisible(true);
+    }
+
+    public void setShowPDF(String pdfFilePath, ScrollPane pdfScrollPane) throws IOException {
+        PDDocument document = PDDocument.load(new File(pdfFilePath));
+        PDFRenderer pdfRenderer = new PDFRenderer(document);
+
+        VBox vbox = new VBox(10);
+        vbox.setStyle("-fx-alignment: center;");
+
+        for (int page = 0; page < document.getNumberOfPages(); page++) {
+            BufferedImage bufferedImage = pdfRenderer.renderImageWithDPI(page, 150);
+
+            Image fxImage = SwingFXUtils.toFXImage(bufferedImage, null);
+
+            ImageView imageView = new ImageView(fxImage);
+            imageView.setFitWidth(1240);
+            imageView.setPreserveRatio(true);
+
+            vbox.getChildren().add(imageView);
+        }
+
+        pdfScrollPane.setContent(null);
+        pdfScrollPane.setContent(vbox);
+
+        document.close();
+    }
+
+    @FXML
+    public void pdfRequestView() throws IOException {
+        setShowPDF(selectedRequest.getPdfFilePath(), requestDetailScrollPane);
+        pdfPopupPane.setVisible(true);
     }
 
     @FXML
@@ -78,27 +279,26 @@ public class StudentRequestListViewController {
     }
 
     @FXML
+    public void settingsPageClick(MouseEvent event) throws IOException {
+        ArrayList<String> data = new ArrayList<>();
+        data.add("student-create-request");
+        data.add(student.getUsername());
+        FXRouter.goTo("settings", data);
+
+    }
+
+    @FXML
     public void createRequestPageClick(MouseEvent event) throws IOException {
         FXRouter.goTo("student-create-request", student.getUsername());
     }
 
     @FXML
-    public void optionDropdown(MouseEvent event) {
-        ContextMenu contextMenu = new ContextMenu();
+    public void closeRequestDetailClick(MouseEvent event) {
+        requestDetailPane.setVisible(false);
+    }
 
-        MenuItem item1 = new MenuItem("Option 1");
-        MenuItem item2 = new MenuItem("Option 2");
-        MenuItem item3 = new MenuItem("Option 3");
-
-
-        contextMenu.getItems().addAll(item1, item2, item3);
-
-        if (!contextMenu.isShowing()) {
-            Bounds optionBounds = optionDropdown.localToScreen(optionDropdown.getBoundsInLocal());
-            contextMenu.show(optionDropdown, optionBounds.getMinX(), optionBounds.getMaxY());
-        } else {
-            contextMenu.hide();
-        }
-
+    @FXML
+    public void closeRequestDetailPdfClick(MouseEvent event){
+        pdfPopupPane.setVisible(false);
     }
 }

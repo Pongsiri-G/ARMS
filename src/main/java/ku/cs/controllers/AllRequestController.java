@@ -1,5 +1,7 @@
 package ku.cs.controllers;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.TableColumn;
@@ -21,6 +23,9 @@ public class AllRequestController {
     @FXML private Label allRequestLabel;
     @FXML private Label userLabel;
     @FXML private Label approvedLabel;
+    @FXML private Label successLabel;
+    @FXML private Label pendingLabel;
+    @FXML private Label deniedLabel;
     @FXML private TableView<Request> allRequestTableView;
     private RequestList requestList;
     private UserList userList;
@@ -29,47 +34,24 @@ public class AllRequestController {
 
     @FXML
     public void initialize() {
-        datasource = new RequestListFileDatasource("data/test", "all-request.csv");
         userDatasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
-        requestList = datasource.readData();
         userList = userDatasource.readData();
-        showTable(requestList);
+        datasource = new RequestListFileDatasource("data/test", "requestlist.csv", userList);
+        requestList = datasource.readData();
+        showRequestStatusCount(requestList);
         showRequest(requestList);
         showTotalUsers(userList);
     }
 
-    @FXML
-    private void showTable(RequestList requestList) {
-        //System.out.println("Showing table with " + requestList.getRequests().size() + " requests");
-        TableColumn<Request, String> nameColumn = new TableColumn<>("ชื่อผู้ใช้");
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-
-        TableColumn<Request, String> facultyColumn = new TableColumn<>("คณะ");
-        facultyColumn.setCellValueFactory(new PropertyValueFactory<>("faculty"));
-
-        TableColumn<Request, String> departmentColumn = new TableColumn<>("ภาควิชา");
-        departmentColumn.setCellValueFactory(new PropertyValueFactory<>("department"));
-
-        TableColumn<Request, String> statusColumn = new TableColumn<>("สถานะคำร้อง");
-        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
-
-        allRequestTableView.getColumns().clear();
-        allRequestTableView.getColumns().add(nameColumn);
-        allRequestTableView.getColumns().add(facultyColumn);
-        allRequestTableView.getColumns().add(departmentColumn);
-        allRequestTableView.getColumns().add(statusColumn);
-
-        allRequestTableView.getItems().clear();
-
-        for (Request request: requestList.getRequests()) {
-            //System.out.println("Adding request: " + request.getName());
-            allRequestTableView.getItems().add(request);
-        }
+    private void showRequestStatusCount(RequestList requestList) {
+        successLabel.setText(requestList.getApprovedRequestsCount() + "");
+        pendingLabel.setText(requestList.getPendingRequestCount() + "");
+        deniedLabel.setText(requestList.getRejectedRequestsCount() + "");
     }
 
     private void showRequest(RequestList requestList) {
-        allRequestLabel.setText(String.format("%d", requestList.getRequests()));
-        approvedLabel.setText(String.format("%d", requestList.getApprovedRequestCount()));
+        allRequestLabel.setText(String.format("%d", requestList.getAllRequestCount()));
+        approvedLabel.setText(String.format("%d", requestList.getApprovedRequestsCount()));
     }
 
     private void showTotalUsers(UserList userList) {

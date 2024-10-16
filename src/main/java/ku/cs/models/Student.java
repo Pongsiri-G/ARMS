@@ -1,5 +1,7 @@
 package ku.cs.models;
 
+import java.util.ArrayList;
+
 public class Student extends User {
     private String studentID;
     private String email;
@@ -27,6 +29,54 @@ public class Student extends User {
         this.enrolledDepartment = department;
     }
 
+    public void createRequest(RequestList requestList, Request newRequest) throws NullPointerException {
+        if (this.getStudentAdvisor() == null){
+            throw new NullPointerException("ไม่สามารถสร้างคำร้องได้\nเนื่องจากคุณยังไม่มีอาจารย์ที่ปรึกษา");
+        }
+        requestList.addRequest(newRequest);
+    }
+
+    //เรียกดูรายการคำร้องที่สร้างไว้ของนิสิต
+    public ArrayList<Request> getRequestsByStudent(RequestList requests) {
+        ArrayList<Request> studentRequests = new ArrayList<>();
+        for (Request request : requests.getRequests()) {
+            if (this.getUsername() != null && this.getUsername().equalsIgnoreCase(request.getRequester().getUsername())) {
+                studentRequests.add(request);
+            }
+        }
+        return studentRequests;
+    }
+
+    public int getStudentPendingRequestCount(ArrayList<Request> requests){
+        int count = 0;
+        for (Request request : requests) {
+            if (request.getStatus().equals("กำลังดำเนินการ")) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public int getStudentRejectedRequestCount(ArrayList<Request> requests){
+        int count = 0;
+        for (Request request : requests) {
+            if (request.getStatus().equals("ปฏิเสธ")) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public int getStudentApprovedRequestCount(ArrayList<Request> requests){
+        int count = 0;
+        for (Request request : requests) {
+            if (request.getStatus().equals("เสร็จสิ้น")) {
+                count++;
+            }
+        }
+        return count;
+    }
+
 
     // สำหรับการสร้าง object ชั่วคราวก่อน initialize
     public Student(String name, String faculty, String department, String studentID, String email) {
@@ -37,14 +87,6 @@ public class Student extends User {
     public Student(String name, String faculty, String department, String studentID, String email, Advisor studentAdvisor) {
         this(name,new Faculty(faculty),new Department(department),studentID,email);
         this.studentAdvisor = studentAdvisor;
-    }
-
-    public void createRequest() {
-        //wait for Request finish
-    }
-
-    public void viewMyRequests(){
-        //wait for request finish
     }
 
     public void setStudentAdvisor(Advisor studentAdvisor) {

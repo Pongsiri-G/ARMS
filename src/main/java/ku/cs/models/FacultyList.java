@@ -17,16 +17,26 @@ public class FacultyList {
     public void addFaculty(String facultyName) {
         faculties.add(new Faculty(facultyName));
     }
-    public void addFaculty(String facultyName, String facultyID, String departmentName, String departmentID) {
-        //faculties.add(new Faculty(facultyName, facultyID)); อันเดิม
-        //faculties.add(new Faculty(facultyName, facultyID, departmentName, departmentID));
-
-        Faculty faculty = new Faculty(facultyName, facultyID);
-        Department department = new Department(departmentName, departmentID);
-        faculty.addDepartment(department); // สร้างอ็อบเจก department เก็บใน faculty
-        faculties.add(faculty); // faculty เก็บใน facultyList
-
+    public boolean addFaculty(String facultyName, String facultyID, String departmentName, String departmentID) {
+        Faculty existingFaculty = findFacultyByName(facultyName);
+        if (existingFaculty == null) {
+            Faculty newFaculty = new Faculty(facultyName, facultyID);
+            newFaculty.addDepartment(departmentName, departmentID);
+            faculties.add(newFaculty);
+            return true; // เพิ่มสำเร็จ
+        } else {
+            // ตรวจสอบว่าภาควิชานี้มีอยู่แล้วหรือไม่
+            boolean departmentExists = existingFaculty.getDepartments().stream()
+                    .anyMatch(department -> department.getDepartmentName().equals(departmentName) && department.getDepartmentID().equals(departmentID));
+            if (!departmentExists) {
+                existingFaculty.addDepartment(departmentName, departmentID); // เพิ่มภาควิชาใหม่
+                return true; // เพิ่มสำเร็จ
+            } else {
+                return false; // ภาควิชานี้มีอยู่แล้ว
+            }
+        }
     }
+
 
     public void removeFaculty(Faculty faculty) {
         faculties.remove(faculty);

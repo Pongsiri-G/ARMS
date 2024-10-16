@@ -5,13 +5,14 @@ import java.util.ArrayList;
 public class DepartmentOfficer extends User implements Officer {
     private Faculty faculty;
     private Department department;
-    private boolean isFirstLogin = true;
+    private String defaultPassword;
 
     // Begin Constructor
     public DepartmentOfficer(String username, String password, String name, Faculty faculty, Department department, boolean isHashed, boolean suspended) {
         super(username, password, name, isHashed, suspended);
         this.faculty = faculty;
         this.department = department;
+        this.defaultPassword = password;
     }
 
     // ใข้ไปก่อนเดี๋ยวแก้ที่หลัง
@@ -19,12 +20,9 @@ public class DepartmentOfficer extends User implements Officer {
         super(username, password, name, isHashed, suspended);
         this.faculty = new Faculty(faculty);
         this.department = new Department(department);
+        this.defaultPassword = password;
     }
     // End Constructor
-
-    public void setFirstLogin(boolean firstLogin) {
-        isFirstLogin = firstLogin;
-    }
 
     @Override
     public void loadRequestManage(ArrayList<RequestHandlingOfficer> approvers) {
@@ -62,38 +60,60 @@ public class DepartmentOfficer extends User implements Officer {
         return department.getRequestHandlingOfficers();
     }
 
-
-    public void rejectRequest(Request request, String reason, String approver) {
-        request.setApproveName(approver);
-        request.changeStatus("rejected");
-        request.setTimeStamp();
-    }
-    public void acceptRequest(Request request,String approver) {
-        request.setApproveName(approver);
-        request.changeStatus("accepted");
-    }
-
-    public void sendRequest(Request request, String approver) {
-        request.setApproveName(approver);
-        request.changeStatus("send");
+    //เรียกดูรายการคำร้องที่ต้องดำเนินการของเจ้าหน้าภาควิชา
+    public ArrayList<Request> getRequestsByDepartment(RequestList requests) {
+        ArrayList<Request> departmentRequests = new ArrayList<>();
+        for (Request request : requests.getRequests()) {
+            for (Student student : this.getDepartment().getStudents()) {
+                if (student.getUsername() != null && student.getUsername().equalsIgnoreCase(request.getRequester().getUsername()) && request.getCurrentApprover().equals("เจ้าหน้าที่ภาควิชา") && request.getStatus().equals("กำลังดำเนินการ")) {
+                    departmentRequests.add(request);
+                }
+            }
+        }
+        return departmentRequests;
     }
 
-    // Handle Student
-//    public void addStudent(String name, String studentID, String email) {
-//        Student student = new Student(name, studentID, email);
-//        department.addStudent(student);
-//    }
-//
-//    public void removeStudent(String studentID) {
-//        Student student = department.findStudentByID(studentID);
-//        if (student != null) {
-//            department.removeStudent(student);
-//        }
-//    }
+    public void rejectRequest(Request request, String approver, String reason) {
+        request.processRequest(approver, "ปฏิเสธ", reason);
+    }
+    public void acceptRequest(Request request, String approver) {
+        request.processRequest(approver, "อนุมัติ", null);
+    }
+    public void finishRequest(Request request, String approver) {
+        request.processRequest(approver,"สิ้นสุด", null);
+    }
+
+    //Handle Student
+    public void addStudentToDep(String name, String studentID, String email) {
+        Student student = new Student(name, this.getFaculty(), this.getDepartment(), studentID, email);
+        department.getStudents().add(student);
+    }
+
+    public void addStudentToDep(String name, String studentID, String email, String advisor) {
+        Student student = new Student(name, faculty.getFacultyName(), department.getDepartmentName(), studentID, email, department.findAdvisorByName(advisor));
+        department.getStudents().add(student);
+    }
+
+    public void removeStudentInDep(Student student) {
+        if (student != null) {
+            department.getStudents().remove(student);
+        }
+    }
 
 
     public void assignAdvisor(Student student, Advisor advisor) {
         student.setStudentAdvisor(advisor);
+    }
+
+
+    public void assignAdvisor(Student student, String Advisor){
+        assignAdvisor(student, this.department.findAdvisorByName(Advisor));
+    }
+
+    public String getDefaultPassword() {return defaultPassword;}
+
+    public void setDefaultPassword(String defaultPassword) {
+        this.defaultPassword = defaultPassword;
     }
 
     public void setFaculty(Faculty faculty){
@@ -108,9 +128,7 @@ public class DepartmentOfficer extends User implements Officer {
     public Department getDepartment() {
         return department;
     }
-    public boolean isFirstLogin() {
-        return isFirstLogin;
-    }
+
     @Override
     public String getRole(){
         return "เจ้าหน้าที่ภาควิชา";

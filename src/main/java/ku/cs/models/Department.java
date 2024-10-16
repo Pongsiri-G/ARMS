@@ -6,6 +6,7 @@ import java.util.Random;
 public class Department {
     private String departmentName;
     private String departmentID;
+    private int approvedDepartmentRequest;
     private ArrayList<RequestHandlingOfficer> requestHandlingOfficers;
     private ArrayList<DepartmentOfficer> departmentOfficers;
     private ArrayList<Advisor> advisors;
@@ -62,6 +63,11 @@ public class Department {
         return null;
     }
 
+    public void increaseApprovedDepartmentRequest() {
+        this.approvedDepartmentRequest++;
+        System.out.println("Approved requests increased for department: " + this.departmentName + ", new count: " + this.approvedDepartmentRequest);
+    }
+
 
     // Begin Setter
     public void setDepartmentName(String departmentName){
@@ -81,19 +87,8 @@ public class Department {
     public String getDepartmentID(){
         return this.departmentID;
     }
+    public int getApprovedDepartmentRequest() {return approvedDepartmentRequest;}
     // End Getter
-
-    public void rejectRequest(Request request, String reason) {
-        request.changeStatus("rejected");
-        request.setTimeStamp();
-    }
-    public void acceptRequest(Request request, String reason) {
-        request.changeStatus("accepted");
-    }
-
-    public void sendRequest(Request request) {
-        request.changeStatus("sent");
-    }
 
     // หาอาจารย์ที่ปรึกษาในนิสิต
     public ArrayList<Student> findStudentsByAdvisorName(String advisorName) {

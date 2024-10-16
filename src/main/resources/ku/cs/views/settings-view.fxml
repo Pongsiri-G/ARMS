@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.image.Image?>
@@ -106,6 +107,11 @@
                <VBox.margin>
                   <Insets top="40.0" />
                </VBox.margin>
+               <children>
+                  <Button mnemonicParsing="false" onMouseClicked="#uploadProfilePictureButton" text="อัพโหลดรูปโปรไฟล์" />
+                  <Button mnemonicParsing="false" onMouseClicked="#changeProfileToDefaultButton" text="เปลี่ยนเป็นโปรไฟล์์พื้นฐาน" />
+                  <Label text="ชื่อไฟล์ที่อัพโหลด" />
+               </children>
             </VBox>
          </children>
          <padding>

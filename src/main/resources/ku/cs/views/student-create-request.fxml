@@ -9,152 +9,214 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1024.0" prefWidth="1440.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.StudentCreateRequestController">
+<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1024.0" prefWidth="1440.0" styleClass="canvas" stylesheets="@../../../style/light-theme.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.StudentCreateRequestController">
     <top>
         <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <children>
-                <Label fx:id="roleLabel" prefHeight="54.0" prefWidth="650.0" stylesheets="@../../../style/style.css" text="roleLabel">
+                <Label fx:id="roleLabel" prefHeight="54.0" prefWidth="1000.0" styleClass="header" text="roleLabel">
                     <HBox.margin>
                         <Insets left="120.0" />
                     </HBox.margin>
-                    <font>
-                        <Font size="32.0" />
-                    </font>
                 </Label>
-            <HBox prefHeight="80.0" prefWidth="500.0" HBox.hgrow="ALWAYS" />
-            <Group>
-               <children>
-                  <Label fx:id="usernameLabel" alignment="CENTER_RIGHT" layoutX="45.0" layoutY="22.0" prefHeight="24.0" prefWidth="180.0" stylesheets="@../../../style/style.css" text="usernameLabel" textFill="#394954">
-                     <font>
-                        <Font size="16.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="nameLabel" alignment="CENTER_RIGHT" layoutX="45.0" layoutY="-5.0" prefHeight="30.0" prefWidth="180.0" stylesheets="@../../../style/style.css" text="nameLabel">
-                     <font>
-                        <Font size="22.0" />
-                     </font>
-                  </Label>
-               </children>
-            </Group>
-            <Circle fx:id="profilePictureDisplay" fill="WHITE" radius="27.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
-               <HBox.margin>
-                  <Insets left="20.0" />
-               </HBox.margin>
-            </Circle>
-            <ImageView fx:id="optionDropdown" fitHeight="40.0" fitWidth="40.0" onMouseClicked="#optionDropdown" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../images/arrow-down.png" />
-               </image>
-               <HBox.margin>
-                  <Insets right="30.0" />
-               </HBox.margin>
-            </ImageView>
+                <HBox prefHeight="80.0" HBox.hgrow="ALWAYS" />
+                <Group>
+                    <children>
+                        <Label fx:id="usernameLabel" alignment="CENTER_RIGHT" layoutX="45.0" layoutY="22.0" prefHeight="24.0" prefWidth="320.0" text="usernameLabel" textFill="#394954">
+                        </Label>
+                        <Label fx:id="nameLabel" alignment="CENTER_RIGHT" layoutX="45.0" layoutY="-5.0" prefHeight="30.0" prefWidth="320.0" text="nameLabel">
+                        </Label>
+                    </children>
+                </Group>
+                <Circle fx:id="profilePictureDisplay" fill="WHITE" radius="27.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+                    <HBox.margin>
+                        <Insets left="20.0" />
+                    </HBox.margin>
+                </Circle>
+                <ImageView fitHeight="40.0" fitWidth="40.0" onMouseClicked="#settingsPageClick" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../../../images/arrow-down.png" />
+                    </image>
+                    <HBox.margin>
+                        <Insets right="30.0" />
+                    </HBox.margin>
+                </ImageView>
             </children>
         </HBox>
     </top>
     <left>
         <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" prefHeight="200.0" prefWidth="100.0" spacing="30.0" BorderPane.alignment="CENTER">
             <children>
-            <VBox prefWidth="80.0" VBox.vgrow="ALWAYS" />
-            <VBox fx:id="navigation" prefHeight="200.0" prefWidth="100.0" spacing="30.0">
-               <children>
-                  <StackPane>
-                     <children>
-                        <Rectangle fx:id="currentBar1" arcHeight="35.0" arcWidth="35.0" fill="#eaeaea" height="75.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="95.0">
-                           <StackPane.margin>
-                              <Insets right="-30.0" />
-                           </StackPane.margin>
-                        </Rectangle>
-                        <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../images/write.png" />
-                           </image>
-                        </ImageView>
-                     </children>
-                  </StackPane>
-                  <StackPane>
-                     <children>
-                        <Rectangle fx:id="currentBar2" arcHeight="35.0" arcWidth="35.0" fill="#eaeaea" height="75.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="95.0">
-                           <StackPane.margin>
-                              <Insets right="-30.0" />
-                           </StackPane.margin>
-                        </Rectangle>
-                        <ImageView fitHeight="50.0" fitWidth="50.0" onMouseClicked="#requestListViewPageClick" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../images/list.png" />
-                           </image>
-                        </ImageView>
-                     </children>
-                  </StackPane>
-               </children></VBox>
-            <VBox prefWidth="80.0" VBox.vgrow="ALWAYS" />
-                  <ImageView fitHeight="50.0" fitWidth="50.0" onMouseClicked="#logoutClick" pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
-                      <image>
-                          <Image url="@../../../images/exit.png" />
-                      </image>
-               <VBox.margin>
-                  <Insets left="25.0" right="25.0" />
-               </VBox.margin>
-                  </ImageView>
-            <VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="80.0" prefWidth="80.0" VBox.vgrow="ALWAYS" />
+                <VBox prefWidth="80.0" VBox.vgrow="ALWAYS" />
+                <VBox fx:id="navigation" prefHeight="200.0" prefWidth="100.0" spacing="30.0">
+                    <children>
+                        <StackPane>
+                            <children>
+                                <Pane prefHeight="75.0" prefWidth="95.0" styleClass="selected-menu">
+                                    <StackPane.margin>
+                                        <Insets bottom="5.0" left="15.0" top="5.0" />
+                                    </StackPane.margin>
+                                </Pane>
+                                <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../../images/write.png" />
+                                    </image>
+                                </ImageView>
+                            </children>
+                        </StackPane>
+                        <StackPane>
+                            <children>
+                                <Pane prefHeight="75.0" prefWidth="95.0" styleClass="selected-menu" visible="false">
+                                    <StackPane.margin>
+                                        <Insets bottom="5.0" left="15.0" top="5.0" />
+                                    </StackPane.margin>
+                                </Pane>
+                                <ImageView fitHeight="50.0" fitWidth="50.0" onMouseClicked="#requestListViewPageClick" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../../images/list.png" />
+                                    </image>
+                                </ImageView>
+                            </children>
+                        </StackPane>
+                    </children></VBox>
+                <VBox prefWidth="80.0" VBox.vgrow="ALWAYS" />
+                <ImageView fitHeight="50.0" fitWidth="50.0" onMouseClicked="#logoutClick" pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
+                    <image>
+                        <Image url="@../../../images/exit.png" />
+                    </image>
+                    <VBox.margin>
+                        <Insets left="25.0" right="25.0" />
+                    </VBox.margin>
+                </ImageView>
+                <VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="80.0" prefWidth="80.0" VBox.vgrow="ALWAYS" />
             </children>
         </VBox>
     </left>
-   <center>
-      <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-radius: 30px 0 0 0; -fx-background-color: #EAEAEA;" stylesheets="@../../../style/style.css" BorderPane.alignment="CENTER">
-         <children>
-            <VBox fx:id="pane" prefHeight="874.0" prefWidth="1229.0" spacing="10.0" style="-fx-background-color: white; -fx-background-radius: 25;" stylesheets="@../../../style/style.css" VBox.vgrow="ALWAYS">
-               <VBox.margin>
-                  <Insets bottom="25.0" left="35.0" right="45.0" top="30.0" />
-               </VBox.margin>
-               <padding>
-                  <Insets bottom="35.0" left="45.0" right="45.0" top="35.0" />
-               </padding>
-               <children>
-                  <HBox prefHeight="80.0" prefWidth="200.0">
-                     <children>
-                        <Label styleClass="title-label" stylesheets="@../../../style/style.css" text="เพิ่มคำร้องใหม่">
-                           <font>
-                              <Font size="24.0" />
-                           </font>
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                        </Label>
-                        <HBox prefWidth="800.0" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="saveRequestButton" mnemonicParsing="false" stylesheets="@../../../style/style.css" text="บันทึกคำร้อง">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                           <graphic>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../../images/save.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </Button>
-                     </children>
-                  </HBox>
-                  <Separator prefWidth="200.0" />
-                  <ChoiceBox fx:id="typeRequestChoice" prefWidth="350.0" stylesheets="@../../../style/style.css">
-                     <VBox.margin>
-                        <Insets bottom="30.0" />
-                     </VBox.margin>
-                  </ChoiceBox>
-                  <VBox fx:id="createRequestPane" prefHeight="200.0" prefWidth="100.0" spacing="20.0" VBox.vgrow="ALWAYS" />
-               </children>
-            </VBox>
-         </children>
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets></VBox>
-   </center>
+    <center>
+        <VBox prefHeight="200.0" prefWidth="100.0" styleClass="outer-pane" BorderPane.alignment="CENTER">
+            <children>
+                <VBox styleClass="inner-pane" VBox.vgrow="ALWAYS">
+                    <VBox.margin>
+                        <Insets bottom="25.0" left="35.0" right="45.0" top="30.0" />
+                    </VBox.margin>
+                    <children>
+                        <StackPane prefHeight="150.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                            <children>
+                                <VBox fx:id="pane" prefHeight="874.0" prefWidth="1229.0" spacing="10.0">
+                                    <children>
+                                        <HBox prefHeight="80.0" prefWidth="200.0">
+                                            <children>
+                                                <Label styleClass="title-label" text="เพิ่มคำร้องใหม่">
+                                                    <HBox.margin>
+                                                        <Insets />
+                                                    </HBox.margin>
+                                                </Label>
+                                                <HBox prefWidth="500.0" HBox.hgrow="ALWAYS" />
+                                                <Button mnemonicParsing="false" onAction="#saveRequestClick" text="บันทึกคำร้อง">
+                                                    <graphic>
+                                                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                                            <image>
+                                                                <Image url="@../../../images/save.png" />
+                                                            </image>
+                                                        </ImageView>
+                                                    </graphic>
+                                                </Button>
+                                            </children>
+                                        </HBox>
+                                        <Separator prefWidth="200.0" />
+                                        <ChoiceBox fx:id="typeRequestChoice" prefWidth="350.0">
+                                            <VBox.margin>
+                                                <Insets bottom="30.0" />
+                                            </VBox.margin>
+                                        </ChoiceBox>
+                                        <VBox fx:id="createRequestPane" prefHeight="200.0" prefWidth="100.0" spacing="20.0" VBox.vgrow="ALWAYS" />
+                                    </children>
+                                    <StackPane.margin>
+                                        <Insets />
+                                    </StackPane.margin>
+                                </VBox>
+                                <GridPane fx:id="errorPane" visible="false">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    </rowConstraints>
+                                    <children>
+                                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="30.0" styleClass="popup-pane" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                            <children>
+                                                <Label fx:id="errorLabel" text="errorLabel" textFill="#be0000" wrapText="true">
+                                                </Label>
+                                                <Button mnemonicParsing="false" onAction="#closeErrorClick" text="ตกลง">
+                                                </Button>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </GridPane>
+                                <GridPane fx:id="confirmationPane" visible="false">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    </rowConstraints>
+                                    <children>
+                                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="30.0" styleClass="popup-pane" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                            <children>
+                                                <Label fx:id="errorLabel1" text="ยืนยันสร้างใบคำร้องหรือไม่?" wrapText="true">
+                                                </Label>
+                                                <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="70.0">
+                                                    <children>
+                                                        <Button mnemonicParsing="false" onAction="#cancelCreateRequestClick" text="ยกเลิก">
+                                                            <graphic>
+                                                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                                                    <image>
+                                                                        <Image url="@../../../images/cancel.png" />
+                                                                    </image>
+                                                                </ImageView>
+                                                            </graphic>
+                                                        </Button>
+                                                        <Button mnemonicParsing="false" onAction="#confirmCreateRequestClick" text="ยืนยัน">
+                                                            <graphic>
+                                                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                                                    <image>
+                                                                        <Image url="@../../../images/confirm.png" />
+                                                                    </image>
+                                                                </ImageView>
+                                                            </graphic>
+                                                        </Button>
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </GridPane>
+                            </children>
+                        </StackPane>
+                    </children>
+                    <padding>
+                        <Insets bottom="35.0" left="45.0" right="45.0" top="35.0" />
+                    </padding>
+                </VBox>
+            </children>
+            <opaqueInsets>
+                <Insets />
+            </opaqueInsets></VBox>
+    </center>
 </BorderPane>

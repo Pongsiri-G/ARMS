@@ -1,57 +1,71 @@
 package ku.cs.controllers;
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
+import javafx.stage.FileChooser;
 import ku.cs.models.*;
-import ku.cs.services.FXRouter;
-import ku.cs.services.RequestHandlingOfficersDataSource;
-import ku.cs.services.UserListFileDatasource;
+import ku.cs.services.*;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.PDFRenderer;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
-public class DepartmentOfficerController {
-
-
+public class DepartmentOfficerController extends BaseController {
     // UI Components
+    @FXML
+    BorderPane rootPane;
     @FXML
     Label nameLabel;
     @FXML
-    Label userNameLabel;
+    Label usernameLabel;
     @FXML
     Label roleLabel;
     @FXML
-    Circle profilePicture;
+    Circle profilePictureDisplay;
     @FXML
-    Rectangle currentBar1;
+    Pane currentMenu1;
     @FXML
-    Rectangle currentBar2;
+    Pane currentMenu2;
     @FXML
-    Rectangle currentBar3;
+    Pane currentMenu3;
 
     // Request Scene
-    @FXML
-    VBox requestListScene;
-    @FXML
-    TableView<Request> requestListTableView;
+    @FXML VBox requestListScene;
+    @FXML TableView<Request> requestListTableView;
+    @FXML VBox requestDetailPane;
+    @FXML Label timestampLabel;
+    @FXML TextArea requestLogTextArea;
+    @FXML ScrollPane requestDetailScrollPane;
+    @FXML MenuButton selectOfficerHandlingMenu;
+    @FXML Label errorLabel;
+    @FXML Label fileLabel;
+    @FXML GridPane rejectPopupPane;
+    @FXML Label rejectionErrorLabel;
+    @FXML TextField reasonTextField;
+
 
     // Approver Scene UI
     @FXML
     VBox approverScene;
-    @FXML
-    StackPane approverMainButtons;
-    @FXML
-    TextField searchBarApproverTextField;
     @FXML
     TableView<RequestHandlingOfficer> approverTableView;
     @FXML
@@ -64,7 +78,7 @@ public class DepartmentOfficerController {
 
     // Manage Approver Scene UI
     @FXML
-    VBox manageApproverScene;
+    GridPane manageApproverScene;
     @FXML
     MenuButton roleSelectMenuButton;
     @FXML
@@ -77,8 +91,6 @@ public class DepartmentOfficerController {
     // all nisit scene
     @FXML
     VBox studentListScene;
-    @FXML
-    StackPane studentMainButtons;
     @FXML
     TextField searchBarStudentTextField;
     @FXML
@@ -94,9 +106,7 @@ public class DepartmentOfficerController {
 
     // manage nisit scene
     @FXML
-    VBox manageStudentScene;
-    @FXML
-    ImageView studentImage;
+    GridPane manageStudentScene;
     @FXML
     TextField studentNameTextField;
     @FXML
@@ -123,26 +133,35 @@ public class DepartmentOfficerController {
     UserListFileDatasource datasource;
     UserList userList;
     ArrayList<Request> requests;
+    RequestListFileDatasource  requestDatasource;
+    RequestList requestList;
     RequestHandlingOfficer approverToEdit;
     ArrayList<Advisor> advisors;
     ArrayList<Student> students;
     Student studentToEdit;
 
-
+    private String selectedApprover;
+    private Request selectedRequest;
+    private File selectedFile;
 
     @FXML
     public void initialize() {
         initializeDataSources();
         loadData();
+        loadRequests();
         loadApprovers();
         setupOfficerInfo();
         switchToRequestScene();
     }
 
+
     public void setupOfficerInfo() {
         nameLabel.setText(officer.getName());
-        userNameLabel.setText(officer.getUsername());
-        roleLabel.setText("เจ้าหน้าที่ภาควิชา" + officer.getDepartment().getDepartmentName());
+        usernameLabel.setText(officer.getUsername());
+        roleLabel.setText("เจ้าหน้าที่ | ภาควิชา" + officer.getFaculty().getFacultyName());
+        applyThemeAndFont(rootPane);
+        //profilePicture
+        setProfilePicture(profilePictureDisplay, officer.getProfilePicturePath());
     }
 
     private void initializeDataSources() {
@@ -153,8 +172,10 @@ public class DepartmentOfficerController {
                 "departmentofficerlist.csv",
                 "facdeplist.csv");
         userList = datasource.readData();
+        requestDatasource = new RequestListFileDatasource("data/test", "requestlist.csv", userList);
+        requestList = requestDatasource.readData();
         officer = (DepartmentOfficer) userList.findUserByUsername((String) FXRouter.getData());
-        //officer = userList.test();
+        requests = officer.getRequestsByDepartment(requestList);
         advisors = officer.getDepartment().getAdvisors();
         students = officer.getDepartment().getStudents();
         approverDatasource = new RequestHandlingOfficersDataSource("data/approver", officer.getDepartment().getDepartmentName() + "-approver.csv");
@@ -163,16 +184,20 @@ public class DepartmentOfficerController {
     public void loadData() {
         userList = datasource.readData();
         officer = (DepartmentOfficer) userList.findUserByUsername(officer.getUsername());
-        //officer = userList.test();
         advisors = officer.getDepartment().getAdvisors();
         students = officer.getDepartment().getStudents();
     }
 
+    public void loadRequests(){
+        requestList = requestDatasource.readData();
+        requests = officer.getRequestsByDepartment(requestList);
+    }
+
 
     public void resetScene() {
-        currentBar1.setVisible(false);
-        currentBar2.setVisible(false);
-        currentBar3.setVisible(false);
+        currentMenu1.setVisible(false);
+        currentMenu2.setVisible(false);
+        currentMenu3.setVisible(false);
         requestListScene.setVisible(false);
         approverScene.setVisible(false);
         approverScene.setManaged(false);
@@ -181,30 +206,52 @@ public class DepartmentOfficerController {
         manageStudentScene.setVisible(false);
         studentsTableView.setVisible(false);
         studentListScene.setVisible(false);
+        requestDetailPane.setVisible(false);
 
     }
 
     public void switchToRequestScene() {
         resetScene();
-        currentBar1.setVisible(true);
+        selectedRequest = null;
+        currentMenu1.setVisible(true);
         requestListScene.setVisible(true);
         requestListScene.setManaged(true);
+        rejectPopupPane.setVisible(false);
+        requests = officer.getRequestsByDepartment(requestList);
         updateRequestTableView();
+    }
+
+
+    public void switchToManageRequestScene() {
+        StringBuilder logs = new StringBuilder();
+        List<String> statusLog = selectedRequest.getStatusLog();
+        for (int i = statusLog.size() - 1; i >= 0; i--) {
+            logs.append(statusLog.get(i)).append("\n");
+        }
+        requestLogTextArea.setText(logs.toString());
+        timestampLabel.setText(("วันที่สร้างคำร้อง: " + selectedRequest.getTimestamp()));
+
+        try {
+            fillSelectApproverMenuButtons();
+            setShowPDF(selectedRequest.getPdfFilePath(), requestDetailScrollPane);
+            requestDetailPane.setVisible(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void switchToApproverScene() {
         resetScene();
-        currentBar2.setVisible(true);
+        currentMenu2.setVisible(true);
         approverScene.setVisible(true);
         approverScene.setManaged(true);
-        approverMainButtons.setDisable(false);
         updateApproverTableView();
     }
 
     public void switchToManageApproverScene() {
         manageApproverScene.setVisible(true);
         manageApproverScene.setManaged(true);
-        approverMainButtons.setDisable(true);
         setApproverPositionAvailable();
         errorManageApproverLabel.setText("");
         if (approverToEdit != null) {
@@ -221,7 +268,7 @@ public class DepartmentOfficerController {
 
     public void switchToStudentsScene(){
         resetScene();
-        currentBar3.setVisible(true);
+        currentMenu3.setVisible(true);
         studentListScene.setVisible(true);
         studentsTableView.setVisible(true);
         //studentMainButtons.setDisable(false);
@@ -233,7 +280,6 @@ public class DepartmentOfficerController {
         setAdvisorAvailable();
         errorManageStudentLabel.setText("");
         if (studentToEdit != null){
-            //studentImage.setImage(new Image(studentToEdit.getProfilePicturePath()));
             studentIDTextField.setText(studentToEdit.getStudentID());
             studentNameTextField.setText(studentToEdit.getName().split(" ")[0]);
             studentLastNameTextField.setText(studentToEdit.getName().split(" ")[1]);
@@ -242,14 +288,13 @@ public class DepartmentOfficerController {
             studentDepartmentLabel.setText("ภาควิชา: " + studentToEdit.getEnrolledDepartment().getDepartmentName());
             if (studentToEdit.getStudentAdvisor() != null){
                 studentSelectAdvisorMenuBar.setText(studentToEdit.getStudentAdvisor().getName());
-                studentAdvisorLabel.setText(studentToEdit.getStudentAdvisor().getName());
+                studentAdvisorLabel.setText("อาจารย์ที่ปรึกษา: " + studentToEdit.getStudentAdvisor().getName());
             } else {
                 studentSelectAdvisorMenuBar.setText("เลือกอาจารย์ที่ปรึกษา");
                 studentAdvisorLabel.setText("ยังไม่กำหนดอาจารย์ที่ปรึกษา");
             }
         } else{
             studentSelectAdvisorMenuBar.setText("เลือกอาจารย์ที่ปรึกษา");
-            //studentImage.setImage(null);
             studentIDTextField.clear();
             studentNameTextField.clear();
             studentLastNameTextField.clear();
@@ -261,103 +306,223 @@ public class DepartmentOfficerController {
         }
     }
 
-    public void loadRequests(){
-        requests = new ArrayList<>();
-        Request req1 = new Request("2024-09-26 10:15", "John Doe", "Pending", "Leave Request", "Requesting 2 weeks of vacation", "REQ001", "555-1234");
-        Request req2 = new Request("2024-09-25 09:45", "Jane Smith", "Pending", "Equipment Request", "Requesting new laptop for work", "REQ002", "555-5678");
-        Request req3 = new Request("2024-09-24 11:30", "Michael Brown", "Pending", "Expense Reimbursement", "Reimbursement for travel expenses", "REQ003", "555-2345");
-        Request req4 = new Request("2024-09-23 08:00", "Emily White", "Pending", "Training Request", "Requesting attendance at a conference", "REQ004", "555-8765");
-        Request req5 = new Request("2024-09-22 14:20", "Chris Green", "Pending", "Leave Request", "Requesting personal leave for medical reasons", "REQ005", "555-3456");
-        Request req6 = new Request("2024-09-21 16:45", "Anna Blue", "Pending", "Project Proposal", "Proposal for a new marketing campaign", "REQ006", "555-9876");
-        Request req7 = new Request("2024-09-20 13:10", "David Black", "Pending", "Budget Increase", "Requesting an increase in project budget", "REQ007", "555-4567");
-        Request req8 = new Request("2024-09-19 12:05", "Lisa Red", "Pending", "Salary Adjustment", "Request for salary review and adjustment", "REQ008", "555-5432");
-        Request req9 = new Request("2024-09-18 17:00", "Robert Silver", "Pending", "Job Transfer", "Request for transfer to a new department", "REQ009", "555-6789");
-        Request req10 = new Request("2024-09-17 15:30", "Sophia Gold", "Pending", "Remote Work Request", "Requesting remote work for 3 days a week", "REQ010", "555-7654");
-
-        requests.add(req1);
-        requests.add(req2);
-        requests.add(req3);
-        requests.add(req4);
-        requests.add(req5);
-        requests.add(req6);
-        requests.add(req7);
-        requests.add(req8);
-        requests.add(req9);
-        requests.add(req10);
-    }
 
     public void loadApprovers(){
         officer.loadRequestManage(approverDatasource.readData());
     }
 
     public void updateRequestTableView() {
-        loadRequests();
+        loadApprovers();
 
         // Set up the columns
-        TableColumn<Request, String> typeColumn = new TableColumn<>("Type");
-        typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+        TableColumn<Request, String> typeColumn = new TableColumn<>("ประเภทคำร้อง");
+        typeColumn.setCellValueFactory(new PropertyValueFactory<>("requestType")); // รับประเภทคำร้องจาก Request โดยตรง
+        typeColumn.setMinWidth(290);
 
-        TableColumn<Request, String> approverColumn = new TableColumn<>("Approver By");
-        approverColumn.setCellValueFactory(new PropertyValueFactory<>("approveName"));
+        TableColumn<Request, String> nameColumn = new TableColumn<>("ชื่อ-นามสกุล");
+        nameColumn.setCellValueFactory(cellData -> {
+            Student student = cellData.getValue().getRequester();
+            return new SimpleStringProperty(student.getName()); // ดึงชื่อ-นามสกุลจากที่สิตที่สร้างคำร้อง
+        });
+        nameColumn.setMinWidth(290);
 
-        TableColumn<Request, String> idColumn = new TableColumn<>("ID");
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        TableColumn<Request, String> idColumn = new TableColumn<>("รหัสนิสิต");
+        idColumn.setCellValueFactory(cellData -> {
+            Student student = cellData.getValue().getRequester();
+            return new SimpleStringProperty(student.getStudentID()); // ดึงรหสนิสิตจากที่สิตที่สร้างคำร้อง
+        });
+        idColumn.setMinWidth(290);
 
-        TableColumn<Request, String> textColumn = new TableColumn<>("Text");
-        textColumn.setCellValueFactory(new PropertyValueFactory<>("text"));
+        TableColumn<Request, String> lastModifiedColumn = new TableColumn<>("วันที่แก้ไขล่าสุด");
+        lastModifiedColumn.setCellValueFactory(new PropertyValueFactory<>("lastModifiedDateTime"));
+        lastModifiedColumn.setMinWidth(290);
 
-        TableColumn<Request, String> timeStampColumn = new TableColumn<>("TimeStamp");
-        timeStampColumn.setCellValueFactory(new PropertyValueFactory<>("timeStamp"));
-
-        // Clear previous columns and add the new ones
         requestListTableView.getColumns().clear();
-        requestListTableView.getColumns().addAll(typeColumn, approverColumn, idColumn, textColumn, timeStampColumn);
+        requestListTableView.getColumns().addAll(typeColumn, nameColumn, idColumn, lastModifiedColumn);
 
-        // Clear the items in the table
         requestListTableView.getItems().clear();
-
-        // Populate the TableView with requests
+        requests.sort(Comparator.comparing(Request::getLastModifiedDateTime).reversed());
         requestListTableView.getItems().addAll(requests);
 
-        // Use the selection model for row selection
         requestListTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                // Get the selected request directly
-                Request selectedRequest = newValue;
-
-                // Perform your actions with the selected request
-                handleSelectedRequest(selectedRequest);
+                selectedRequest = newValue;
+                switchToManageRequestScene();
             }
         });
     }
 
-    private void handleSelectedRequest(Request selectedRequest) {
-        // Handle the selected request (e.g., navigate to the details scene)
-        try {
-            List<Object> dataToPass = new ArrayList<>();
-            dataToPass.add(selectedRequest);  // Add the Request object
-            dataToPass.add(officer);  // Add the RequestHandlingOfficer object
-            FXRouter.goTo("department-officer-manage-request", dataToPass);  // Pass the list with both objects
-        } catch (IOException e) {
-            System.err.println("Route is null. Check if the route is registered properly.");
-            e.printStackTrace();
+
+    public void closeRequestDetailClick(){
+        switchToRequestScene();
+    }
+
+    public void setShowPDF(String pdfFilePath, ScrollPane pdfScrollPane) throws IOException {
+        PDDocument document = PDDocument.load(new File(pdfFilePath));
+        PDFRenderer pdfRenderer = new PDFRenderer(document);
+
+        VBox vbox = new VBox(10);
+        vbox.setStyle("-fx-alignment: center;");
+
+        for (int page = 0; page < document.getNumberOfPages(); page++) {
+            BufferedImage bufferedImage = pdfRenderer.renderImageWithDPI(page, 150);
+
+            Image fxImage = SwingFXUtils.toFXImage(bufferedImage, null);
+
+            ImageView imageView = new ImageView(fxImage);
+            imageView.setFitWidth(1240);
+            imageView.setPreserveRatio(true);
+
+            vbox.getChildren().add(imageView);
+        }
+
+        pdfScrollPane.setContent(null);
+        pdfScrollPane.setContent(vbox);
+
+        document.close();
+    }
+
+    public void fillSelectApproverMenuButtons() {
+        selectOfficerHandlingMenu.getItems().clear(); // Clear existing items
+        ArrayList<RequestHandlingOfficer> approvers = officer.getRequestManagers();
+
+        for (RequestHandlingOfficer approver : approvers) {
+            MenuItem item = new MenuItem(approver.getFullPositoin());
+
+            // Event handling when an item is clicked
+            item.setOnAction(e -> {
+                // Set the selected position
+                String selectedApprover = item.getText();
+
+                // Set the text of the roleSelectMenuButton to the selected position
+                selectOfficerHandlingMenu.setText(selectedApprover);
+            });
+
+            // Add the item to the menu button
+            selectOfficerHandlingMenu.getItems().add(item);
+            selectOfficerHandlingMenu.setText("เลือกผู้ดำเนินการ");
         }
     }
 
+    @FXML
+    public void uploadButtonClick(MouseEvent event) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose PDF File");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("PDF Files", "*.pdf")
+        );
 
+        selectedFile = fileChooser.showOpenDialog(requestDetailPane.getScene().getWindow());
 
+        if (selectedFile != null) {
+            selectedRequest.setPdfFilePath(selectedFile.getAbsolutePath());
+            fileLabel.setText(selectedFile.getName());
+            fileLabel.setVisible(true);
+
+            setShowPDF(selectedFile.getAbsolutePath(), requestDetailScrollPane);
+        }
+    }
+
+    @FXML
+    public void downloadButtonClick(MouseEvent event) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save PDF File");
+
+        FileChooser.ExtensionFilter pdfFilter = new FileChooser.ExtensionFilter("PDF Files", "*.pdf");
+        fileChooser.getExtensionFilters().add(pdfFilter);
+
+        fileChooser.setInitialFileName(selectedRequest.getRequester().getStudentID() + selectedRequest.getRequestType() + ".pdf");
+
+        File fileToSave = fileChooser.showSaveDialog(requestDetailPane.getScene().getWindow());
+
+        if (fileToSave != null) {
+            String filePath = fileToSave.getAbsolutePath();
+
+            Path sourcePath = Path.of(selectedRequest.getPdfFilePath());
+            Path destinationPath = Path.of(filePath);
+
+            try {
+                Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @FXML
+    public void onRejectRequestButtonClick(MouseEvent event) {
+        selectedApprover = selectOfficerHandlingMenu.getText();
+        if (checkValid(selectedApprover, false)) {
+            rejectPopupPane.setVisible(true);
+        }
+    }
+
+    @FXML void onReasonRejectToStudentClick(MouseEvent event) throws IOException {
+        if (reasonTextField.getText().trim().isEmpty()){
+            rejectionErrorLabel.setVisible(true);
+        }
+        else {
+            officer.rejectRequest(selectedRequest, selectedApprover, reasonTextField.getText().trim());
+            requestDatasource.writeData(requestList);
+            switchToRequestScene();
+        }
+    }
+
+    @FXML
+    public void onSendRequestButtonClick(MouseEvent event) throws IOException {
+        selectedApprover = selectOfficerHandlingMenu.getText();
+        if (checkValid(selectedApprover, true)) {
+            officer.acceptRequest(selectedRequest, selectedApprover);
+            updateRequest();
+            switchToRequestScene();
+        }
+    }
+
+    @FXML
+    public void onApproveRequestButtonClick(MouseEvent event) throws IOException {
+        selectedApprover = selectOfficerHandlingMenu.getText();
+        if (checkValid(selectedApprover, true)) {
+            officer.acceptRequest(selectedRequest, selectedApprover);
+            updateRequest();
+            switchToRequestScene();
+        }
+    }
+
+    public void updateRequest() throws IOException {
+        // การอัพโหลด pdf
+        fileLabel.setText(selectedFile.getName());
+        String filePath = FileStorage.replaceFileWithTimestamp(selectedFile, selectedRequest.getPdfFilePath()); // เอาไฟล์ที่อัพโหลดไปใส่
+        selectedRequest.setPdfFilePath(filePath); // เก็บที่อยู่ pdf ใน request
+
+        // เขียนลง csv
+        requestDatasource.writeData(requestList);
+    }
+
+    public boolean checkValid(String approver, boolean isUseFile){
+        if (approver.equals("") || approver == null || approver.equals("เลือกผู้ดำเนินการ")) {
+            errorLabel.setText("กรุณาเลือกผู้ดำเนินการ");
+            errorLabel.setVisible(true);
+            return false;
+        }
+        else if (isUseFile && selectedFile == null){
+            errorLabel.setText("กรุณาอัพโหลดไฟล์ PDF");
+            errorLabel.setVisible(true);
+            return false;
+        }
+        return true;
+    }
 
     public void updateApproverTableView() {
         loadApprovers();
         approverRoleTableColumn = new TableColumn<>("ตำแหน่ง");
         approverRoleTableColumn.setCellValueFactory(new PropertyValueFactory<>("position"));
-        approverRoleTableColumn.setMinWidth(360);
-        approverNameTableColumn = new TableColumn<>("ขื่อ-นามสกุล");
+        approverRoleTableColumn.setMinWidth(300);
+        approverNameTableColumn = new TableColumn<>("ชื่อ-นามสกุล");
         approverNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        approverNameTableColumn.setMinWidth(420);
-        approverLastUpdateTableColumn = new TableColumn<>("วัน-เวลา แก้ไขล่าสุด");
+        approverNameTableColumn.setMinWidth(300);
+        approverLastUpdateTableColumn = new TableColumn<>("วันที่แก้ไขล่าสุด");
         approverLastUpdateTableColumn.setCellValueFactory(new PropertyValueFactory<>("lastUpdate"));
-        approverLastUpdateTableColumn.setMinWidth(400);
+        approverLastUpdateTableColumn.setMinWidth(300);
 
         approverTableView.getColumns().clear();
         approverTableView.getColumns().add(approverRoleTableColumn);
@@ -368,14 +533,11 @@ public class DepartmentOfficerController {
         for (RequestHandlingOfficer approver : officer.getRequestManagers()) {
             approverTableView.getItems().add(approver);
         }
-
-
     }
 
     public void setApproverPositionAvailable() {
         roleSelectMenuButton.getItems().clear(); // Clear existing items
         ArrayList<String> positions = officer.getAvailablePositions();
-        System.out.println(positions);
 
         for (String position : positions) {
             MenuItem item = new MenuItem(position);
@@ -395,9 +557,8 @@ public class DepartmentOfficerController {
     }
 
     public void updateStudentTableView() {
-
         // Column for student's ID
-        studentIDTableColumn = new TableColumn<>("ID");
+        studentIDTableColumn = new TableColumn<>("รหัสประจำตัวนิสิต");
         studentIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("studentID"));
         studentIDTableColumn.setMinWidth(300);
         studentIDTableColumn.setMaxWidth(300);
@@ -431,13 +592,39 @@ public class DepartmentOfficerController {
         studentsTableView.getColumns().add(studentEmailTableColumn);
         studentsTableView.getColumns().add(studentAdvisorTableColumn);
 
-        // Clear previous data
-        studentsTableView.getItems().clear();
+        // Create a FilteredList to allow filtering the students based on the search text
+        FilteredList<Student> filteredData = new FilteredList<>(FXCollections.observableArrayList(students), p -> true);
 
-        // Populate table with student data
-        for (Student student : students) {
-            studentsTableView.getItems().add(student);
-        }
+        // Add a listener to the searchBarStudentTextField to filter the list
+        searchBarStudentTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(student -> {
+                // If search field is empty, display all students
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                // Filter by student name, email, or advisor's name
+                if (student.getStudentID().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                } else if (student.getName().toLowerCase().contains(lowerCaseFilter)) {
+                    return true; // Filter matches student name
+                } else if (student.getEmail().toLowerCase().contains(lowerCaseFilter)) {
+                    return true; // Filter matches student email
+                } else if (student.getStudentAdvisor() != null && student.getStudentAdvisor().getName().toLowerCase().contains(lowerCaseFilter)) {
+                    return true; // Filter matches advisor's name
+                }
+                return false; // No match
+            });
+        });
+
+        // Use a SortedList to bind sorting to the TableView
+        SortedList<Student> sortedData = new SortedList<>(filteredData);
+        sortedData.comparatorProperty().bind(studentsTableView.comparatorProperty());
+
+        // Set the sorted and filtered data to the TableView
+        studentsTableView.setItems(sortedData);
     }
 
     public void setAdvisorAvailable() {
@@ -465,8 +652,6 @@ public class DepartmentOfficerController {
             studentSelectAdvisorMenuBar.getItems().add(item);
         }
     }
-
-
 
     @FXML
     public void onGoToRequestSceneButtonClick(MouseEvent mouseEvent) {
@@ -514,33 +699,27 @@ public class DepartmentOfficerController {
     @FXML
     public void onOkButtonClick(MouseEvent mouseEvent) {
         String position = roleSelectMenuButton.getText();
-        String name = nameTextField.getText() + " " + lastNameTextField.getText();
-        String test = name.replaceAll("\\s+", "");
+        String name = nameTextField.getText().trim() + " " + lastNameTextField.getText().trim();
         if (position == null || position.equals("") || position.equals("เลือกตำแหน่ง")) {
-            errorManageApproverLabel.setText("กรุณาระบุตำแหน่งคนอนุมัติ");
-        }
-        else if (name == null || test.equals("")) {
+            errorManageApproverLabel.setText("กรุณาระบุตำแหน่งผู้อนุมัติ");
+        } else if (nameTextField.getText().trim().isEmpty() || lastNameTextField.getText().trim().isEmpty()) {
             errorManageApproverLabel.setText("กรุณากรอกข้อมูลผู้อนุมัติ");
-        }
-        else {
+        } else {
             if (approverToEdit == null) {
                 officer.addRequestManager(position, name);
-                //approvers.add(new RequestHandlingOfficer(position, name));
-            }
-            else {
+            } else {
                 officer.updateRequestManager(approverToEdit, position, name);
-                //approverToEdit.update(position, name);
             }
             approverDatasource.writeData(officer.getRequestManagers());
             approverToEdit = null;
             switchToApproverScene();
         }
-
-
     }
 
 
     public void onGoToStudentListSceneButtonClick(MouseEvent mouseEvent) {switchToStudentsScene();}
+
+    public void onSearchBarStudentTextFieldClick(MouseEvent mouseEvent) {switchToStudentsScene();}
 
     public void onRemoveStudentButtonClick(MouseEvent mouseEvent) {
         studentToEdit = studentsTableView.getSelectionModel().getSelectedItem();
@@ -548,7 +727,8 @@ public class DepartmentOfficerController {
             // Remove from the students
            // students.remove(studentToEdit);
             // Remove from userList
-            officer.getDepartment().getStudents().remove(studentToEdit);
+            officer.removeStudentInDep(studentToEdit);
+            //officer.getDepartment().getStudents().remove(studentToEdit);
             datasource.writeData(userList);
             loadData();
             studentToEdit = null;
@@ -568,8 +748,6 @@ public class DepartmentOfficerController {
             switchToManageStudentScene();
         }
     }
-
-
 
     public void onStudentBackButtonClick(MouseEvent mouseEvent) {
         studentToEdit = null;
@@ -609,17 +787,19 @@ public class DepartmentOfficerController {
             if (advisor.equals("ไม่ระบุ")){
                 studentToEdit.setStudentAdvisor(null);
             } else {
-                studentToEdit.setStudentAdvisor(officer.getDepartment().findAdvisorByName(advisor));
+                officer.assignAdvisor(studentToEdit, advisor);
+                //studentToEdit.setStudentAdvisor(officer.getDepartment().findAdvisorByName(advisor));
             }
         } else {
-            Student student;
+            //Student student;
             if (advisor == null || advisor.equals("เลือกอาจารย์ที่ปรึกษา") || advisor.equals("ไม่ระบุ")) {
-                student = new Student(name, officer.getFaculty(), officer.getDepartment(), id, email);
+                officer.addStudentToDep(name, id, email);
+                //student = new Student(name, officer.getFaculty(), officer.getDepartment(), id, email);
             }
             else {
-                student = new Student(name,officer.getFaculty().getFacultyName(), officer.getDepartment().getDepartmentName(), id, email, officer.getDepartment().findAdvisorByName(advisor));
+                officer.addStudentToDep(name, id, email, advisor);
+                //student = new Student(name,officer.getFaculty().getFacultyName(), officer.getDepartment().getDepartmentName(), id, email, officer.getDepartment().findAdvisorByName(advisor));
             }
-            officer.getDepartment().getStudents().add(student);
         }
         datasource.writeData(userList);
         loadData();
@@ -628,7 +808,16 @@ public class DepartmentOfficerController {
     }
 
     @FXML
-    public void onLogoutButtonClick(MouseEvent event) throws IOException {
+    public void settingsPageClick(MouseEvent event) throws IOException {
+        ArrayList<String> data = new ArrayList<>();
+        data.add("department-officer");
+        data.add(officer.getUsername());
+        FXRouter.goTo("settings", data);
+
+    }
+
+    @FXML
+    public void logoutClick(MouseEvent event) throws IOException {
         FXRouter.goTo("login");
     }
 }
