@@ -1,0 +1,304 @@
+@font-face {
+    font-family: 'Noto Sans Thai';
+    src: url('../fonts/NotoSansThai-Regular.ttf') format('truetype');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'Noto Sans Thai';
+    src: url('../fonts/NotoSansThai-Bold.ttf') format('truetype');
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: 'Noto Sans Thai Looped';
+    src: url('../fonts/NotoSansThaiLooped-Regular.ttf') format('truetype');
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: 'Noto Sans Thai Looped';
+    src: url('../fonts/NotoSansThaiLooped-SemiBold.ttf') format('truetype');
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: 'Bai Jamjuree';
+    src: url('../fonts/BaiJamjuree-Regular.ttf') format('truetype');
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: 'Bai Jamjuree';
+    src: url('../fonts/BaiJamjuree-Bold.ttf') format('truetype');
+    font-weight: bold;
+}
+
+* {
+    -fx-primary-color: #006664;
+    -fx-secondary-color: white;
+    -fx-tertiary-color: #eaeaea;
+    -fx-contrast-color: black;
+    -fx-middle-color: #6b6b6b;
+    -fx-red-color: #be0000;
+    -fx-yellow-color: #d7a700;
+    -fx-green-color: #149100;
+}
+.root {
+    -fx-font-size: 18px;
+    -fx-font-family: 'Noto Sans Thai';
+}
+.Small {
+    -fx-font-size: 16px;
+}
+
+.Medium {
+    -fx-font-size: 18px;
+}
+
+.Large {
+    -fx-font-size: 21px;
+}
+.pane {
+    -fx-background-radius: 25;
+    -fx-background-color: -fx-tertiary-color;
+}
+.label {
+    -fx-text-fill: -fx-contrast-color;
+}
+.button {
+    -fx-background-radius: 20;
+    -fx-background-color: -fx-primary-color;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+}
+.button:focused {
+    -fx-opacity: 0.75;
+}
+.text-field {
+    -fx-background-color: -fx-contrast-color, -fx-secondary-color;
+    -fx-background-insets: 0, -1 -1 2 -1;
+    -fx-background-radius: 0;
+    -fx-text-fill: -fx-contrast-color;
+    -fx-padding: 10 0 0 10;
+    -fx-text-box-border: transparent;
+}
+.text-field:focused {
+    -fx-background-color: -fx-primary-color, -fx-secondary-color;
+    -fx-focus-color: transparent;
+}
+.choice-box {
+    -fx-background-color: -fx-tertiary-color;
+    -fx-background-radius: 10;
+    -fx-focus-color: -fx-middle-color;
+    -fx-faint-focus-color: -fx-secondary-color;
+    -fx-control-inner-background: -fx-tertiary-color;
+    -fx-selection-bar: -fx-secondary-color;
+    -fx-prompt-text-fill: -fx-contrast-color;
+}
+.combo-box .arrow-button {
+    -fx-background-color: -fx-tertiary-color;
+}
+
+.combo-box .list-cell {
+    -fx-background-color: -fx-tertiary-color;
+    -fx-text-fill: -fx-contrast-color;
+}
+
+.combo-box:hover {
+    -fx-background-color: -fx-secondary-color;
+}
+
+.combo-box:focused {
+    -fx-background-color: -fx-middle-color;
+}
+.radio-button {
+    -fx-padding: 5px;
+    -fx-text-fill: -fx-contrast-color;
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+}
+.radio-button:focused {
+    -fx-padding: 5px;
+    -fx-border-color: -fx-primary-color;
+    -fx-background-color: transparent;
+}
+
+
+
+.canvas {
+    -fx-background-color: -fx-secondary-color;
+}
+.outer-pane {
+    -fx-background-radius:  30px 0 0 0;
+    -fx-background-color: -fx-tertiary-color;
+}
+.inner-pane {
+    -fx-background-radius: 25;
+    -fx-background-color: -fx-secondary-color;
+}
+.popup-pane {
+    -fx-background-radius: 25;
+    -fx-background-color: -fx-tertiary-color;
+    -fx-border-radius: 25;
+    -fx-border-width: 2;
+    -fx-border-color: -fx-middle-color;
+}
+.selected-menu {
+    -fx-background-color: -fx-tertiary-color;
+    -fx-background-radius:  20px 0 0 20px;
+}
+.header {
+    -fx-font-size: 32;
+}
+.title-label {
+    -fx-font-weight: bold;
+    -fx-font-size: 36;
+}
+.error-label {
+    -fx-text-fill: -fx-red-color;
+}
+.red-box {
+    -fx-background-color: #d38b8b;
+    -fx-background-radius: 10px;
+    -fx-padding: 5;
+}
+.yellow-box {
+    -fx-background-color: #fbecb8;
+    -fx-background-radius: 10px;
+    -fx-padding: 5;
+}
+.green-box {
+    -fx-background-color: #bfedb8;
+    -fx-background-radius: 10px;
+    -fx-padding: 5;
+}
+.red-label {
+    -fx-text-fill: -fx-red-color;
+}
+.yellow-label{
+    -fx-text-fill: -fx-yellow-color;
+}
+.green-label {
+    -fx-text-fill: -fx-green-color;
+}
+.red-title-label{
+    -fx-font-size: 36;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-red-color;
+}
+.yellow-title-label{
+    -fx-font-size: 36;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-yellow-color;
+}
+.green-title-label{
+    -fx-font-size: 36;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-green-color;
+}
+.red-button {
+    -fx-background-radius: 20;
+    -fx-background-color: -fx-red-color;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+}
+.yellow-button {
+    -fx-background-radius: 20;
+    -fx-background-color: -fx-yellow-color;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+}
+.green-button {
+    -fx-background-radius: 20;
+    -fx-background-color: -fx-green-color;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+}
+.middle-button {
+    -fx-background-radius: 20;
+    -fx-background-color: -fx-middle-color;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+}
+.capsule-text-field{
+    -fx-background-color: -fx-secondary-color;
+    -fx-background-radius: 30;
+    -fx-text-fill: -fx-contrast-color;
+    -fx-padding: 10 10 10 10;
+    -fx-text-box-border: transparent;
+}
+.table-view,
+.table-view .column-header,
+.table-view .column-header-background .filler,
+.table-view .corner {
+    -fx-background-color: transparent;
+}
+.table-view .column-header-background{
+    -fx-background-color: -fx-secondary-color;
+    -fx-border-width: 0 0 2 0;
+    -fx-border-color: -fx-middle-color;
+}
+.table-view .table-cell{
+    -fx-border-color: transparent;
+    -fx-padding: 2 0 2 50px;
+    -fx-alignment: CENTER;
+    -fx-text-fill: -fx-contrast-color;
+}
+.table-row-cell:odd{
+    -fx-background-color: -fx-tertiary-color;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.0em;
+}
+.table-row-cell:even {
+    -fx-background-color: -fx-secondary-color;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.0em;
+}
+.table-row-cell:selected {
+    -fx-background-color: -fx-primary-color;
+    -fx-text-background-color: -fx-primary-color;
+    -fx-text-fill: -fx-contrast-color;
+}
+.table-view .virtual-flow .scroll-bar:vertical,
+.table-view .virtual-flow .scroll-bar:vertical .track,
+.table-view .virtual-flow .scroll-bar:vertical .track-background,
+.table-view .virtual-flow .scroll-bar:horizontal,
+.table-view .virtual-flow .scroll-bar:horizontal .track,
+.table-view .virtual-flow .scroll-bar:horizontal .track-background {
+    -fx-background-color: transparent;
+}
+.separator .line {
+    -fx-background-color: -fx-middle-color;
+    -fx-pref-height: 3;
+    -fx-border-color: null ;
+}
+.text-area {
+    -fx-border-color: -fx-middle-color;
+    -fx-background-color: transparent;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-padding: 10px;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-text-fill: -fx-contrast-color;
+}
+.text-area .content {
+    -fx-background-color: -fx-secondary-color;
+}
+.date-picker .month-year-label {
+    -fx-text-fill: -fx-middle-color;
+}
+.date-picker .arrow-button {
+    -fx-background-color: -fx-tertiary-color;
+    -fx-background-radius: 0;
+}
+.date-picker-popup > .month-year-pane {
+    -fx-base: -fx-primary-color ;
+    -fx-mark-highlight-color: -fx-contrast-color ;
+}
+.date-picker .selected {
+    -fx-background-color: -fx-primary-color;
+    -fx-text-fill: -fx-contrast-color;
+}

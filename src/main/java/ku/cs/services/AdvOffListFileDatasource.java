@@ -51,22 +51,21 @@ public class AdvOffListFileDatasource implements Datasource<ArrayList<Advisor>> 
                 String[] data = line.split(","); // แบ่งข้อมูลด้วยเครื่องหมายจุลภาค
 
                 // ตรวจสอบจำนวนคอลัมน์ว่าถูกต้อง
-                if (data.length != 11) continue;
+                if (data.length != 10) continue;
 
                 String username = data[0]; // ชื่อผู้ใช้
                 String password = data[1]; // รหัสผ่าน
                 String name = data[2]; // ชื่อ
                 boolean suspended = "ระงับบัญชี".equals(data[3]); // สถานะพักการใช้งาน
                 LocalDateTime lastLogin = "ไม่เคยเข้าใช้งาน".equals(data[4]) ? null : LocalDateTime.parse(data[4], formatter); // ถ้าเป็น "ไม่เคยเข้าใช้งาน" ให้ค่าเป็น null
-                String profilePicturePath = data[5].isEmpty() ? User.DEFAULT_PROFILE_PICTURE_PATH : data[5]; // ค่าพาธรูปโปรไฟล์
+                String profilePicturePath = data[5].equals("ไม่มีรูปประจำตัว") ? null : data[5]; // ค่าพาธรูปโปรไฟล์
                 String faculty = data[6]; // คณะ
                 String department = data[7]; // ภาควิชา
                 String advisorID = data[8]; // รหัสอาจารย์
-                String advisorEmail = data[9]; // อีเมล
-                String defaultPassword = data[10];
+                String defaultPassword = data[9];
 
                 // เพิ่ม Advisor ไปยัง list ด้วยวิธี addNewAdvisor
-                Advisor a = new Advisor(username, password, name, new Faculty(faculty), new Department(department), advisorID, advisorEmail, true, suspended);
+                Advisor a = new Advisor(username, password, name, new Faculty(faculty), new Department(department), advisorID, true, suspended);
                 a.setLastLogin(lastLogin); // กำหนดค่า lastLogin
                 a.setProfilePicturePath(profilePicturePath); // กำหนดค่าพาธรูปโปรไฟล์
                 a.setDefaultPassword(defaultPassword);
@@ -100,7 +99,7 @@ public class AdvOffListFileDatasource implements Datasource<ArrayList<Advisor>> 
             // Write each advisor's data
             for (Advisor advisor : advisors) {
                 String lastLoginStr = advisor.getLastLogin() == null ? "ไม่เคยเข้าใช้งาน" : advisor.getLastLogin().format(formatter);
-                String profilePicturePath = advisor.getProfilePicturePath() == null ? User.DEFAULT_PROFILE_PICTURE_PATH : advisor.getProfilePicturePath();
+                String profilePicturePath = advisor.getProfilePicturePath() == null ? "ไม่มีรูปประจำตัว" : advisor.getProfilePicturePath();
                 String defaultPassword = advisor.getDefaultPassword() == null ? "" : advisor.getDefaultPassword();
                 String line = advisor.getUsername() + ","
                         + advisor.getPassword() + ","
@@ -111,7 +110,6 @@ public class AdvOffListFileDatasource implements Datasource<ArrayList<Advisor>> 
                         + advisor.getFaculty().getFacultyName() + ","
                         + advisor.getDepartment().getDepartmentName() + ","
                         + advisor.getAdvisorID() + ","
-                        + advisor.getAdvisorEmail() + ","
                         + advisor.getDefaultPassword();
                 buffer.write(line);
                 buffer.newLine();

@@ -1,6 +1,7 @@
 package ku.cs.services;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import ku.cs.models.*;
@@ -12,12 +13,12 @@ public class RequestListFileDatasourceTest {
     private String testDirectory = "data/test";
     private String testFileName = "requestlist.csv";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         RequestListFileDatasourceTest test = new RequestListFileDatasourceTest();
         test.runTests();
     }
 
-    public void runTests() {
+    public void runTests() throws IOException {
         setup();
         loadRequestList();
     }
@@ -41,7 +42,7 @@ public class RequestListFileDatasourceTest {
         }
     }
 
-    public RequestList loadRequestList() {
+    public RequestList loadRequestList() throws IOException {
         RequestList requestList = new RequestList();
 
         Request request1 = new SickLeaveRequest(

@@ -37,7 +37,7 @@ public class UserManagementController {
     @FXML private Label allRequestLabel;
     @FXML private Label approvedLabel;
     @FXML private TableView<User> userManagementTableView;
-    private String[] role = {"All", "Students", "Advisors", "Faculty Officers", "Department Officers"};
+    private String[] role = {"ทั้งหมด", "นิสิต", "อาจารย์", "เจ้าหน้าที่คณะ", "เจ้าหน้าที่ภาควิชา"};
     private UserList userList;
     private Datasource<UserList> datasource;
     private Datasource<RequestList> requestListDatasource;
@@ -52,7 +52,7 @@ public class UserManagementController {
     @FXML
     public void initialize() {
         searchByRole.getItems().addAll(role);
-        searchByRole.setValue("All");
+        searchByRole.setValue("ทั้งหมด");
         searchByRole.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             filterTableByRole(newValue);
         });
@@ -72,52 +72,36 @@ public class UserManagementController {
     }
 
     private void filterTableByRole(String role) {
-        // สร้าง FilteredList จาก userList
+        // Create a FilteredList from the original ObservableList
         ObservableList<User> observableUserList = FXCollections.observableArrayList(userList.getAllUsers());
         FilteredList<User> filteredList = new FilteredList<>(observableUserList, user -> {
-            switch (role) {
-                case "Students":
-                    return user instanceof Student;
-                case "Advisors":
-                    return user instanceof Advisor;
-                case "Faculty Officers":
-                    return user instanceof FacultyOfficer;
-                case "Department Officers":
-                    return user instanceof DepartmentOfficer;
-                case "All":
-                    try {
-                        FXRouter.goTo("user-management");
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                default:
-                    return true;
-            }
-        });
-
-        // สร้าง SortedList จาก filteredList
-        SortedList<User> sortedData = new SortedList<>(filteredList, new Comparator<User>() {
-            @Override
-            public int compare(User u1, User u2) {
-                if (u1.getLastLogin() == null && u2.getLastLogin() == null) {
-                    return 0;
-                } else if (u1.getLastLogin() == null) {
-                    return 1;
-                } else if (u2.getLastLogin() == null) {
-                    return -1;
-                } else {
-                    return u2.getLastLogin().compareTo(u1.getLastLogin());
+            // Filter based on the selected role
+            if (role.equals("ทั้งหมด")) {
+                try {
+                    FXRouter.goTo("user-management");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
+                return true; // Show all users
+            } else if (role.equals("นิสิต") && user instanceof Student) {
+                return true;
+            } else if (role.equals("อาจารย์") && user instanceof Advisor) {
+                return true;
+            } else if (role.equals("เจ้าหน้าที่ภาควิชา") && user instanceof FacultyOfficer) {
+                return true;
+            } else if (role.equals("เจ้าหน้าที่คณะ") && user instanceof DepartmentOfficer) {
+                return true;
             }
+            return false;
         });
 
-        // ผูกคอมเปอเรเตอร์ของ sortedData เข้ากับ tableView
-        sortedData.comparatorProperty().bind(userManagementTableView.comparatorProperty());
+        // Wrap FilteredList with a SortedList and bind the comparator to the TableView's comparator
+        SortedList<User> sortedList = new SortedList<>(filteredList);
+        sortedList.comparatorProperty().bind(userManagementTableView.comparatorProperty());
 
-        // ตั้งค่าข้อมูลที่กรองและจัดเรียงแล้วให้กับ TableView
-        userManagementTableView.setItems(sortedData);
+        // Set the items of the TableView to the SortedList
+        userManagementTableView.setItems(sortedList);
     }
-
 
     private void filterUsersBySearch(String searchQuery) {
         searchQuery = searchQuery.toLowerCase();
@@ -149,13 +133,12 @@ public class UserManagementController {
         TableColumn<User, Image> pictureColumn = new TableColumn<>("รูปภาพ");
         pictureColumn.setCellValueFactory(cellData -> {
             String imagePath = cellData.getValue().getProfilePicturePath();
-            File file = new File(imagePath);
             Image image;
-            if (file.exists()) {
-                image = new Image(file.toURI().toString(), 50, 50, true, true); // กำหนดขนาดตามต้องการ
+            if (imagePath != null) {
+                image = new Image("file:" + imagePath); // กำหนดขนาดตามต้องการ
             } else {
                 // ใช้รูปภาพเริ่มต้นถ้าไม่พบไฟล์
-                image = new Image(getClass().getResourceAsStream("/images/default-profile.png"), 50, 50, true, true);
+                image = new Image(getClass().getResourceAsStream("/images/profile.jpg"), 50, 50, true, true);
             }
             return new SimpleObjectProperty<>(image);
         });
@@ -310,15 +293,6 @@ public class UserManagementController {
     protected void onStaffClick() {
         try {
             FXRouter.goTo("staff-advisor-management");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @FXML
-    protected void onSettingButtonClick() {
-        try {
-            FXRouter.goTo("settings");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

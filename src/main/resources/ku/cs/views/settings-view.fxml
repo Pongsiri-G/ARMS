@@ -10,18 +10,14 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1024.0" prefWidth="1440.0" style="-fx-background-color: #EAEAEA;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.SettingsController">
+<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1024.0" prefWidth="1440.0" styleClass="canvas" stylesheets="@../../../style/light-theme.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.SettingsController">
    <left>
-      <VBox prefHeight="200.0" prefWidth="500.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="1024.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <VBox alignment="TOP_CENTER" prefHeight="300.0" prefWidth="300.0" style="-fx-background-color: WHITE; -fx-background-radius: 30;" VBox.vgrow="ALWAYS">
+            <VBox alignment="TOP_CENTER" prefHeight="300.0" prefWidth="400.0" spacing="20.0" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets left="40.0" right="40.0" top="40.0" />
                </VBox.margin>
@@ -38,235 +34,84 @@
                         </ImageView>
                      </children>
                   </HBox>
-                  <HBox alignment="TOP_RIGHT" prefHeight="30.0" prefWidth="238.0">
-                     <children>
-                        <ImageView fitHeight="30.0" fitWidth="33.0" onMouseClicked="#onChangeProfileButtonClick" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../images/pencil-svgrepo-com.png" />
-                           </image>
-                        </ImageView>
-                     </children>
-                     <padding>
-                        <Insets right="110.0" />
-                     </padding>
-                  </HBox>
                   <Circle fx:id="profilePictureDisplay" fill="#eaeaea" radius="100.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
                   </Circle>
                   <Label fx:id="nameLabel" text="nameLabel">
-                     <font>
-                        <Font size="24.0" />
-                     </font>
                      <VBox.margin>
                         <Insets left="20.0" right="20.0" top="20.0" />
                      </VBox.margin>
                   </Label>
                   <Label fx:id="roleLabel" text="roleLabel">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
                   </Label>
-                  <VBox fx:id="userInfoPane" prefHeight="200.0" prefWidth="100.0" spacing="30.0">
+                  <VBox fx:id="userInfoPane" spacing="30.0">
                      <VBox.margin>
                         <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
                      </VBox.margin>
                   </VBox>
+                  <Button mnemonicParsing="false" onMouseClicked="#uploadProfilePictureButton" text="อัปโหลดรูปผู้ใช้" />
+                  <Button mnemonicParsing="false" onMouseClicked="#changeProfileToDefaultButton" styleClass="middle-button" text="กำหนดรูปผู้ใช้เริ่มต้น" />
                </children>
             </VBox>
-            <VBox prefHeight="600.0" prefWidth="100.0" VBox.vgrow="ALWAYS" />
          </children>
       </VBox>
    </left>
    <center>
-      <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-radius: 30; -fx-background-color: WHITE;" BorderPane.alignment="CENTER">
+      <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
-            <Insets bottom="40.0" right="40.0" top="40.0" />
+            <Insets />
          </BorderPane.margin>
          <children>
-            <HBox prefHeight="50.0" prefWidth="200.0">
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-               <children>
-                  <Label onMouseClicked="#onUserDataClick" stylesheets="@../../../style/style.css" text="ข้อมูลผู้ใช้" textFill="#6b6b6b">
-                     <font>
-                        <Font size="24.0" />
-                     </font>
-                  </Label>
-                  <HBox prefHeight="50.0" prefWidth="121.0" HBox.hgrow="ALWAYS" />
-                  <Label onMouseClicked="#onChangePasswordclick" stylesheets="@../../../style/style.css" text="เปลี่ยนรหัสผ่าน" textFill="#6b6b6b">
-                     <font>
-                        <Font size="24.0" />
-                     </font>
-                  </Label>
-                  <HBox prefHeight="50.0" prefWidth="70.0" HBox.hgrow="ALWAYS" />
-                  <Label onMouseClicked="#onChangeThemeClick" stylesheets="@../../../style/style.css" text="ธีมของระบบ" textFill="#6b6b6b">
-                     <font>
-                        <Font size="24.0" />
-                     </font>
-                  </Label>
-               </children>
+            <VBox prefHeight="200.0" prefWidth="100.0" styleClass="outer-pane">
                <padding>
-                  <Insets left="50.0" right="50.0" />
+                  <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
                </padding>
-            </HBox>
-            <Separator prefWidth="200.0">
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-            </Separator>
-            <VBox fx:id="settingPane" prefHeight="745.0" prefWidth="760.0" spacing="30.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <Label styleClass="header" text="ปรับแต่งธีมระบบ" />
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+                     <children>
+                        <ChoiceBox fx:id="themeChoiceBox" prefWidth="150.0" />
+                        <ChoiceBox fx:id="fontFamilyChoiceBox" prefWidth="150.0" />
+                        <ChoiceBox fx:id="fontSizeChoiceBox" prefWidth="150.0" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <Separator prefWidth="200.0" />
+            <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+            <VBox fx:id="settingPane" prefHeight="200.0" prefWidth="100.0" spacing="30.0" styleClass="outer-pane">
                <VBox.margin>
                   <Insets top="40.0" />
                </VBox.margin>
+               <padding>
+                  <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+               </padding>
                <children>
-                  <Pane prefHeight="831.0" prefWidth="760.0">
+                  <Label styleClass="header" text="เปลี่ยนรหัสผ่านผู้ใช้" />
+                  <VBox alignment="TOP_RIGHT" spacing="30.0">
                      <children>
-                        <StackPane fx:id="userDataStackPane" prefHeight="771.0" prefWidth="760.0" visible="false">
-                           <children>
-                              <Pane prefHeight="200.0" prefWidth="200.0">
-                                 <children>
-                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f2f7fc" height="65.0" layoutX="51.0" layoutY="58.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="657.0" />
-                                    <Label layoutX="106.0" layoutY="72.0" prefHeight="35.0" prefWidth="133.0" text="ชื่อ นามสกุล :">
-                                       <font>
-                                          <Font size="24.0" />
-                                       </font>
-                                    </Label>
-                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f2f7fc" height="65.0" layoutX="52.0" layoutY="169.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="657.0" />
-                                    <Label layoutX="106.0" layoutY="183.0" prefHeight="35.0" prefWidth="133.0" text="ชื่อผู้ใช้ระบบ :">
-                                       <font>
-                                          <Font size="24.0" />
-                                       </font>
-                                    </Label>
-                                    <Rectangle fx:id="idRectangle" arcHeight="5.0" arcWidth="5.0" fill="#f2f7fc" height="65.0" layoutX="51.0" layoutY="281.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="657.0" />
-                                    <Label fx:id="idTitle" layoutX="105.0" layoutY="295.0" prefHeight="35.0" prefWidth="133.0" text="รหัสประจำตัว :">
-                                       <font>
-                                          <Font size="24.0" />
-                                       </font>
-                                    </Label>
-                                    <Rectangle fx:id="emailRectangle" arcHeight="5.0" arcWidth="5.0" fill="#f2f7fc" height="65.0" layoutX="51.0" layoutY="403.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="657.0" />
-                                    <Label fx:id="emailTitle" layoutX="105.0" layoutY="417.0" prefHeight="35.0" prefWidth="133.0" text="อีเมล :">
-                                       <font>
-                                          <Font size="24.0" />
-                                       </font>
-                                    </Label>
-                                    <Rectangle fx:id="facultyRectangle" arcHeight="5.0" arcWidth="5.0" fill="#f2f7fc" height="65.0" layoutX="52.0" layoutY="520.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="657.0" />
-                                    <Label fx:id="facultyTitle" layoutX="106.0" layoutY="534.0" prefHeight="35.0" prefWidth="62.0" text="คณะ :">
-                                       <font>
-                                          <Font size="24.0" />
-                                       </font>
-                                    </Label>
-                                    <Rectangle fx:id="departmentRectangle" arcHeight="5.0" arcWidth="5.0" fill="#f2f7fc" height="65.0" layoutX="52.0" layoutY="638.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="657.0" />
-                                    <Label fx:id="departmentTitle" layoutX="109.0" layoutY="652.0" prefHeight="35.0" prefWidth="94.0" text="ภาควิชา :">
-                                       <font>
-                                          <Font size="24.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="nameLabel" layoutX="257.0" layoutY="73.0" prefHeight="35.0" prefWidth="350.0" text="nameLabel">
-                                       <font>
-                                          <Font size="24.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="usernameLabel" layoutX="257.0" layoutY="184.0" prefHeight="35.0" prefWidth="201.0" text="usernameLabel">
-                                       <font>
-                                          <Font size="24.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="idLabel" layoutX="269.0" layoutY="296.0" prefHeight="35.0" prefWidth="301.0" text="idLabel">
-                                       <font>
-                                          <Font size="24.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="emailLabel" layoutX="194.0" layoutY="418.0" prefHeight="35.0" prefWidth="325.0" text="emailLabel">
-                                       <font>
-                                          <Font size="24.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="facultyLabel" layoutX="191.0" layoutY="535.0" prefHeight="35.0" prefWidth="334.0" text="facultyLabel">
-                                       <font>
-                                          <Font size="24.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="departmentLabel" layoutX="238.0" layoutY="652.0" prefHeight="35.0" prefWidth="336.0" text="departmentLabel">
-                                       <font>
-                                          <Font size="24.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </Pane>
-                           </children>
-                        </StackPane>
-                        <StackPane fx:id="changePasswordStackPane" prefHeight="771.0" prefWidth="760.0" visible="false">
-                           <children>
-                              <Pane prefHeight="200.0" prefWidth="200.0">
-                                 <children>
-                                    <Button layoutX="278.0" layoutY="560.0" mnemonicParsing="false" onAction="#onChangePasswordClick" prefHeight="60.0" prefWidth="205.0" text="เปลี่ยนรหัสผ่าน">
-                                       <font>
-                                          <Font size="24.0" />
-                                       </font>
-                                    </Button>
-                                    <Label layoutX="277.0" layoutY="116.0" prefHeight="35.0" prefWidth="207.0" text="กรอกรหัสผ่านปัจจุบัน">
-                                       <font>
-                                          <Font size="24.0" />
-                                       </font>
-                                    </Label>
-                                    <Label layoutX="289.0" layoutY="252.0" prefHeight="35.0" prefWidth="207.0" text="กรอกรหัสผ่านใหม่">
-                                       <font>
-                                          <Font size="24.0" />
-                                       </font>
-                                    </Label>
-                                    <Label layoutX="233.0" layoutY="385.0" prefHeight="35.0" prefWidth="318.0" text="กรอกรหัสผ่านใหม่อีกครั้งเพื่อยืนยัน">
-                                       <font>
-                                          <Font size="24.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="errorMessageLabel" layoutX="244.0" layoutY="485.0" prefHeight="35.0" prefWidth="273.0" text="errorMessageLabel" textAlignment="CENTER" textFill="RED">
-                                       <font>
-                                          <Font size="18.0" />
-                                       </font>
-                                    </Label>
-                                    <PasswordField fx:id="currentPasswordField" layoutX="244.0" layoutY="171.0" prefHeight="47.0" prefWidth="273.0" />
-                                    <PasswordField fx:id="newPasswordField" layoutX="244.0" layoutY="302.0" prefHeight="47.0" prefWidth="273.0" />
-                                    <PasswordField fx:id="confirmNewPassword" layoutX="244.0" layoutY="438.0" prefHeight="47.0" prefWidth="273.0" />
-                                 </children>
-                              </Pane>
-                           </children>
-                        </StackPane>
-                        <StackPane fx:id="changeThemeStackPane" layoutX="-2.0" layoutY="-2.0" prefHeight="775.0" prefWidth="763.0" visible="false">
-                           <children>
-                              <Pane prefHeight="200.0" prefWidth="200.0">
-                                 <children>
-                                    <Label layoutX="260.0" layoutY="184.0" prefHeight="35.0" prefWidth="243.0" text="เลือกธีมปัจจุบันของระบบ :">
-                                       <font>
-                                          <Font size="24.0" />
-                                       </font>
-                                    </Label>
-                                    <ChoiceBox fx:id="themeChoiceBox" layoutX="265.0" layoutY="238.0" prefHeight="34.0" prefWidth="233.0" />
-                                    <Label layoutX="246.0" layoutY="321.0" prefHeight="35.0" prefWidth="272.0" text="เลือกฟอนต์ปัจจุบันของระบบ :">
-                                       <font>
-                                          <Font size="24.0" />
-                                       </font>
-                                    </Label>
-                                    <ChoiceBox fx:id="fontChoiceBox" layoutX="265.0" layoutY="379.0" prefHeight="34.0" prefWidth="233.0" />
-                                    <Label layoutX="221.0" layoutY="455.0" prefHeight="35.0" prefWidth="321.0" text="เลือกขนาดอักษรปัจจุบันของระบบ :">
-                                       <font>
-                                          <Font size="24.0" />
-                                       </font>
-                                    </Label>
-                                    <ChoiceBox fx:id="fontSizeChoiceBox" layoutX="265.0" layoutY="512.0" prefHeight="34.0" prefWidth="233.0" />
-                                 </children>
-                              </Pane>
-                           </children>
-                        </StackPane>
+                        <PasswordField fx:id="currentPasswordField" promptText="รหัสผ่านปัจจุบัน" styleClass="capsule-text-field" />
+                        <PasswordField fx:id="newPasswordField" promptText="รหัสผ่านใหม่" styleClass="capsule-text-field">
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
+                        </PasswordField>
+                        <PasswordField fx:id="confirmNewPasswordField" promptText="ยืนยันรหัสผ่านใหม่" styleClass="capsule-text-field" />
+                        <Label fx:id="errorLabel" styleClass="error-label" text="errorLabel" visible="false" />
+                        <Button mnemonicParsing="false" onAction="#changePassword" text="เปลี่ยนรหัสผ่าน" />
                      </children>
-                  </Pane>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </VBox>
                </children>
             </VBox>
+            <Separator prefWidth="200.0" />
          </children>
          <padding>
-            <Insets bottom="40.0" left="70.0" right="70.0" top="40.0" />
+            <Insets bottom="70.0" left="70.0" right="70.0" top="70.0" />
          </padding>
       </VBox>
    </center>

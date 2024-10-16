@@ -117,7 +117,7 @@
                   <Insets left="150.0" top="30.0" />
                </HBox.margin>
             </Label>
-            <Button mnemonicParsing="false" onAction="#onSettingButtonClick" prefHeight="53.0" prefWidth="117.0" text="Setting">
+            <Button mnemonicParsing="false" prefHeight="53.0" prefWidth="117.0" text="Setting">
                <HBox.margin>
                   <Insets top="20.0" />
                </HBox.margin>

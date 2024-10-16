@@ -3,197 +3,104 @@ package ku.cs.controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.stage.FileChooser;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
+import javafx.stage.FileChooser;
 import ku.cs.models.*;
 import ku.cs.services.FXRouter;
+import ku.cs.services.FileStorage;
 import ku.cs.services.UserListFileDatasource;
+import ku.cs.services.UserPreferencesListFileDatasource;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class SettingsController {
+public class SettingsController extends BaseController {
     @FXML private VBox userInfoPane;
-    @FXML private VBox settingPane;
-    @FXML private StackPane userDataStackPane;
-    @FXML private StackPane changePasswordStackPane;
-    @FXML private StackPane changeThemeStackPane;
-    @FXML private Label roleLabel;
-    @FXML private Label nameLabel;
-    @FXML private Label usernameLabel;
-    @FXML private Label idLabel;
-    @FXML private Label emailLabel;
-    @FXML private Label facultyLabel;
-    @FXML private Label departmentLabel;
-    @FXML private Label idTitle;
-    @FXML private Label emailTitle;
-    @FXML private Label facultyTitle;
-    @FXML private Label departmentTitle;
-    @FXML private Label errorMessageLabel;
-    @FXML private Rectangle idRectangle;
-    @FXML private Rectangle emailRectangle;
-    @FXML private Rectangle facultyRectangle;
-    @FXML private Rectangle departmentRectangle;
-    @FXML private Circle profilePictureDisplay;
-    @FXML private TextField currentPasswordField;
-    @FXML private TextField newPasswordField;
-    @FXML private TextField confirmNewPassword;
-    @FXML private ChoiceBox<String> themeChoiceBox;
-    @FXML private ChoiceBox<String> fontChoiceBox;
-    @FXML private ChoiceBox<String> fontSizeChoiceBox;
-    @FXML private String[] theme = {"Light", "Dark"};
-    @FXML private String[] font = {"System", "Karaoke"};
-    @FXML private String[] fontSize = {"20", "24", "26"};
 
-    FileChooser fileChooser = new FileChooser();
+    @FXML private Label roleLabel;
+
+    @FXML private Label nameLabel;
+
+
+    @FXML private Circle profilePictureDisplay;
+
+
+    @FXML private ChoiceBox<String> themeChoiceBox;
+    @FXML private ChoiceBox<String> fontFamilyChoiceBox;
+    @FXML private ChoiceBox<String> fontSizeChoiceBox;
+    @FXML private BorderPane rootPane;
+    @FXML private PasswordField currentPasswordField;
+    @FXML private PasswordField newPasswordField;
+    @FXML private PasswordField confirmNewPasswordField;
+    @FXML private Label errorLabel;
 
     private ArrayList<String> data;
     private UserList userList;
     private UserListFileDatasource datasource;
     private User user;
+    private UserPreferencesListFileDatasource preferencesListFileDatasource;
+
+    private File uploadedPicture;
 
 
-    public SettingsController(){
+    public SettingsController() {
         datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
         this.userList = datasource.readData();
+        preferencesListFileDatasource = new UserPreferencesListFileDatasource("data/test", "preferences.csv", userList);
+        this.preferencesListFileDatasource.readData();
     }
 
     @FXML
     public void initialize() {
-        themeChoiceBox.getItems().addAll(theme);
-        fontChoiceBox.getItems().addAll(font);
-        fontSizeChoiceBox.getItems().addAll(fontSize);
-        themeChoiceBox.setValue("Light");
-        fontChoiceBox.setValue("System");
-        fontSizeChoiceBox.setValue("24");
-        errorMessageLabel.setText("");
-        fileChooser.setInitialDirectory(new File(""));
         data = (ArrayList<String>) FXRouter.getData();
         user = userList.findUserByUsername(data.get(1));
-        userDataStackPane.setVisible(true);
-        userDataInitialize();
-        changePasswordStackPane.setVisible(false);
-        changeThemeStackPane.setVisible(false);
         nameLabel.setText(user.getName());
         roleLabel.setText(user.getRole());
-        setProfilePicture(user.getProfilePicturePath());
+        setProfilePicture(profilePictureDisplay, user.getProfilePicturePath());
+
+        themeChoiceBox.getItems().addAll("Light", "Dark", "Autumn", "Coffee", "Fallen");
+        fontFamilyChoiceBox.getItems().addAll("Noto Sans Thai", "Noto Sans Thai Looped", "Bai Jamjuree");
+        fontSizeChoiceBox.getItems().addAll("Small", "Medium", "Large");
+
         userPaneInitialize();
+
+        themeChoiceBox.setValue(user.getPreferences().getTheme());
+        fontFamilyChoiceBox.setValue(user.getPreferences().getFontFamily());
+        fontSizeChoiceBox.setValue(user.getPreferences().getFontSize());
+
+        applyThemeAndFont(rootPane, user.getPreferences().getTheme(), user.getPreferences().getFontFamily(), user.getPreferences().getFontSize());
+        preferencesListFileDatasource.writeData();
+
+        // Add listeners for immediate change on selection
+        themeChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            user.getPreferences().setTheme(newValue);
+            applyThemeAndFont(rootPane, user.getPreferences().getTheme(), user.getPreferences().getFontFamily(), user.getPreferences().getFontSize());
+            preferencesListFileDatasource.writeData();
+        });
+
+        fontFamilyChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            user.getPreferences().setFontFamily(newValue);
+            applyThemeAndFont(rootPane, user.getPreferences().getTheme(), user.getPreferences().getFontFamily(), user.getPreferences().getFontSize());
+            preferencesListFileDatasource.writeData();
+        });
+
+        fontSizeChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            user.getPreferences().setFontSize(newValue);
+            applyThemeAndFont(rootPane, user.getPreferences().getTheme(), user.getPreferences().getFontFamily(), user.getPreferences().getFontSize());
+            preferencesListFileDatasource.writeData();
+        });
     }
 
-    private void userDataInitialize(){
-        if (user instanceof Student) {
-            Student student = (Student) user;
-            nameLabel.setText(student.getName());
-            usernameLabel.setText(student.getUsername());
-            idLabel.setText(student.getStudentID());
-            emailLabel.setText(student.getEmail());
-            facultyLabel.setText(student.getEnrolledFaculty().getFacultyName());
-            departmentLabel.setText(student.getEnrolledDepartment().getDepartmentName());
-        } else if (user instanceof Advisor) {
-            Advisor advisor = (Advisor) user;
-            nameLabel.setText(advisor.getName());
-            usernameLabel.setText(advisor.getUsername());
-            idLabel.setText(advisor.getAdvisorID());
-            emailLabel.setText(advisor.getAdvisorEmail());
-            facultyLabel.setText(advisor.getFaculty().getFacultyName());
-            departmentLabel.setText(advisor.getDepartment().getDepartmentName());
-        } else if (user instanceof FacultyOfficer) {
-            FacultyOfficer facultyOfficer = (FacultyOfficer) user;
-            nameLabel.setText(facultyOfficer.getName());
-            usernameLabel.setText(facultyOfficer.getUsername());
-            facultyLabel.setText(facultyOfficer.getFaculty().getFacultyName());
-            facultyLabel.setLayoutY(296);
-            facultyRectangle.setLayoutY(281);
-            facultyTitle.setLayoutY(295);
-            idLabel.setVisible(false);
-            idRectangle.setVisible(false);
-            idTitle.setVisible(false);
-            emailTitle.setVisible(false);
-            emailRectangle.setVisible(false);
-            emailLabel.setVisible(false);
-            departmentTitle.setVisible(false);
-            departmentLabel.setVisible(false);
-            departmentRectangle.setVisible(false);
-        } else if (user instanceof DepartmentOfficer) {
-            DepartmentOfficer departmentOfficer = (DepartmentOfficer) user;
-            nameLabel.setText(departmentOfficer.getName());
-            usernameLabel.setText(departmentOfficer.getUsername());
-            departmentLabel.setText(departmentOfficer.getDepartment().getDepartmentName());
-            facultyLabel.setText(departmentOfficer.getFaculty().getFacultyName());
-            facultyLabel.setLayoutY(296);
-            facultyRectangle.setLayoutY(281);
-            facultyTitle.setLayoutY(295);
-            departmentTitle.setLayoutY(417);
-            departmentRectangle.setLayoutY(403);
-            departmentLabel.setLayoutY(418);
-            idTitle.setVisible(false);
-            idRectangle.setVisible(false);
-            idLabel.setVisible(false);
-            emailTitle.setVisible(false);
-            emailRectangle.setVisible(false);
-            emailLabel.setVisible(false);
-        }
-    }
-
-    @FXML
-    protected void onChangeProfileButtonClick() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
-
-        File file = fileChooser.showOpenDialog(new Stage());
-        if (file != null) {
-            try {
-                String filePath = file.toURI().toString().replace("file:", "");
-                Image image = new Image("file:" + filePath);
-                profilePictureDisplay.setFill(new ImagePattern(image));
-                user.setProfilePicturePath(file.toURI().toString().replace("file:", ""));
-                datasource.writeData(userList);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @FXML
-    protected void onChangePasswordClick() {
-        String currentPassword = currentPasswordField.getText().trim();
-        String newPassword = newPasswordField.getText().trim();
-        String confirmPassword = confirmNewPassword.getText().trim();
-
-        if (currentPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
-            errorMessageLabel.setText("โปรดกรอกข้อมูลให้ครบถ้วน");
-            return;
-        }
-
-        if (!user.validatePassword(currentPassword)) {
-            errorMessageLabel.setText("โปรดกรอกรหัสผ่านปัจจุบันให้ถูกต้อง");
-            return;
-        }
-
-        if (!newPassword.equals(confirmPassword)) {
-            errorMessageLabel.setText("รหัสผ่านใหม่ไม่ตรงกัน");
-            return;
-        }
-
-        if (newPassword.equals(currentPassword)) {
-            errorMessageLabel.setText("รหัสผ่านใหม่เหมือนกับรหัสผ่านปัจุจบัน");
-            return;
-        }
-
-        user.setPassword(newPassword, false);
-        errorMessageLabel.setText("เปลี่ยนรหัสผ่านสำเร็จ");
-        errorMessageLabel.setStyle("-fx-text-fill: green;");
-    }
 
     private void userPaneInitialize(){
         userInfoPane.getChildren().addAll(createLabel("ชื่อผู้ใช้ " + user.getUsername()));
@@ -201,8 +108,9 @@ public class SettingsController {
             Student student = (Student) user;
 
             userInfoPane.getChildren().addAll(
-                    createLabel("คณะ " + student.getEnrolledFaculty().getFacultyName()),
-                    createLabel("สาขาวิชา " + student.getEnrolledDepartment().getDepartmentName() + " (" + student.getEnrolledFaculty().getFacultyId() + student.getEnrolledDepartment().getDepartmentID() + ")")
+                    createLabel("คณะ " + student.getEnrolledFaculty().getFacultyName() +  " (" + student.getEnrolledFaculty().getFacultyId() + ")"),
+                    createLabel("สาขาวิชา " + student.getEnrolledDepartment().getDepartmentName() + " (" + student.getEnrolledDepartment().getDepartmentID() + ")"),
+                    createLabel("อาจารย์ที่ปรึกษา " + (student.getStudentAdvisor() == null ? "ไม่มี" : student.getStudentAdvisor().getName() + " (" + student.getStudentAdvisor().getAdvisorID() + ")"))
             );
         }
         else if (user instanceof FacultyOfficer){
@@ -214,15 +122,15 @@ public class SettingsController {
         else if (user instanceof DepartmentOfficer){
             DepartmentOfficer departmentOfficer = (DepartmentOfficer) user;
             userInfoPane.getChildren().addAll(
-                    createLabel("คณะ " + departmentOfficer.getFaculty().getFacultyName()),
-                    createLabel("สาขาวิชา " + departmentOfficer.getDepartment().getDepartmentName() + " (" + departmentOfficer.getFaculty().getFacultyId() + departmentOfficer.getDepartment().getDepartmentID() + ")")
+                    createLabel("คณะ " + departmentOfficer.getFaculty().getFacultyName() + " (" + departmentOfficer.getFaculty().getFacultyId() + ")"),
+                    createLabel("สาขาวิชา " + departmentOfficer.getDepartment().getDepartmentName() + " (" + departmentOfficer.getDepartment().getDepartmentID() + ")")
             );
         }
         else if (user instanceof Advisor) {
             Advisor advisor = (Advisor) user;
             userInfoPane.getChildren().addAll(
-                    createLabel("คณะ " + advisor.getFaculty()),
-                    createLabel("สาขาวิชา " + advisor.getDepartment().getDepartmentName() + " (" + advisor.getFaculty().getFacultyId() + advisor.getDepartment().getDepartmentID() + ")")
+                    createLabel("คณะ " + advisor.getFaculty().getFacultyName() + " (" + advisor.getFaculty().getFacultyId() + ")"),
+                    createLabel("สาขาวิชา " + advisor.getDepartment().getDepartmentName() + " (" + advisor.getDepartment().getDepartmentID() + ")")
             );
         }
     }
@@ -243,7 +151,6 @@ public class SettingsController {
     private Label createLabel(String text) {
         Label label = new Label(text);
         label.getStyleClass().add("label");
-        label.setFont(new Font("System", 18));
         return label;
     }
 
@@ -252,30 +159,73 @@ public class SettingsController {
     }
 
     @FXML
-    protected void onChangePictureClick() {
-        changePasswordStackPane.setVisible(false);
-        changeThemeStackPane.setVisible(false);
-        userDataStackPane.setVisible(false);
+    public void uploadProfilePictureButton(MouseEvent event) throws IOException {
+        // Create a FileChooser to select an image file
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose Profile Picture");
+
+        // Filter to show only image files (JPG, PNG)
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png")
+        );
+
+        // Show open file dialog
+        uploadedPicture = fileChooser.showOpenDialog(rootPane.getScene().getWindow());
+
+        if (uploadedPicture != null) {
+            // Set the file label to the name of the uploaded picture
+
+            // Save the uploaded file to a directory (you can modify the directory path as needed)
+            String directory = "data" + File.separator + "user-profile-picture" + File.separator;
+
+            // Ensure the directory exists
+            File dir = new File(directory);
+            if (!dir.exists()) {
+                dir.mkdirs(); // Create the directory if it doesn't exist
+            }
+
+            String extension = uploadedPicture.getName().substring(uploadedPicture.getName().lastIndexOf(".")); //ตัวบอกว่าไฟล์ที่อัพไปมีนามสกุลอะไร
+            String filePath = directory + user.getUsername() + extension;
+
+            FileStorage.saveFileToDirectory(uploadedPicture, filePath);
+            user.setProfilePicturePath(filePath);  // Set the profile picture path for the user
+
+            // Update the Circle profile picture display
+            setProfilePicture(filePath);
+
+            // Save changes (if necessary) and update the data source
+            datasource.writeData(userList);
+        }
     }
 
     @FXML
-    protected void onUserDataClick() {
-        changePasswordStackPane.setVisible(false);
-        changeThemeStackPane.setVisible(false);
-        userDataStackPane.setVisible(true);
+    public void changePassword(){
+        try {
+        if (!newPasswordField.getText().equals(confirmNewPasswordField.getText())) {
+            throw new IllegalArgumentException("รหัสผ่านใหม่และยืนยันรหัสผ่านใหม่ไม่ตรงกัน");
+            }
+        if (!user.validatePassword(currentPasswordField.getText())){
+            throw new IllegalArgumentException("รหัสผ่านปัจจุบันไม่ถูกต้อง");
+            }
+        user.setPassword(confirmNewPasswordField.getText(), false);
+        datasource.writeData(userList);
+        FXRouter.goTo("login");
+        }
+        catch (IllegalArgumentException e){
+            errorLabel.setText(e.getMessage());
+            errorLabel.setVisible(true);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
-    protected void onChangePasswordclick() {
-        changePasswordStackPane.setVisible(true);
-        changeThemeStackPane.setVisible(false);
-        userDataStackPane.setVisible(false);
-    }
-
-    @FXML
-    protected void onChangeThemeClick() {
-        changePasswordStackPane.setVisible(false);
-        changeThemeStackPane.setVisible(true);
-        userDataStackPane.setVisible(false);
+    public void changeProfileToDefaultButton(MouseEvent event) throws IOException {
+        String filePath = "src/main/resources/images/profile.jpg";
+        user.setProfilePicturePath(filePath);  // Set the profile picture path for the user
+        // Update the Circle profile picture display
+        setProfilePicture(filePath);
+        // Save changes (if necessary) and update the data source
+        datasource.writeData(userList);
     }
 }

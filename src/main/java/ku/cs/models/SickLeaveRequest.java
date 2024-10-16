@@ -1,5 +1,8 @@
 package ku.cs.models;
 
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -29,6 +32,17 @@ public class SickLeaveRequest extends Request{
         this.fromDateLeave = fromDateLeave;
         this.toDateLeave = toDateLeave;
         this.registeredCourses = registeredCourses;
+    }
+
+    public void createRequest() throws IOException{
+        String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss")); // timestamp ช่วยแก้ปัญหาชื่อไฟล์ซ้ำกันได้
+        String requestPdfPath = "data" + File.separator + "students_requests" + File.separator + getRequester().getStudentID() + File.separator + getRequester().getStudentID() + "-" + "คำร้องลาป่วยลากิจ" + "_" + timeStamp + ".pdf";
+        try {
+            SickLeaveRequestPDF.createRequest(requestPdfPath, this); //สร้างไฟล์ pdf
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        this.setPdfFilePath(requestPdfPath);
     }
 
     public long findDiffDay() {

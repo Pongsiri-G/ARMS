@@ -2,6 +2,7 @@ package ku.cs.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import ku.cs.models.*;
 import ku.cs.services.FXRouter;
@@ -12,9 +13,9 @@ import java.time.LocalDateTime;
 
 public class ChangePasswordController {
     @FXML private Label userLabel;
-    @FXML private TextField confirmYourPasswordField;
+    @FXML private PasswordField confirmYourPasswordField;
     @FXML private Label errorPasswordLabel;
-    @FXML private TextField newPasswordField;
+    @FXML private PasswordField newPasswordField;
     private User user;
     private UserList userList;
     private UserListFileDatasource datasource;
@@ -30,7 +31,7 @@ public class ChangePasswordController {
     }
 
     private void showUserInfo(User user) {
-        userLabel.setText(user.getUsername());
+        userLabel.setText("ผู้ใช้: " + user.getUsername());
     }
 
     @FXML
@@ -43,7 +44,7 @@ public class ChangePasswordController {
                 user.setPassword(newPassword, false);
                 user.setLastLogin(LocalDateTime.now());
                 datasource.writeData(userList);
-                String loggedInUser = userList.findUserByUsername(userLabel.getText().trim()).getUsername();
+                String loggedInUser = user.getUsername();
 
 
                 if (user instanceof Advisor) {
@@ -54,7 +55,7 @@ public class ChangePasswordController {
                     FXRouter.goTo("faculty-officer", loggedInUser);
                 }
             }else {
-                errorPasswordLabel.setText("Passwords do not match");
+                errorPasswordLabel.setText("รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน");
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

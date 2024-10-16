@@ -57,7 +57,7 @@ public class ApprovedController {
         addChoiceBoxListeners();
         populateFacultyChoiceBox();
 
-        selectedFaculty.getSelectionModel().select("วิทยาศาสตร์");
+        selectedFaculty.getSelectionModel().select("เลือกคณะ");
         selectedDepartment.getSelectionModel().select("All");
 
         showRequest();
@@ -73,7 +73,7 @@ public class ApprovedController {
         }
 
         // ตั้งค่าเริ่มต้นให้เลือกเป็น "คณะวิทยาศาสตร์"
-        selectedFaculty.getSelectionModel().select("วิทยาศาสตร์");
+        selectedFaculty.getSelectionModel().select("เลือกคณะ");
         populateDepartmentChoiceBox(selectedFaculty.getSelectionModel().getSelectedItem());
 
         // เพิ่ม Listener เพื่ออัปเดตสาขาเมื่อมีการเลือกคณะ

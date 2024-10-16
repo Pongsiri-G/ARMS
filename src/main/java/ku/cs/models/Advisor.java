@@ -6,25 +6,22 @@ public class Advisor extends User{
     private Faculty faculty;
     private Department department;
     private String advisorID;
-    private String advisorEmail;
     private String defaultPassword;
 
-    public Advisor(String username, String password, String name, Faculty faculty, Department department, String advisorID, String advisorEmail, boolean isHashed, boolean suspended) {
+    public Advisor(String username, String password, String name, Faculty faculty, Department department, String advisorID, boolean isHashed, boolean suspended) {
         super(username, password, name, isHashed, suspended);
         this.faculty = faculty;
         this.department = department;
         this.advisorID = advisorID;
-        this.advisorEmail = advisorEmail;
         this.defaultPassword = password;
     }
 
     // ใช้้ไปก่อนเดี๋ยวแก้ที่หลัง
-    public Advisor(String username, String password, String name, String faculty, String department, String advisorID, String advisorEmail, boolean isHashed, boolean suspended) {
+    public Advisor(String username, String password, String name, String faculty, String department, String advisorID, boolean isHashed, boolean suspended) {
         super(username, password, name, isHashed, suspended);
         this.faculty = new Faculty(faculty);
         this.department = new Department(department);
         this.advisorID = advisorID;
-        this.advisorEmail = advisorEmail;
         this.defaultPassword = password;
     }
 
@@ -62,9 +59,6 @@ public class Advisor extends User{
     public void acceptRequest(Request request) {
         request.processRequest("อาจารย์ที่ปรึกษา", "อนุมัติ", null);
     }
-
-    public String getAdvisorEmail() { return advisorEmail; }
-
 
     public String getAdvisorID() {
         return advisorID;

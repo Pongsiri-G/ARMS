@@ -52,7 +52,7 @@ public class StudentListFileDatasource implements Datasource<ArrayList<Student>>
                 String name = data[2];
                 boolean isSuspended = "ระงับบัญชี".equals(data[3]);
                 LocalDateTime lastLogin = "ไม่เคยเข้าใช้งาน".equals(data[4]) ? null : LocalDateTime.parse(data[4], formatter);
-                String profilePicturePath = data[5].isEmpty() ? User.DEFAULT_PROFILE_PICTURE_PATH : data[5];
+                String profilePicturePath = data[5].equals("ไม่มีรูปประจำตัว") ? null : data[5];
                 String facultyName = data[6];
                 String departmentName = data[7];
                 String studentId = data[8];
@@ -92,7 +92,7 @@ public class StudentListFileDatasource implements Datasource<ArrayList<Student>>
                 String username = student.getUsername() == null ? " " : student.getUsername();
                 String password = student.getPassword() == null ? " " : student.getPassword();
                 String lastLoginStr = student.getLastLogin() == null ? "ไม่เคยเข้าใช้งาน" : student.getLastLogin().format(formatter);
-                String profilePicturePath = student.getProfilePicturePath() == null ? User.DEFAULT_PROFILE_PICTURE_PATH : student.getProfilePicturePath();
+                String profilePicturePath = student.getProfilePicturePath()== null ? "ไม่มีรูปประจำตัว" : student.getProfilePicturePath();
                 String studentAdvisor = student.getStudentAdvisor() == null ? " " : student.getStudentAdvisor().getName();
 
                 StringBuilder line = new StringBuilder();

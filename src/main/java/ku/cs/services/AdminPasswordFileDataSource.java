@@ -43,7 +43,7 @@ public class AdminPasswordFileDataSource implements Datasource<Admin> {
                 String[] data = line.split(",");
                 if (data.length > 0) {
                     String password = data[0].trim();
-                    String profilePicturePath = data.length > 5 && !data[5].isEmpty() ? data[5].trim() : User.DEFAULT_PROFILE_PICTURE_PATH;
+                    String profilePicturePath = data[1].equals("ไม่มีรูปประจำตัว") ? null : data[1].trim();
                     admin = new Admin(password, true, false);
                     admin.setProfilePicturePath(profilePicturePath);
                 }
@@ -58,7 +58,7 @@ public class AdminPasswordFileDataSource implements Datasource<Admin> {
     public void writeData(Admin admin) {
         String filePath = directoryName + File.separator + fileName;
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
-            String profilePicturePath = admin.getProfilePicturePath() == null ? User.DEFAULT_PROFILE_PICTURE_PATH : admin.getProfilePicturePath();
+            String profilePicturePath = admin.getProfilePicturePath() == null ? "ไม่มีรูปประจำตัว" : admin.getProfilePicturePath();
             String line = admin.getPassword() + "," + profilePicturePath; // Ensure proper comma separation
             bw.write(line);
             bw.newLine();
