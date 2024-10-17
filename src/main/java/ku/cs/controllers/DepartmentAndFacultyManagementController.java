@@ -6,8 +6,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Circle;
 import ku.cs.models.*;
 import ku.cs.services.*;
 
@@ -17,7 +19,7 @@ import java.io.IOException;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
-public class DepartmentAndFacultyManagementController {
+public class DepartmentAndFacultyManagementController extends BaseController{
     @FXML private GridPane addGridPane;
     @FXML private GridPane editGridPane;
     @FXML private TextField facultyTextField;
@@ -31,6 +33,8 @@ public class DepartmentAndFacultyManagementController {
     @FXML private Label errorMessageLabel;
     @FXML private Label editErrorMessageLabel;
     @FXML private TableView<Faculty> facDepTableView; // ใช้ Object เนื่องจากจะมีทั้ง Faculty และ Department
+    @FXML private BorderPane rootPane;
+    @FXML private Circle profilePictureDisplay;
     private FacultyList facultyList;
     private UserList userList;
     private Admin admin;
@@ -47,6 +51,10 @@ public class DepartmentAndFacultyManagementController {
         userList = datasource.readData();
         adminDatasource = new AdminPasswordFileDataSource("data/test", "admin.csv");
         admin = adminDatasource.readData();
+
+        applyThemeAndFont(rootPane, admin.getPreferences().getTheme(), admin.getPreferences().getFontFamily(), admin.getPreferences().getFontSize());
+        setProfilePicture(profilePictureDisplay, admin.getProfilePicturePath());
+
         facultyList = userList.getFacultyList();
         showTable(facultyList);
 
@@ -309,7 +317,7 @@ public class DepartmentAndFacultyManagementController {
     @FXML
     protected void onSettingButtonClick() {
         try {
-            FXRouter.goTo("settings");
+            FXRouter.goTo("admin-settings","department-faculty-management");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

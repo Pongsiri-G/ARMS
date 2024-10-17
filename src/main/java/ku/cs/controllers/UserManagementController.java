@@ -12,6 +12,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.shape.Circle;
 import ku.cs.models.*;
 import ku.cs.services.*;
 import javafx.scene.image.Image;
@@ -27,10 +29,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
 
-public class UserManagementController {
+public class UserManagementController extends BaseController{
     @FXML private ChoiceBox<String> searchByRole;
     @FXML private TextField searchTextField;
     @FXML private TableView<User> userManagementTableView;
+    @FXML private BorderPane rootPane;
+    @FXML private Circle profilePictureDisplay;
     private String[] role = {"ทั้งหมด", "นิสิต", "อาจารย์", "เจ้าหน้าที่คณะ", "เจ้าหน้าที่ภาควิชา"};
     private UserList userList;
     private Admin admin;
@@ -57,6 +61,9 @@ public class UserManagementController {
         userList = datasource.readData();
         adminDatasource = new AdminPasswordFileDataSource("data/test", "admin.csv");
         admin = adminDatasource.readData();
+
+        applyThemeAndFont(rootPane, admin.getPreferences().getTheme(), admin.getPreferences().getFontFamily(), admin.getPreferences().getFontSize());
+        setProfilePicture(profilePictureDisplay, admin.getProfilePicturePath());
 
         showTable(userList);
 
@@ -299,7 +306,7 @@ public class UserManagementController {
     @FXML
     protected void onSettingButtonClick() {
         try {
-            FXRouter.goTo("settings");
+            FXRouter.goTo("admin-settings", "user-management");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

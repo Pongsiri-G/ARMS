@@ -31,7 +31,7 @@
                   <Insets left="20.0" />
                </HBox.margin>
             </Circle>
-            <ImageView fx:id="onSettingButtonClick" fitHeight="40.0" fitWidth="40.0" onMouseClicked="#settingsPageClick" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="onSettingButtonlick" fitHeight="40.0" fitWidth="40.0" onMouseClicked="#onSettingButtonClick" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../images/arrow-down.png" />
                </image>

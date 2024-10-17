@@ -3,6 +3,7 @@ package ku.cs.controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
@@ -12,7 +13,7 @@ import ku.cs.services.*;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
-public class AdminController {
+public class AdminController extends BaseController {
     @FXML private ChoiceBox<String> selectedChoiceBox;
     @FXML private ChoiceBox<String> selectedFaculty;
     @FXML private ChoiceBox<String> selectedDepartment;
@@ -29,6 +30,7 @@ public class AdminController {
     @FXML private Label totalLabel;
     @FXML private VBox roleVBox;
     @FXML private VBox facDepVBox;
+    @FXML private BorderPane rootPane;
     @FXML private Circle profilePictureDisplay;
 
 
@@ -60,6 +62,9 @@ public class AdminController {
         facultyList = facultyListDatasource.readData();
         adminDatasource = new AdminPasswordFileDataSource("data/test", "admin.csv");
         admin = adminDatasource.readData();
+
+        applyThemeAndFont(rootPane, admin.getPreferences().getTheme(), admin.getPreferences().getFontFamily(), admin.getPreferences().getFontSize());
+        setProfilePicture(profilePictureDisplay, admin.getProfilePicturePath());
 
         addChoiceBoxListeners();
 
@@ -299,7 +304,7 @@ public class AdminController {
     @FXML
     protected void onSettingButtonClick() {
         try {
-            FXRouter.goTo("settings");
+            FXRouter.goTo("admin-settings", "dashboard");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

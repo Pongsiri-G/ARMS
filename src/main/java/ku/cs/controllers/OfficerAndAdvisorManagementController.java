@@ -4,9 +4,11 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import ku.cs.models.*;
 import ku.cs.models.User;
@@ -15,7 +17,7 @@ import ku.cs.services.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class OfficerAndAdvisorManagementController {
+public class OfficerAndAdvisorManagementController extends BaseController{
     @FXML private ChoiceBox<String> roleChoiceBox;
     private String[] role = {"อาจารย์ที่ปรึกษา", "เจ้าหน้าที่คณะ", "เจ้าหน้าที่ภาควิชา"};
     @FXML private GridPane addGridPane;
@@ -52,6 +54,8 @@ public class OfficerAndAdvisorManagementController {
     @FXML private TextField editDepartmentTextField;
     @FXML private TextField editIdTextField;
     @FXML private TableView<User> officerAdvisorTableView;
+    @FXML private BorderPane rootPane;
+    @FXML private Circle profilePictureDisplay;
     private FacultyList facultyList;
     private UserList userList;
     private Admin admin;
@@ -81,6 +85,10 @@ public class OfficerAndAdvisorManagementController {
         facultyList = facultyDatasource.readData();
         adminDatasource = new AdminPasswordFileDataSource("data/test", "admin.csv");
         admin = adminDatasource.readData();
+
+        applyThemeAndFont(rootPane, admin.getPreferences().getTheme(), admin.getPreferences().getFontFamily(), admin.getPreferences().getFontSize());
+        setProfilePicture(profilePictureDisplay, admin.getProfilePicturePath());
+
         showTable(userList);
 
         officerAdvisorTableView.setOnMouseClicked(event -> {
@@ -594,7 +602,7 @@ public class OfficerAndAdvisorManagementController {
     @FXML
     protected void onSettingButtonClick() {
         try {
-            FXRouter.goTo("settings");
+            FXRouter.goTo("admin-settings", "staff-advisor-management");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

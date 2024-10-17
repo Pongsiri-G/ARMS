@@ -8,12 +8,14 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.shape.Circle;
 import ku.cs.models.*;
 import ku.cs.services.*;
 
 import java.io.IOException;
 
-public class AllRequestController {
+public class AllRequestController extends BaseController {
     @FXML private Label allRequestLabel;
     @FXML private Label userLabel;
     @FXML private Label approvedLabel;
@@ -28,6 +30,9 @@ public class AllRequestController {
     private Datasource<UserList> userDatasource;
     private Datasource<Admin> adminDatasource;
 
+    @FXML private BorderPane rootPane;
+    @FXML private Circle profilePictureDisplay;
+
     @FXML
     public void initialize() {
         userDatasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
@@ -36,6 +41,9 @@ public class AllRequestController {
         requestList = datasource.readData();
         adminDatasource = new AdminPasswordFileDataSource("data/test", "admin.csv");
         admin = adminDatasource.readData();
+        applyThemeAndFont(rootPane, admin.getPreferences().getTheme(), admin.getPreferences().getFontFamily(), admin.getPreferences().getFontSize());
+        setProfilePicture(profilePictureDisplay, admin.getProfilePicturePath());
+
         for (Request request : requestList.getRequests()) {
             admin.increaseRequestCount(request);
         }
@@ -119,7 +127,7 @@ public class AllRequestController {
     @FXML
     protected void onSettingButtonClick() {
         try {
-            FXRouter.goTo("settings");
+            FXRouter.goTo("admin-settings", "all-request");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
