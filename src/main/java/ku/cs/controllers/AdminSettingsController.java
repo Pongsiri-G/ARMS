@@ -38,7 +38,7 @@ public class AdminSettingsController extends BaseController {
 
 
     public AdminSettingsController() {
-        adminDatasource = new AdminPasswordFileDataSource("data/test", "admin.csv");
+        adminDatasource = new AdminPasswordFileDataSource("data/csv_files", "admin.csv");
         admin = adminDatasource.readData();
     }
 

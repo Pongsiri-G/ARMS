@@ -79,11 +79,11 @@ public class OfficerAndAdvisorManagementController extends BaseController{
         facultyOfficerVBox.setVisible(false);
         departmentOfficerVBox.setVisible(false);
         editGridPane.setVisible(false);
-        datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
+        datasource = new UserListFileDatasource("data/csv_files", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
         userList = datasource.readData();
-        facultyDatasource = new FacDepListFileDatascource("data/test", "facdeplist.csv");
+        facultyDatasource = new FacDepListFileDatascource("data/csv_files", "facdeplist.csv");
         facultyList = facultyDatasource.readData();
-        adminDatasource = new AdminPasswordFileDataSource("data/test", "admin.csv");
+        adminDatasource = new AdminPasswordFileDataSource("data/csv_files", "admin.csv");
         admin = adminDatasource.readData();
 
         applyThemeAndFont(rootPane, admin.getPreferences().getTheme(), admin.getPreferences().getFontFamily(), admin.getPreferences().getFontSize());
