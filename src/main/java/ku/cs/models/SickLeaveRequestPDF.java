@@ -173,7 +173,7 @@ public class SickLeaveRequestPDF {
                 .add("\n")
                 .add(new Paragraph("ลงนาม/ Signature " + request.getRequester().getStudentAdvisor().getName()).setFixedLeading(20).setPaddingLeft(60).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.RIGHT)
                         .add("\n")
-                        .add("( +" + request.getRequester().getStudentAdvisor().getName() + " )")
+                        .add("( " + request.getRequester().getStudentAdvisor().getName() + " )")
                         .add("\n")
                         .add("" + LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yy")))
                         .add("\n")

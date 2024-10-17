@@ -42,7 +42,6 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
         String filePath = directoryName + File.separator + fileName;
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath), StandardCharsets.UTF_8))) {
             for (Request request : requestList.getRequests()) {
-                String approverListStr = String.join("|", request.getApproverList());
 
                 if (request instanceof LeaveOfAbsenceRequest) {
                     LeaveOfAbsenceRequest leaveRequest = (LeaveOfAbsenceRequest) request;
@@ -64,8 +63,7 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
                             String.valueOf(leaveRequest.getToAcademicYear()),
                             leaveRequest.getLastModifiedDateTime(),
                             leaveRequest.getPdfFilePath() == null ? "ไม่มีเอกสาร" : leaveRequest.getPdfFilePath(),
-                            String.join("|", leaveRequest.getStatusLog()),
-                            approverListStr
+                            String.join("|", leaveRequest.getStatusLog())
                     ));
                     writer.newLine();
                 } else if (request instanceof ResignationRequest) {
@@ -80,8 +78,7 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
                             escapeNewlines(resignationRequest.getReason()),
                             resignationRequest.getLastModifiedDateTime(),
                             resignationRequest.getPdfFilePath() == null ? "ไม่มีเอกสาร" : resignationRequest.getPdfFilePath(),
-                            String.join("|", resignationRequest.getStatusLog()),
-                            approverListStr
+                            String.join("|", resignationRequest.getStatusLog())
                     ));
                     writer.newLine();
                 } else if (request instanceof SickLeaveRequest) {
@@ -100,8 +97,7 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
                             escapeNewlines(sickLeaveRequest.getRegisteredCourses()),
                             sickLeaveRequest.getLastModifiedDateTime(),
                             sickLeaveRequest.getPdfFilePath() == null ? "ไม่มีเอกสาร" : sickLeaveRequest.getPdfFilePath(),
-                            String.join("|", sickLeaveRequest.getStatusLog()),
-                            approverListStr
+                            String.join("|", sickLeaveRequest.getStatusLog())
                     ));
                     writer.newLine();
                 }
@@ -156,7 +152,7 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
                     List<String> statusLog = Arrays.asList(data[17].split("\\|"));
                     LeaveOfAbsenceRequest leaveRequest = new LeaveOfAbsenceRequest(timestamp, requestType, status, requester, currentApprover, numberPhone,
                             reason, currentAddress, registeredCourses, currentSemester, currentAcademicYear, fromSemester, fromAcademicYear, toSemester, toAcademicYear,
-                            lastModifiedDate, pdfFilePath, statusLog, approverList);
+                            lastModifiedDate, pdfFilePath, statusLog);
                     requestList.addRequest(leaveRequest);
 
                 } else if ("ลาออก".equalsIgnoreCase(requestType)) {
@@ -165,7 +161,7 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
                     String pdfFilePath = data[8].equals("ไม่มีเอกสาร") ? null : data[8];
                     List<String> statusLog = Arrays.asList(data[9].split("\\|"));
                     ResignationRequest resignationRequest = new ResignationRequest(timestamp, requestType, status, requester, currentApprover, numberPhone,
-                            reason, lastModifiedDate, pdfFilePath, statusLog, approverList);
+                            reason, lastModifiedDate, pdfFilePath, statusLog);
                     requestList.addRequest(resignationRequest);
 
                 } else if ("ลาป่วยหรือลากิจ".equalsIgnoreCase(requestType)) {
@@ -178,7 +174,7 @@ public class RequestListFileDatasource implements Datasource<RequestList> {
                     String pdfFilePath = data[12].equals("ไม่มีเอกสาร") ? null : data[12];
                     List<String> statusLog = Arrays.asList(data[13].split("\\|"));
                     SickLeaveRequest sickLeaveRequest = new SickLeaveRequest(timestamp, requestType, status, requester, currentApprover, numberPhone,
-                            leaveType, fromDateLeave, toDateLeave, reason, registeredCourses, lastModifiedDate, pdfFilePath, statusLog, approverList);
+                            leaveType, fromDateLeave, toDateLeave, reason, registeredCourses, lastModifiedDate, pdfFilePath, statusLog);
                     requestList.addRequest(sickLeaveRequest);
                 }
             }
