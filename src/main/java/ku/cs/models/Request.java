@@ -15,7 +15,6 @@ public abstract class Request {
     private String numberPhone; //เบอร์มือถือของผู้ยื่นคำร้อง
     private String pdfFilePath; //เก็บตัวคำร้องที่เป็นไฟล์ pdf จริงๆ
     private List<String> statusLog; //เก็บประวัติการดำเนินการต่างๆข้องคำร้อง
-    private List<String> approverList; //เก็บรายการคนที่อนุมัติคำร้อง String (ชื่อคนอนุมัติ - ตำแหน่ง)
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
@@ -25,7 +24,6 @@ public abstract class Request {
         this.timestamp = LocalDateTime.now().format(formatter); // Current time for new requests
         this.lastModifiedDateTime = LocalDateTime.now().format(formatter);
         this.statusLog = new ArrayList<>();
-        this.approverList = new ArrayList<>();
         this.requester = requester;
         this.currentApprover = "อาจารย์ที่ปรึกษา";
         this.numberPhone = numberPhone;
@@ -35,12 +33,11 @@ public abstract class Request {
     }
 
     // Constructor สำหรับอ่านไฟล์จาก CSV
-    public Request(String timestamp, String requestType, String status, Student requester, String currentApprover, String numberPhone, String lastModifiedDateTime, String pdfFilePath, List<String> statusLog, List<String> approverList) {
+    public Request(String timestamp, String requestType, String status, Student requester, String currentApprover, String numberPhone, String lastModifiedDateTime, String pdfFilePath, List<String> statusLog) {
         this.requestType = requestType;
         this.timestamp = timestamp;
         this.lastModifiedDateTime = lastModifiedDateTime;
         this.statusLog = statusLog != null ? new ArrayList<>(statusLog) : new ArrayList<>();
-        this.approverList = approverList != null ? new ArrayList<>(approverList) : new ArrayList<>();
         this.requester = requester;
         this.currentApprover = currentApprover;
         this.numberPhone = numberPhone;
@@ -67,14 +64,11 @@ public abstract class Request {
             this.setCurrentApprover("เจ้าหน้าที่ภาควิชา");
             this.addStatusLog("อนุมัติโดยอาจารย์ที่ปรึกษา");
             this.addStatusLog("คำร้องส่งต่อให้หัวหน้าภาควิชา");
-            this.addApprover(approver);
         } else if ("เจ้าหน้าที่ภาควิชา".equalsIgnoreCase(this.currentApprover)) {
             this.setCurrentApprover("เจ้าหน้าที่คณะ");
             this.addStatusLog("อนุมัติโดยหัวหน้าภาควิชา");
             this.addStatusLog("คำร้องส่งต่อให้คณบดี");
-            this.addApprover(approver);
         } else if ("เจ้าหน้าที่คณะ".equalsIgnoreCase(this.currentApprover)) {
-            this.addApprover(approver);
             this.addStatusLog("อนุมัติโดยคณบดี");
             this.setStatus("เสร็จสิ้น");
         }
@@ -95,7 +89,6 @@ public abstract class Request {
 
     private void handleFinish(String approver) {
         if ("เจ้าหน้าที่ภาควิชา".equalsIgnoreCase(this.currentApprover)) {
-            this.addApprover(approver);
             this.setStatus("เสร็จสิ้น");
             this.addStatusLog("อนุมัติโดยหัวหน้าภาควิชา");
         }
@@ -164,14 +157,6 @@ public abstract class Request {
 
     public String getNumberPhone() {
         return numberPhone;
-    }
-
-    public List<String> getApproverList(){
-        return approverList;
-    }
-
-    public void addApprover(String approver) {
-        approverList.add(approver);
     }
 
     public void setStatus(String status) {

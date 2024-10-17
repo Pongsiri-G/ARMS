@@ -10,11 +10,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import ku.cs.models.*;
 import ku.cs.models.User;
-import ku.cs.services.AdvOffListFileDatasource;
-import ku.cs.services.Datasource;
-import ku.cs.services.FXRouter;
-import ku.cs.services.UserListFileDatasource;
-import ku.cs.services.FacDepListFileDatascource;
+import ku.cs.services.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -58,7 +54,9 @@ public class OfficerAndAdvisorManagementController {
     @FXML private TableView<User> officerAdvisorTableView;
     private FacultyList facultyList;
     private UserList userList;
+    private Admin admin;
     private Datasource<UserList> datasource;
+    private Datasource<Admin> adminDatasource;
     private Datasource<FacultyList> facultyDatasource;
 
     @FXML
@@ -81,6 +79,8 @@ public class OfficerAndAdvisorManagementController {
         userList = datasource.readData();
         facultyDatasource = new FacDepListFileDatascource("data/test", "facdeplist.csv");
         facultyList = facultyDatasource.readData();
+        adminDatasource = new AdminPasswordFileDataSource("data/test", "admin.csv");
+        admin = adminDatasource.readData();
         showTable(userList);
 
         officerAdvisorTableView.setOnMouseClicked(event -> {
