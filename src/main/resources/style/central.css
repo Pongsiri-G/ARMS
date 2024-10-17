@@ -13,7 +13,7 @@
 * {
     -fx-primary-color: #006664;
     -fx-contrast-color: #ffffff;
-    -fx-middle-color: rgba(255, 255, 255, 0.75);
+    -fx-middle-color: #FFFFFFBF;
     -fx-font-family: "Noto Sans Thai";
 }
 .canvas {

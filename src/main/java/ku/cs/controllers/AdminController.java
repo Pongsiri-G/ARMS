@@ -3,14 +3,17 @@ package ku.cs.controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import ku.cs.models.*;
 import ku.cs.services.*;
 
 import java.io.IOException;
 import java.util.stream.Collectors;
 
-public class AdminController {
+public class AdminController extends BaseController {
     @FXML private ChoiceBox<String> selectedChoiceBox;
     @FXML private ChoiceBox<String> selectedFaculty;
     @FXML private ChoiceBox<String> selectedDepartment;
@@ -25,8 +28,11 @@ public class AdminController {
     @FXML private Label facultyLabel;
     @FXML private Label departmentLabel;
     @FXML private Label totalLabel;
-    @FXML private StackPane roleStackPane;
-    @FXML private StackPane facDepStackPane;
+    @FXML private VBox roleVBox;
+    @FXML private VBox facDepVBox;
+    @FXML private BorderPane rootPane;
+    @FXML private Circle profilePictureDisplay;
+
 
     private RequestList requestList;
     private UserList userList;
@@ -44,8 +50,8 @@ public class AdminController {
         selectedChoiceBox.setValue(choice[0]);
 
         // ตั้งค่า StackPane เริ่มต้น
-        roleStackPane.setVisible(true);
-        facDepStackPane.setVisible(false);
+        roleVBox.setVisible(true);
+        facDepVBox.setVisible(false);
 
         // โหลดข้อมูลจากไฟล์ CSV
         datasource = new UserListFileDatasource("data/csv_files", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
@@ -56,6 +62,9 @@ public class AdminController {
         facultyList = facultyListDatasource.readData();
         adminDatasource = new AdminPasswordFileDataSource("data/csv_files", "admin.csv");
         admin = adminDatasource.readData();
+
+        applyThemeAndFont(rootPane, admin.getPreferences().getTheme(), admin.getPreferences().getFontFamily(), admin.getPreferences().getFontSize());
+        setProfilePicture(profilePictureDisplay, admin.getProfilePicturePath());
 
         addChoiceBoxListeners();
 
@@ -166,11 +175,11 @@ public class AdminController {
         selectedChoiceBox.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> {
                     if ("บทบาท".equals(newValue)) {
-                        roleStackPane.setVisible(true);
-                        facDepStackPane.setVisible(false);
+                        roleVBox.setVisible(true);
+                        facDepVBox.setVisible(false);
                     } else if ("คณะ/ภาควิชา".equals(newValue)) {
-                        roleStackPane.setVisible(false);
-                        facDepStackPane.setVisible(true);
+                        roleVBox.setVisible(false);
+                        facDepVBox.setVisible(true);
                     }
                 }
         );
@@ -295,7 +304,7 @@ public class AdminController {
     @FXML
     protected void onSettingButtonClick() {
         try {
-            FXRouter.goTo("settings");
+            FXRouter.goTo("admin-settings", "dashboard");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -1,25 +1,17 @@
 package ku.cs.controllers;
 
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.chart.PieChart;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.Label;
-import javafx.scene.control.cell.PropertyValueFactory;
+
+import javafx.scene.layout.BorderPane;
+import javafx.scene.shape.Circle;
 import ku.cs.models.*;
 import ku.cs.services.*;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-public class ApprovedController {
+public class ApprovedController extends BaseController {
     @FXML private ChoiceBox<String> selectedFaculty;
     @FXML private ChoiceBox<String> selectedDepartment;
     @FXML private Label userLabel;
@@ -37,6 +29,9 @@ public class ApprovedController {
     private Datasource<FacultyList> facdepDatasource;
     private Datasource<Admin> adminDatasource;
 
+    @FXML private BorderPane rootPane;
+    @FXML private Circle profilePictureDisplay;
+
     @FXML
     public void initialize() {
         userDatasource = new UserListFileDatasource("data/csv_files", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
@@ -47,6 +42,10 @@ public class ApprovedController {
         facultyList = facdepDatasource.readData();
         adminDatasource = new AdminPasswordFileDataSource("data/csv_files", "admin.csv");
         admin = adminDatasource.readData();
+
+        applyThemeAndFont(rootPane, admin.getPreferences().getTheme(), admin.getPreferences().getFontFamily(), admin.getPreferences().getFontSize());
+        setProfilePicture(profilePictureDisplay, admin.getProfilePicturePath());
+
         for (Request request : requestList.getRequests()) {
             admin.increaseRequestCount(request);
         }
@@ -229,7 +228,7 @@ public class ApprovedController {
     @FXML
     protected void onSettingButtonClick() {
         try {
-            FXRouter.goTo("settings");
+            FXRouter.goTo("admin-settings", "approved-request");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
