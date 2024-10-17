@@ -62,11 +62,11 @@ public class StudentCreateRequestController extends BaseController {
 
 
     public StudentCreateRequestController(){
-        userListDatasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
+        userListDatasource = new UserListFileDatasource("data/csv_files", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
         this.userList = userListDatasource.readData();
-        requestListDatasource = new RequestListFileDatasource("data/test", "requestlist.csv", userList);
+        requestListDatasource = new RequestListFileDatasource("data/students_requests", "requestlist.csv", userList);
         this.requestList = requestListDatasource.readData();
-        preferencesListFileDatasource = new UserPreferencesListFileDatasource("data/test", "preferences.csv", userList);
+        preferencesListFileDatasource = new UserPreferencesListFileDatasource("data/csv_files", "preferences.csv", userList);
         this.preferencesListFileDatasource.readData();
     }
 

@@ -57,9 +57,9 @@ public class AdvisorController extends BaseController {
 
     @FXML
     public void initialize() {
-        datasources = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv", "departmentofficerlist.csv", "facdeplist.csv");
+        datasources = new UserListFileDatasource("data/csv_files", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv", "departmentofficerlist.csv", "facdeplist.csv");
         this.userList = datasources.readData();
-        preferencesListFileDatasource = new UserPreferencesListFileDatasource("data/test", "preferences.csv", userList);
+        preferencesListFileDatasource = new UserPreferencesListFileDatasource("data/csv_files", "preferences.csv", userList);
         this.preferencesListFileDatasource.readData();
         // เนื่องจากการส่งข้อมูลข้ามหน้าของเราเป็น การส่ง Username มาก็เลย Cast ให้มันเป็น String เเละหาใน UserList เเล้วให้ return Object นั้นมาเพื่อใช้ในการเเสดงข้อมูลขั้นต่อไป
         User user = userList.findUserByUsername((String) FXRouter.getData());

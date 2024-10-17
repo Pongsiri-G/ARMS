@@ -6,7 +6,7 @@ import java.io.*;
 
 public class UserListFileDatasourceTest {
     private UserListFileDatasource datasource;
-    private String testDirectory = "data/test";
+    private String testDirectory = "data/csv_files";
     private String testAdvisorFileName = "advisorlist.csv";
     private String testStudentFileName = "studentlist.csv";
     private String testFacultyOfficerFileName = "facultyofficerlist.csv";
@@ -50,7 +50,7 @@ public class UserListFileDatasourceTest {
     }
 
     public void loadAdvisorList(){
-        AdvOffListFileDatasource datasource = new AdvOffListFileDatasource("data/test", "advisorlist.csv");
+        AdvOffListFileDatasource datasource = new AdvOffListFileDatasource("data/csv_files", "advisorlist.csv");
         ArrayList<Advisor> advisorList = new ArrayList<>();
         advisorList.add(new Advisor("Jak", "vXuO637", "พรรษา จักรพันธ์ประดิษฐ์", "วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "D12345", false, false));
         advisorList.add(new Advisor("Tan", "168K5Hl", "ปวิน จันทรเกียรติ", "วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "D12346", false, false));
@@ -63,7 +63,7 @@ public class UserListFileDatasourceTest {
     }
 
     public void loadStudent(){
-        StudentListFileDatasource datasource = new StudentListFileDatasource("data/test", "studentlist.csv");
+        StudentListFileDatasource datasource = new StudentListFileDatasource("data/csv_files", "studentlist.csv");
         ArrayList<Student> studentList = new ArrayList<>();
         studentList.add(new Student("อธิฐาน คมปราชญ์","วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "6620400000", "studentmail1@ku.th", new Advisor("พรรษา จักรพันธ์ประดิษฐ์")));
         studentList.add(new Student("นิชกานต์ ประเสริฐโสม","วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", "6620400001", "studentmail2@ku.th", new Advisor("พรรษา จักรพันธ์ประดิษฐ์")));
@@ -76,7 +76,7 @@ public class UserListFileDatasourceTest {
     }
 
     public void loadDepartmentOfficer(){
-        DepartmentOfficerListFileDatasource datasource = new DepartmentOfficerListFileDatasource("data/test", "departmentofficerlist.csv");
+        DepartmentOfficerListFileDatasource datasource = new DepartmentOfficerListFileDatasource("data/csv_files", "departmentofficerlist.csv");
         ArrayList<DepartmentOfficer> officers = new ArrayList<>();
         officers.add(new DepartmentOfficer("Rain", "cN76A0S", "อนันกร ปิติโอภาสพงศ์", "วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", false, false));
         officers.add(new DepartmentOfficer("Patrick", "fORP833", "จักร จันทรเกียรติ", "วิทยาศาสตร์", "วิทยาการคอมพิวเตอร์", false, false));
@@ -88,7 +88,7 @@ public class UserListFileDatasourceTest {
     }
 
     public void loadFacultyOfficer(){
-        FacultyOfficerListFileDatasource datasource = new FacultyOfficerListFileDatasource("data/test", "facultyofficerlist.csv");
+        FacultyOfficerListFileDatasource datasource = new FacultyOfficerListFileDatasource("data/csv_files", "facultyofficerlist.csv");
         ArrayList<FacultyOfficer> officers = new ArrayList<>();
         officers.add(new FacultyOfficer("Farm", "91gw9Wf", "โถมนะ สุพรรณภาคิน", "วิทยาศาสตร์", false, false));
         officers.add(new FacultyOfficer("Tame", "48eEO6X", "ปวัตร เจริญผลวัฒนา", "วิทยาศาสตร์", false, false));
@@ -100,7 +100,7 @@ public class UserListFileDatasourceTest {
 
 
     public void loadFacultyList(){
-        FacDepListFileDatascource datasource = new FacDepListFileDatascource("data/test", "facdeplist.csv");
+        FacDepListFileDatascource datasource = new FacDepListFileDatascource("data/csv_files", "facdeplist.csv");
         FacultyList facultyList = new FacultyList();
         // เพิ่มคณะ
         Faculty faculty1 = new Faculty("วิทยาศาสตร์", "01");
@@ -121,7 +121,7 @@ public class UserListFileDatasourceTest {
     }
 
     public void loadAdmin() {
-        AdminPasswordFileDataSource adminPasswordFileDataSource = new AdminPasswordFileDataSource("data/test", "admin.csv");
+        AdminPasswordFileDataSource adminPasswordFileDataSource = new AdminPasswordFileDataSource("data/csv_files", "admin.csv");
         Admin admin = new Admin("1111", false, false);
         adminPasswordFileDataSource.writeData(admin);
     }

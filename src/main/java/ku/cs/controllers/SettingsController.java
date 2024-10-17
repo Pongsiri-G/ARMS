@@ -54,9 +54,9 @@ public class SettingsController extends BaseController {
 
 
     public SettingsController() {
-        datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
+        datasource = new UserListFileDatasource("data/csv_files", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
         this.userList = datasource.readData();
-        preferencesListFileDatasource = new UserPreferencesListFileDatasource("data/test", "preferences.csv", userList);
+        preferencesListFileDatasource = new UserPreferencesListFileDatasource("data/csv_files", "preferences.csv", userList);
         this.preferencesListFileDatasource.readData();
     }
 

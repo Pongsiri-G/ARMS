@@ -30,11 +30,11 @@ public class AllRequestController {
 
     @FXML
     public void initialize() {
-        userDatasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
+        userDatasource = new UserListFileDatasource("data/csv_files", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
         userList = userDatasource.readData();
-        datasource = new RequestListFileDatasource("data/test", "requestlist.csv", userList);
+        datasource = new RequestListFileDatasource("data/students_requests", "requestlist.csv", userList);
         requestList = datasource.readData();
-        adminDatasource = new AdminPasswordFileDataSource("data/test", "admin.csv");
+        adminDatasource = new AdminPasswordFileDataSource("data/csv_files", "admin.csv");
         admin = adminDatasource.readData();
         for (Request request : requestList.getRequests()) {
             admin.increaseRequestCount(request);

@@ -43,7 +43,7 @@ public class DepartmentAndFacultyManagementController {
         editErrorMessageLabel.setText("");
         addStackPane.setVisible(false);
         editStackPane.setVisible(false);
-        datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
+        datasource = new UserListFileDatasource("data/csv_files", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
         userList = datasource.readData();
         facultyList = userList.getFacultyList();
         showTable(facultyList);

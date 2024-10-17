@@ -33,9 +33,9 @@ public class LoginController {
     private AdminPasswordFileDataSource adminPasswordFileDataSource;
 
     public LoginController() {
-        datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
+        datasource = new UserListFileDatasource("data/csv_files", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
         this.userList = datasource.readData();
-        adminPasswordFileDataSource = new AdminPasswordFileDataSource("data/test", "admin.csv");
+        adminPasswordFileDataSource = new AdminPasswordFileDataSource("data/csv_files", "admin.csv");
         admin = adminPasswordFileDataSource.readData();
     }
 

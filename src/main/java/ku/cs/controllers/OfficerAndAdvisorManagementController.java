@@ -75,9 +75,9 @@ public class OfficerAndAdvisorManagementController {
         facultyOfficerStackPane.setVisible(false);
         departmentOfficerStackPane.setVisible(false);
         editStackPane.setVisible(false);
-        datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
+        datasource = new UserListFileDatasource("data/csv_files", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
         userList = datasource.readData();
-        facultyDatasource = new FacDepListFileDatascource("data/test", "facdeplist.csv");
+        facultyDatasource = new FacDepListFileDatascource("data/csv_files", "facdeplist.csv");
         facultyList = facultyDatasource.readData();
         showTable(userList);
 

@@ -42,7 +42,7 @@ public class UserManagementController {
     private Datasource<UserList> datasource;
     private Datasource<RequestList> requestListDatasource;
     private UserListFileDatasource listDatasource;
-    private String testDirectory = "data/test";
+    private String testDirectory = "data/csv_files";
     private String testAdvisorFileName = "advisorlist.csv";
     private String testStudentFileName = "studentlist.csv";
     private String testFacultyOfficerFileName = "facultyofficerlist.csv";

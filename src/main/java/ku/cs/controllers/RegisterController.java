@@ -33,7 +33,7 @@ public class RegisterController {
 
     @FXML
     private void initialize() {
-        datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv", "departmentofficerlist.csv", "facdeplist.csv");
+        datasource = new UserListFileDatasource("data/csv_files", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv", "departmentofficerlist.csv", "facdeplist.csv");
         errorLabel.setText("");
         createUserPane.setVisible(false);
         this.userList = datasource.readData();

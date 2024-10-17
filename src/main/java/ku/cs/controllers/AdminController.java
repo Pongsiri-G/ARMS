@@ -48,13 +48,13 @@ public class AdminController {
         facDepStackPane.setVisible(false);
 
         // โหลดข้อมูลจากไฟล์ CSV
-        datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
+        datasource = new UserListFileDatasource("data/csv_files", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
         userList = datasource.readData();
-        requestListDatasource = new RequestListFileDatasource("data/test", "requestlist.csv", userList);
+        requestListDatasource = new RequestListFileDatasource("data/students_requests", "requestlist.csv", userList);
         requestList = requestListDatasource.readData();
-        facultyListDatasource = new FacDepListFileDatascource("data/test", "facdeplist.csv");
+        facultyListDatasource = new FacDepListFileDatascource("data/csv_files", "facdeplist.csv");
         facultyList = facultyListDatasource.readData();
-        adminDatasource = new AdminPasswordFileDataSource("data/test", "admin.csv");
+        adminDatasource = new AdminPasswordFileDataSource("data/csv_files", "admin.csv");
         admin = adminDatasource.readData();
 
         addChoiceBoxListeners();
