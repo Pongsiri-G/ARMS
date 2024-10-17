@@ -8,10 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.StackPane;
 import ku.cs.models.*;
-import ku.cs.services.Datasource;
-import ku.cs.services.FXRouter;
-import ku.cs.services.FacDepListFileDatascource;
-import ku.cs.services.UserListFileDatasource;
+import ku.cs.services.*;
 
 import java.io.IOException;
 
@@ -35,6 +32,8 @@ public class DepartmentAndFacultyManagementController {
     @FXML private TableView<Faculty> facDepTableView; // ใช้ Object เนื่องจากจะมีทั้ง Faculty และ Department
     private FacultyList facultyList;
     private UserList userList;
+    private Admin admin;
+    private Datasource<Admin> adminDatasource;
     private Datasource<UserList> datasource;
 
     @FXML
@@ -45,6 +44,8 @@ public class DepartmentAndFacultyManagementController {
         editStackPane.setVisible(false);
         datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
         userList = datasource.readData();
+        adminDatasource = new AdminPasswordFileDataSource("data/test", "admin.csv");
+        admin = adminDatasource.readData();
         facultyList = userList.getFacultyList();
         showTable(facultyList);
 

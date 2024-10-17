@@ -13,10 +13,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import ku.cs.models.*;
-import ku.cs.services.Datasource;
-import ku.cs.services.FXRouter;
-import ku.cs.services.RequestListFileDatasource;
-import ku.cs.services.UserListFileDatasource;
+import ku.cs.services.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.TableCell;
@@ -39,7 +36,9 @@ public class UserManagementController {
     @FXML private TableView<User> userManagementTableView;
     private String[] role = {"ทั้งหมด", "นิสิต", "อาจารย์", "เจ้าหน้าที่คณะ", "เจ้าหน้าที่ภาควิชา"};
     private UserList userList;
+    private Admin admin;
     private Datasource<UserList> datasource;
+    private Datasource<Admin> adminDatasource;
     private Datasource<RequestList> requestListDatasource;
     private UserListFileDatasource listDatasource;
     private String testDirectory = "data/test";
@@ -59,6 +58,8 @@ public class UserManagementController {
 
         datasource = new UserListFileDatasource(testDirectory, testStudentFileName, testAdvisorFileName, testFacultyOfficerFileName, testDepartmentFileName, testFacDepFileName);
         userList = datasource.readData();
+        adminDatasource = new AdminPasswordFileDataSource("data/test", "admin.csv");
+        admin = adminDatasource.readData();
 
         showTable(userList);
 
