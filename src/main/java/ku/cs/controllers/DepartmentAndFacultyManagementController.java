@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import ku.cs.models.*;
 import ku.cs.services.Datasource;
@@ -20,8 +21,8 @@ import java.io.IOException;
 import java.util.stream.Collectors;
 
 public class DepartmentAndFacultyManagementController {
-    @FXML private StackPane addStackPane;
-    @FXML private StackPane editStackPane;
+    @FXML private GridPane addGridPane;
+    @FXML private GridPane editGridPane;
     @FXML private TextField facultyTextField;
     @FXML private TextField facultyIdTextField;
     @FXML private TextField departmentTextField;
@@ -41,8 +42,8 @@ public class DepartmentAndFacultyManagementController {
     public void initialize() {
         errorMessageLabel.setText("");
         editErrorMessageLabel.setText("");
-        addStackPane.setVisible(false);
-        editStackPane.setVisible(false);
+        addGridPane.setVisible(false);
+        editGridPane.setVisible(false);
         datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
         userList = datasource.readData();
         facultyList = userList.getFacultyList();
@@ -102,7 +103,7 @@ public class DepartmentAndFacultyManagementController {
     }
 
     private void showEditPane(Faculty faculty) {
-        editStackPane.setVisible(true);
+        editGridPane.setVisible(true);
         // ตั้งค่าให้ TextField แสดงค่าที่เลือก
         editFacultyTextField.setText(faculty.getFacultyName());
         editFacultyIdTextField.setText(faculty.getFacultyId());
@@ -118,7 +119,7 @@ public class DepartmentAndFacultyManagementController {
     // ฟังก์ชันที่ใช้ซ่อน editStackPane
     @FXML
     public void onCancelEditButtonClick() {
-        editStackPane.setVisible(false);
+        editGridPane.setVisible(false);
         clearEditFields();
     }
 
@@ -182,18 +183,18 @@ public class DepartmentAndFacultyManagementController {
             datasource.writeData(userList);
             showTable(facultyList);
             // ซ่อน pane และรีเฟรชตาราง
-            editStackPane.setVisible(false);
+            editGridPane.setVisible(false);
             //showTable(facultyList);
             clearEditFields();
         }
     }
 
     @FXML public void onAddFacDepButtonClick() {
-        addStackPane.setVisible(true);
+        addGridPane.setVisible(true);
     }
 
     @FXML public void onCancelButtonClick() {
-        addStackPane.setVisible(false);
+        addGridPane.setVisible(false);
         clearAddFields();
     }
 
@@ -247,7 +248,7 @@ public class DepartmentAndFacultyManagementController {
 
         // บันทึกข้อมูลลงไฟล์
         datasource.writeData(userList);
-        addStackPane.setVisible(false);
+        addGridPane.setVisible(false);
         showTable(facultyList);
         clearAddFields();
     }

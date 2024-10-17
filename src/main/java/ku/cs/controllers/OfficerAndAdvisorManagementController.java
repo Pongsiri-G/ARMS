@@ -4,7 +4,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import ku.cs.models.*;
 import ku.cs.models.User;
@@ -20,11 +22,11 @@ import java.util.ArrayList;
 public class OfficerAndAdvisorManagementController {
     @FXML private ChoiceBox<String> roleChoiceBox;
     private String[] role = {"อาจารย์ที่ปรึกษา", "เจ้าหน้าที่คณะ", "เจ้าหน้าที่ภาควิชา"};
-    @FXML private StackPane addStackPane;
-    @FXML private StackPane editStackPane;
-    @FXML private StackPane advisorStackPane;
-    @FXML private StackPane facultyOfficerStackPane;
-    @FXML private StackPane departmentOfficerStackPane;
+    @FXML private GridPane addGridPane;
+    @FXML private GridPane editGridPane;
+    @FXML private VBox advisorVBox;
+    @FXML private VBox facultyOfficerVBox;
+    @FXML private VBox departmentOfficerVBox;
     @FXML private Label editErrorMessageLabel;
     @FXML private Label advisorErrorMessageLabel;
     @FXML private Label facultyOfficerErrorMessageLabel;
@@ -63,7 +65,7 @@ public class OfficerAndAdvisorManagementController {
     public void initialize() {
         roleChoiceBox.getItems().addAll(role);
         roleChoiceBox.setValue("อาจารย์ที่ปรึกษา");
-        advisorStackPane.setVisible(true);
+        advisorVBox.setVisible(true);
         roleChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             selectRole(newValue);
         });
@@ -71,10 +73,10 @@ public class OfficerAndAdvisorManagementController {
         facultyOfficerErrorMessageLabel.setText("");
         departmentOfficerErrorMessageLabel.setText("");
         editErrorMessageLabel.setText("");
-        addStackPane.setVisible(false);
-        facultyOfficerStackPane.setVisible(false);
-        departmentOfficerStackPane.setVisible(false);
-        editStackPane.setVisible(false);
+        addGridPane.setVisible(false);
+        facultyOfficerVBox.setVisible(false);
+        departmentOfficerVBox.setVisible(false);
+        editGridPane.setVisible(false);
         datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
         userList = datasource.readData();
         facultyDatasource = new FacDepListFileDatascource("data/test", "facdeplist.csv");
@@ -92,7 +94,7 @@ public class OfficerAndAdvisorManagementController {
     }
 
     private void showEditPane(User user) {
-        editStackPane.setVisible(true);
+        editGridPane.setVisible(true);
         if (user instanceof Advisor) {
             Advisor advisor = (Advisor) user;
             editRoleLabel.setText("แก้ไขอาจารย์ที่ปรึกษา");
@@ -272,23 +274,23 @@ public class OfficerAndAdvisorManagementController {
 
     public void selectRole(String role) {
         if (role.equals("อาจารย์ที่ปรึกษา")) {
-            advisorStackPane.setVisible(true);
-            facultyOfficerStackPane.setVisible(false);
-            departmentOfficerStackPane.setVisible(false);
+            advisorVBox.setVisible(true);
+            facultyOfficerVBox.setVisible(false);
+            departmentOfficerVBox.setVisible(false);
         } else if (role.equals("เจ้าหน้าที่คณะ")) {
-            facultyOfficerStackPane.setVisible(true);
-            advisorStackPane.setVisible(false);
-            departmentOfficerStackPane.setVisible(false);
+            facultyOfficerVBox.setVisible(true);
+            advisorVBox.setVisible(false);
+            departmentOfficerVBox.setVisible(false);
         } else if (role.equals("เจ้าหน้าที่ภาควิชา")) {
-            departmentOfficerStackPane.setVisible(true);
-            advisorStackPane.setVisible(false);
-            facultyOfficerStackPane.setVisible(false);
+            departmentOfficerVBox.setVisible(true);
+            advisorVBox.setVisible(false);
+            facultyOfficerVBox.setVisible(false);
         }
     }
 
     @FXML
     public void onAddButtonClick() {
-        addStackPane.setVisible(true);
+        addGridPane.setVisible(true);
     }
 
     @FXML
@@ -394,7 +396,7 @@ public class OfficerAndAdvisorManagementController {
             advisor.setAdvisorID(id);
         }
         datasource.writeData(userList);
-        editStackPane.setVisible(false);
+        editGridPane.setVisible(false);
         showTable(userList);
         clearEditFields();
     }
@@ -510,7 +512,7 @@ public class OfficerAndAdvisorManagementController {
         }
 
         datasource.writeData(userList);
-        addStackPane.setVisible(false);
+        addGridPane.setVisible(false);
         showTable(userList);
     }
 
@@ -526,7 +528,7 @@ public class OfficerAndAdvisorManagementController {
 
     @FXML
     public void onEditCancelButtonClick() {
-        editStackPane.setVisible(false);
+        editGridPane.setVisible(false);
         clearEditFields();
     }
 
@@ -550,7 +552,7 @@ public class OfficerAndAdvisorManagementController {
         departmentOfficerFacultyTextField.setText("");
         departmentOfficerDepartmentTextField.setText("");
         departmentOfficerErrorMessageLabel.setText("");
-        addStackPane.setVisible(false);
+        addGridPane.setVisible(false);
     }
 
     @FXML

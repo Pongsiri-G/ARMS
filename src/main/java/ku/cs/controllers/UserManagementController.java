@@ -33,9 +33,6 @@ import java.util.Comparator;
 public class UserManagementController {
     @FXML private ChoiceBox<String> searchByRole;
     @FXML private TextField searchTextField;
-    @FXML private Label roleLabel;
-    @FXML private Label allRequestLabel;
-    @FXML private Label approvedLabel;
     @FXML private TableView<User> userManagementTableView;
     private String[] role = {"ทั้งหมด", "นิสิต", "อาจารย์", "เจ้าหน้าที่คณะ", "เจ้าหน้าที่ภาควิชา"};
     private UserList userList;
@@ -293,6 +290,15 @@ public class UserManagementController {
     protected void onStaffClick() {
         try {
             FXRouter.goTo("staff-advisor-management");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
+    protected void onSettingButtonClick() {
+        try {
+            FXRouter.goTo("settings");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

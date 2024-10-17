@@ -4,6 +4,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import ku.cs.models.*;
 import ku.cs.services.*;
 
@@ -25,8 +27,10 @@ public class AdminController {
     @FXML private Label facultyLabel;
     @FXML private Label departmentLabel;
     @FXML private Label totalLabel;
-    @FXML private StackPane roleStackPane;
-    @FXML private StackPane facDepStackPane;
+    @FXML private VBox roleVBox;
+    @FXML private VBox facDepVBox;
+    @FXML private Circle profilePictureDisplay;
+
 
     private RequestList requestList;
     private UserList userList;
@@ -44,8 +48,8 @@ public class AdminController {
         selectedChoiceBox.setValue(choice[0]);
 
         // ตั้งค่า StackPane เริ่มต้น
-        roleStackPane.setVisible(true);
-        facDepStackPane.setVisible(false);
+        roleVBox.setVisible(true);
+        facDepVBox.setVisible(false);
 
         // โหลดข้อมูลจากไฟล์ CSV
         datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
@@ -166,11 +170,11 @@ public class AdminController {
         selectedChoiceBox.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> {
                     if ("บทบาท".equals(newValue)) {
-                        roleStackPane.setVisible(true);
-                        facDepStackPane.setVisible(false);
+                        roleVBox.setVisible(true);
+                        facDepVBox.setVisible(false);
                     } else if ("คณะ/ภาควิชา".equals(newValue)) {
-                        roleStackPane.setVisible(false);
-                        facDepStackPane.setVisible(true);
+                        roleVBox.setVisible(false);
+                        facDepVBox.setVisible(true);
                     }
                 }
         );
