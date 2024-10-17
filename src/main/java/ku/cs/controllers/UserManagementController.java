@@ -128,7 +128,7 @@ public class UserManagementController {
     }
 
     @FXML
-    private void showTable(UserList userList) {
+    private void showTable(UserList filteredUserList) {
         // Column for image
         TableColumn<User, Image> pictureColumn = new TableColumn<>("รูปภาพ");
         pictureColumn.setCellValueFactory(cellData -> {
@@ -227,7 +227,7 @@ public class UserManagementController {
         userManagementTableView.getColumns().addAll(pictureColumn, usernameColumn, nameColumn, timeColumn, suspendColumn);
 
         // สร้าง ObservableList จาก userList
-        ObservableList<User> observableUserList = FXCollections.observableArrayList(userList.getAllUsers());
+        ObservableList<User> observableUserList = FXCollections.observableArrayList(filteredUserList.getAllUsers());
 
         // สร้าง SortedList และกำหนด Comparator
         SortedList<User> sortedList = new SortedList<>(observableUserList, new Comparator<User>() {
