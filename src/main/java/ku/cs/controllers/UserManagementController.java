@@ -59,7 +59,7 @@ public class UserManagementController extends BaseController{
 
         datasource = new UserListFileDatasource(testDirectory, testStudentFileName, testAdvisorFileName, testFacultyOfficerFileName, testDepartmentFileName, testFacDepFileName);
         userList = datasource.readData();
-        adminDatasource = new AdminPasswordFileDataSource("data/test", "admin.csv");
+        adminDatasource = new AdminPasswordFileDataSource("data/csv_files", "admin.csv");
         admin = adminDatasource.readData();
 
         applyThemeAndFont(rootPane, admin.getPreferences().getTheme(), admin.getPreferences().getFontFamily(), admin.getPreferences().getFontSize());
