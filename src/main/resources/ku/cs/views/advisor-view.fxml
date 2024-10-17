@@ -129,7 +129,7 @@
                                              </children>
                                           </HBox>
                                           <Label graphicTextGap="20.0" text="ตำเเหน่ง: อาจารย์ที่ปรึกษา" />
-                                          <Label fx:id="emailLabel" text="emailLabel" />
+                                          <Label fx:id="advisorIdLabel" text="advisorIdLabel" />
                                        </children>
                                     </VBox>
                                  </children>

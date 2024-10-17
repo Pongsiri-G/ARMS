@@ -174,13 +174,25 @@ public class OfficerAndAdvisorManagementController {
 
             if (user instanceof FacultyOfficer) {
                 FacultyOfficer facOff = (FacultyOfficer) user;
-                return new SimpleStringProperty(facOff.getDefaultPassword());
+                if (facOff.validatePassword(facOff.getDefaultPassword())) {
+                    return new SimpleStringProperty(facOff.getDefaultPassword());
+                } else {
+                    return new SimpleStringProperty("ผู้ใช้เปลี่ยนรหัสผ่านแล้ว");
+                }
             } else if (user instanceof DepartmentOfficer) {
                 DepartmentOfficer depOff = (DepartmentOfficer) user;
-                return new SimpleStringProperty(depOff.getDefaultPassword());
+                if (depOff.validatePassword(depOff.getDefaultPassword())) {
+                    return new SimpleStringProperty(depOff.getDefaultPassword());
+                } else {
+                    return new SimpleStringProperty("ผู้ใช้เปลี่ยนรหัสผ่านแล้ว");
+                }
             } else if (user instanceof Advisor) {
                 Advisor advisor = (Advisor) user;
-                return new SimpleStringProperty(advisor.getDefaultPassword());
+                if (advisor.validatePassword(advisor.getDefaultPassword())) {
+                    return new SimpleStringProperty(advisor.getDefaultPassword());
+                } else {
+                    return new SimpleStringProperty("ผู้ใช้เปลี่ยนรหัสผ่านแล้ว");
+                }
             }
             return new SimpleStringProperty("-");
         });
@@ -572,6 +584,15 @@ public class OfficerAndAdvisorManagementController {
     protected void onDepartmentAndFacultyClick() {
         try {
             FXRouter.goTo("department-faculty-management");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
+    protected void onSettingButtonClick() {
+        try {
+            FXRouter.goTo("settings");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

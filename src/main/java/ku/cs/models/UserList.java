@@ -79,7 +79,6 @@ public class UserList {
         }
     }
 
-
     // Setters and Getters
     public void setUsers(ArrayList<User> users) {
         this.users.clear();
@@ -160,7 +159,7 @@ public class UserList {
     // Login with hashed password verification
     public String login(String username, String password) throws IllegalArgumentException {
         if (username.isEmpty() || password.isEmpty()) {
-            throw new IllegalArgumentException("ชื่อบัญชีผู้ใช้หรือรหัสผ่านไม่สามารถเป็นค่าว่างได้");
+            throw new IllegalArgumentException("โปรดกรอกให้ครบถ้วน");
         }
 
         User user = findUserByUsername(username);

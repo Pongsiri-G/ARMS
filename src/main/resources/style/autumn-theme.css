@@ -35,10 +35,10 @@
 }
 
 * {
-    -fx-primary-color: #006664;
-    -fx-secondary-color: #313338;
-    -fx-tertiary-color: #2B2D31;
-    -fx-contrast-color: white;
+    -fx-primary-color: #CC7152;
+    -fx-secondary-color: #EBE3D8;
+    -fx-tertiary-color: #DA9753;
+    -fx-contrast-color: black;
     -fx-middle-color: #6b6b6b;
     -fx-red-color: #be0000;
     -fx-yellow-color: #d7a700;

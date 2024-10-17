@@ -77,6 +77,11 @@ public class UserManagementController {
         FilteredList<User> filteredList = new FilteredList<>(observableUserList, user -> {
             // Filter based on the selected role
             if (role.equals("ทั้งหมด")) {
+                try {
+                    FXRouter.goTo("user-management");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 return true; // Show all users
             } else if (role.equals("นิสิต") && user instanceof Student) {
                 return true;
@@ -130,10 +135,10 @@ public class UserManagementController {
             String imagePath = cellData.getValue().getProfilePicturePath();
             Image image;
             if (imagePath != null) {
-                image = new Image("file:" + imagePath); // กำหนดขนาดตามต้องการ
+                image = new Image("file:" + imagePath, 120, 160, true, true); // กำหนดขนาดตามต้องการ
             } else {
                 // ใช้รูปภาพเริ่มต้นถ้าไม่พบไฟล์
-                image = new Image(getClass().getResourceAsStream("/images/profile.jpg"), 50, 50, true, true);
+                image = new Image(getClass().getResourceAsStream("/images/profile.jpg"), 120, 160, true, true);
             }
             return new SimpleObjectProperty<>(image);
         });

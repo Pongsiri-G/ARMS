@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1024.0" prefWidth="1440.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.OfficerAndAdvisorManagementController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1024.0" prefWidth="1440.0" stylesheets="@../../../style/style.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.OfficerAndAdvisorManagementController">
     <left>
         <VBox prefHeight="200.0" prefWidth="108.0" spacing="30.0" BorderPane.alignment="TOP_CENTER">
             <children>
@@ -109,7 +109,7 @@
         </VBox>
     </left>
     <top>
-        <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <HBox prefHeight="100.0" prefWidth="200.0" spacing="900.0" BorderPane.alignment="CENTER">
             <children>
                 <Label text="ผู้ดูแลระบบ">
                     <font>
@@ -119,11 +119,16 @@
                         <Insets left="150.0" top="30.0" />
                     </HBox.margin>
                 </Label>
+            <Button mnemonicParsing="false" prefHeight="53.0" prefWidth="117.0" text="Setting">
+               <HBox.margin>
+                  <Insets top="20.0" />
+               </HBox.margin>
+            </Button>
             </children>
         </HBox>
     </top>
     <center>
-        <AnchorPane prefHeight="639.0" prefWidth="1332.0" styleClass="dash-board-background" stylesheets="@../../../style/style.css" BorderPane.alignment="CENTER">
+        <AnchorPane prefHeight="639.0" prefWidth="1332.0" styleClass="dash-board-background" BorderPane.alignment="CENTER">
             <children>
                 <AnchorPane layoutX="62.0" layoutY="40.0" prefHeight="886.0" prefWidth="1198.0" style="-fx-background-color: white; -fx-background-radius: 30;">
                     <children>

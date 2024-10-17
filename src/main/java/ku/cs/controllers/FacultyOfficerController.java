@@ -93,6 +93,7 @@ public class FacultyOfficerController extends BaseController{
     RequestListFileDatasource requestDatasource;
     RequestList requestList;
     RequestHandlingOfficer approverToEdit;
+    private UserPreferencesListFileDatasource preferencesListFileDatasource;
 
     private String selectedApprover;
     private Request selectedRequest;
@@ -110,7 +111,7 @@ public class FacultyOfficerController extends BaseController{
         nameLabel.setText(officer.getName());
         usernameLabel.setText(officer.getUsername());
         roleLabel.setText("เจ้าหน้าที่ | คณะ" + officer.getFaculty().getFacultyName());
-        applyThemeAndFont(rootPane);
+        applyThemeAndFont(rootPane, officer.getPreferences().getTheme(), officer.getPreferences().getFontFamily(), officer.getPreferences().getFontSize());
         setProfilePicture(profilePictureDisplay, officer.getProfilePicturePath());
     }
 
@@ -127,6 +128,8 @@ public class FacultyOfficerController extends BaseController{
         officer = (FacultyOfficer) userList.findUserByUsername((String) FXRouter.getData());
         requests = officer.getRequestsByFaculty(requestList);
         approverDatasource = new RequestHandlingOfficersDataSource("data/approver", officer.getFaculty().getFacultyName() + "-approver.csv");
+        preferencesListFileDatasource = new UserPreferencesListFileDatasource("data/test", "preferences.csv", userList);
+        this.preferencesListFileDatasource.readData();
         loadApprovers();
     }
 

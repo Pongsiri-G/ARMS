@@ -11,8 +11,7 @@ public abstract class User {
     private boolean suspended;
     private LocalDateTime lastLogin;
     private String profilePicturePath;
-    // test การเข้าใช้งานครั้งเเรกให้มีการเปลี่ยนรหัสผ่านสำหรับอาจารย์ที่ปรึกษา
-    //private boolean isFirstLogin;
+    private UserPreferences preferences;
 
     // Constructor for new users (password is hashed)
     public User(String username, String password, String name) {
@@ -43,20 +42,8 @@ public abstract class User {
         this.name = name;
         this.suspended = suspended;
         this.lastLogin = null;
+        this.preferences = new UserPreferences();
     }
-
-    /*
-    //ping
-    public User(String profilePicturePath, String username, String name, String role, String faculty, String department, String timeStamp) {
-        this.profilePicturePath = profilePicturePath;
-        this.username = username;
-        this.name = name;
-        this.role = role;
-        this.faculty = faculty;
-        this.department = department;
-        this.timeStamp = timeStamp;
-    }
-     */
 
     // Check if the username matches
     public boolean isUsername(String username) {
@@ -78,10 +65,6 @@ public abstract class User {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setName(String firstName, String lastName) {
-        this.name = firstName + " " + lastName;
     }
 
     public void setSuspended(boolean suspended) {
@@ -123,6 +106,14 @@ public abstract class User {
     public boolean validatePassword(String password) {
         BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), this.password);
         return result.verified;
+    }
+
+    public UserPreferences getPreferences() {
+        return preferences;
+    }
+
+    public void setPreferences(UserPreferences preferences) {
+        this.preferences = preferences;
     }
 
     public abstract String getRole();

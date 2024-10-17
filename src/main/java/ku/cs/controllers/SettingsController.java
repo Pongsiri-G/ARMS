@@ -1,13 +1,11 @@
 package ku.cs.controllers;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -20,47 +18,87 @@ import ku.cs.models.*;
 import ku.cs.services.FXRouter;
 import ku.cs.services.FileStorage;
 import ku.cs.services.UserListFileDatasource;
+import ku.cs.services.UserPreferencesListFileDatasource;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class SettingsController {
+public class SettingsController extends BaseController {
     @FXML private VBox userInfoPane;
-
-    @FXML private VBox settingPane;
 
     @FXML private Label roleLabel;
 
     @FXML private Label nameLabel;
 
-    @FXML private Label fileUploadLabel; //แสดงชื่อไฟล์ที่อัพโหลดไป
 
     @FXML private Circle profilePictureDisplay;
 
 
+    @FXML private ChoiceBox<String> themeChoiceBox;
+    @FXML private ChoiceBox<String> fontFamilyChoiceBox;
+    @FXML private ChoiceBox<String> fontSizeChoiceBox;
+    @FXML private BorderPane rootPane;
+    @FXML private PasswordField currentPasswordField;
+    @FXML private PasswordField newPasswordField;
+    @FXML private PasswordField confirmNewPasswordField;
+    @FXML private Label errorLabel;
 
     private ArrayList<String> data;
     private UserList userList;
     private UserListFileDatasource datasource;
     private User user;
+    private UserPreferencesListFileDatasource preferencesListFileDatasource;
 
     private File uploadedPicture;
 
 
-    public SettingsController(){
+    public SettingsController() {
         datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
         this.userList = datasource.readData();
+        preferencesListFileDatasource = new UserPreferencesListFileDatasource("data/test", "preferences.csv", userList);
+        this.preferencesListFileDatasource.readData();
     }
 
     @FXML
     public void initialize() {
-        //data = (ArrayList<String>) FXRouter.getData();
-        user = userList.findUserByUsername((String) FXRouter.getData());
+        data = (ArrayList<String>) FXRouter.getData();
+        user = userList.findUserByUsername(data.get(1));
         nameLabel.setText(user.getName());
         roleLabel.setText(user.getRole());
-        setProfilePicture(user.getProfilePicturePath());
+        setProfilePicture(profilePictureDisplay, user.getProfilePicturePath());
+
+        themeChoiceBox.getItems().addAll("Light", "Dark", "Autumn", "Coffee", "Fallen");
+        fontFamilyChoiceBox.getItems().addAll("Noto Sans Thai", "Noto Sans Thai Looped", "Bai Jamjuree");
+        fontSizeChoiceBox.getItems().addAll("Small", "Medium", "Large");
+
         userPaneInitialize();
+
+        themeChoiceBox.setValue(user.getPreferences().getTheme());
+        fontFamilyChoiceBox.setValue(user.getPreferences().getFontFamily());
+        fontSizeChoiceBox.setValue(user.getPreferences().getFontSize());
+
+        applyThemeAndFont(rootPane, user.getPreferences().getTheme(), user.getPreferences().getFontFamily(), user.getPreferences().getFontSize());
+        preferencesListFileDatasource.writeData();
+
+        // Add listeners for immediate change on selection
+        themeChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            user.getPreferences().setTheme(newValue);
+            applyThemeAndFont(rootPane, user.getPreferences().getTheme(), user.getPreferences().getFontFamily(), user.getPreferences().getFontSize());
+            preferencesListFileDatasource.writeData();
+        });
+
+        fontFamilyChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            user.getPreferences().setFontFamily(newValue);
+            applyThemeAndFont(rootPane, user.getPreferences().getTheme(), user.getPreferences().getFontFamily(), user.getPreferences().getFontSize());
+            preferencesListFileDatasource.writeData();
+        });
+
+        fontSizeChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            user.getPreferences().setFontSize(newValue);
+            applyThemeAndFont(rootPane, user.getPreferences().getTheme(), user.getPreferences().getFontFamily(), user.getPreferences().getFontSize());
+            preferencesListFileDatasource.writeData();
+        });
     }
 
 
@@ -70,8 +108,9 @@ public class SettingsController {
             Student student = (Student) user;
 
             userInfoPane.getChildren().addAll(
-                    createLabel("คณะ " + student.getEnrolledFaculty().getFacultyName()),
-                    createLabel("สาขาวิชา " + student.getEnrolledDepartment().getDepartmentName() + " (" + student.getEnrolledFaculty().getFacultyId() + student.getEnrolledDepartment().getDepartmentID() + ")")
+                    createLabel("คณะ " + student.getEnrolledFaculty().getFacultyName() +  " (" + student.getEnrolledFaculty().getFacultyId() + ")"),
+                    createLabel("สาขาวิชา " + student.getEnrolledDepartment().getDepartmentName() + " (" + student.getEnrolledDepartment().getDepartmentID() + ")"),
+                    createLabel("อาจารย์ที่ปรึกษา " + (student.getStudentAdvisor() == null ? "ไม่มี" : student.getStudentAdvisor().getName() + " (" + student.getStudentAdvisor().getAdvisorID() + ")"))
             );
         }
         else if (user instanceof FacultyOfficer){
@@ -83,19 +122,17 @@ public class SettingsController {
         else if (user instanceof DepartmentOfficer){
             DepartmentOfficer departmentOfficer = (DepartmentOfficer) user;
             userInfoPane.getChildren().addAll(
-                    createLabel("คณะ " + departmentOfficer.getFaculty().getFacultyName()),
-                    createLabel("สาขาวิชา " + departmentOfficer.getDepartment().getDepartmentName() + " (" + departmentOfficer.getFaculty().getFacultyId() + departmentOfficer.getDepartment().getDepartmentID() + ")")
+                    createLabel("คณะ " + departmentOfficer.getFaculty().getFacultyName() + " (" + departmentOfficer.getFaculty().getFacultyId() + ")"),
+                    createLabel("สาขาวิชา " + departmentOfficer.getDepartment().getDepartmentName() + " (" + departmentOfficer.getDepartment().getDepartmentID() + ")")
             );
         }
         else if (user instanceof Advisor) {
             Advisor advisor = (Advisor) user;
             userInfoPane.getChildren().addAll(
-                    createLabel("คณะ " + advisor.getFaculty()),
-                    createLabel("สาขาวิชา " + advisor.getDepartment().getDepartmentName() + " (" + advisor.getFaculty().getFacultyId() + advisor.getDepartment().getDepartmentID() + ")")
+                    createLabel("คณะ " + advisor.getFaculty().getFacultyName() + " (" + advisor.getFaculty().getFacultyId() + ")"),
+                    createLabel("สาขาวิชา " + advisor.getDepartment().getDepartmentName() + " (" + advisor.getDepartment().getDepartmentID() + ")")
             );
         }
-
-        fileUploadLabel.setText(""); //ตังเป็นไม่แสดงก่อน
     }
 
     private void setProfilePicture(String profilePath) {
@@ -114,7 +151,6 @@ public class SettingsController {
     private Label createLabel(String text) {
         Label label = new Label(text);
         label.getStyleClass().add("label");
-        label.setFont(new Font("System", 18));
         return label;
     }
 
@@ -134,11 +170,10 @@ public class SettingsController {
         );
 
         // Show open file dialog
-        uploadedPicture = fileChooser.showOpenDialog(fileUploadLabel.getScene().getWindow());
+        uploadedPicture = fileChooser.showOpenDialog(rootPane.getScene().getWindow());
 
         if (uploadedPicture != null) {
             // Set the file label to the name of the uploaded picture
-            fileUploadLabel.setText(uploadedPicture.getName());
 
             // Save the uploaded file to a directory (you can modify the directory path as needed)
             String directory = "data" + File.separator + "user-profile-picture" + File.separator;
@@ -163,6 +198,26 @@ public class SettingsController {
         }
     }
 
+    @FXML
+    public void changePassword(){
+        try {
+        if (!newPasswordField.getText().equals(confirmNewPasswordField.getText())) {
+            throw new IllegalArgumentException("รหัสผ่านใหม่และยืนยันรหัสผ่านใหม่ไม่ตรงกัน");
+            }
+        if (!user.validatePassword(currentPasswordField.getText())){
+            throw new IllegalArgumentException("รหัสผ่านปัจจุบันไม่ถูกต้อง");
+            }
+        user.setPassword(confirmNewPasswordField.getText(), false);
+        datasource.writeData(userList);
+        FXRouter.goTo("login");
+        }
+        catch (IllegalArgumentException e){
+            errorLabel.setText(e.getMessage());
+            errorLabel.setVisible(true);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @FXML
     public void changeProfileToDefaultButton(MouseEvent event) throws IOException {

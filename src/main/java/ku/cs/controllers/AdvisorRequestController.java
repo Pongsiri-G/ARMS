@@ -14,6 +14,7 @@ import ku.cs.models.*;
 import ku.cs.services.FXRouter;
 import ku.cs.services.RequestListFileDatasource;
 import ku.cs.services.UserListFileDatasource;
+import ku.cs.services.UserPreferencesListFileDatasource;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,6 +55,7 @@ public class AdvisorRequestController extends BaseController {
     private UserList userList;
     private UserListFileDatasource userListDatasource;
     private RequestListFileDatasource requestListDatasource;
+    private UserPreferencesListFileDatasource preferencesListFileDatasource;
     private RequestList requestList;
     private Request request;
 
@@ -62,6 +64,8 @@ public class AdvisorRequestController extends BaseController {
         this.userList = userListDatasource.readData();
         requestListDatasource = new RequestListFileDatasource("data/test", "requestlist.csv", userList);
         this.requestList = requestListDatasource.readData();
+        preferencesListFileDatasource = new UserPreferencesListFileDatasource("data/test", "preferences.csv", userList);
+        this.preferencesListFileDatasource.readData();
     }
 
     @FXML
@@ -71,7 +75,7 @@ public class AdvisorRequestController extends BaseController {
         roleLabel.setText("อาจารย์ | ภาควิชา" + advisor.getDepartment().getDepartmentName());
         nameLabel.setText(advisor.getName());
         usernameLabel.setText(advisor.getUsername());
-        applyThemeAndFont(rootPane);
+        applyThemeAndFont(rootPane, advisor.getPreferences().getTheme(), advisor.getPreferences().getFontFamily(), advisor.getPreferences().getFontSize());
         setProfilePicture(profilePictureDisplay, advisor.getProfilePicturePath());
 
         showTable(advisor.getRequestsByAdvisor(requestList));
