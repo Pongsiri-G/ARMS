@@ -103,6 +103,8 @@ public class FacultyOfficerController extends BaseController{
     public void initialize() {
         initializeDataSources();
         loadRequests();
+        preferencesListFileDatasource = new UserPreferencesListFileDatasource("data/test", "preferences.csv", userList);
+        this.preferencesListFileDatasource.readData();
         setupOfficerInfo();
         switchToRequestScene();
     }
@@ -128,8 +130,6 @@ public class FacultyOfficerController extends BaseController{
         officer = (FacultyOfficer) userList.findUserByUsername((String) FXRouter.getData());
         requests = officer.getRequestsByFaculty(requestList);
         approverDatasource = new RequestHandlingOfficersDataSource("data/approver", officer.getFaculty().getFacultyName() + "-approver.csv");
-        preferencesListFileDatasource = new UserPreferencesListFileDatasource("data/test", "preferences.csv", userList);
-        this.preferencesListFileDatasource.readData();
         loadApprovers();
     }
 
@@ -518,7 +518,7 @@ public class FacultyOfficerController extends BaseController{
     @FXML
     public void settingsPageClick(MouseEvent event) throws IOException {
         ArrayList<String> data = new ArrayList<>();
-        data.add("department-officer");
+        data.add("faculty-officer");
         data.add(officer.getUsername());
         FXRouter.goTo("settings", data);
 
