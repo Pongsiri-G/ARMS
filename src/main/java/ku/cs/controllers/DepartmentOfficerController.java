@@ -152,8 +152,11 @@ public class DepartmentOfficerController extends BaseController {
         loadData();
         loadRequests();
         loadApprovers();
+        preferencesListFileDatasource = new UserPreferencesListFileDatasource("data/test", "preferences.csv", userList);
+        this.preferencesListFileDatasource.readData();
         setupOfficerInfo();
         switchToRequestScene();
+
     }
 
     public void setupOfficerInfo() {
@@ -164,7 +167,7 @@ public class DepartmentOfficerController extends BaseController {
         setProfilePicture(profilePictureDisplay, officer.getProfilePicturePath());
     }
 
-    private void initializeDataSources() {
+    public void initializeDataSources() {
         datasource = new UserListFileDatasource("data/test",
                 "studentlist.csv",
                 "advisorlist.csv",
@@ -179,8 +182,6 @@ public class DepartmentOfficerController extends BaseController {
         advisors = officer.getDepartment().getAdvisors();
         students = officer.getDepartment().getStudents();
         approverDatasource = new RequestHandlingOfficersDataSource("data/approver", officer.getDepartment().getDepartmentName() + "-approver.csv");
-        preferencesListFileDatasource = new UserPreferencesListFileDatasource("data/test", "preferences.csv", userList);
-        this.preferencesListFileDatasource.readData();
     }
 
     public void loadData() {
