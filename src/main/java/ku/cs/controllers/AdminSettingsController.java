@@ -156,13 +156,15 @@ public class AdminSettingsController extends BaseController {
         }
     }
 
+
     @FXML
     public void changeProfileToDefaultButton(MouseEvent event) throws IOException {
-        String filePath = "src/main/resources/images/profile.jpg";
-        admin.setProfilePicturePath(filePath);  // Set the profile picture path for the user
+        admin.setProfilePicturePath(null);  // Set the profile picture path for the user
         // Update the Circle profile picture display
-        setProfilePicture(filePath);
         // Save changes (if necessary) and update the data source
         adminDatasource.writeData(admin);
+        Image profileImage = new Image(getClass().getResource("/images/profile.jpg").toExternalForm());
+        profilePictureDisplay.setFill(new ImagePattern(profileImage));
+
     }
 }

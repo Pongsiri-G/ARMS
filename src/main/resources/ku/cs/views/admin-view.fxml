@@ -20,7 +20,7 @@
    <top>
       <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Label fx:id="roleLabel" prefHeight="54.0" prefWidth="1000.0" styleClass="header" text="roleLabel">
+            <Label  prefHeight="54.0" prefWidth="1000.0" styleClass="header" text="ผู้ดูแลระบบ">
                <HBox.margin>
                   <Insets left="120.0" />
                </HBox.margin>
