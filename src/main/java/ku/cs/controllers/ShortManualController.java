@@ -5,7 +5,7 @@ import ku.cs.services.FXRouter;
 
 import java.io.IOException;
 
-public class CreatorController {
+public class ShortManualController {
     @FXML
     protected void onBackButtonClick() {
         try {

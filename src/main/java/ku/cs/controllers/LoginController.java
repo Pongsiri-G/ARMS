@@ -47,17 +47,17 @@ public class LoginController {
     public void userLogin() throws IOException {
         try {
             String adminPassword = password.getText().trim();
-            //System.out.println("Loaded users: " + userList.getAllUsers()); // Debugging Only, will remove later
+
             System.out.println(admin.getPassword());
             if ((username.getText().trim().equals("Admin")) && (admin.validatePassword(adminPassword))) {
                 FXRouter.goTo("dashboard");
-            } // TEMPORARY LOGIN FOR TEST ONLY
+            }
 
             String role = userList.login(username.getText().trim(), password.getText().trim());
 
             if (role != null) {
                 datasource.writeData(userList);
-                redirect(role);  // Redirect based on role
+                redirect(role);
             }
         }
         catch (IllegalArgumentException e) {
@@ -65,7 +65,7 @@ public class LoginController {
         }
     }
 
-    // Handle redirection based on the user role
+
     private void redirect(String role) throws IOException {
         String loggedInUser = userList.findUserByUsername(username.getText().trim()).getUsername();
         User user = userList.findUserByUsername(username.getText().trim());
@@ -98,12 +98,11 @@ public class LoginController {
         FXRouter.goTo("register");
     }
 
-    @FXML
-    protected void onCreatorClick() {
-        try {
-            FXRouter.goTo("creator");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public void toShortManualPageClick() throws IOException {
+        FXRouter.goTo("short-manual");
+    }
+
+    public void toCreatorPageClick() throws IOException {
+        FXRouter.goTo("creator");
     }
 }

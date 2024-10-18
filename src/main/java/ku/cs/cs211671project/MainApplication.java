@@ -12,16 +12,17 @@ public class MainApplication extends Application {
         FXRouter.bind(this, stage, "CS211 Project", 1440, 1024);
         configRoutes();
         FXRouter.goTo("login");
-        //UserListFileDatasourceTest u = new UserListFileDatasourceTest(); //FOR TESTING ONLY
-        //u.runTests(); //FOR TESTING ONLY
-        //RequestListFileDatasourceTest r = new RequestListFileDatasourceTest(); //FOR TESING ONLY
-        //r.runTests();
+
+
+
+
     }
 
     private void configRoutes() {
         String viewPath = "ku/cs/views/";
         FXRouter.when("login", viewPath + "login-view.fxml");
         FXRouter.when("creator", viewPath + "creator-view.fxml");
+        FXRouter.when("short-manual", viewPath + "short-manual-view.fxml");
         FXRouter.when("settings", viewPath + "settings-view.fxml");
         FXRouter.when("dashboard", viewPath + "admin-view.fxml");
         FXRouter.when("advisor", viewPath + "advisor-view.fxml");
