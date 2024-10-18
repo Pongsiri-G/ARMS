@@ -182,7 +182,7 @@ public class UserListFileDatasourceTest {
 
 
 
-        datasource.writeData(officers);
+                datasource.writeData(officers);
     }
 
     public void loadFacultyOfficer(){

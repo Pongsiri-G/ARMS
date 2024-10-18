@@ -61,7 +61,7 @@ public class AdvisorController extends BaseController {
         this.userList = datasources.readData();
         preferencesListFileDatasource = new UserPreferencesListFileDatasource("data/csv_files", "preferences.csv", userList);
         this.preferencesListFileDatasource.readData();
-        // เนื่องจากการส่งข้อมูลข้ามหน้าของเราเป็น การส่ง Username มาก็เลย Cast ให้มันเป็น String เเละหาใน UserList เเล้วให้ return Object นั้นมาเพื่อใช้ในการเเสดงข้อมูลขั้นต่อไป
+        
         User user = userList.findUserByUsername((String) FXRouter.getData());
         showUserInfo(user);
 
@@ -111,8 +111,8 @@ public class AdvisorController extends BaseController {
         studentListTable.getItems().clear();
 
         facultyCol.setCellValueFactory(student ->
-                new SimpleStringProperty(student.getValue().getEnrolledFaculty().getFacultyName())//ใช้ SimpleStringProperty ในการดึง method ที่่ return เป็น string
-        );//ซึ่งตรงกับชนิด dataType ที่กำหนดไว้เพราะ contructor ที่เรารับมานั้น Faculty and Department มันรับเป็น object
+                new SimpleStringProperty(student.getValue().getEnrolledFaculty().getFacultyName())
+        );
         departmentCol.setCellValueFactory(student ->
                 new SimpleStringProperty(student.getValue().getEnrolledDepartment().getDepartmentName())
         );
@@ -120,21 +120,21 @@ public class AdvisorController extends BaseController {
         idCol.setCellValueFactory(new PropertyValueFactory<>("studentID"));
         emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
 
-        // ล้าง column เดิมทั้งหมดที่มีอยู่ใน table แล้วเพิ่ม column ใหม่
+        
         studentListTable.getColumns().clear();
         studentListTable.getColumns().add(facultyCol);
         studentListTable.getColumns().add(departmentCol);
         studentListTable.getColumns().add(nameCol);
         studentListTable.getColumns().add(idCol);
         studentListTable.getColumns().add(emailCol);
-        // ใส่ข้อมูล Student ทั้งหมดจาก studentList ไปแสดงใน TableView
+        
         studentListTable.getItems().addAll(students);
     }
 
     @FXML
     void searchStudent() {
         facultyCol.setCellValueFactory(student ->
-                new SimpleStringProperty(student.getValue().getEnrolledFaculty().getFacultyName())//ใช้ SimpleStringProperty ในการดึง method ที่่ return เป็น string
+                new SimpleStringProperty(student.getValue().getEnrolledFaculty().getFacultyName())
         );
         departmentCol.setCellValueFactory(student ->
                 new SimpleStringProperty(student.getValue().getEnrolledDepartment().getDepartmentName())

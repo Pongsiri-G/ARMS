@@ -1,7 +1,6 @@
 package ku.cs.services;
 
 import ku.cs.models.RequestHandlingOfficer;
-import ku.cs.models.Student;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -17,7 +16,7 @@ public class RequestHandlingOfficersDataSource implements Datasource<ArrayList<R
         checkFileIsExisted();
     }
 
-    // ตรวจสอบว่ามีไฟล์ให้อ่านหรือไม่ ถ้าไม่มีให้สร้างไฟล์เปล่า
+    
     private void checkFileIsExisted() {
         File file = new File(directoryName);
         if (!file.exists()) {
@@ -40,7 +39,7 @@ public class RequestHandlingOfficersDataSource implements Datasource<ArrayList<R
         String filePath = directoryName + File.separator + fileName;
         File file = new File(filePath);
 
-        // เตรียม object ที่ใช้ในการอ่านไฟล์
+        
         FileInputStream fileInputStream = null;
 
         try {
@@ -57,21 +56,21 @@ public class RequestHandlingOfficersDataSource implements Datasource<ArrayList<R
 
         String line = "";
         try {
-            // ใช้ while loop เพื่ออ่านข้อมูลรอบละบรรทัด
+            
             while ((line = buffer.readLine()) != null) {
-                // ถ้าเป็นบรรทัดว่าง ให้ข้าม
+                
                 if (line.equals("")) continue;
 
-                // แยกสตริงด้วย ,
+                
                 String[] data = line.split(",");
 
-                // อ่านข้อมูลตาม index แล้วจัดการประเภทของข้อมูลให้เหมาะสม
+                
                 String facDep = data[0].trim();
                 String position = data[1].trim();
                 String name = data[2].trim();
                 String lastUpdate = data[3].trim();
 
-                // เพิ่มข้อมูลลงใน list
+                
                 approvers.add(new RequestHandlingOfficer(facDep, position, name, lastUpdate));
             }
         } catch (IOException e) {
@@ -86,7 +85,7 @@ public class RequestHandlingOfficersDataSource implements Datasource<ArrayList<R
         String filePath = directoryName + File.separator + fileName;
         File file = new File(filePath);
 
-        // เตรียม object ที่ใช้ในการเขียนไฟล์
+        
         FileOutputStream fileOutputStream = null;
 
         try {
@@ -102,7 +101,7 @@ public class RequestHandlingOfficersDataSource implements Datasource<ArrayList<R
         BufferedWriter buffer = new BufferedWriter(outputStreamWriter);
 
         try {
-            // สร้าง csv และเขียนลงในไฟล์ทีละบรรทัด
+            
             for (RequestHandlingOfficer approver : data) {
                 String line = approver.getFacDep() + "," + approver.getPosition() + "," + approver.getName() + "," + approver.getLastUpdate();
                 buffer.append(line);

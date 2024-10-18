@@ -6,22 +6,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Request {
-    private String timestamp; //วันเวลาที่คำข้อถูกสร้าง
-    private String lastModifiedDateTime; //วันเวลาที่คำขอถูกแก้ไขมากที่สุด
-    private String status; //สถานะคำร้อง (กำลังดำเนินการ ปฏิเสธ เสร็จสิ้น)
-    private String requestType; //ประเภทคำร้อง
-    private Student requester; //ผู้ยื่นคำร้อง (นิสิต)
-    private String currentApprover; //ผู้อนุมัติปัจจุบัน (อาจารย์ที่ปรึกษา, เจ้าหน้าที่ภาควิชา, เจ้าหน้าที่คณะ)
-    private String numberPhone; //เบอร์มือถือของผู้ยื่นคำร้อง
-    private String pdfFilePath; //เก็บตัวคำร้องที่เป็นไฟล์ pdf จริงๆ
-    private List<String> statusLog; //เก็บประวัติการดำเนินการต่างๆข้องคำร้อง
+    private String timestamp; 
+    private String lastModifiedDateTime; 
+    private String status; 
+    private String requestType; 
+    private Student requester; 
+    private String currentApprover; 
+    private String numberPhone; 
+    private String pdfFilePath; 
+    private List<String> statusLog; 
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-    // Constructor for creating a new request, with automatic timestamps
+    
     public Request(String requestType, Student requester, String numberPhone) {
         this.requestType = requestType;
-        this.timestamp = LocalDateTime.now().format(formatter); // Current time for new requests
+        this.timestamp = LocalDateTime.now().format(formatter); 
         this.lastModifiedDateTime = LocalDateTime.now().format(formatter);
         this.statusLog = new ArrayList<>();
         this.requester = requester;
@@ -32,7 +32,7 @@ public abstract class Request {
         addStatusLog("คำร้องส่งต่อให้อาจารย์ที่ปรึกษา");
     }
 
-    // Constructor สำหรับอ่านไฟล์จาก CSV
+    
     public Request(String timestamp, String requestType, String status, Student requester, String currentApprover, String numberPhone, String lastModifiedDateTime, String pdfFilePath, List<String> statusLog) {
         this.requestType = requestType;
         this.timestamp = timestamp;
@@ -45,7 +45,7 @@ public abstract class Request {
         this.pdfFilePath = pdfFilePath;
     }
 
-    //ดำเนินการคำร้อง (เรียกใช้จาก method นี้)
+    
     public void processRequest(String approver, String decision, String detail) {
         if ("อนุมัติ".equalsIgnoreCase(decision)) {
             handleApproval(approver);
@@ -94,7 +94,7 @@ public abstract class Request {
         }
     }
 
-    // Getters
+    
     public String getRequestType() {
         return requestType;
     }
@@ -107,7 +107,7 @@ public abstract class Request {
         return statusLog;
     }
 
-    //ใช้สำหรับในการดึงไปแสดงในหน้า TableView
+    
     public String getRecentStatusLog() {
         if (statusLog.isEmpty()) {
             return null;

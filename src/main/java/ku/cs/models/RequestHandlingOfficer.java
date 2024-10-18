@@ -4,13 +4,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class RequestHandlingOfficer {
-    // นี่ไม่ใช่คำร้องน่่เป็นคนจัดการคำร้องพวก หัวหน้าภาควิชา
+    
     private String facDep;
     private String position;
     private String name;
     private String lastUpdate;
 
-    // Begin Constructor
+    
     public RequestHandlingOfficer(String facDep, String position, String name) {
         this.facDep = facDep;
         this.position = position;
@@ -24,7 +24,7 @@ public class RequestHandlingOfficer {
         this.name = name;
         this.lastUpdate = lastUpdate;
     }
-    // End Constructor
+    
 
     public void setName(String name) {
         this.name = name;

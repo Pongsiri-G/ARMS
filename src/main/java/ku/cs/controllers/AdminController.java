@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import ku.cs.models.*;
@@ -37,23 +36,23 @@ public class AdminController extends BaseController {
     private RequestList requestList;
     private UserList userList;
     private FacultyList facultyList;
-    private Admin admin; // ประกาศตัวแปร admin
+    private Admin admin; 
     private Datasource<UserList> datasource;
     private Datasource<RequestList> requestListDatasource;
     private Datasource<FacultyList> facultyListDatasource;
-    private Datasource<Admin> adminDatasource; // ประกาศ Datasource สำหรับ Admin
+    private Datasource<Admin> adminDatasource; 
 
     @FXML
     public void initialize() {
-        // ตั้งค่า ChoiceBox สำหรับการเลือกประเภทการแสดงผล
+        
         selectedChoiceBox.getItems().addAll(choice);
         selectedChoiceBox.setValue(choice[0]);
 
-        // ตั้งค่า StackPane เริ่มต้น
+        
         roleVBox.setVisible(true);
         facDepVBox.setVisible(false);
 
-        // โหลดข้อมูลจากไฟล์ CSV
+        
         datasource = new UserListFileDatasource("data/csv_files", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
         userList = datasource.readData();
         requestListDatasource = new RequestListFileDatasource("data/students_requests", "requestlist.csv", userList);
@@ -103,24 +102,24 @@ public class AdminController extends BaseController {
             admin.increaseRequestCount(request);
         }
 
-        // อัปเดตจำนวนผู้ใช้ในคณะและสาขาเริ่มต้น
+        
         populateFacultyChoiceBox();
         populateDepartmentChoiceBox("All");
 
-        // ตั้งค่าเลือกเริ่มต้น
+        
         selectedFaculty.getSelectionModel().select("เลือกคณะ");
         selectedDepartment.getSelectionModel().select("เลือกภาควิชา");
 
-        facultyLabel.setText(selectedFaculty.getValue()); // อัปเดต label คณะ
-        departmentLabel.setText(selectedDepartment.getValue()); // อัปเดต label สาขา
+        facultyLabel.setText(selectedFaculty.getValue()); 
+        departmentLabel.setText(selectedDepartment.getValue()); 
 
-        // นับจำนวนผู้ใช้ตามบทบาทและเพิ่มข้อมูลลงใน admin
+        
         countUserByRole();
 
-        // แสดงข้อมูลคำร้องขอ
+        
         showRequest();
 
-        // แสดงจำนวนผู้ใช้ทั้งหมด
+        
         showTotalUsers();
     }
 
@@ -131,7 +130,7 @@ public class AdminController extends BaseController {
             countFacOff.setText(String.valueOf(admin.getAllFacultyOfficers()));
             countDepOff.setText(String.valueOf(admin.getAllDepartmentOfficers()));
         } else {
-            // กรณีที่ admin ยังไม่ถูกกำหนดค่า
+            
             countStudent.setText("0");
             countAdvisor.setText("0");
             countFacOff.setText("0");
@@ -140,22 +139,22 @@ public class AdminController extends BaseController {
     }
 
     private void populateFacultyChoiceBox() {
-        // เพิ่มชื่อคณะจาก facultyList ลงใน selectedFaculty
+        
         selectedFaculty.getItems().clear();
         selectedFaculty.getItems().addAll(
                 facultyList.getFaculties().stream()
                         .map(Faculty::getFacultyName)
                         .collect(Collectors.toList())
         );
-        selectedFaculty.getItems().add(0, "เลือกคณะ"); // เพิ่มตัวเลือก "เลือกคณะ" ที่ด้านบน
+        selectedFaculty.getItems().add(0, "เลือกคณะ"); 
     }
 
     private void populateDepartmentChoiceBox(String facultyName) {
-        // ล้างรายการสาขาเก่า
+        
         selectedDepartment.getItems().clear();
-        selectedDepartment.getItems().add("All"); // เพิ่มตัวเลือก All
+        selectedDepartment.getItems().add("All"); 
 
-        if (!facultyName.equals("All")) { // เนื่องจาก selectedFaculty ไม่มี "All"
+        if (!facultyName.equals("All")) { 
             Faculty faculty = facultyList.findFacultyByName(facultyName);
             if (faculty != null) {
                 selectedDepartment.getItems().addAll(
@@ -166,12 +165,12 @@ public class AdminController extends BaseController {
             }
         }
 
-        // ตั้งค่าเลือกเป็น "All" หลังจากเติมข้อมูล
+        
         selectedDepartment.getSelectionModel().select("All");
     }
 
     private void addChoiceBoxListeners() {
-        // Listener สำหรับ selectedChoiceBox เพื่อแสดง/hide StackPane ตามการเลือก
+        
         selectedChoiceBox.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> {
                     if ("บทบาท".equals(newValue)) {
@@ -188,9 +187,9 @@ public class AdminController extends BaseController {
                 (observable, oldValue, newValue) -> {
                     if (newValue != null && !newValue.equals("เลือกคณะ")) {
                         populateDepartmentChoiceBox(newValue);
-                        facultyLabel.setText(newValue); // อัปเดตป้ายชื่อคณะ
+                        facultyLabel.setText(newValue); 
                     } else {
-                        facultyLabel.setText(""); // ล้างป้ายชื่อคณะถ้าเลือก "เลือกคณะ"
+                        facultyLabel.setText(""); 
                     }
                 }
         );
@@ -199,15 +198,15 @@ public class AdminController extends BaseController {
                 (observable, oldValue, newValue) -> {
                     if (newValue != null) {
                         if (!newValue.equals("All")) {
-                            departmentLabel.setText(newValue); // อัปเดตป้ายชื่อสาขา
+                            departmentLabel.setText(newValue); 
                         } else {
-                            departmentLabel.setText("ทั้งหมด"); // แสดง "ทั้งหมด" เมื่อเลือก "All"
+                            departmentLabel.setText("ทั้งหมด"); 
                         }
 
                         if ("All".equals(newValue)) {
-                            updateFacultyUser(selectedFaculty.getSelectionModel().getSelectedItem()); // อัปเดตจำนวนผู้ใช้ในคณะที่เลือกทั้งหมด
+                            updateFacultyUser(selectedFaculty.getSelectionModel().getSelectedItem()); 
                         } else {
-                            updateDepartmentUser(newValue); // อัปเดตจำนวนผู้ใช้ในสาขาที่เลือก
+                            updateDepartmentUser(newValue); 
                         }
                     }
                 }

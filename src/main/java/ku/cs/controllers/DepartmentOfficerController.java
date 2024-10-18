@@ -30,7 +30,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class DepartmentOfficerController extends BaseController {
-    // UI Components
+    
     @FXML
     BorderPane rootPane;
     @FXML
@@ -48,7 +48,7 @@ public class DepartmentOfficerController extends BaseController {
     @FXML
     Pane currentMenu3;
 
-    // Request Scene
+    
     @FXML VBox requestListScene;
     @FXML TableView<Request> requestListTableView;
     @FXML VBox requestDetailPane;
@@ -63,7 +63,7 @@ public class DepartmentOfficerController extends BaseController {
     @FXML TextField reasonTextField;
 
 
-    // Approver Scene UI
+    
     @FXML
     VBox approverScene;
     @FXML
@@ -76,7 +76,7 @@ public class DepartmentOfficerController extends BaseController {
     TableColumn<RequestHandlingOfficer, String> approverLastUpdateTableColumn;
 
 
-    // Manage Approver Scene UI
+    
     @FXML
     GridPane manageApproverScene;
     @FXML
@@ -88,7 +88,7 @@ public class DepartmentOfficerController extends BaseController {
     @FXML
     Label errorManageApproverLabel;
 
-    // all nisit scene
+    
     @FXML
     VBox studentListScene;
     @FXML
@@ -104,7 +104,7 @@ public class DepartmentOfficerController extends BaseController {
     @FXML
     TableColumn<Student, String> studentAdvisorTableColumn;
 
-    // manage nisit scene
+    
     @FXML
     GridPane manageStudentScene;
     @FXML
@@ -127,7 +127,7 @@ public class DepartmentOfficerController extends BaseController {
     Label errorManageStudentLabel;
 
 
-    // Handle Data
+    
     DepartmentOfficer officer;
     RequestHandlingOfficersDataSource approverDatasource;
     UserListFileDatasource datasource;
@@ -274,7 +274,7 @@ public class DepartmentOfficerController extends BaseController {
         currentMenu3.setVisible(true);
         studentListScene.setVisible(true);
         studentsTableView.setVisible(true);
-        //studentMainButtons.setDisable(false);
+        
         updateStudentTableView();
     }
 
@@ -317,22 +317,22 @@ public class DepartmentOfficerController extends BaseController {
     public void updateRequestTableView() {
         loadApprovers();
 
-        // Set up the columns
+        
         TableColumn<Request, String> typeColumn = new TableColumn<>("ประเภทคำร้อง");
-        typeColumn.setCellValueFactory(new PropertyValueFactory<>("requestType")); // รับประเภทคำร้องจาก Request โดยตรง
+        typeColumn.setCellValueFactory(new PropertyValueFactory<>("requestType")); 
         typeColumn.setMinWidth(290);
 
         TableColumn<Request, String> nameColumn = new TableColumn<>("ชื่อ-นามสกุล");
         nameColumn.setCellValueFactory(cellData -> {
             Student student = cellData.getValue().getRequester();
-            return new SimpleStringProperty(student.getName()); // ดึงชื่อ-นามสกุลจากที่สิตที่สร้างคำร้อง
+            return new SimpleStringProperty(student.getName()); 
         });
         nameColumn.setMinWidth(290);
 
         TableColumn<Request, String> idColumn = new TableColumn<>("รหัสนิสิต");
         idColumn.setCellValueFactory(cellData -> {
             Student student = cellData.getValue().getRequester();
-            return new SimpleStringProperty(student.getStudentID()); // ดึงรหสนิสิตจากที่สิตที่สร้างคำร้อง
+            return new SimpleStringProperty(student.getStudentID()); 
         });
         idColumn.setMinWidth(290);
 
@@ -385,22 +385,22 @@ public class DepartmentOfficerController extends BaseController {
     }
 
     public void fillSelectApproverMenuButtons() {
-        selectOfficerHandlingMenu.getItems().clear(); // Clear existing items
+        selectOfficerHandlingMenu.getItems().clear(); 
         ArrayList<RequestHandlingOfficer> approvers = officer.getRequestManagers();
 
         for (RequestHandlingOfficer approver : approvers) {
             MenuItem item = new MenuItem(approver.getFullPositoin());
 
-            // Event handling when an item is clicked
+            
             item.setOnAction(e -> {
-                // Set the selected position
+                
                 String selectedApprover = item.getText();
 
-                // Set the text of the roleSelectMenuButton to the selected position
+                
                 selectOfficerHandlingMenu.setText(selectedApprover);
             });
 
-            // Add the item to the menu button
+            
             selectOfficerHandlingMenu.getItems().add(item);
             selectOfficerHandlingMenu.setText("เลือกผู้ดำเนินการ");
         }
@@ -491,12 +491,12 @@ public class DepartmentOfficerController extends BaseController {
     }
 
     public void updateRequest() throws IOException {
-        // การอัพโหลด pdf
+        
         fileLabel.setText(selectedFile.getName());
-        String filePath = FileStorage.replaceFileWithTimestamp(selectedFile, selectedRequest.getPdfFilePath()); // เอาไฟล์ที่อัพโหลดไปใส่
-        selectedRequest.setPdfFilePath(filePath); // เก็บที่อยู่ pdf ใน request
+        String filePath = FileStorage.replaceFileWithTimestamp(selectedFile, selectedRequest.getPdfFilePath()); 
+        selectedRequest.setPdfFilePath(filePath); 
 
-        // เขียนลง csv
+        
         requestDatasource.writeData(requestList);
     }
 
@@ -538,94 +538,94 @@ public class DepartmentOfficerController extends BaseController {
     }
 
     public void setApproverPositionAvailable() {
-        roleSelectMenuButton.getItems().clear(); // Clear existing items
+        roleSelectMenuButton.getItems().clear(); 
         ArrayList<String> positions = officer.getAvailablePositions();
 
         for (String position : positions) {
             MenuItem item = new MenuItem(position);
 
-            // Event handling when an item is clicked
+            
             item.setOnAction(e -> {
-                // Set the selected position
+                
                 String selectedPosition = item.getText();
 
-                // Set the text of the roleSelectMenuButton to the selected position
+                
                 roleSelectMenuButton.setText(selectedPosition);
             });
 
-            // Add the item to the menu button
+            
             roleSelectMenuButton.getItems().add(item);
         }
     }
 
     public void updateStudentTableView() {
-        // Column for student's ID
+        
         studentIDTableColumn = new TableColumn<>("รหัสประจำตัวนิสิต");
         studentIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("studentID"));
         studentIDTableColumn.setMinWidth(300);
         studentIDTableColumn.setMaxWidth(300);
 
-        // Column for student's name
+        
         studenttNameTableColumn = new TableColumn<>("ชื่อ-นามสกุล");
         studenttNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         studenttNameTableColumn.setMinWidth(300);
         studenttNameTableColumn.setMaxWidth(300);
 
-        // Column for student's email
+        
         studentEmailTableColumn = new TableColumn<>("อีเมล");
         studentEmailTableColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         studentEmailTableColumn.setMinWidth(300);
         studentEmailTableColumn.setMaxWidth(300);
 
-        // Column for student's advisor (custom CellValueFactory to access Advisor's name)
+        
         studentAdvisorTableColumn = new TableColumn<>("อาจารย์ที่ปรึกษา");
         studentAdvisorTableColumn.setCellValueFactory(cellData -> {
-            Advisor advisor = cellData.getValue().getStudentAdvisor(); // Access the Advisor object
-            return new SimpleStringProperty(advisor != null ? advisor.getName() : "-"); // Return advisor's name or empty string if null
+            Advisor advisor = cellData.getValue().getStudentAdvisor(); 
+            return new SimpleStringProperty(advisor != null ? advisor.getName() : "-"); 
         });
         studentAdvisorTableColumn.setMinWidth(300);
         studentAdvisorTableColumn.setMaxWidth(300);
 
 
-        // Clear and set columns in the TableView
+        
         studentsTableView.getColumns().clear();
         studentsTableView.getColumns().add(studentIDTableColumn);
         studentsTableView.getColumns().add(studenttNameTableColumn);
         studentsTableView.getColumns().add(studentEmailTableColumn);
         studentsTableView.getColumns().add(studentAdvisorTableColumn);
 
-        // Create a FilteredList to allow filtering the students based on the search text
+        
         FilteredList<Student> filteredData = new FilteredList<>(FXCollections.observableArrayList(students), p -> true);
 
-        // Add a listener to the searchBarStudentTextField to filter the list
+        
         searchBarStudentTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             filteredData.setPredicate(student -> {
-                // If search field is empty, display all students
+                
                 if (newValue == null || newValue.isEmpty()) {
                     return true;
                 }
 
                 String lowerCaseFilter = newValue.toLowerCase();
 
-                // Filter by student name, email, or advisor's name
+                
                 if (student.getStudentID().toLowerCase().contains(lowerCaseFilter)) {
                     return true;
                 } else if (student.getName().toLowerCase().contains(lowerCaseFilter)) {
-                    return true; // Filter matches student name
+                    return true; 
                 } else if (student.getEmail().toLowerCase().contains(lowerCaseFilter)) {
-                    return true; // Filter matches student email
+                    return true; 
                 } else if (student.getStudentAdvisor() != null && student.getStudentAdvisor().getName().toLowerCase().contains(lowerCaseFilter)) {
-                    return true; // Filter matches advisor's name
+                    return true; 
                 }
-                return false; // No match
+                return false; 
             });
         });
 
-        // Use a SortedList to bind sorting to the TableView
+        
         SortedList<Student> sortedData = new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(studentsTableView.comparatorProperty());
 
-        // Set the sorted and filtered data to the TableView
+        
         studentsTableView.setItems(sortedData);
     }
 
@@ -633,24 +633,24 @@ public class DepartmentOfficerController extends BaseController {
         studentSelectAdvisorMenuBar.getItems().clear();
         MenuItem noAdvisorItem = new MenuItem("ไม่ระบุ");
 
-        // Event handling for "ไม่ระบุ"
+        
         noAdvisorItem.setOnAction(e -> {
-            // Set the text of the menu button to "ไม่ระบุ" when clicked
+            
             studentSelectAdvisorMenuBar.setText("ไม่ระบุ");
         });
         studentSelectAdvisorMenuBar.getItems().add(noAdvisorItem);
         for (Advisor advisor : advisors) {
             MenuItem item = new MenuItem(advisor.getName());
-            // Event handling when an item is clicked
+            
             item.setOnAction(e -> {
-                // Set the selected position
+                
                 String selectedPosition = item.getText();
 
-                // Set the text of the roleSelectMenuButton to the selected position
+                
                 studentSelectAdvisorMenuBar.setText(selectedPosition);
             });
 
-            // Add the item to the menu button
+            
             studentSelectAdvisorMenuBar.getItems().add(item);
         }
     }
@@ -726,11 +726,11 @@ public class DepartmentOfficerController extends BaseController {
     public void onRemoveStudentButtonClick(MouseEvent mouseEvent) {
         studentToEdit = studentsTableView.getSelectionModel().getSelectedItem();
         if (studentToEdit != null) {
-            // Remove from the students
-           // students.remove(studentToEdit);
-            // Remove from userList
+            
+           
+            
             officer.removeStudentInDep(studentToEdit);
-            //officer.getDepartment().getStudents().remove(studentToEdit);
+            
             datasource.writeData(userList);
             loadData();
             studentToEdit = null;
@@ -762,26 +762,26 @@ public class DepartmentOfficerController extends BaseController {
         String email = studentEmailTextField.getText();
         String advisor = studentSelectAdvisorMenuBar.getText();
 
-        // Validate ID: Check if it is null, blank, or not an integer
+        
         if (id == null || id.trim().isEmpty()) {
             errorManageStudentLabel.setText("กรุณากรอกรหัสนิสิต");
             return;
         }
 
-        // Validate Name: Check if it is null or blank
+        
         if (name == null || name.trim().isEmpty()) {
             errorManageStudentLabel.setText("กรุณากรอกชื่อ-นามสกุลนิสิต");
             return;
         }
 
 
-        // Validate Email: Check if it contains '@'
+        
         if (email == null || !email.contains("@")) {
             errorManageStudentLabel.setText("กรุณาระบุอีเมลให้ถูกต้อง");
             return;
         }
 
-        // If all validations pass, proceed with saving the data
+        
         if (studentToEdit != null) {
             studentToEdit.setStudentID(id);
             studentToEdit.setName(name);
@@ -790,17 +790,17 @@ public class DepartmentOfficerController extends BaseController {
                 studentToEdit.setStudentAdvisor(null);
             } else {
                 officer.assignAdvisor(studentToEdit, advisor);
-                //studentToEdit.setStudentAdvisor(officer.getDepartment().findAdvisorByName(advisor));
+                
             }
         } else {
-            //Student student;
+            
             if (advisor == null || advisor.equals("เลือกอาจารย์ที่ปรึกษา") || advisor.equals("ไม่ระบุ")) {
                 officer.addStudentToDep(name, id, email);
-                //student = new Student(name, officer.getFaculty(), officer.getDepartment(), id, email);
+                
             }
             else {
                 officer.addStudentToDep(name, id, email, advisor);
-                //student = new Student(name,officer.getFaculty().getFacultyName(), officer.getDepartment().getDepartmentName(), id, email, officer.getDepartment().findAdvisorByName(advisor));
+                
             }
         }
         datasource.writeData(userList);

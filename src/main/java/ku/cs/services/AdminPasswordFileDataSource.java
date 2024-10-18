@@ -2,7 +2,6 @@ package ku.cs.services;
 
 import ku.cs.models.Admin;
 import ku.cs.models.UserPreferences;
-import ku.cs.models.User;
 
 import java.io.*;
 
@@ -17,12 +16,12 @@ public class AdminPasswordFileDataSource implements Datasource<Admin> {
     }
 
     private void checkFileIsExisted() {
-        // Check directory
+        
         File dir = new File(directoryName);
         if (!dir.exists()) {
             dir.mkdirs();
         }
-        // Check file
+        
         String filePath = directoryName + File.separator + fileName;
         File file = new File(filePath);
         if (!file.exists()) {
@@ -42,14 +41,14 @@ public class AdminPasswordFileDataSource implements Datasource<Admin> {
             String line = br.readLine();
             if (line != null) {
                 String[] data = line.split(",");
-                if (data.length >= 5) { // Ensure all data fields are available
+                if (data.length >= 5) { 
                     String password = data[0].trim();
                     String profilePicturePath = data[1].equals("ไม่มีรูปประจำตัว") ? null : data[1].trim();
                     String theme = data[2].trim();
                     String fontSize = data[3].trim();
                     String fontFamily = data[4].trim();
 
-                    // Create Admin and set values
+                    
                     admin = new Admin(password, true, false);
                     admin.setProfilePicturePath(profilePicturePath);
 

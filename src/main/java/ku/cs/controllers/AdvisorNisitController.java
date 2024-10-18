@@ -1,7 +1,6 @@
 package ku.cs.controllers;
 
 import javafx.embed.swing.SwingFXUtils;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -129,14 +128,14 @@ public class AdvisorNisitController extends BaseController {
             }
         });
 
-        // ล้าง column เดิมทั้งหมดที่มีอยู่ใน table แล้วเพิ่ม column ใหม่
+        
         studentTable.getColumns().clear();
         studentTable.getColumns().add(type);
         studentTable.getColumns().add(status);
         studentTable.getColumns().add(time);
 
 
-        // ใส่ข้อมูล Student ทั้งหมดจาก studentList ไปแสดงใน TableView
+        
         studentTable.getItems().addAll(requests);
     }
 

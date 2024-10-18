@@ -9,9 +9,7 @@ public class Student extends User {
     private Department enrolledDepartment;
     private Advisor studentAdvisor;
     public String advisorName;
-
-
-    //เพิ่มนิสิตใหม่สำหรับฐานข้อมูลภาควิชา (ไม่มี username, password)
+    
     public Student(String name,  Faculty faculty, Department department, String studentID, String email) {
         super(null, null, name);
         this.studentID = studentID;
@@ -20,7 +18,6 @@ public class Student extends User {
         this.enrolledDepartment = department;
     }
 
-    //สำหรับการอ่านจากไฟล์
     public Student(String username, String password, String name, Faculty faculty, Department department, String studentID, String email, boolean isHashed, boolean suspended) {
         super(username, password, name, isHashed, suspended);
         this.studentID = studentID;
@@ -36,7 +33,6 @@ public class Student extends User {
         requestList.addRequest(newRequest);
     }
 
-    //เรียกดูรายการคำร้องที่สร้างไว้ของนิสิต
     public ArrayList<Request> getRequestsByStudent(RequestList requests) {
         ArrayList<Request> studentRequests = new ArrayList<>();
         for (Request request : requests.getRequests()) {
@@ -76,14 +72,11 @@ public class Student extends User {
         }
         return count;
     }
-
-
-    // สำหรับการสร้าง object ชั่วคราวก่อน initialize
+    
     public Student(String name, String faculty, String department, String studentID, String email) {
         this(name,new Faculty(faculty),new Department(department),studentID,email);
     }
-
-    // สำหรับการสร้าง object ชั่วคราวก่อน initialize
+    
     public Student(String name, String faculty, String department, String studentID, String email, Advisor studentAdvisor) {
         this(name,new Faculty(faculty),new Department(department),studentID,email);
         this.studentAdvisor = studentAdvisor;

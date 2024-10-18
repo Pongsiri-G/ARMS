@@ -22,13 +22,13 @@ public class AdvOffListFileDatasource implements Datasource<ArrayList<Advisor>> 
     private void checkFileIsExisted() {
         File directory = new File(directoryName);
         if (!directory.exists()) {
-            directory.mkdirs(); // Create directory if not found
+            directory.mkdirs(); 
         }
         String filePath = directoryName + File.separator + advisorListFileName;
         File file = new File(filePath);
         if (!file.exists()) {
             try {
-                file.createNewFile(); // Create new file if not found
+                file.createNewFile(); 
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -46,28 +46,28 @@ public class AdvOffListFileDatasource implements Datasource<ArrayList<Advisor>> 
             buffer = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
             String line;
             while ((line = buffer.readLine()) != null) {
-                if (line.isEmpty()) continue; // ข้ามบรรทัดที่ว่าง
+                if (line.isEmpty()) continue; 
 
-                String[] data = line.split(","); // แบ่งข้อมูลด้วยเครื่องหมายจุลภาค
+                String[] data = line.split(","); 
 
-                // ตรวจสอบจำนวนคอลัมน์ว่าถูกต้อง
+                
                 if (data.length != 10) continue;
 
-                String username = data[0]; // ชื่อผู้ใช้
-                String password = data[1]; // รหัสผ่าน
-                String name = data[2]; // ชื่อ
-                boolean suspended = "ระงับบัญชี".equals(data[3]); // สถานะพักการใช้งาน
-                LocalDateTime lastLogin = "ไม่เคยเข้าใช้งาน".equals(data[4]) ? null : LocalDateTime.parse(data[4], formatter); // ถ้าเป็น "ไม่เคยเข้าใช้งาน" ให้ค่าเป็น null
-                String profilePicturePath = data[5].equals("ไม่มีรูปประจำตัว") ? null : data[5]; // ค่าพาธรูปโปรไฟล์
-                String faculty = data[6]; // คณะ
-                String department = data[7]; // ภาควิชา
-                String advisorID = data[8]; // รหัสอาจารย์
+                String username = data[0]; 
+                String password = data[1]; 
+                String name = data[2]; 
+                boolean suspended = "ระงับบัญชี".equals(data[3]); 
+                LocalDateTime lastLogin = "ไม่เคยเข้าใช้งาน".equals(data[4]) ? null : LocalDateTime.parse(data[4], formatter); 
+                String profilePicturePath = data[5].equals("ไม่มีรูปประจำตัว") ? null : data[5]; 
+                String faculty = data[6]; 
+                String department = data[7]; 
+                String advisorID = data[8]; 
                 String defaultPassword = data[9];
 
-                // เพิ่ม Advisor ไปยัง list ด้วยวิธี addNewAdvisor
+                
                 Advisor a = new Advisor(username, password, name, new Faculty(faculty), new Department(department), advisorID, true, suspended);
-                a.setLastLogin(lastLogin); // กำหนดค่า lastLogin
-                a.setProfilePicturePath(profilePicturePath); // กำหนดค่าพาธรูปโปรไฟล์
+                a.setLastLogin(lastLogin); 
+                a.setProfilePicturePath(profilePicturePath); 
                 a.setDefaultPassword(defaultPassword);
                 advisors.add(a);
             }
@@ -96,11 +96,10 @@ public class AdvOffListFileDatasource implements Datasource<ArrayList<Advisor>> 
         try {
             buffer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));
 
-            // Write each advisor's data
+            
             for (Advisor advisor : advisors) {
                 String lastLoginStr = advisor.getLastLogin() == null ? "ไม่เคยเข้าใช้งาน" : advisor.getLastLogin().format(formatter);
                 String profilePicturePath = advisor.getProfilePicturePath() == null ? "ไม่มีรูปประจำตัว" : advisor.getProfilePicturePath();
-                String defaultPassword = advisor.getDefaultPassword() == null ? "" : advisor.getDefaultPassword();
                 String line = advisor.getUsername() + ","
                         + advisor.getPassword() + ","
                         + advisor.getName() + ","

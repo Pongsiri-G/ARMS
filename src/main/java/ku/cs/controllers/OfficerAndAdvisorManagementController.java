@@ -3,19 +3,15 @@ package ku.cs.controllers;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
-import javafx.stage.Stage;
 import ku.cs.models.*;
 import ku.cs.models.User;
 import ku.cs.services.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class OfficerAndAdvisorManagementController extends BaseController{
     @FXML private ChoiceBox<String> roleChoiceBox;
@@ -450,7 +446,7 @@ public class OfficerAndAdvisorManagementController extends BaseController{
             advisorFacultyTextField.setText("");
             advisorDepartmentTextField.setText("");
             advisorIdTextField.setText("");
-            advisorErrorMessageLabel.setText(""); // ล้างข้อความผิดพลาดหลังจากเพิ่มสำเร็จ
+            advisorErrorMessageLabel.setText(""); 
         } else if (selectedRole.equals("เจ้าหน้าที่คณะ")) {
             String name = facultyOfficerNameTextField.getText().trim();
             String username = facultyOfficerUsernameTextField.getText().trim();
@@ -516,7 +512,7 @@ public class OfficerAndAdvisorManagementController extends BaseController{
             departmentOfficerPasswordTextField.setText("");
             departmentOfficerFacultyTextField.setText("");
             departmentOfficerDepartmentTextField.setText("");
-            departmentOfficerErrorMessageLabel.setText(""); // ล้างข้อความผิดพลาดหลังจากเพิ่มสำเร็จ
+            departmentOfficerErrorMessageLabel.setText(""); 
         }
 
         datasource.writeData(userList);

@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class ResignationRequest extends Request{
-    private String reason; // เหตุผลในการลาออก
+    private String reason; 
 
     public ResignationRequest(Student requester, String numberPhone,String reason) {
         super("ลาออก", requester, numberPhone);
@@ -20,10 +20,10 @@ public class ResignationRequest extends Request{
     }
 
     public void createRequest(){
-        String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss")); // timestamp ช่วยแก้ปัญหาชื่อไฟล์ซ้ำกันได้
+        String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss")); 
         String requestPdfPath = "data" + File.separator + "students_requests" + File.separator + getRequester().getStudentID() + File.separator + getRequester().getStudentID() + "-" + "คำร้องลาออก" + "_" + timeStamp + ".pdf";
         try {
-            ResignationRequestPDF.createRequest(requestPdfPath, this); //สร้างไฟล์ pdf
+            ResignationRequestPDF.createRequest(requestPdfPath, this); 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -6,17 +6,17 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-// ขอลาพักการศึกษา
+
 public class LeaveOfAbsenceRequest extends Request {
-    private String reason; // สาเหตุที่ลา
-    private String registeredCourses; // วิชาที่ลงทะเบียนเรียนไว้
-    private String currentAddress; // ที่อยู่ปุัจจุบัน
-    private int currentSemester; //ภาคการศึกษาปัจจุบัน
-    private int currentAcademicYear; //ปีการศึกษาปัจจุบัน
-    private int fromSemester; // ตั้งเเต่ภาคการศึกษา
-    private int toSemester; // ถึงภาคศึกษา
-    private int fromAcademicYear; // ตั้งแต่ปีการศึกษา
-    private int toAcademicYear; // ถึงปีการศึกษา
+    private String reason; 
+    private String registeredCourses; 
+    private String currentAddress; 
+    private int currentSemester; 
+    private int currentAcademicYear; 
+    private int fromSemester; 
+    private int toSemester; 
+    private int fromAcademicYear; 
+    private int toAcademicYear; 
 
 
     public LeaveOfAbsenceRequest(Student requester, String numberPhone,String reason, String currentAddress, String registeredCourses,
@@ -49,10 +49,10 @@ public class LeaveOfAbsenceRequest extends Request {
     }
 
     public void createRequest() throws IOException {
-        String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss")); // timestamp ช่วยแก้ปัญหาชื่อไฟล์ซ้ำกันได้
+        String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss")); 
         String requestPdfPath = "data" + File.separator + "students_requests" + File.separator + getRequester().getStudentID() + File.separator + getRequester().getStudentID() + "-" + "คำร้องลาพักการศึกษา" + "_" + timeStamp + ".pdf";
         try {
-            LeaveOfAbsenceRequestPDF.createRequest(requestPdfPath, this); //สร้างไฟล์ pdf
+            LeaveOfAbsenceRequestPDF.createRequest(requestPdfPath, this); 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

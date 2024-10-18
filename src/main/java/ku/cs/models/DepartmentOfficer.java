@@ -7,7 +7,7 @@ public class DepartmentOfficer extends User implements Officer {
     private Department department;
     private String defaultPassword;
 
-    // Begin Constructor
+    
     public DepartmentOfficer(String username, String password, String name, Faculty faculty, Department department, boolean isHashed, boolean suspended) {
         super(username, password, name, isHashed, suspended);
         this.faculty = faculty;
@@ -15,14 +15,14 @@ public class DepartmentOfficer extends User implements Officer {
         this.defaultPassword = password;
     }
 
-    // ใข้ไปก่อนเดี๋ยวแก้ที่หลัง
+    
     public DepartmentOfficer(String username, String password, String name, String faculty, String department, boolean isHashed, boolean suspended) {
         super(username, password, name, isHashed, suspended);
         this.faculty = new Faculty(faculty);
         this.department = new Department(department);
         this.defaultPassword = password;
     }
-    // End Constructor
+    
 
     @Override
     public void loadRequestManage(ArrayList<RequestHandlingOfficer> approvers) {
@@ -60,7 +60,7 @@ public class DepartmentOfficer extends User implements Officer {
         return department.getRequestHandlingOfficers();
     }
 
-    //เรียกดูรายการคำร้องที่ต้องดำเนินการของเจ้าหน้าภาควิชา
+    
     public ArrayList<Request> getRequestsByDepartment(RequestList requests) {
         ArrayList<Request> departmentRequests = new ArrayList<>();
         for (Request request : requests.getRequests()) {
@@ -79,11 +79,8 @@ public class DepartmentOfficer extends User implements Officer {
     public void acceptRequest(Request request, String approver) {
         request.processRequest(approver, "อนุมัติ", null);
     }
-    public void finishRequest(Request request, String approver) {
-        request.processRequest(approver,"สิ้นสุด", null);
-    }
 
-    //Handle Student
+    
     public void addStudentToDep(String name, String studentID, String email) {
         Student student = new Student(name, this.getFaculty(), this.getDepartment(), studentID, email);
         department.getStudents().add(student);

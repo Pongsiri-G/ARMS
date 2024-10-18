@@ -1,13 +1,7 @@
 package ku.cs.controllers;
 
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
-import javafx.scene.chart.PieChart;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.Label;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.shape.Circle;
 import ku.cs.models.*;
@@ -22,7 +16,6 @@ public class AllRequestController extends BaseController {
     @FXML private Label successLabel;
     @FXML private Label pendingLabel;
     @FXML private Label deniedLabel;
-    @FXML private TableView<Request> allRequestTableView;
     private RequestList requestList;
     private UserList userList;
     private Admin admin;

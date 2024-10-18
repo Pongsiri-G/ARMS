@@ -10,11 +10,11 @@ import java.time.temporal.ChronoUnit;
 
 
 public class SickLeaveRequest extends Request{
-    private String leaveType; //ประเภทการลา (ลาป่วย หรือ ลากิจ)
-    private String fromDateLeave; // ลาตั้งเเต่วันที่
-    private String toDateLeave; // ถึงวันที่
-    private String registeredCourses; // รายวิชาเรียนในช่วงที่ลา
-    private String reason; // เหตุผลที่ลา
+    private String leaveType; 
+    private String fromDateLeave; 
+    private String toDateLeave; 
+    private String registeredCourses; 
+    private String reason; 
 
     public SickLeaveRequest(Student requester, String numberPhone, String leaveType, String reason, String fromDateLeave, String toDateLeave, String registeredCourses) {
         super("ลาป่วยหรือลากิจ", requester, numberPhone);
@@ -35,10 +35,10 @@ public class SickLeaveRequest extends Request{
     }
 
     public void createRequest() throws IOException{
-        String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss")); // timestamp ช่วยแก้ปัญหาชื่อไฟล์ซ้ำกันได้
+        String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss")); 
         String requestPdfPath = "data" + File.separator + "students_requests" + File.separator + getRequester().getStudentID() + File.separator + getRequester().getStudentID() + "-" + "คำร้องลาป่วยลากิจ" + "_" + timeStamp + ".pdf";
         try {
-            SickLeaveRequestPDF.createRequest(requestPdfPath, this); //สร้างไฟล์ pdf
+            SickLeaveRequestPDF.createRequest(requestPdfPath, this); 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -13,7 +13,6 @@ public class UserList {
         this.faculties = new FacultyList();
     }
 
-    // Add FacultyOfficer
     public void addUser(FacultyOfficer facultyOfficer) {
         if (findUserByUsername(facultyOfficer.getUsername()) == null) {
             Faculty faculty = faculties.findFacultyByName(facultyOfficer.getFaculty().getFacultyName());
@@ -25,7 +24,6 @@ public class UserList {
         }
     }
 
-    // Add DepartmentOfficer
     public void addUser(DepartmentOfficer departmentOfficer) {
         if (findUserByUsername(departmentOfficer.getUsername()) == null) {
             Faculty faculty = faculties.findFacultyByName(departmentOfficer.getFaculty().getFacultyName());
@@ -41,7 +39,6 @@ public class UserList {
         }
     }
 
-    // Add Advisor
     public void addUser(Advisor advisor) {
         if (findUserByUsername(advisor.getUsername()) == null) {
             Faculty faculty = faculties.findFacultyByName(advisor.getFaculty().getFacultyName());
@@ -57,7 +54,6 @@ public class UserList {
         }
     }
 
-    // Add Student
     public void addUser(Student student) {
         if (findUserByUsername(student.getUsername()) == null) {
             Faculty faculty = faculties.findFacultyByName(student.getEnrolledFaculty().getFacultyName());
@@ -69,7 +65,7 @@ public class UserList {
                     if (student.getStudentAdvisor() != null) {
                         student.setStudentAdvisor(department.findAdvisorByName(student.getStudentAdvisor().getName()));
                     }
-                    //System.out.println("Name : " + student.getName() + "Department : " + student.getEnrolledDepartment().getDepartmentName() + "NameAdvisor : " + student.getStudentAdvisor().getName());
+                    
                     department.getStudents().add(student);
                     if (student.getUsername() != null && student.getPassword() != null) {
                         users.add(student);
@@ -79,7 +75,7 @@ public class UserList {
         }
     }
 
-    // Setters and Getters
+    
     public void setUsers(ArrayList<User> users) {
         this.users.clear();
         this.users.addAll(users);
@@ -93,7 +89,7 @@ public class UserList {
         return faculties;
     }
 
-    // Register a student with hashed password support
+    
     public void registerStudent(String username, String password, String confirmPassword, String fullName,
                                 String studentId, String email, boolean isHashed) throws IllegalArgumentException {
         if (!password.equals(confirmPassword)) {
@@ -119,7 +115,7 @@ public class UserList {
             if (foundStudent) break;
         }
 
-        // If the student is not found, throw an exception
+        
         if (!foundStudent) {
             throw new IllegalArgumentException("ไม่พบข้อมูลนิสิตในฐานข้อมูลภาควิชา\nกรุณาตรวจสอบข้อมูลที่กรอกอีกครั้ง");
         }
@@ -138,7 +134,7 @@ public class UserList {
         users.add(matchedStudent);
     }
 
-    // Find user by username
+    
     public User findUserByUsername(String username) {
         for (User user : users) {
             if (user.isUsername(username)) return user;
@@ -146,17 +142,17 @@ public class UserList {
         return null;
     }
 
-    // Remove user from list
+    
     public void removeUser(User user) {
         this.users.remove(user);
     }
 
-    // Get all users
+    
     public ArrayList<User> getAllUsers() {
         return users;
     }
 
-    // Login with hashed password verification
+    
     public String login(String username, String password) throws IllegalArgumentException {
         if (username.isEmpty() || password.isEmpty()) {
             throw new IllegalArgumentException("โปรดกรอกให้ครบถ้วน");
@@ -172,7 +168,7 @@ public class UserList {
             throw new IllegalArgumentException("บัญชีผู้ใช้นี้ถูกระงับ ไม่สามารถเข้าสู่ระบบได้");
         }
 
-        // เช็คการตั้งค่า lastLogin
+        
         if (!((user instanceof Advisor || user instanceof DepartmentOfficer || user instanceof FacultyOfficer) && user.getLastLogin() == null)) {
             user.setLastLogin(LocalDateTime.now());
         }

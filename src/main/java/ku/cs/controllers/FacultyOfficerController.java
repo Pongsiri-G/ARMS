@@ -9,10 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import ku.cs.models.*;
 import ku.cs.services.*;
@@ -30,8 +27,6 @@ import java.util.Comparator;
 import java.util.List;
 
 public class FacultyOfficerController extends BaseController{
-
-    // UI Components
     @FXML
     BorderPane rootPane;
     @FXML
@@ -47,7 +42,7 @@ public class FacultyOfficerController extends BaseController{
     @FXML
     Pane currentMenu2;
 
-    // Request Scene
+    
     @FXML VBox requestListScene;
     @FXML TableView<Request> requestListTableView;
     @FXML VBox requestDetailPane;
@@ -61,7 +56,7 @@ public class FacultyOfficerController extends BaseController{
     @FXML Label rejectionErrorLabel;
     @FXML TextField reasonTextField;
 
-    // Approver Scene UI
+    
     @FXML
     VBox approverScene;
     @FXML
@@ -73,7 +68,7 @@ public class FacultyOfficerController extends BaseController{
     @FXML
     TableColumn<RequestHandlingOfficer, String> approverLastUpdateTableColumn;
 
-    // Manage Approver Scene UI
+    
     @FXML
     GridPane manageApproverScene;
     @FXML
@@ -213,22 +208,22 @@ public class FacultyOfficerController extends BaseController{
     public void updateRequestTableView() {
         loadApprovers();
 
-        // Set up the columns
+        
         TableColumn<Request, String> typeColumn = new TableColumn<>("ประเภทคำร้อง");
-        typeColumn.setCellValueFactory(new PropertyValueFactory<>("requestType")); // รับประเภทคำร้องจาก Request โดยตรง
+        typeColumn.setCellValueFactory(new PropertyValueFactory<>("requestType")); 
         typeColumn.setMinWidth(290);
 
         TableColumn<Request, String> nameColumn = new TableColumn<>("ชื่อ-นามสกุล");
         nameColumn.setCellValueFactory(cellData -> {
             Student student = cellData.getValue().getRequester();
-            return new SimpleStringProperty(student.getName()); // ดึงชื่อ-นามสกุลจากที่สิตที่สร้างคำร้อง
+            return new SimpleStringProperty(student.getName()); 
         });
         nameColumn.setMinWidth(290);
 
         TableColumn<Request, String> idColumn = new TableColumn<>("รหัสนิสิต");
         idColumn.setCellValueFactory(cellData -> {
             Student student = cellData.getValue().getRequester();
-            return new SimpleStringProperty(student.getStudentID()); // ดึงรหสนิสิตจากที่สิตที่สร้างคำร้อง
+            return new SimpleStringProperty(student.getStudentID()); 
         });
         idColumn.setMinWidth(290);
 
@@ -236,19 +231,19 @@ public class FacultyOfficerController extends BaseController{
         lastModifiedColumn.setCellValueFactory(new PropertyValueFactory<>("lastModifiedDateTime"));
         lastModifiedColumn.setMinWidth(290);
 
-        // Clear previous columns and add the new ones
+        
         requestListTableView.getColumns().clear();
         requestListTableView.getColumns().addAll(typeColumn, nameColumn, idColumn, lastModifiedColumn);
 
-        // Clear the items in the table
+        
         requestListTableView.getItems().clear();
 
-        requests.sort(Comparator.comparing(Request::getLastModifiedDateTime).reversed()); // เรียง Request ตามวันเวลา
+        requests.sort(Comparator.comparing(Request::getLastModifiedDateTime).reversed()); 
 
-        // Populate the TableView with requests
+        
         requestListTableView.getItems().addAll(requests);
 
-        // Use the selection model for row selection
+        
         requestListTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 selectedRequest = newValue;
@@ -283,7 +278,6 @@ public class FacultyOfficerController extends BaseController{
     }
 
     public void closeRequestDetailClick(){
-        System.out.println("kuy");
         switchToRequestScene();
     }
 
@@ -291,7 +285,6 @@ public class FacultyOfficerController extends BaseController{
         selectOfficerHandlingMenu.getItems().clear();
         ArrayList<RequestHandlingOfficer> approvers = officer.getRequestManagers();
         for (RequestHandlingOfficer approver : approvers) {
-            System.out.println(approver.getFullPositoin());
             MenuItem item = new MenuItem(approver.getFullPositoin());
 
             item.setOnAction(e -> {
@@ -381,12 +374,12 @@ public class FacultyOfficerController extends BaseController{
     }
 
     public void updateRequest() throws IOException {
-        // การอัพโหลด pdf
+        
         fileLabel.setText(selectedFile.getName());
-        String filePath = FileStorage.replaceFileWithTimestamp(selectedFile, selectedRequest.getPdfFilePath()); // เอาไฟล์ที่อัพโหลดไปใส่
-        selectedRequest.setPdfFilePath(filePath); // เก็บที่อยู่ pdf ใน request
+        String filePath = FileStorage.replaceFileWithTimestamp(selectedFile, selectedRequest.getPdfFilePath()); 
+        selectedRequest.setPdfFilePath(filePath); 
 
-        // เขียนลง csv
+        
         requestDatasource.writeData(requestList);
     }
 
@@ -428,22 +421,22 @@ public class FacultyOfficerController extends BaseController{
     }
 
     public void setApproverPositionAvailable() {
-        roleSelectMenuButton.getItems().clear(); // Clear existing items
+        roleSelectMenuButton.getItems().clear(); 
         ArrayList<String> positions = officer.getAvailablePositions();
 
         for (String position : positions) {
             MenuItem item = new MenuItem(position);
 
-            // Event handling when an item is clicked
+            
             item.setOnAction(e -> {
-                // Set the selected position
+                
                 String selectedPosition = item.getText();
 
-                // Set the text of the roleSelectMenuButton to the selected position
+                
                 roleSelectMenuButton.setText(selectedPosition);
             });
 
-            // Add the item to the menu button
+            
             roleSelectMenuButton.getItems().add(item);
         }
     }
