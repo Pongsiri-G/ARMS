@@ -146,12 +146,10 @@ public class UserList {
     public void removeUser(User user) {
         this.users.remove(user);
     }
-
     
     public ArrayList<User> getAllUsers() {
         return users;
     }
-
     
     public String login(String username, String password) throws IllegalArgumentException {
         if (username.isEmpty() || password.isEmpty()) {
