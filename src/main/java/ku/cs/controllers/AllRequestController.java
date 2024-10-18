@@ -1,79 +1,66 @@
 package ku.cs.controllers;
 
 import javafx.fxml.FXML;
-import javafx.scene.chart.PieChart;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.Label;
-import javafx.scene.control.cell.PropertyValueFactory;
-import ku.cs.models.Request;
-import ku.cs.models.RequestList;
-import ku.cs.models.User;
-import ku.cs.models.UserList;
-import ku.cs.services.Datasource;
-import ku.cs.services.FXRouter;
-import ku.cs.services.RequestListFileDatasource;
-import ku.cs.services.UserListFileDatasource;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.shape.Circle;
+import ku.cs.models.*;
+import ku.cs.services.*;
 
 import java.io.IOException;
 
-public class AllRequestController {
+public class AllRequestController extends BaseController {
     @FXML private Label allRequestLabel;
     @FXML private Label userLabel;
     @FXML private Label approvedLabel;
-    @FXML private TableView<Request> allRequestTableView;
+    @FXML private Label successLabel;
+    @FXML private Label pendingLabel;
+    @FXML private Label deniedLabel;
     private RequestList requestList;
     private UserList userList;
+    private Admin admin;
     private Datasource<RequestList> datasource;
     private Datasource<UserList> userDatasource;
+    private Datasource<Admin> adminDatasource;
+
+    @FXML private BorderPane rootPane;
+    @FXML private Circle profilePictureDisplay;
 
     @FXML
     public void initialize() {
-        datasource = new RequestListFileDatasource("data/test", "all-request.csv");
-        userDatasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv");
-        requestList = datasource.readData();
+        userDatasource = new UserListFileDatasource("data/csv_files", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
         userList = userDatasource.readData();
-        showTable(requestList);
-        showRequest(requestList);
-        showTotalUsers(userList);
-    }
+        datasource = new RequestListFileDatasource("data/students_requests", "requestlist.csv", userList);
+        requestList = datasource.readData();
+        adminDatasource = new AdminPasswordFileDataSource("data/csv_files", "admin.csv");
+        admin = adminDatasource.readData();
+        applyThemeAndFont(rootPane, admin.getPreferences().getTheme(), admin.getPreferences().getFontFamily(), admin.getPreferences().getFontSize());
+        setProfilePicture(profilePictureDisplay, admin.getProfilePicturePath());
 
-    @FXML
-    private void showTable(RequestList requestList) {
-        //System.out.println("Showing table with " + requestList.getRequests().size() + " requests");
-        TableColumn<Request, String> nameColumn = new TableColumn<>("ชื่อผู้ใช้");
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-
-        TableColumn<Request, String> facultyColumn = new TableColumn<>("คณะ");
-        facultyColumn.setCellValueFactory(new PropertyValueFactory<>("faculty"));
-
-        TableColumn<Request, String> departmentColumn = new TableColumn<>("ภาควิชา");
-        departmentColumn.setCellValueFactory(new PropertyValueFactory<>("department"));
-
-        TableColumn<Request, String> statusColumn = new TableColumn<>("สถานะคำร้อง");
-        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
-
-        allRequestTableView.getColumns().clear();
-        allRequestTableView.getColumns().add(nameColumn);
-        allRequestTableView.getColumns().add(facultyColumn);
-        allRequestTableView.getColumns().add(departmentColumn);
-        allRequestTableView.getColumns().add(statusColumn);
-
-        allRequestTableView.getItems().clear();
-
-        for (Request request: requestList.getRequests()) {
-            //System.out.println("Adding request: " + request.getName());
-            allRequestTableView.getItems().add(request);
+        for (Request request : requestList.getRequests()) {
+            admin.increaseRequestCount(request);
         }
+        for (User user : userList.getAllUsers()) {
+            admin.increaseUserCount(user);
+        }
+        showRequestStatusCount(admin);
+        showRequest();
+        showTotalUsers();
     }
 
-    private void showRequest(RequestList requestList) {
-        allRequestLabel.setText(String.format("%d", requestList.getAllRequest()));
-        approvedLabel.setText(String.format("%d", requestList.getApprovedRequest()));
+    private void showRequestStatusCount(Admin admin) {
+        successLabel.setText(admin.getAllApprovedRequests() + "");
+        pendingLabel.setText(admin.getAllPendingRequests() + "");
+        deniedLabel.setText(admin.getAllRejectRequests() + "");
     }
 
-    private void showTotalUsers(UserList userList) {
-        userLabel.setText(String.format("%d", userList.getAllUsers().size()));
+    private void showRequest() {
+        allRequestLabel.setText(String.format("%d", admin.getAllRequests()));
+        approvedLabel.setText(String.format("%d", admin.getAllApprovedRequests()));
+    }
+
+    private void showTotalUsers() {
+        userLabel.setText(String.format("%d", admin.getTotalUsers()));
     }
 
     @FXML
@@ -125,6 +112,15 @@ public class AllRequestController {
     protected void onApprovedClick() {
         try {
             FXRouter.goTo("approved-request");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
+    protected void onSettingButtonClick() {
+        try {
+            FXRouter.goTo("admin-settings", "all-request");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

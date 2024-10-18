@@ -1,120 +1,249 @@
 package ku.cs.controllers;
 
-import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
-import ku.cs.models.RequestList;
-import ku.cs.models.Request;
-import ku.cs.models.Advisor;
-import ku.cs.models.User;
-import ku.cs.models.UserList;
-import ku.cs.services.Datasource;
-import ku.cs.services.FXRouter;
-import ku.cs.models.FacultyOfficer;
-import ku.cs.models.DepartmentOfficer;
-import ku.cs.models.Student;
-import ku.cs.services.RequestListFileDatasource;
-import ku.cs.services.UserListFileDatasource;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
+import ku.cs.models.*;
+import ku.cs.services.*;
 
 import java.io.IOException;
+import java.util.stream.Collectors;
 
-public class AdminController {
+public class AdminController extends BaseController {
+    @FXML private ChoiceBox<String> selectedChoiceBox;
+    @FXML private ChoiceBox<String> selectedFaculty;
+    @FXML private ChoiceBox<String> selectedDepartment;
+    private String[] choice = {"บทบาท", "คณะ/ภาควิชา"};
     @FXML private Label allRequestLabel;
     @FXML private Label approvedLabel;
     @FXML private Label userLabel;
-    @FXML private TableView<User> allUserTableView;
+    @FXML private Label countStudent;
+    @FXML private Label countAdvisor;
+    @FXML private Label countFacOff;
+    @FXML private Label countDepOff;
+    @FXML private Label facultyLabel;
+    @FXML private Label departmentLabel;
+    @FXML private Label totalLabel;
+    @FXML private VBox roleVBox;
+    @FXML private VBox facDepVBox;
+    @FXML private BorderPane rootPane;
+    @FXML private Circle profilePictureDisplay;
+
+
     private RequestList requestList;
     private UserList userList;
+    private FacultyList facultyList;
+    private Admin admin; 
     private Datasource<UserList> datasource;
     private Datasource<RequestList> requestListDatasource;
+    private Datasource<FacultyList> facultyListDatasource;
+    private Datasource<Admin> adminDatasource; 
 
     @FXML
     public void initialize() {
-        datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv");
-        requestListDatasource = new RequestListFileDatasource("data/test", "all-request.csv");
+        
+        selectedChoiceBox.getItems().addAll(choice);
+        selectedChoiceBox.setValue(choice[0]);
+
+        
+        roleVBox.setVisible(true);
+        facDepVBox.setVisible(false);
+
+        
+        datasource = new UserListFileDatasource("data/csv_files", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
         userList = datasource.readData();
+        requestListDatasource = new RequestListFileDatasource("data/students_requests", "requestlist.csv", userList);
         requestList = requestListDatasource.readData();
-        showTable(userList);
-        showRequest(requestList);
-        showTotalUsers(userList);
-    }
+        facultyListDatasource = new FacDepListFileDatascource("data/csv_files", "facdeplist.csv");
+        facultyList = facultyListDatasource.readData();
+        adminDatasource = new AdminPasswordFileDataSource("data/csv_files", "admin.csv");
+        admin = adminDatasource.readData();
 
-    @FXML
-    private void showTable(UserList userList) {
-        // Column for name
-        TableColumn<User, String> nameColumn = new TableColumn<>("ชื่อ");
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        applyThemeAndFont(rootPane, admin.getPreferences().getTheme(), admin.getPreferences().getFontFamily(), admin.getPreferences().getFontSize());
+        setProfilePicture(profilePictureDisplay, admin.getProfilePicturePath());
 
-        // Column for role
-        TableColumn<User, String> roleColumn = new TableColumn<>("บทบาท");
-        roleColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
+        addChoiceBoxListeners();
 
-        // Column for faculty
-        TableColumn<User, String> facultyColumn = new TableColumn<>("คณะ");
-        facultyColumn.setCellValueFactory(cellData -> {
-            User user = cellData.getValue();
-            String facultyName = "";
-
-            // Get faculty based on user type
+        for (User user : userList.getAllUsers()) {
+            admin.increaseUserCount(user);
             if (user instanceof Student) {
                 Student student = (Student) user;
-                facultyName = student.getEnrolledFaculty().getFacultyName(); // Get faculty for student
+                if (student.getEnrolledFaculty() != null) {
+                    admin.increaseFacultyUserCount(student.getEnrolledFaculty().getFacultyName());
+                } if (student.getEnrolledDepartment() != null) {
+                    admin.increaseDepartmentUserCount(student.getEnrolledDepartment().getDepartmentName());
+                }
             } else if (user instanceof Advisor) {
                 Advisor advisor = (Advisor) user;
-                facultyName = advisor.getFaculty(); // Get faculty for advisor
+                if (advisor.getFaculty() != null) {
+                    admin.increaseFacultyUserCount(advisor.getFaculty().getFacultyName());
+                }if (advisor.getDepartment() != null) {
+                    admin.increaseDepartmentUserCount(advisor.getDepartment().getDepartmentName());
+                }
             } else if (user instanceof FacultyOfficer) {
                 FacultyOfficer facultyOfficer = (FacultyOfficer) user;
-                facultyName = facultyOfficer.getFaculty().getFacultyName(); // Get faculty for faculty officer
+                if (facultyOfficer.getFaculty() != null) {
+                    admin.increaseFacultyUserCount(facultyOfficer.getFaculty().getFacultyName());
+                }
             } else if (user instanceof DepartmentOfficer) {
                 DepartmentOfficer departmentOfficer = (DepartmentOfficer) user;
-                facultyName = departmentOfficer.getFaculty().getFacultyName(); // Get faculty for department officer
+                if (departmentOfficer.getFaculty() != null) {
+                    admin.increaseFacultyUserCount(departmentOfficer.getFaculty().getFacultyName());
+                }if (departmentOfficer.getDepartment() != null) {
+                    admin.increaseDepartmentUserCount(departmentOfficer.getDepartment().getDepartmentName());
+                }
             }
+        }
 
-            // Return the faculty name (or "-" if not available)
-            return new SimpleStringProperty(facultyName.isEmpty() ? "-" : facultyName);
-        });
+        for (Request request : requestList.getRequests()) {
+            admin.increaseRequestCount(request);
+        }
 
-        // Column for department (with logic to handle FacultyOfficer not having a department)
-        TableColumn<User, String> departmentColumn = new TableColumn<>("ภาควิชา");
-        departmentColumn.setCellValueFactory(cellData -> {
-            User user = cellData.getValue();
+        
+        populateFacultyChoiceBox();
+        populateDepartmentChoiceBox("All");
 
-            if (user instanceof FacultyOfficer) {
-                return new SimpleStringProperty("-");
-            } else if (user instanceof DepartmentOfficer) {
-                DepartmentOfficer officer = (DepartmentOfficer) user;
-                return new SimpleStringProperty(officer.getDepartment().getDepartmentName());
-            } else if (user instanceof Student) {
-                Student student = (Student) user;
-                return new SimpleStringProperty(student.getEnrolledDepartment().getDepartmentName());
-            }
-            return new SimpleStringProperty("-");
-        });
+        
+        selectedFaculty.getSelectionModel().select("เลือกคณะ");
+        selectedDepartment.getSelectionModel().select("เลือกภาควิชา");
 
-        // Add columns to the table
-        allUserTableView.getColumns().clear();
-        allUserTableView.getColumns().add(nameColumn);
-        allUserTableView.getColumns().add(roleColumn);
-        allUserTableView.getColumns().add(facultyColumn);  // Add faculty column
-        allUserTableView.getColumns().add(departmentColumn);
+        facultyLabel.setText(selectedFaculty.getValue()); 
+        departmentLabel.setText(selectedDepartment.getValue()); 
 
-        // Add users to the table
-        allUserTableView.getItems().clear();
-        for (User user : userList.getAllUsers()) {
-            allUserTableView.getItems().add(user);
+        
+        countUserByRole();
+
+        
+        showRequest();
+
+        
+        showTotalUsers();
+    }
+
+    private void countUserByRole() {
+        if (admin != null) {
+            countStudent.setText(String.valueOf(admin.getAllStudents()));
+            countAdvisor.setText(String.valueOf(admin.getAllAdvisors()));
+            countFacOff.setText(String.valueOf(admin.getAllFacultyOfficers()));
+            countDepOff.setText(String.valueOf(admin.getAllDepartmentOfficers()));
+        } else {
+            
+            countStudent.setText("0");
+            countAdvisor.setText("0");
+            countFacOff.setText("0");
+            countDepOff.setText("0");
         }
     }
 
-    private void showRequest(RequestList requestList) {
-        allRequestLabel.setText(String.format("%d", requestList.getAllRequest()));
-        approvedLabel.setText(String.format("%d", requestList.getApprovedRequest()));
+    private void populateFacultyChoiceBox() {
+        
+        selectedFaculty.getItems().clear();
+        selectedFaculty.getItems().addAll(
+                facultyList.getFaculties().stream()
+                        .map(Faculty::getFacultyName)
+                        .collect(Collectors.toList())
+        );
+        selectedFaculty.getItems().add(0, "เลือกคณะ"); 
     }
 
-    private void showTotalUsers(UserList userList) {
-        userLabel.setText(String.format("%d", userList.getAllUsers().size()));
+    private void populateDepartmentChoiceBox(String facultyName) {
+        
+        selectedDepartment.getItems().clear();
+        selectedDepartment.getItems().add("All"); 
+
+        if (!facultyName.equals("All")) { 
+            Faculty faculty = facultyList.findFacultyByName(facultyName);
+            if (faculty != null) {
+                selectedDepartment.getItems().addAll(
+                        faculty.getDepartments().stream()
+                                .map(Department::getDepartmentName)
+                                .collect(Collectors.toList())
+                );
+            }
+        }
+
+        
+        selectedDepartment.getSelectionModel().select("All");
+    }
+
+    private void addChoiceBoxListeners() {
+        
+        selectedChoiceBox.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    if ("บทบาท".equals(newValue)) {
+                        roleVBox.setVisible(true);
+                        facDepVBox.setVisible(false);
+                    } else if ("คณะ/ภาควิชา".equals(newValue)) {
+                        roleVBox.setVisible(false);
+                        facDepVBox.setVisible(true);
+                    }
+                }
+        );
+
+        selectedFaculty.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    if (newValue != null && !newValue.equals("เลือกคณะ")) {
+                        populateDepartmentChoiceBox(newValue);
+                        facultyLabel.setText(newValue); 
+                    } else {
+                        facultyLabel.setText(""); 
+                    }
+                }
+        );
+
+        selectedDepartment.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    if (newValue != null) {
+                        if (!newValue.equals("All")) {
+                            departmentLabel.setText(newValue); 
+                        } else {
+                            departmentLabel.setText("ทั้งหมด"); 
+                        }
+
+                        if ("All".equals(newValue)) {
+                            updateFacultyUser(selectedFaculty.getSelectionModel().getSelectedItem()); 
+                        } else {
+                            updateDepartmentUser(newValue); 
+                        }
+                    }
+                }
+        );
+    }
+
+    private void updateFacultyUser(String facultyName) {
+        if (facultyName == null || facultyName.equals("เลือกคณะ")) {
+            totalLabel.setText("0");
+            return;
+        }
+        int totalFacUser = admin.getAllFacultyUsers(facultyName);
+        totalLabel.setText(String.valueOf(totalFacUser));
+    }
+
+    private void updateDepartmentUser(String departmentName) {
+        String selectedFac = selectedFaculty.getSelectionModel().getSelectedItem();
+        if (selectedFac == null || selectedFac.equals("เลือกคณะ")) {
+            totalLabel.setText("0");
+            return;
+        }
+
+        int totalDepUser = admin.getAllDepartmentUsers(departmentName);
+        totalLabel.setText(String.valueOf(totalDepUser));
+    }
+
+    private void showRequest() {
+        allRequestLabel.setText(String.format("%d", admin.getAllRequests()));
+        approvedLabel.setText(String.format("%d", admin.getAllApprovedRequests()));
+    }
+
+    private void showTotalUsers() {
+        if (admin != null) {
+            userLabel.setText(String.valueOf(admin.getTotalUsers()));
+        } else {
+            userLabel.setText("0");
+        }
     }
 
     @FXML
@@ -166,6 +295,15 @@ public class AdminController {
     protected void onApprovedClick() {
         try {
             FXRouter.goTo("approved-request");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
+    protected void onSettingButtonClick() {
+        try {
+            FXRouter.goTo("admin-settings", "dashboard");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

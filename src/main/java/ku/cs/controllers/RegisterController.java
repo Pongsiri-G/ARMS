@@ -5,54 +5,73 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import ku.cs.services.FXRouter;
 
-import ku.cs.models.*; //Add for testing only
-import java.util.ArrayList;
-import java.util.List;
+import ku.cs.models.*; 
+import ku.cs.services.UserListFileDatasource;
 
 import java.io.IOException;
 
 public class RegisterController {
 
+    @FXML private VBox createUserPane;
     @FXML private TextField firstnameTextField;
     @FXML private TextField lastnameTextField;
     @FXML private TextField emailTextField;
     @FXML private TextField studentIdTextField;
+    @FXML private TextField usernameTextField;
+    @FXML private PasswordField passwordPasswordField;
+    @FXML private PasswordField confirmPasswordPasswordField;
     @FXML private Label errorLabel;
 
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String studentId;
+    private UserList userList;
+    private UserListFileDatasource datasource;
 
     @FXML
     private void initialize() {
+        datasource = new UserListFileDatasource("data/csv_files", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv", "departmentofficerlist.csv", "facdeplist.csv");
         errorLabel.setText("");
+        createUserPane.setVisible(false);
+        this.userList = datasource.readData();
     }
 
-    @FXML
-    public void nextRegisterClick(MouseEvent event) {
-        checkRegister();
-    }
-
-    private void checkRegister() {
-        firstName = firstnameTextField.getText();
-        lastName = lastnameTextField.getText();
-        email = emailTextField.getText();
-        studentId = studentIdTextField.getText();
-
-        if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || studentId.isEmpty()) {
-            errorLabel.setText("โปรดกรอกข้อมูลให้ครบถ้วน");
-            return;
-        }
-
+    public void checkRegister() {
         try {
-            FXRouter.goTo("register-second", List.of(firstName, lastName, email, studentId));
+            String firstName = firstnameTextField.getText().trim();
+            String lastName = lastnameTextField.getText().trim();
+            String email = emailTextField.getText().trim();
+            String studentId = studentIdTextField.getText().trim();
+            String username = usernameTextField.getText().trim();
+            String password = passwordPasswordField.getText().trim();
+            String confirmPassword = confirmPasswordPasswordField.getText().trim();
+
+            if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || studentId.isEmpty() || username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+                throw new NullPointerException("โปรดกรอกข้อมูลให้ครบถ้วน");
+            }
+            if (!password.equals(confirmPassword)) {
+                errorLabel.setText("รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน");
+                return;
+            }
+            userList.registerStudent(username, password, confirmPassword, firstName + " " + lastName, studentId, email, false);
+            datasource.writeData(userList);
+            FXRouter.goTo("login");
         } catch (IOException e) {
             errorLabel.setText("โปรแกรมเกิดข้อผิดพลาด");
-            System.err.println(e.getMessage());
+        } catch (NullPointerException e) {
+            errorLabel.setText(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            errorLabel.setText(e.getMessage());
         }
+    }
+    public void toLoginPageClick(MouseEvent event) throws IOException {
+        FXRouter.goTo("login");
+    }
+    public void toCreateUserClick(MouseEvent event) throws IOException {
+        createUserPane.setVisible(true);
+    }
+    public void closeCreateUserClick(MouseEvent event) throws IOException {
+        createUserPane.setVisible(false);
     }
 }
 

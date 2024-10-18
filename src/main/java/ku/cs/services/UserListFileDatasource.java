@@ -2,28 +2,30 @@ package ku.cs.services;
 
 import ku.cs.models.*;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
 
 public class UserListFileDatasource implements Datasource<UserList> {
     private String directoryName;
-    private String fileName;
     private StudentListFileDatasource studentDatasource;
     private AdvOffListFileDatasource advisorDatasource;
+    private FacultyOfficerListFileDatasource facultyOfficerDatasource;
+    private DepartmentOfficerListFileDatasource departmentOfficerDatasource;
+    private FacDepListFileDatascource facDepDatasource;
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public UserListFileDatasource(String directoryName, String studentListFileName, String advisorListFileName) {
+    public UserListFileDatasource(String directoryName, String studentListFileName, String advisorListFileName, String facultyOfficerListFileName, String departmentOfficerListFileName, String facDepListFileName) {
         this.directoryName = directoryName;
+        this.facDepDatasource = new FacDepListFileDatascource(directoryName, facDepListFileName);
         this.studentDatasource = new StudentListFileDatasource(directoryName, studentListFileName);
         this.advisorDatasource = new AdvOffListFileDatasource(directoryName, advisorListFileName);
+        this.facultyOfficerDatasource = new FacultyOfficerListFileDatasource(directoryName, facultyOfficerListFileName);
+        this.departmentOfficerDatasource = new DepartmentOfficerListFileDatasource(directoryName, departmentOfficerListFileName);
         checkFileIsExisted();
     }
-    // ping : all user table view
+    
     public UserListFileDatasource(String directoryName, String userListFileName) {
         this.directoryName = directoryName;
-        this.fileName = userListFileName;
         checkFileIsExisted();
     }
 
@@ -37,85 +39,69 @@ public class UserListFileDatasource implements Datasource<UserList> {
     @Override
     public UserList readData() {
         UserList users = new UserList();
-        StudentList studentList = studentDatasource.readData();
-        AdvisorList advisorList = advisorDatasource.readData();
+        FacultyList facultyList = facDepDatasource.readData();
+        ArrayList<Advisor> advisorList = advisorDatasource.readData();
+        ArrayList<Student> studentList = studentDatasource.readData();
+        ArrayList<FacultyOfficer> facultyOfficers = facultyOfficerDatasource.readData();
+        ArrayList<DepartmentOfficer> departmentOfficers = departmentOfficerDatasource.readData();
 
-        // Add students from studentlist.csv
-        for (Student student : studentList.getStudents()) {
-            users.addUser(student);
-        }
+        users.setFacultyList(facultyList);
 
-        // Add advisors from advisor.csv
-        for (Advisor advisor : advisorList.getAdvisors()) {
+        
+        for (Advisor advisor : advisorList) {
             users.addUser(advisor);
         }
 
-        return users;
-    }
-
-    /*ping
-    @Override
-    public UserList readData() {
-        UserList users = new UserList();
-        String filePath = directoryName + File.separator + fileName;
-        File file = new File(filePath);
-
-        FileInputStream    fileInputStream = null;
-
-        try {
-            fileInputStream = new FileInputStream(file);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+        
+        for (Student student : studentList) {
+            users.addUser(student);
         }
 
-        InputStreamReader inputStreamReader = new InputStreamReader(
-                fileInputStream,
-                StandardCharsets.UTF_8
-        );
-        BufferedReader buffer = new BufferedReader(inputStreamReader);
+        for (FacultyOfficer facultyOfficer : facultyOfficers){
+            users.addUser(facultyOfficer);
+        }
 
-        String line = "";
-        try {
-            while ( (line = buffer.readLine()) != null ){
-                if (line.equals("")) continue;
-
-                String[] data = line.split(", ");
-
-                // อ่านข้อมูลตาม index แล้วจัดการประเภทของข้อมูลให้เหมาะสม
-                String image = data[0].trim();
-                String username = data[1].trim();
-                String name = data[2].trim();
-                String role = data[3].trim();
-                String faculty = data[4].trim();
-                String department = data[5].trim();
-                String timeStamp = data[6].trim();
-
-                // เพิ่มข้อมูลลงใน list
-                users.addTableUser(image, username, name, role, faculty, department, timeStamp);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        for (DepartmentOfficer departmentOfficer : departmentOfficers){
+            users.addUser(departmentOfficer);
         }
 
         return users;
     }
-     */
 
     @Override
     public void writeData(UserList users) {
-        StudentList studentList = new StudentList();
-        AdvisorList advisorList = new AdvisorList();
+        ArrayList<Student> studentList = new ArrayList<>();
+        ArrayList<Advisor> advisorList = new ArrayList<>();
+        ArrayList<DepartmentOfficer> departmentOfficers = new ArrayList<>();
+        ArrayList<FacultyOfficer> facultyOfficers = new ArrayList<>();
+        FacultyList facultyList = users.getFacultyList();
 
         for (User user : users.getAllUsers()) {
             if (user instanceof Student) {
-                studentList.addStudent((Student) user);
+                studentList.add((Student) user);
             } else if (user instanceof Advisor) {
-                advisorList.addAdvisor((Advisor) user);
+                advisorList.add((Advisor) user);
+            }
+            else if (user instanceof FacultyOfficer) {
+                facultyOfficers.add((FacultyOfficer) user);
+            }
+            else if (user instanceof DepartmentOfficer) {
+                departmentOfficers.add((DepartmentOfficer) user);
             }
         }
 
+        for (Faculty faculty : users.getFacultyList().getFaculties()){
+            for (Department department : faculty.getDepartments()) {
+                for (Student student : department.getStudents()) {
+                    if(student.getUsername() == null && student.getPassword() == null) studentList.add(student);
+                }
+            }
+        }
+
+        facDepDatasource.writeData(facultyList);
         studentDatasource.writeData(studentList);
         advisorDatasource.writeData(advisorList);
-        //NOTE : AdvisorListFile Datasource is not finish now, waiting boom to write...
+        facultyOfficerDatasource.writeData(facultyOfficers);
+        departmentOfficerDatasource.writeData(departmentOfficers);
     }
 }

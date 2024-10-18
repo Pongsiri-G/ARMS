@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="1024.0" prefWidth="1440.0" styleClass="canvas" stylesheets="@../../../style/central.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controllers.ShortManualController">
+   <center>
+      <VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" spacing="30.0">
+         <children>
+            <HBox alignment="CENTER_LEFT" spacing="20.0">
+               <children>
+                  <ImageView fitHeight="50.0" fitWidth="50.0" onMouseClicked="#onBackButtonClick" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../images/back-arrow-white.png" />
+                     </image>
+                  </ImageView>
+                  <Label styleClass="title" text="คำแนะนำการใช้งานโปรแกรม">
+                     <font>
+                        <Font size="36.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <TextArea editable="false" prefHeight="200.0" prefWidth="200.0" style="-fx-font-size: 20; -fx-background-color: white;" text="หากใช้โปรแกรมบนจอภาพที่มีขนาดเล็กหรือมีขนาดหน้าจอความละเอียดน้อยกว่าหรือเท่ากับ 1920x1080 &#10;ควรปรับ Scale ของหน้าจอให้เป็น 100% เพื่อป้องกันโปรแกรมล้นหน้าจอ&#10;&#10;1. เข้าสู่ระบบ&#10;   ใช้ Username และ Password ในการเข้าสู่ระบบ ผู้ใช้แต่ละคนจะมีบทบาทเฉพาะ เช่น นิสิต เจ้าหน้าที่ อาจารย์ หรือผู้ดูแลระบบ&#10;&#10;2. เปลี่ยนรหัสผ่าน  &#10;   - สามารถเปลี่ยนรหัสผ่านได้โดยกดที่ปุ่มมุมขวาบนสุดของเมนูเมื่อเข้าสู่ระบบ (ข้างรูปประจำตัวผู้ใช้) &gt; เปลี่ยนรหัสผ่าน&#10;   - กรอกรหัสผ่านปัจจุบันและรหัสผ่านใหม่เพื่อเปลี่ยน&#10;&#10;3. จัดการข้อมูลผู้ใช้ (ผู้ดูแลระบบ)  &#10;   - ไปที่เมนู บริหารจัดการผู้ใช้ เพื่อดูรายชื่อผู้ใช้ ค้นหา และระงับสิทธิ์หรือคืนสิทธิ์ผู้ใช้&#10;&#10;4. จัดการคณะและภาควิชา (ผู้ดูแลระบบ)  &#10;   - เมนู บริหารจัดการคณะและภาควิชา สำหรับเพิ่ม/แก้ไขข้อมูลคณะ และเพิ่ม/แก้ไขข้อมูลภาควิชา&#10;&#10;5. จัดการเจ้าหน้าที่และอาจารย์ที่ปรึกษา (ผู้ดูแลระบบ)  &#10;   - เพิ่ม/แก้ไขข้อมูลเจ้าหน้าที่และอาจารย์ที่ปรึกษาในเมนู บริหารจัดการบุคลากร&#10;&#10;6. Dashboard (ผู้ดูแลระบบ)  &#10;   - ดูข้อมูลสรุปของระบบ เช่น จำนวนคำร้องและจำนวนผู้ใช้ในหน้า สรุปข้อมูล&#10;&#10;7. เข้าใช้งานครั้งแรก (เจ้าหน้าที่/อาจารย์) &#10;   - เปลี่ยนรหัสผ่านเริ่มต้นก่อนใช้งาน&#10;&#10;8. จัดการคำร้อง (เจ้าหน้าที่/อาจารย์)  &#10;   - ดูและจัดการคำร้อง เช่น อนุมัติหรือปฏิเสธคำร้องในเมนู รายการคำร้องรอพิจารณา&#10;&#10;9. จัดการผู้อนุมัติคำร้อง (เจ้าหน้าที่)&#10;   - เพิ่ม/แก้ไขข้อมูลเจ้าหน้าที่ผู้ที่จะอนุมัติคำร้องในเมนู บริหารจัดการผู้อนุมัติ&#10;&#10;10. บริหารจัดการนิสิต (เจ้าหน้าที่ภาควิชา)&#10;   - เพิ่ม/แก้ไข/ลบ ข้อมูลนิสิตในภาควิชาในเมนู บริหารจัดการนิสิต&#10;&#10;11. ลงทะเบียน (นิสิต) &#10;   - เข้าถึงได้จากเมนู ลงทะเบียนนิสิต ที่อยู่หน้าเข้าสู่ระบบ เพื่อสร้างบัญชีใหม่ ตรวจสอบข้อมูลกับฐานข้อมูลภาควิชาในระบบอัตโนมัติ&#10;&#10;12. สร้างใบคำร้อง (นิสิต) &#10;    - เลือกรูปแบบคำร้องจากเมนู เพิ่มคำร้องใหม่ และกรอกข้อมูลที่ต้องการ&#10;&#10;13. ติดตามคำร้อง (นิสิต)  &#10;    - ดูสถานะคำร้องที่ส่งไปแล้วในเมนู ติดตามคำร้อง" VBox.vgrow="ALWAYS">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </padding>
+            </TextArea>
+         </children>
+      </VBox>
+   </center>
+   <top>
+      <Pane BorderPane.alignment="CENTER" />
+   </top>
+   <left>
+      <Pane BorderPane.alignment="CENTER" />
+   </left>
+   <right>
+      <Pane BorderPane.alignment="CENTER" />
+   </right>
+   <bottom>
+      <VBox alignment="CENTER" prefHeight="100.0" prefWidth="100.0">
+         <children>
+            <Label text="COPY AND PASTA PROJECT">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label text="ภาควิชาวิทยาการคอมพิวเตอร์ มหาวิทยาลัยเกษตรศาสตร์">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+   </bottom>
+</BorderPane>

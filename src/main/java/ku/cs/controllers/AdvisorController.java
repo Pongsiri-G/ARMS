@@ -3,101 +3,178 @@ package ku.cs.controllers;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.shape.Circle;
 import ku.cs.models.*;
-import ku.cs.services.Datasource;
-import ku.cs.services.FXRouter;
-import ku.cs.services.StudentListFileDatasource;
-import ku.cs.services.StudentListHardCodeDatasource;
+import ku.cs.services.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
-public class AdvisorController{
+public class AdvisorController extends BaseController {
+    @FXML private BorderPane rootPane;
     @FXML private TableView<Student> studentListTable;
-    private StudentList students;
-    private Datasource<StudentList> datasource;
+    @FXML private Label roleLabel;
+    @FXML private Label nameLabel;
+    @FXML private Label usernameLabel;
+    @FXML private Label departmentLabel;
+    @FXML private Label advisorIdLabel;
+    @FXML private Label facultyLabel;
+    @FXML private Label advisorNameLabel;
+    @FXML private TextField searchStudentField;
+    @FXML private Circle profilePictureDisplay;
+    @FXML private Circle advisorProfilePictureDisplay;
 
     @FXML
-    protected void onButtonToAdvisor() {
-        try {
-            FXRouter.goTo("login");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    private TableColumn<Student, String> departmentCol;
     @FXML
-    protected void onButtonTBackAdvisor() {
-        try {
-            FXRouter.goTo("advisor");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    private TableColumn<Student, String> emailCol;
+    @FXML
+    private TableColumn<Student, String> facultyCol;
+    @FXML
+    private TableColumn<Student, String> idCol;
+    @FXML
+    private TableColumn<Student, String> nameCol;
+
+    private ArrayList<Student> studentList;
+    private UserList userList;
+    private UserListFileDatasource datasources;
+    private Advisor advisor;
+    ObservableList<Student> studentListObservable;
+    private UserPreferencesListFileDatasource preferencesListFileDatasource;
 
 
     @FXML
     public void initialize() {
+        datasources = new UserListFileDatasource("data/csv_files", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv", "departmentofficerlist.csv", "facdeplist.csv");
+        this.userList = datasources.readData();
+        preferencesListFileDatasource = new UserPreferencesListFileDatasource("data/csv_files", "preferences.csv", userList);
+        this.preferencesListFileDatasource.readData();
+        
+        User user = userList.findUserByUsername((String) FXRouter.getData());
+        showUserInfo(user);
 
-        datasource = new StudentListFileDatasource("data/test", "student-list.csv");
-        students = datasource.readData();
-        showTable(students);
+        advisor = (Advisor) user;
+        roleLabel.setText("อาจารย์ | ภาควิชา" + advisor.getDepartment().getDepartmentName());
+        nameLabel.setText(advisor.getName());
+        usernameLabel.setText(advisor.getUsername());
+        applyThemeAndFont(rootPane, advisor.getPreferences().getTheme(), advisor.getPreferences().getFontFamily(), advisor.getPreferences().getFontSize());
+        setProfilePicture(profilePictureDisplay, advisor.getProfilePicturePath());
+        setProfilePicture(advisorProfilePictureDisplay, advisor.getProfilePicturePath());
+
+        studentList = advisor.getDepartment().findStudentsByAdvisorName(advisor.getName());
+        studentListObservable = FXCollections.observableArrayList(studentList);
+
+        showTable(studentList);
+        searchStudent();
 
         studentListTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Student>() {
             @Override
             public void changed(ObservableValue<? extends Student> observableValue, Student oldStudent, Student newStudent) {
                 try {
-                    FXRouter.goTo("advisor-nisit", newStudent.getStudentID());
+                    ArrayList<String> data = new ArrayList<>();
+                    data.add(advisor.getUsername());
+                    data.add(newStudent.getStudentID());
+                    FXRouter.goTo("advisor-nisit", data);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             }
         });
     }
-    /*
-    private void showTable(StudentList students) {
+
+    @FXML
+    void goToRequestNisit(MouseEvent event) throws IOException {
+        FXRouter.goTo("advisor-request-nisit", advisor.getUsername());
+    }
+
+    private void showUserInfo(User user) {
+        Advisor advisor = (Advisor) user;
+        advisorNameLabel.setText("ชื่อ: " +advisor.getName());
+        facultyLabel.setText("คณะ: " +advisor.getFaculty().getFacultyName());
+        departmentLabel.setText("สาขาวิชา: " + advisor.getDepartment().getDepartmentName());
+        advisorIdLabel.setText("รหัสประจำตัวอาจารย์: " + advisor.getAdvisorID());
+    }
+
+    private void showTable(ArrayList<Student> students) {
         studentListTable.getItems().clear();
-        studentListTable.getItems().addAll(students.getStudents());
-    }*/
 
-    private void showTable(StudentList students) {
-        TableColumn<Student, String> facultyCol = new TableColumn<>("คณะ");
         facultyCol.setCellValueFactory(student ->
-                new SimpleStringProperty(student.getValue().getEnrolledFaculty().getFacultyName())//ใช้ SimpleStringProperty ในการดึง method ที่่ return เป็น string
-        );//ซึ่งตรงกับชนิด dataType ที่กำหนดไว้เพราะ contructor ที่เรารับมานั้น Faculty and Department มันรับเป็น object
-
-        TableColumn<Student, String> departmentCol = new TableColumn<>("สาขา");
+                new SimpleStringProperty(student.getValue().getEnrolledFaculty().getFacultyName())
+        );
         departmentCol.setCellValueFactory(student ->
                 new SimpleStringProperty(student.getValue().getEnrolledDepartment().getDepartmentName())
         );
-
-        TableColumn<Student, String> nameCol = new TableColumn<>("ชื่อ-นามสกุล");
         nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-
-        TableColumn<Student, String> idCol = new TableColumn<>("รหัสนิสิต");
         idCol.setCellValueFactory(new PropertyValueFactory<>("studentID"));
-
-        TableColumn<Student, String> emailCol = new TableColumn<>("อีเมล");
         emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
 
-        // ล้าง column เดิมทั้งหมดที่มีอยู่ใน table แล้วเพิ่ม column ใหม่
+        
         studentListTable.getColumns().clear();
         studentListTable.getColumns().add(facultyCol);
         studentListTable.getColumns().add(departmentCol);
         studentListTable.getColumns().add(nameCol);
         studentListTable.getColumns().add(idCol);
         studentListTable.getColumns().add(emailCol);
+        
+        studentListTable.getItems().addAll(students);
+    }
 
-        //studentListTable.getItems().addAll(students.getStudents());
+    @FXML
+    void searchStudent() {
+        facultyCol.setCellValueFactory(student ->
+                new SimpleStringProperty(student.getValue().getEnrolledFaculty().getFacultyName())
+        );
+        departmentCol.setCellValueFactory(student ->
+                new SimpleStringProperty(student.getValue().getEnrolledDepartment().getDepartmentName())
+        );
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        idCol.setCellValueFactory(new PropertyValueFactory<>("studentID"));
+        emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
+        FilteredList<Student> filteredData = new FilteredList<>(studentListObservable, p -> true);
+        searchStudentField.textProperty().addListener((observable, oldValue, newValue) -> {
+            String lowerCaseFilter = (newValue == null) ? "" : newValue.toLowerCase().trim();
+            filteredData.setPredicate(student -> {
+                if (lowerCaseFilter.isEmpty()) {
+                    return true;
+                }else if (student.getName().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                } else if (student.getEmail().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                } else if (student.getStudentID().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                }else
+                    return false;
+            });
+        });
+        SortedList<Student> sortedData = new SortedList<>(filteredData);
+        sortedData.comparatorProperty().bind(studentListTable.comparatorProperty());
+        studentListTable.setItems(sortedData);
+    }
 
+    @FXML
+    public void settingsPageClick(MouseEvent event) throws IOException {
+        ArrayList<String> data = new ArrayList<>();
+        data.add("advisor");
+        data.add(advisor.getUsername());
+        FXRouter.goTo("settings", data);
 
+    }
 
-        // ใส่ข้อมูล Student ทั้งหมดจาก studentList ไปแสดงใน TableView
-        for (Student student: students.getStudents()) {
-            studentListTable.getItems().add(student);
-        }
+    @FXML
+    public void logoutClick(MouseEvent event) throws IOException {
+        FXRouter.goTo("login");
     }
     }
 

@@ -1,0 +1,125 @@
+package ku.cs.models;
+
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+
+public class LeaveOfAbsenceRequest extends Request {
+    private String reason; 
+    private String registeredCourses; 
+    private String currentAddress; 
+    private int currentSemester; 
+    private int currentAcademicYear; 
+    private int fromSemester; 
+    private int toSemester; 
+    private int fromAcademicYear; 
+    private int toAcademicYear; 
+
+
+    public LeaveOfAbsenceRequest(Student requester, String numberPhone,String reason, String currentAddress, String registeredCourses,
+                                 int currentSemester, int currentAcademicYear,
+                                 int fromSemester, int fromAcademicYear,
+                                 int toSemester, int toAcademicYear) {
+        super("ลาพักการศึกษา", requester, numberPhone);
+        this.reason = reason;
+        this.currentAddress = currentAddress;
+        this.registeredCourses = registeredCourses;
+        this.currentSemester = currentSemester;
+        this.currentAcademicYear = currentAcademicYear;
+        this.fromSemester = fromSemester;
+        this.toSemester = toSemester;
+        this.fromAcademicYear = fromAcademicYear;
+        this.toAcademicYear = toAcademicYear;
+    }
+
+    public LeaveOfAbsenceRequest(String timestamp, String requestType, String status, Student requester, String currentApprover, String numberPhone, String reason, String currentAddress, String registeredCourses, int currentSemester, int currentAcademicYear, int fromSemester, int fromAcademicYear, int toSemester, int toAcademicYear, String lastModifiedDateTime, String pdfFilePath, List<String>statusLog) {
+        super(timestamp, requestType, status, requester, currentApprover, numberPhone, lastModifiedDateTime, pdfFilePath, statusLog);
+        this.reason = reason;
+        this.currentAddress = currentAddress;
+        this.registeredCourses = registeredCourses;
+        this.currentSemester = currentSemester;
+        this.currentAcademicYear = currentAcademicYear;
+        this.fromSemester = fromSemester;
+        this.toSemester = toSemester;
+        this.fromAcademicYear = fromAcademicYear;
+        this.toAcademicYear = toAcademicYear;
+    }
+
+    public void createRequest() throws IOException {
+        String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss")); 
+        String requestPdfPath = "data" + File.separator + "students_requests" + File.separator + getRequester().getStudentID() + File.separator + getRequester().getStudentID() + "-" + "คำร้องลาพักการศึกษา" + "_" + timeStamp + ".pdf";
+        try {
+            LeaveOfAbsenceRequestPDF.createRequest(requestPdfPath, this); 
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        this.setPdfFilePath(requestPdfPath);
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public String getRegisteredCourses() {
+        return registeredCourses;
+    }
+
+    public String getCurrentAddress() {
+        return currentAddress;
+    }
+
+    public int getCurrentSemester() {
+        return currentSemester;
+    }
+
+    public int getCurrentAcademicYear() {
+        return currentAcademicYear;
+    }
+
+    public int getFromSemester() {
+        return fromSemester;
+    }
+
+    public int getToSemester() {
+        return toSemester;
+    }
+
+    public int getFromAcademicYear() {
+        return fromAcademicYear;
+    }
+
+    public int getToAcademicYear() {
+        return toAcademicYear;
+    }
+
+    public int calculateTotalSemesters() {
+        if (fromAcademicYear == toAcademicYear) {
+            return toSemester - fromSemester + 1;
+        }
+
+        int semestersInFromYear = 2 - fromSemester + 1;
+
+        int yearsBetween = toAcademicYear - fromAcademicYear - 1;
+        int semestersInBetweenYears = yearsBetween * 2;
+
+        int semestersInToYear = toSemester;
+
+        return semestersInFromYear + semestersInBetweenYears + semestersInToYear;
+    }
+
+    @Override
+    public String toString() {
+        return "เรียน " + getRequester().getStudentAdvisor().getName() + " (อาจารย์ที่ปรึกษา)"
+                + "\nชื่อนิสิต " + getRequester().getName() + "     รหัสประจำตัวนิสิต " + getRequester().getStudentID()
+                + "\nคณะ " + getRequester().getEnrolledFaculty().getFacultyName() + "     สาขาวิชาเอก " + getRequester().getEnrolledDepartment().getDepartmentName()
+                + "\nหมายเลขโทรศัพท์ " + getNumberPhone() + "     ที่อยู่ปัจจุบัน " + getCurrentAddress()
+                + "\nสาเหตุที่ลา " + getReason()
+                + "\nมีความประสงค์ขอลาพักการศึกษาเป็นจำนวน " + calculateTotalSemesters() + " ภาคการศึกษา     ตั้งแต่ภาค " +  getFromSemester() + " ปีการศึกษา " + getFromAcademicYear() + "     ถึงภาค " + getToSemester() + " ปีการศึกษา " + getToAcademicYear()
+                + "\nอนึ่ง ข้าพเจ้าได้ลงทะเบียนไว้ในภาค " + getCurrentSemester() + " ปีการศึกษา " + getCurrentAcademicYear() + " ดังนี้"
+                + "\n" + getRegisteredCourses()
+                + "\nจึงเรียนมาเพื่อโปรดพิจารณา";
+    }
+}

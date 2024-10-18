@@ -1,0 +1,109 @@
+@font-face {
+    font-family: 'Noto Sans Thai';
+    src: url('../fonts/NotoSansThai-Regular.ttf') format('truetype');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'Noto Sans Thai';
+    src: url('../fonts/NotoSansThai-Bold.ttf') format('truetype');
+    font-weight: bold;
+}
+
+* {
+    -fx-primary-color: #006664;
+    -fx-contrast-color: #ffffff;
+    -fx-middle-color: #FFFFFFBF;
+    -fx-font-family: "Noto Sans Thai";
+}
+.canvas {
+    -fx-background-color: -fx-primary-color;
+}
+.text-field {
+    -fx-background-color: -fx-contrast-color, -fx-primary-color;
+    -fx-background-insets: 0, -1 -1 2 -1;
+    -fx-background-radius: 0;
+    -fx-prompt-text-fill: -fx-middle-color;
+    -fx-padding: 0 0 0 45;
+    -fx-text-box-border: transparent;
+    -fx-border-width: 0;
+    -fx-border-insets: 0;
+    -fx-font-size: 20;
+    -fx-text-fill: -fx-contrast-color;
+}
+.text-field:focused {
+    -fx-background-color: -fx-middle-color, -fx-primary-color;
+    -fx-focus-color: transparent;
+}
+.label {
+    -fx-text-fill: -fx-contrast-color;
+}
+.pane {
+    -fx-background-color: -fx-primary-color;
+}
+.password-field {
+    -fx-background-color: -fx-contrast-color, -fx-primary-color;
+    -fx-background-insets: 0, -1 -1 2 -1;
+    -fx-background-radius: 0;
+    -fx-prompt-text-fill: -fx-middle-color;
+    -fx-padding: 0 0 0 45;
+    -fx-text-box-border: transparent;
+    -fx-font-size: 20;
+    -fx-border-width: 0;
+    -fx-border-insets: 0;
+    -fx-text-fill: -fx-contrast-color;
+}
+
+.button {
+    -fx-background-radius: 20;
+    -fx-background-color: -fx-contrast-color;
+    -fx-text-fill: -fx-primary-color;
+    -fx-font-size: 18;
+    -fx-font-weight: 700;
+}
+.button:focused {
+    -fx-opacity: 0.75;
+}
+.title {
+    -fx-font-weight: 700;
+}
+.error-label {
+    -fx-text-fill: #FFC5C5;
+}
+
+.nisit-regis-button {
+    -fx-text-fill: -fx-contrast-color;
+    -fx-background-color: transparent;
+    -fx-font-size: 16;
+}
+
+.nisit-regis-button:focused {
+    -fx-opacity: 0.75;
+}
+
+.nisit-regis-text-field {
+    -fx-background-color: -fx-contrast-color, -fx-primary-color;
+    -fx-background-insets: 0, -1 -1 2 -1;
+    -fx-background-radius: 0;
+    -fx-prompt-text-fill: -fx-middle-color;
+    -fx-padding: 0 0 0 10;
+    -fx-text-box-border: transparent;
+    -fx-border-width: 0;
+    -fx-border-insets: 0;
+    -fx-font-size: 20;
+}
+.nisit-regis-text-field:focused {
+    -fx-background-color: -fx-middle-color, -fx-primary-color;
+    -fx-focus-color: transparent;
+}
+.nisit-regis-password-field {
+    -fx-background-color: -fx-contrast-color, -fx-primary-color;
+    -fx-background-insets: 0, -1 -1 2 -1;
+    -fx-background-radius: 0;
+    -fx-prompt-text-fill: -fx-middle-color;
+    -fx-padding: 0 0 0 10;
+    -fx-text-box-border: transparent;
+    -fx-font-size: 18;
+    -fx-border-width: 0;
+    -fx-border-insets: 0;
+}

@@ -3,16 +3,14 @@ package ku.cs.controllers;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import ku.cs.models.Admin;
 import ku.cs.models.User;
 import ku.cs.models.UserList;
-import ku.cs.services.FXRouter;
+import ku.cs.services.*;
 
 import javafx.fxml.FXML;
-import ku.cs.services.UserListFileDatasource;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class LoginController {
     @FXML
@@ -23,11 +21,18 @@ public class LoginController {
     private Label errorLabel;
 
     private UserList userList;
+    private Admin admin;
+    private UserListFileDatasource datasource;
+    private AdminPasswordFileDataSource adminPasswordFileDataSource;
+    private UserPreferencesListFileDatasource userPreferencesListFileDatasource;
 
     public LoginController() {
-        UserListFileDatasource datasource = new UserListFileDatasource("data/test", "studentlist.csv", "advisorlist.csv");
+        datasource = new UserListFileDatasource("data/csv_files", "studentlist.csv", "advisorlist.csv", "facultyofficerlist.csv","departmentofficerlist.csv", "facdeplist.csv");
         this.userList = datasource.readData();
-        System.out.println("Loaded users: " + this.userList.getAllUsers());
+        adminPasswordFileDataSource = new AdminPasswordFileDataSource("data/csv_files", "admin.csv");
+        admin = adminPasswordFileDataSource.readData();
+        userPreferencesListFileDatasource = new UserPreferencesListFileDatasource("data/csv_files", "preferences.csv", userList);
+        userPreferencesListFileDatasource.writeData();
     }
 
     public void initialize() {
@@ -36,27 +41,17 @@ public class LoginController {
 
     public void userLogin() throws IOException {
         try {
-            //System.out.println("Loaded users: " + userList.getAllUsers()); // Debugging Only, will remove later
+            String adminPassword = password.getText().trim();
 
-            if ((username.getText().trim().equals("Admin")) && (password.getText().trim().equals("0000"))) {
+            if ((username.getText().trim().equals("Admin")) && (admin.validatePassword(adminPassword))) {
                 FXRouter.goTo("dashboard");
-            } // TEMPORARY LOGIN FOR TEST ONLY
-
-            else if ((username.getText().trim().equals("Advisor")) && (password.getText().trim().equals("0000"))) {
-                FXRouter.goTo("advisor");
-            } // TEMPORARY LOGIN FOR TEST ONLY
-
-            else if ((username.getText().trim().equals("Department")) && (password.getText().trim().equals("0000"))) {
-                FXRouter.goTo("department-request");
-            } // TEMPORARY LOGIN FOR TEST ONLY
+            }
 
             String role = userList.login(username.getText().trim(), password.getText().trim());
 
             if (role != null) {
-                redirect(role);  // Redirect based on role
-            } else {
-                System.out.println("Login failed. Invalid username or password.");
-                // Debugging Only, will remove later
+                datasource.writeData(userList);
+                redirect(role);
             }
         }
         catch (IllegalArgumentException e) {
@@ -64,23 +59,29 @@ public class LoginController {
         }
     }
 
-    // Handle redirection based on the user role
+
     private void redirect(String role) throws IOException {
+        String loggedInUser = userList.findUserByUsername(username.getText().trim()).getUsername();
+        User user = userList.findUserByUsername(username.getText().trim());
+
         switch (role) {
-            case "Admin":
+            case "ผู้ดูแลระบบ":
                 FXRouter.goTo("dashboard");
                 break;
-            case "Advisor":
-                FXRouter.goTo("change-password");
+            case "เจ้าหน้าที่คณะ":
+                if (user.getLastLogin() == null) { FXRouter.goTo("change-password", loggedInUser); }
+                else { FXRouter.goTo("faculty-officer", loggedInUser); }
                 break;
-            case "DepartmentOfficer":
-                FXRouter.goTo("department-request");
+            case "เจ้าหน้าที่ภาควิชา":
+                if (user.getLastLogin() == null) { FXRouter.goTo("change-password", loggedInUser); }
+                else { FXRouter.goTo("department-officer", loggedInUser); }
                 break;
-            case "Student":
-                FXRouter.goTo("student-create-request");
+            case "อาจารย์":
+                if (user.getLastLogin() == null) { FXRouter.goTo("change-password", loggedInUser); }
+                else { FXRouter.goTo("advisor", loggedInUser); }
                 break;
-            case "FacultyOfficer":  // Handling FacultyOfficer role
-                //FXRouter.goTo("faculty-dashboard");  // Navigate to faculty dashboard (Wait for Putt Add fxml)
+            case "นิสิต":
+                FXRouter.goTo("student-create-request", loggedInUser);
                 break;
             default:
                 throw new NullPointerException("Unrecognized role: " + role);
@@ -88,6 +89,14 @@ public class LoginController {
     }
 
     public void toRegisterPageClick() throws IOException {
-        FXRouter.goTo("register-first");
+        FXRouter.goTo("register");
+    }
+
+    public void toShortManualPageClick() throws IOException {
+        FXRouter.goTo("short-manual");
+    }
+
+    public void toCreatorPageClick() throws IOException {
+        FXRouter.goTo("creator");
     }
 }

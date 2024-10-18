@@ -1,25 +1,47 @@
 package ku.cs.models;
 
-public class ResignationRequest extends Request{
-    private int semester; // ภาคเรียน
-    private int academicYear; // ปีการศึกษา
-    private String courseId; // รหัสวิชา
-    private String email;
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
-    ResignationRequest(String email, int semester, int academicYear, String courseId, String timeStamp, String approveName, String status, String type, String text, String id, String numberPhone) {
-        super(timeStamp,approveName,status,type,text,id,numberPhone);
-        this.email = email;
-        this.semester = semester;
-        this.academicYear = academicYear;
-        this.courseId = courseId;
+public class ResignationRequest extends Request{
+    private String reason; 
+
+    public ResignationRequest(Student requester, String numberPhone,String reason) {
+        super("ลาออก", requester, numberPhone);
+        this.reason = reason;
     }
 
-    public String getEmail() { return email; }
+    public ResignationRequest(String timestamp, String requestType, String status, Student requester, String currentApprover, String numberPhone, String reason, String lastModifiedDate, String pdfFilePath, List<String> statusLog) {
+        super(timestamp, requestType, status, requester, currentApprover, numberPhone, lastModifiedDate, pdfFilePath, statusLog);
+        this.reason = reason;
+    }
 
-    public int getSemester() { return semester; }
+    public void createRequest(){
+        String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss")); 
+        String requestPdfPath = "data" + File.separator + "students_requests" + File.separator + getRequester().getStudentID() + File.separator + getRequester().getStudentID() + "-" + "คำร้องลาออก" + "_" + timeStamp + ".pdf";
+        try {
+            ResignationRequestPDF.createRequest(requestPdfPath, this); 
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        this.setPdfFilePath(requestPdfPath);
+    }
 
-    public int getAcademicYear() { return academicYear; }
+    public String getReason() {
+        return reason;
+    }
 
-    public String getCourseId() { return courseId; }
-
+    @Override
+    public String toString() {
+        return "เรียน " + getRequester().getStudentAdvisor().getName() + " (อาจารย์ที่ปรึกษา)"
+                + "\nชื่อนิสิต " + getRequester().getName() + "     รหัสประจำตัวนิสิต " + getRequester().getStudentID()
+                + "\nคณะ " + getRequester().getEnrolledFaculty().getFacultyName() + "     สาขาวิชาเอก " + getRequester().getEnrolledDepartment().getDepartmentName()
+                + "\nหมายเลขโทรศัพท์ " + getNumberPhone()
+                + "\nมีความประสงค์ขอลาออก เนื่องจาก  " + getReason()
+                + "\nจึงขอลาออกตั้งแต่บัดนี้เป็นต้นไป และข้าพเจ้าไม่มีหนี้สินค้างชำระ";
+    }
 }
+

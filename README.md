@@ -67,22 +67,190 @@
 
 
 ### โครงงานที่สมบูรณ์
-1. คนที่หนึ่ง ซึ่งยังไม่ใช่ (วัน)
-    * อธิบายสิ่งที่เป็นประโยชน์ต่อระบบ และทำให้ทีมภูมิใจ ไม่จำกัดจำนวนข้อย่อย
-    * อธิบายสิ่งที่เป็นประโยชน์ต่อระบบ และทำให้ทีมภูมิใจ ไม่จำกัดจำนวนข้อย่อย
-2. คนที่สอง แค่ลองรักกัน (ทรู)
-    * อธิบายสิ่งที่เป็นประโยชน์ต่อระบบ และทำให้ทีมภูมิใจ ไม่จำกัดจำนวนข้อย่อย
-    * อธิบายสิ่งที่เป็นประโยชน์ต่อระบบ และทำให้ทีมภูมิใจ ไม่จำกัดจำนวนข้อย่อย
-3. คนที่สาม ต้องห้ามตัวเอง (ทรี)
-    * อธิบายสิ่งที่เป็นประโยชน์ต่อระบบ และทำให้ทีมภูมิใจ ไม่จำกัดจำนวนข้อย่อย
-    * อธิบายสิ่งที่เป็นประโยชน์ต่อระบบ และทำให้ทีมภูมิใจ ไม่จำกัดจำนวนข้อย่อย
-4. คนที่สี่ คนนี้แค่พี่น้อง (โฟร์)
-    * อธิบายสิ่งที่เป็นประโยชน์ต่อระบบ และทำให้ทีมภูมิใจ ไม่จำกัดจำนวนข้อย่อย
-    * อธิบายสิ่งที่เป็นประโยชน์ต่อระบบ และทำให้ทีมภูมิใจ ไม่จำกัดจำนวนข้อย่อย
+1. 6610402043 นายตะวัน พลแสน (ปิง)
+   * สร้างคลาส Admin เพื่อกำหนด method ต่างๆเพื่อเรียกใช้ในหน้า Dashboard 
+   * สร้าง User manual ของแอดมินและระบบอื่นๆที่จำเป็น
+   * ปรับการแสดงผลหน้า Dashboard ให้ครบถ้วยมากยิ่งขึ้น
+2. 6610402167 นายพงษ์ศิริ กิตติยุทธนาวิน (พุธ)
+   * สร้างของเจ้าหน้าที่คณะและภาควิชาที่ทำงานได้ถูกต้อง
+   * สามารถรวมหลายๆ หน้าๆ ของ fxml เข้าไว้ด้วยกันโดยการใช้ stackpane
+   * ทำให้โปรแกรมสามารถ gennarate file pdf และอัปโหลดไฟล์ได้
+3. 6610402001 นายฐิติโชติ กิ่งไพบูลย์ (เฟิร์ส)
+   * การออกแบบหน้า fxml ใหม่ของทุกบทบาทที่เป็นมิตรต่อผู้ใช้
+   * ออกแบบและเขียนคลาสที่เกี่ยวข้องกับคำร้องและสามารถเชื่อมต่อกับคลาสที่เกี่ยวกับผู้ใช้ได้ถูกต้อง
+   * เพิ่มการปรับแต่งธีมระบบของผู้ใช้
+4. 6610402213 รัตพล อินทนี (บูม)
+   * ระบบมีการเปลี่ยนรหัสผ่านครั้งเเรกสำหรับผู้ใช้ที่เป็น role อาจารย์ที่ปรึกษา เจ้าหน้าที่คณะ เจ้าหน้าที่ภาควิชา ที่ถูกต้อง
+   * มีหน้าหน้าเเสดงรายการคำร้องที่รอการดำเนินการที่เข้าใจง่ายไม่ซับซ้อน
+   * เพิ่มการค้นหานิสิตจากข้อมูลส่วนนึงของนิสิตได้ ในกรณีที่นิสิตมีเยอะมากก็จะง่ายต่อการค้นหา
+   * มีการเเสดงรายละเอียดคำร้องในรูปเเบบเอกสาร PDF ที่ง่ายต่อการเข้าใจ
+   * ระบบของอาจารย์ที่ปรึกษาเสร็จสมบูรณ์
 
 ## วิธีการติดตั้งและรันโปรแกรม
-อธิบายวิธีการติดตั้ง และวิธีการรันโปรแกรม รวมถึงที่อยู่ของไฟล์ pdf
-
+   สามารถดาวน์โหลดโปรแกรมได้ที่ Tags -> Final
+   แตกไฟล์ zip จะได้ copy-and-pasta(ชื่อไฟล์) แล้วดับเบิ้ลคลิกที่โปรแกรมในโฟลเดอร์
+   (โปรแกรมนี้สามารถ run ได้เฉพาะ windows เท่านั้น)
 ## ตัวอย่างข้อมูลผู้ใช้ระบบ (username, password) 
-
+  * Admin
+  Username : Admin
+  Password : 1111
+  * Advisor
+    Username : Jak
+    Password : jak
+  * Faculty Officer
+    Username : Farm
+    Password : farm
+  * Department Officer
+    Username : Rain
+    Password : rain
+  * Student
+    name : Nicha
+    Password : nicha
 ## การวางโครงสร้างไฟล์ของโครงงาน
+C:.
+└───main
+├───java
+│   │   module-info.java
+│   │
+│   └───ku
+│       └───cs
+│           │   Main.java
+│           │
+│           ├───controllers
+│           │       AdminController.java
+│           │       AdminSettingsController.java
+│           │       AdvisorController.java
+│           │       AdvisorNisitController.java
+│           │       AdvisorRequestController.java
+│           │       AllRequestController.java
+│           │       ApprovedController.java
+│           │       BaseController.java
+│           │       ChangePasswordController.java
+│           │       CreatorController.java
+│           │       DepartmentAndFacultyManagementController.java
+│           │       DepartmentOfficerController.java
+│           │       FacultyOfficerController.java
+│           │       LoginController.java
+│           │       OfficerAndAdvisorManagementController.java
+│           │       RegisterController.java
+│           │       SettingsController.java
+│           │       ShortManualController.java
+│           │       StudentCreateRequestController.java
+│           │       StudentRequestListViewController.java
+│           │       UserManagementController.java
+│           │
+│           ├───cs211671project
+│           │       MainApplication.java
+│           │
+│           ├───models
+│           │       Admin.java
+│           │       Advisor.java
+│           │       Department.java
+│           │       DepartmentOfficer.java
+│           │       Faculty.java
+│           │       FacultyList.java
+│           │       FacultyOfficer.java
+│           │       LeaveOfAbsenceRequest.java
+│           │       LeaveOfAbsenceRequestPDF.java
+│           │       Officer.java
+│           │       Request.java
+│           │       RequestHandlingOfficer.java
+│           │       RequestList.java
+│           │       ResignationRequest.java
+│           │       ResignationRequestPDF.java
+│           │       SickLeaveRequest.java
+│           │       SickLeaveRequestPDF.java
+│           │       Student.java
+│           │       User.java
+│           │       UserList.java
+│           │       UserPreferences.java
+│           │
+│           └───services
+│                   AdminPasswordFileDataSource.java
+│                   AdvOffListFileDatasource.java
+│                   Datasource.java
+│                   DepartmentOfficerListFileDatasource.java
+│                   FacDepListFileDatascource.java
+│                   FacultyOfficerListFileDatasource.java
+│                   FileStorage.java
+│                   FXRouter.java
+│                   RequestHandlingOfficersDataSource.java
+│                   RequestListFileDatasource.java
+│                   StudentListFileDatasource.java
+│                   UserListFileDatasource.java
+│                   UserPreferencesListFileDatasource.java
+│
+└───resources
+├───fonts
+│       NotoSansThai-Bold.ttf
+│       NotoSansThai-Regular.ttf
+│
+├───images
+│       arrow-down.png
+│       attach.png
+│       back-arrow-grey.png
+│       back-arrow-white.png
+│       book-check-dashbord.png
+│       book-dashbord.png
+│       Boom.png
+│       building-admin.png
+│       cancel.png
+│       confirm.png
+│       couple-users.png
+│       dashboard-admin.png
+│       document.png
+│       download.png
+│       exit.png
+│       First.png
+│       forward-arrow-white.png
+│       key.png
+│       KU.png
+│       list.png
+│       more-horizontal.png
+│       Ping.png
+│       profile.jpg
+│       Put.png
+│       request.png
+│       save.png
+│       security.png
+│       teacher-admin.png
+│       user-fill.png
+│       user-rounded-dashbord.png
+│       user.png
+│       users-admin.png
+│       write.png
+│
+├───ku
+│   └───cs
+│       └───views
+│               admin-settings-view.fxml
+│               admin-view.fxml
+│               advisor-nisit-view.fxml
+│               advisor-request-nisit-view.fxml
+│               advisor-view.fxml
+│               all-request.fxml
+│               approved-request.fxml
+│               change-password-view.fxml
+│               creator-view.fxml
+│               department-faculty-management.fxml
+│               department-officer-view.fxml
+│               faculty-officer-view.fxml
+│               login-view.fxml
+│               register-view.fxml
+│               settings-view.fxml
+│               short-manual-view.fxml
+│               staff-advisor-management.fxml
+│               staff-template.fxml
+│               student-create-request.fxml
+│               student-request-list-view.fxml
+│               test-view.fxml
+│               user-management.fxml
+│
+└───style
+      Autumn-theme.css
+      central.css
+      Coffee-theme.css
+      Dark-theme.css
+      Fallen-theme.css
+      Light-theme.css
+      THSarabunNew.ttf

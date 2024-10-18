@@ -1,0 +1,265 @@
+package ku.cs.models;
+
+import com.itextpdf.io.image.ImageData;
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.geom.Rectangle;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.borders.Border;
+import com.itextpdf.layout.element.*;
+import com.itextpdf.layout.properties.TabAlignment;
+import com.itextpdf.layout.properties.TextAlignment;
+import com.itextpdf.layout.properties.UnitValue;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+public class SickLeaveRequestPDF {
+
+    public static void createRequest(String requestsDirectory, SickLeaveRequest request) throws IOException {
+        Student student = request.getRequester();
+        
+        File file = new File(requestsDirectory);
+        file.getParentFile().mkdirs();
+        PdfWriter writer = new PdfWriter(requestsDirectory);
+        PdfDocument pdfDoc = new PdfDocument(writer);
+        Document document = new Document(pdfDoc, PageSize.A4);
+
+        
+        InputStream imageStream = SickLeaveRequestPDF.class.getResourceAsStream("/images/KU.png");
+        if (imageStream == null) {
+            throw new RuntimeException("Image file not found in resources");
+        }
+
+        
+        InputStream fontStream = SickLeaveRequestPDF.class.getResourceAsStream("/style/THSarabunNew.ttf");
+        if (fontStream == null) {
+            throw new RuntimeException("Font file not found in resources");
+        }
+        
+        PdfFont thaiFont = PdfFontFactory.createFont(fontStream.readAllBytes(), PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
+
+        Div div = new Div();
+
+        
+        ImageData imageData = ImageDataFactory.create(imageStream.readAllBytes());
+        Image image = new Image(imageData);
+        image.setHeight(70);
+        image.setWidth(70);
+
+        
+        Paragraph textHeader = new Paragraph()
+                .setFixedLeading(14)
+                .add(new Paragraph().add("มหาวิทยาลัยเกษตรศาสตร์\n").setFont(thaiFont).setFontSize(24).setBold().setTextAlignment(TextAlignment.LEFT))
+                .add(new Paragraph().add("ใบขออนุญาตลากิจ/ลาป่วย /Request for leave/sick leave").setFont(thaiFont).setFontSize(18).setTextAlignment(TextAlignment.LEFT));
+
+        
+
+        
+        Table headerTable = new Table(2)
+                .addCell(new Cell().add(image).setBorder(Border.NO_BORDER))
+                .addCell(new Cell().add(textHeader).setBorder(Border.NO_BORDER).setPaddingLeft(10).setPaddingTop(15)); 
+        div.add(headerTable);    
+
+        
+        div.setMarginBottom(20); 
+
+        
+        Paragraph textDateRight = new Paragraph(
+                "วันที่ " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yy")) + "\n" +
+                        "Date               DD/MM/YY")
+                .setPaddingTop(-20)
+                .setFixedLeading(14)
+                .setTextAlignment(TextAlignment.RIGHT)
+                
+                .setFont(thaiFont)
+                .setFontSize(14);
+        div.add(textDateRight);
+
+
+        Paragraph toAdvisor = new Paragraph()
+                .add(new Paragraph()
+                        .setFixedLeading(14)
+                        .add("เรียน: อาจารย์" + student.getStudentAdvisor().getName() + "\n").setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT)
+                        .add("To     (อาจารย์ที่ปรึกษา/Advisor)\n").setFont(thaiFont).setFontSize(10).setTextAlignment(TextAlignment.LEFT)
+                );
+
+
+        Paragraph nisitName = new Paragraph()
+                .setFixedLeading(4)
+                .add(new Paragraph("ชื่อนิสิต (นาย/นาง/นางสาว): " + student.getName()).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
+                .add(new Tab())
+                .addTabStops(new TabStop(1000, TabAlignment.RIGHT))
+                .add(new Paragraph("ตัวบรรจง").setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.RIGHT))
+                .add("\n")
+                .add(new Paragraph("Student’s name (Mr./Mrs./Miss)").setFont(thaiFont).setFontSize(10).setTextAlignment(TextAlignment.LEFT))
+                .add(new Tab())
+                .addTabStops(new TabStop(1000, TabAlignment.RIGHT))
+                .add(new Paragraph("(Print Name)").setFont(thaiFont).setFontSize(10).setTextAlignment(TextAlignment.LEFT));
+
+        Paragraph nisitInfo1 = new Paragraph()
+                .setFixedLeading(4)
+                .add(new Paragraph("รหัสประจำตัว: " + student.getStudentID()).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
+                .add(new Tab())
+                .addTabStops(new TabStop(225, TabAlignment.LEFT))
+                
+                
+                
+                .add(new Paragraph("คณะ: " + student.getEnrolledFaculty().getFacultyName()).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
+                .add("\n")
+                .add(new Paragraph("Student ID Number").setFont(thaiFont).setFontSize(10).setTextAlignment(TextAlignment.LEFT))
+                .add(new Tab())
+                .addTabStops(new TabStop(350, TabAlignment.LEFT))
+                .add(new Paragraph("Faculty").setFont(thaiFont).setFontSize(10).setTextAlignment(TextAlignment.LEFT));
+
+        Paragraph nisitInfo2 = new Paragraph()
+                .setFixedLeading(4)
+                .add(new Paragraph("สาขาวิชาเอก: " + student.getEnrolledDepartment().getDepartmentName()).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
+                .add(new Tab())
+                .addTabStops(new TabStop(200, TabAlignment.LEFT))
+                .add(new Paragraph("หมายเลขโทรศัพท์: " + request.getNumberPhone()).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
+                .add("\n")
+                .add(new Paragraph("Major Field").setFont(thaiFont).setFontSize(10).setTextAlignment(TextAlignment.LEFT))
+                .add(new Tab())
+                .addTabStops(new TabStop(200, TabAlignment.LEFT))
+                .add(new Paragraph("Phone number").setFont(thaiFont).setFontSize(10).setTextAlignment(TextAlignment.LEFT))
+                .add("\n");
+
+        Paragraph nisitReason = new Paragraph()
+                .setFixedLeading(4)
+                .add(new Paragraph("สาเหตุที่ลา: "  + request.getReason()).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
+                .add("\n")
+                .add(new Paragraph("Reason for request").setFont(thaiFont).setFontSize(10).setTextAlignment(TextAlignment.LEFT))
+                .add("\n");
+
+        Paragraph nisitInfo4 = new Paragraph()
+                .setFixedLeading(4)
+                .add(new Paragraph("โดยมีรายวิชาที่ขอหยุดเรียนดังนี้").setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
+                .add("\n")
+                .add(new Paragraph("The subjects that I would like to cancel are as follows:").setFont(thaiFont).setFontSize(10).setTextAlignment(TextAlignment.LEFT))
+                .add("\n");
+
+
+        Paragraph nisitInfo5 = new Paragraph(request.getRegisteredCourses()).setFixedLeading(14).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT);
+
+        Paragraph consideration = new Paragraph()
+                .add(new Paragraph()
+                        .setFixedLeading(14)
+                        .add("จึงเรียนมาเพื่อโปรดพิจารณา\n").setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT).setPaddingLeft(20)
+                        .add("Request for consideration \n").setFont(thaiFont).setFontSize(10).setTextAlignment(TextAlignment.LEFT).setPaddingLeft(20));
+
+        Paragraph studentDigitalSignature = new Paragraph()
+                .setTextAlignment(TextAlignment.RIGHT)
+                .setFixedLeading(10)
+                .add(new Paragraph("ลายมือชื่อดิจิทัลนี้ถูกลงชื่อจากระบบคำร้อง\nโดย " + request.getRequester().getName() + " เมื่อวันที่ " + request.getTimestamp() ).setFont(thaiFont).setFontSize(10).setFixedLeading(10)); 
+
+        Paragraph studentSignature = new Paragraph()
+                .setTextAlignment(TextAlignment.RIGHT)
+                .add(new Paragraph("ลงนามนิสิต/ผู้ดำเนินการแทน " + request.getRequester().getName() + "\nStudent/Person Requesting Signature").setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT).setFixedLeading(14));
+
+        Paragraph headOfDepartment = new Paragraph()
+                .setFixedLeading(5)
+                .add(new Paragraph("1) เรียน หัวหน้าภาค").setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT).setPaddingTop(5))
+                .add("\n")
+                .add(new Paragraph("To Head of department").setFont(thaiFont).setFontSize(10).setTextAlignment(TextAlignment.LEFT))
+                .add("\n")
+                .add(new Paragraph("[/] อนุมัติ Approved").setPaddingLeft(20).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
+                .add("\n")
+                .add(new Paragraph("[ ] ไม่อนุมัติ Denied").setPaddingLeft(20).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
+                .add("\n")
+                .add(new Paragraph("ลงนาม/ Signature " + request.getRequester().getStudentAdvisor().getName()).setFixedLeading(20).setPaddingLeft(60).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.RIGHT)
+                        .add("\n")
+                        .add("( " + request.getRequester().getStudentAdvisor().getName() + " )")
+                        .add("\n")
+                        .add("" + LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yy")))
+                        .add("\n")
+                        .add("อาจารย์ที่ปรึกษา Advisor    "))
+                .add(new Paragraph("ลายมือชื่อดิจิทัลนี้ถูกลงชื่อจากระบบคำร้อง\nโดย " + request.getRequester().getStudentAdvisor().getName() + " เมื่อวันที่ " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) ).setTextAlignment(TextAlignment.LEFT).setFont(thaiFont).setFontSize(10).setFixedLeading(10));
+
+        Paragraph dean = new Paragraph()
+                .setFixedLeading(5)
+                .add(new Paragraph("2) เรียน คณบดี").setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT).setPaddingTop(5))
+                .add("\n")
+                .add(new Paragraph("To Dean").setFont(thaiFont).setFontSize(10).setTextAlignment(TextAlignment.LEFT))
+                .add("\n")
+                .add(new Paragraph("[ ] อนุมัติ Approved").setPaddingLeft(20).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
+                .add("\n")
+                .add(new Paragraph("[ ] ไม่อนุมัติ Denied").setPaddingLeft(20).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
+                .add("\n")
+                .add(new Paragraph("ลงนาม/ Signature_______________").setFixedLeading(20).setPaddingLeft(60).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.RIGHT)
+                        .add("\n")
+                        .add("(_______________)")
+                        .add("\n")
+                        .add("_____/_____/_____")
+                        .add("\n")
+                        .add("หัวหน้าภาควิชา Head of department"));
+
+        Paragraph deanDecision = new Paragraph()
+                .setFixedLeading(5)
+                .add(new Paragraph("3) คำพิจารณาคณบดีเจ้าสังกัด").setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT).setPaddingTop(5))
+                .add("\n")
+                .add(new Paragraph("Dean’s decision\n").setFont(thaiFont).setFontSize(10).setTextAlignment(TextAlignment.LEFT))
+                .add("\n")
+                .add(new Paragraph("[ ] อนุมัติ Approved").setPaddingLeft(20).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
+                .add("\n")
+                .add(new Paragraph("[ ] ไม่อนุมัติ Denied").setPaddingLeft(20).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
+                .add("\n")
+                .add(new Paragraph("ลงนาม/ Signature_______________").setFixedLeading(20).setPaddingLeft(60).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.RIGHT)
+                        .add("\n")
+                        .add("(_______________)")
+                        .add("\n")
+                        .add("_____/_____/_____")
+                        .add("\n")
+                        .add("  คณบดี Dean  "));
+
+        Paragraph directorAdmin = new Paragraph()
+                .setFixedLeading(5)
+                .add(new Paragraph("4) เรียน ผู้อำนวยการสำนักบริหารการศึกษา\n").setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT).setPaddingTop(5))
+                .add("\n")
+                .add(new Paragraph("To Director of Office of Educational Administration").setFont(thaiFont).setFontSize(10).setTextAlignment(TextAlignment.LEFT))
+                .add("\n")
+                .add(new Paragraph("เพื่อโปรดดำเนินการ").setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.CENTER))
+                .add("\n")
+                .add(new Paragraph("To be proceeded").setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.CENTER))
+                .add("\n")
+                .add(new Paragraph("ลงนาม/ Signature_______________").setFixedLeading(20).setPaddingLeft(60).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.RIGHT)
+                        .add("\n")
+                        .add("(_______________)")
+                        .add("\n")
+                        .add("_____/_____/_____"));
+
+        Table approvalTable = new Table(UnitValue.createPercentArray(new float[]{1, 1}));
+        approvalTable.setKeepTogether(true);
+        approvalTable.setWidth(UnitValue.createPercentValue(100));
+
+
+        approvalTable.addCell(headOfDepartment);
+        approvalTable.addCell(dean);
+        approvalTable.addCell(deanDecision);
+        approvalTable.addCell(directorAdmin);
+
+        div.add(toAdvisor);
+        div.add(nisitName);
+        div.add(nisitInfo1);
+        div.add(nisitInfo2);
+        div.add(nisitReason);
+        div.add(nisitInfo4);
+        div.add(nisitInfo5);
+        div.add(consideration);
+        div.add(studentDigitalSignature);
+        div.add(studentSignature);
+        div.add(approvalTable);
+        
+        document.add(div);
+
+        document.close();
+    }
+}
