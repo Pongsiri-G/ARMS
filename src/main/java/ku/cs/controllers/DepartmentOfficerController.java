@@ -484,7 +484,7 @@ public class DepartmentOfficerController extends BaseController {
     public void onApproveRequestButtonClick(MouseEvent event) throws IOException {
         selectedApprover = selectOfficerHandlingMenu.getText();
         if (checkValid(selectedApprover, true)) {
-            officer.acceptRequest(selectedRequest, selectedApprover);
+            officer.finishRequest(selectedRequest, selectedApprover);
             updateRequest();
             switchToRequestScene();
         }

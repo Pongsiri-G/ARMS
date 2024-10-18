@@ -89,5 +89,159 @@
 ## วิธีการติดตั้งและรันโปรแกรม
    สามารถดาวน์โหลดโปรแกรมได้ที่ Tags -> final -> (ชื่อไฟล์)
 ## ตัวอย่างข้อมูลผู้ใช้ระบบ (username, password) 
-
+  * Admin
+  Username : Admin
+  Password : 1111
+  * Advisor
+   
+  * Faculty Officer
+  * Department Officer
+  * Student
 ## การวางโครงสร้างไฟล์ของโครงงาน
+C:.
+└───main
+├───java
+│   │   module-info.java
+│   │
+│   └───ku
+│       └───cs
+│           │   Main.java
+│           │
+│           ├───controllers
+│           │       AdminController.java
+│           │       AdminSettingsController.java
+│           │       AdvisorController.java
+│           │       AdvisorNisitController.java
+│           │       AdvisorRequestController.java
+│           │       AllRequestController.java
+│           │       ApprovedController.java
+│           │       BaseController.java
+│           │       ChangePasswordController.java
+│           │       CreatorController.java
+│           │       DepartmentAndFacultyManagementController.java
+│           │       DepartmentOfficerController.java
+│           │       FacultyOfficerController.java
+│           │       LoginController.java
+│           │       OfficerAndAdvisorManagementController.java
+│           │       RegisterController.java
+│           │       SettingsController.java
+│           │       ShortManualController.java
+│           │       StudentCreateRequestController.java
+│           │       StudentRequestListViewController.java
+│           │       UserManagementController.java
+│           │
+│           ├───cs211671project
+│           │       MainApplication.java
+│           │
+│           ├───models
+│           │       Admin.java
+│           │       Advisor.java
+│           │       Department.java
+│           │       DepartmentOfficer.java
+│           │       Faculty.java
+│           │       FacultyList.java
+│           │       FacultyOfficer.java
+│           │       LeaveOfAbsenceRequest.java
+│           │       LeaveOfAbsenceRequestPDF.java
+│           │       Officer.java
+│           │       Request.java
+│           │       RequestHandlingOfficer.java
+│           │       RequestList.java
+│           │       ResignationRequest.java
+│           │       ResignationRequestPDF.java
+│           │       SickLeaveRequest.java
+│           │       SickLeaveRequestPDF.java
+│           │       Student.java
+│           │       User.java
+│           │       UserList.java
+│           │       UserPreferences.java
+│           │
+│           └───services
+│                   AdminPasswordFileDataSource.java
+│                   AdvOffListFileDatasource.java
+│                   Datasource.java
+│                   DepartmentOfficerListFileDatasource.java
+│                   FacDepListFileDatascource.java
+│                   FacultyOfficerListFileDatasource.java
+│                   FileStorage.java
+│                   FXRouter.java
+│                   RequestHandlingOfficersDataSource.java
+│                   RequestListFileDatasource.java
+│                   StudentListFileDatasource.java
+│                   UserListFileDatasource.java
+│                   UserPreferencesListFileDatasource.java
+│
+└───resources
+├───fonts
+│       NotoSansThai-Bold.ttf
+│       NotoSansThai-Regular.ttf
+│
+├───images
+│       arrow-down.png
+│       attach.png
+│       back-arrow-grey.png
+│       back-arrow-white.png
+│       book-check-dashbord.png
+│       book-dashbord.png
+│       Boom.png
+│       building-admin.png
+│       cancel.png
+│       confirm.png
+│       couple-users.png
+│       dashboard-admin.png
+│       document.png
+│       download.png
+│       exit.png
+│       First.png
+│       forward-arrow-white.png
+│       key.png
+│       KU.png
+│       list.png
+│       more-horizontal.png
+│       Ping.png
+│       profile.jpg
+│       Put.png
+│       request.png
+│       save.png
+│       security.png
+│       teacher-admin.png
+│       user-fill.png
+│       user-rounded-dashbord.png
+│       user.png
+│       users-admin.png
+│       write.png
+│
+├───ku
+│   └───cs
+│       └───views
+│               admin-settings-view.fxml
+│               admin-view.fxml
+│               advisor-nisit-view.fxml
+│               advisor-request-nisit-view.fxml
+│               advisor-view.fxml
+│               all-request.fxml
+│               approved-request.fxml
+│               change-password-view.fxml
+│               creator-view.fxml
+│               department-faculty-management.fxml
+│               department-officer-view.fxml
+│               faculty-officer-view.fxml
+│               login-view.fxml
+│               register-view.fxml
+│               settings-view.fxml
+│               short-manual-view.fxml
+│               staff-advisor-management.fxml
+│               staff-template.fxml
+│               student-create-request.fxml
+│               student-request-list-view.fxml
+│               test-view.fxml
+│               user-management.fxml
+│
+└───style
+      Autumn-theme.css
+      central.css
+      Coffee-theme.css
+      Dark-theme.css
+      Fallen-theme.css
+      Light-theme.css
+      THSarabunNew.ttf

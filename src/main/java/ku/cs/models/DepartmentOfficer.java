@@ -29,6 +29,10 @@ public class DepartmentOfficer extends User implements Officer {
         department.setRequestManagers(approvers);
     }
 
+    public void finishRequest(Request request, String approver) {
+        request.processRequest(approver,"สิ้นสุด", null);
+    }
+
     @Override
     public void addRequestManager(String position, String name) {
         department.getRequestHandlingOfficers().add(new RequestHandlingOfficer(department.getDepartmentName(), position, name));

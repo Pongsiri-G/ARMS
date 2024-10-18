@@ -150,13 +150,6 @@ public class DepartmentAndFacultyManagementController extends BaseController{
         }
 
         for (Faculty faculty : facultyList.getFaculties()) {
-            if (!faculty.getFacultyName().equals(selectedFaculty.getFacultyName()) && facultyId.equals(faculty.getFacultyId())) {
-                editErrorMessageLabel.setText("รหัสคณะนี้มีอยู่แล้วในระบบ");
-                return;
-            }
-        }
-
-        for (Faculty faculty : facultyList.getFaculties()) {
             for (Department department : faculty.getDepartments()) {
                 if (department.getDepartmentName().equals(departmentName) && !(departmentName.equals(selectedFaculty.getDepartments().get(0).getDepartmentName()))) {
                     editErrorMessageLabel.setText("ภาควิชานี้มีอยู่แล้วในระบบ");
@@ -222,14 +215,6 @@ public class DepartmentAndFacultyManagementController extends BaseController{
             errorMessageLabel.setText("โปรดกรอกรหัสคณะให้ถูกต้อง");
             errorMessageLabel.setVisible(true);
             return;
-        }
-
-        for (Faculty faculty : facultyList.getFaculties()) {
-            if (facultyId.equals(faculty.getFacultyId())) {
-                errorMessageLabel.setText("รหัสคณะนี้มีอยู่แล้วในระบบ");
-                errorMessageLabel.setVisible(true);
-                return;
-            }
         }
         
         for (Faculty faculty : facultyList.getFaculties()) {
