@@ -80,7 +80,6 @@ public class DepartmentOfficerListFileDatasource implements Datasource<ArrayList
             for (DepartmentOfficer departmentOfficer : departmentOfficers) {
                 String lastLoginStr = departmentOfficer.getLastLogin() == null ? "ไม่เคยเข้าใช้งาน" : departmentOfficer.getLastLogin().format(formatter);
                 String profilePicturePath = departmentOfficer.getProfilePicturePath() == null ? "ไม่มีรูปประจำตัว" : departmentOfficer.getProfilePicturePath();
-                String defaultPassword = departmentOfficer.getDefaultPassword();
 
                 StringBuilder line = new StringBuilder();
                 line.append(departmentOfficer.getUsername()).append(",")

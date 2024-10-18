@@ -16,7 +16,7 @@ public class Advisor extends User{
         this.defaultPassword = password;
     }
 
-    // ใช้้ไปก่อนเดี๋ยวแก้ที่หลัง
+    
     public Advisor(String username, String password, String name, String faculty, String department, String advisorID, boolean isHashed, boolean suspended) {
         super(username, password, name, isHashed, suspended);
         this.faculty = new Faculty(faculty);
@@ -33,12 +33,12 @@ public class Advisor extends User{
         this.defaultPassword = password;
     }
 
-    //ใช้สำหรับอ่านข้อมูลจากไฟล์เก็บเป็น object ชั่วคราวเท่านั้น
+    
     public Advisor(String name) {
         super(null, null, name);
     }
 
-    //เรียกดูรายการคำร้องที่ต้องดำเนินการอาจารย์
+    
     public ArrayList<Request> getRequestsByAdvisor(RequestList requests) {
         ArrayList<Request> advisorRequests = new ArrayList<>();
         for (Request request : requests.getRequests()) {

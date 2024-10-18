@@ -2,13 +2,8 @@ package ku.cs.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.Font;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import ku.cs.models.*;
 import ku.cs.services.FXRouter;
@@ -16,10 +11,7 @@ import ku.cs.services.RequestListFileDatasource;
 import ku.cs.services.UserListFileDatasource;
 import ku.cs.services.UserPreferencesListFileDatasource;
 
-import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class StudentCreateRequestController extends BaseController {
@@ -34,7 +26,7 @@ public class StudentCreateRequestController extends BaseController {
     @FXML private GridPane errorPane;
     @FXML private Label errorLabel;
 
-    //For Request
+    
     @FXML private TextField phoneTextField;
     @FXML private TextField reasonTextField;
 
@@ -111,7 +103,7 @@ public class StudentCreateRequestController extends BaseController {
         HBox phoneBox = new HBox(30, createLabel("เบอร์โทรติดต่อ"), phoneTextField);
         ToggleGroup leaveTypeGroup = new ToggleGroup();
 
-        // Create radio buttons and add them to the ToggleGroup
+        
         sickLeaveRadio = createRadioButton("ลาป่วย", true);
         personalLeaveRadio = createRadioButton("ลากิจ", false);
 
@@ -127,13 +119,13 @@ public class StudentCreateRequestController extends BaseController {
                 createLabel("ถึงวันที่"), toDatePicker
         );
 
-        // Reason for leave TextArea
+        
         reasonTextField = createTextField(500);
 
-        // Absent subjects TextArea
+        
         absentSubjectTextArea = createTextArea(3, 300);
 
-        // Add all elements to the pane
+        
         createRequestPane.getChildren().addAll(
                 phoneBox,
                 purposeBox,
@@ -253,7 +245,7 @@ public class StudentCreateRequestController extends BaseController {
             String selectedRequestType = typeRequestChoice.getValue();
 
             if (selectedRequestType.equals("ลาป่วยหรือลากิจ")) {
-                // Handle Sick Leave or Personal Leave Request
+                
                 String phone = phoneTextField.getText();
                 String typeLeave = sickLeaveRadio.isSelected() ? "ลาป่วย" : "ลากิจ";
                 String reason = reasonTextField.getText();
@@ -278,7 +270,7 @@ public class StudentCreateRequestController extends BaseController {
                     throw new NullPointerException("กรุณากรอกข้อมูลให้ครบถ้วน");
                 }
 
-                // Check if all semester and academic year fields are filled
+                
                 if (currentSemesterTextField.getText().isEmpty() || currentAcademicYearTextField.getText().isEmpty() ||
                         fromSemesterTextField.getText().isEmpty() || fromAcademicYearTextField.getText().isEmpty() ||
                         toSemesterTextField.getText().isEmpty() || toAcademicYearTextField.getText().isEmpty()) {

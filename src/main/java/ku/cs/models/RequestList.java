@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class RequestList {
     private ArrayList<Request> requests;
 
-    // Constructor
+    
     public RequestList() {
         requests = new ArrayList<>();
     }
@@ -18,7 +18,7 @@ public class RequestList {
         return requests;
     }
 
-    // test
+    
     public Request getRequestByTimestamp(String timestamp) {
         for (Request request : requests) {
             if (request.getTimestamp() != null && request.getTimestamp().equals(timestamp)) {

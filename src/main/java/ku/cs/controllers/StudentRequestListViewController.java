@@ -9,10 +9,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import ku.cs.models.Request;
@@ -55,7 +52,7 @@ public class StudentRequestListViewController extends BaseController {
 
     @FXML private Circle profilePictureDisplay;
 
-    //Part of Request Detail Pane
+    
     @FXML private VBox requestDetailPane;
     @FXML private Label typeRequestLabel;
     @FXML private Label nameRequesterLabel;
@@ -144,13 +141,13 @@ public class StudentRequestListViewController extends BaseController {
 
                     switch (status) {
                         case "กำลังดำเนินการ":
-                            setStyle("-fx-text-fill: #d7a700; -fx-font-weight: bold;"); // Yellow for "in progress"
+                            setStyle("-fx-text-fill: #d7a700; -fx-font-weight: bold;"); 
                             break;
                         case "ปฏิเสธ":
-                            setStyle("-fx-text-fill: #be0000; -fx-font-weight: bold;"); // Red for "rejected"
+                            setStyle("-fx-text-fill: #be0000; -fx-font-weight: bold;"); 
                             break;
                         case "เสร็จสิ้น":
-                            setStyle("-fx-text-fill: #149100; -fx-font-weight: bold;"); // Green for "completed"
+                            setStyle("-fx-text-fill: #149100; -fx-font-weight: bold;"); 
                             break;
                         default:
                             setStyle("");

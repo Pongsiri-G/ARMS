@@ -6,9 +6,9 @@ public class UserPreferences {
     private String fontFamily;
 
     public UserPreferences() {
-        this.theme = "Light"; // Default theme
-        this.fontSize = "Medium"; // Default font size
-        this.fontFamily = "Noto Sans Thai"; // Default font family
+        this.theme = "Light"; 
+        this.fontSize = "Medium"; 
+        this.fontFamily = "Noto Sans Thai"; 
     }
 
     public UserPreferences(String theme, String fontSize, String fontFamily) {
@@ -17,7 +17,7 @@ public class UserPreferences {
         this.fontFamily = fontFamily;
     }
 
-    // Getters and setters for preferences
+    
     public String getTheme() {
         return theme;
     }

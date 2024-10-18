@@ -64,43 +64,40 @@ public class ApprovedController extends BaseController {
     }
 
     private void populateFacultyChoiceBox() {
-        selectedFaculty.getItems().clear(); // ล้างรายการคณะเก่า
+        selectedFaculty.getItems().clear(); 
 
-        // เพิ่มชื่อคณะจาก FacultyList ลงใน ChoiceBox
+        
         for (Faculty faculty : facultyList.getFaculties()) {
-            selectedFaculty.getItems().add(faculty.getFacultyName()); // เพิ่มชื่อคณะ
+            selectedFaculty.getItems().add(faculty.getFacultyName()); 
         }
 
-        // ตั้งค่าเริ่มต้นให้เลือกเป็น "คณะวิทยาศาสตร์"
+        
         selectedFaculty.getSelectionModel().select("เลือกคณะ");
         populateDepartmentChoiceBox(selectedFaculty.getSelectionModel().getSelectedItem());
 
-        // เพิ่ม Listener เพื่ออัปเดตสาขาเมื่อมีการเลือกคณะ
+        
         selectedFaculty.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> {
                     populateDepartmentChoiceBox(newValue);
-                    facultyLabel.setText(newValue); // อัปเดตป้ายชื่อคณะ
+                    facultyLabel.setText(newValue); 
                 }
         );
     }
 
 
     private void populateDepartmentChoiceBox(String selectedFacultyName) {
-        selectedDepartment.getItems().clear(); // ล้างรายการสาขาเก่า
-        selectedDepartment.getItems().add("All"); // เพิ่มตัวเลือก "All"
+        selectedDepartment.getItems().clear(); 
+        selectedDepartment.getItems().add("All"); 
 
         Faculty selectedFaculty = facultyList.findFacultyByName(selectedFacultyName);
         if (selectedFaculty != null) {
-            // เพิ่มสาขาทั้งหมดในคณะที่เลือกลงใน ChoiceBox
+            
             for (Department department : selectedFaculty.getDepartments()) {
-                System.out.println("Adding department: " + department.getDepartmentName()); // Debugging
                 selectedDepartment.getItems().add(department.getDepartmentName());
             }
 
-            // ตั้งค่าเริ่มต้นให้เลือกเป็น "All"
+            
             selectedDepartment.getSelectionModel().select("All");
-        } else {
-            System.out.println("Faculty not found: " + selectedFacultyName); // Debugging
         }
     }
 
@@ -108,17 +105,17 @@ public class ApprovedController extends BaseController {
         selectedFaculty.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> {
                     if (newValue.equals("All")) {
-                        selectedDepartment.getSelectionModel().select("All"); // ตั้งค่า selectedDepartment เป็น "All"
+                        selectedDepartment.getSelectionModel().select("All"); 
                     } else {
-                        populateDepartmentChoiceBox(newValue); // ปรับอัปเดตสาขา
+                        populateDepartmentChoiceBox(newValue); 
                     }
-                    facultyLabel.setText(newValue); // อัปเดตป้ายชื่อคณะ
+                    facultyLabel.setText(newValue); 
                 }
         );
 
         selectedDepartment.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> {
-                    departmentLabel.setText(newValue); // อัปเดตป้ายชื่อสาขา
+                    departmentLabel.setText(newValue); 
                     updateApprovedRequestCount(newValue);
                 }
         );
@@ -128,21 +125,21 @@ public class ApprovedController extends BaseController {
         String selectedFac = selectedFaculty.getSelectionModel().getSelectedItem();
         int approvedCount = 0;
 
-        // ตรวจสอบว่าถ้า selectedDepartment เป็น "All"
+        
         if (departmentName.equals("All")) {
             Faculty selectedFacultyObj = facultyList.findFacultyByName(selectedFac);
             if (selectedFacultyObj != null) {
-                // วนลูปเช็คคำร้องของทุกสาขาในคณะที่เลือก
+                
                 for (Department department : selectedFacultyObj.getDepartments()) {
                     approvedCount += countApprovedRequestsByDepartment(department.getDepartmentName());
                 }
             }
         } else {
-            // ถ้าเลือกสาขาเฉพาะก็ให้คำนวณเฉพาะสาขานั้น
+            
             approvedCount = countApprovedRequestsByDepartment(departmentName);
         }
 
-        // อัปเดต approvedCountLabel ด้วยจำนวนคำร้องที่ได้รับการอนุมัติ
+        
         approvedCountLabel.setText(String.format("%d", approvedCount));
     }
 
@@ -152,7 +149,7 @@ public class ApprovedController extends BaseController {
         for (Request request : requestList.getRequests()) {
             Department department = request.getRequester().getEnrolledDepartment();
 
-            // ตรวจสอบว่าคำร้องมาจากสาขาที่เลือก และมีสถานะเป็น "เสร็จสิ้น"
+            
             if (department != null && department.getDepartmentName().equals(departmentName)
                     && request.getStatus().equals("เสร็จสิ้น")) {
                 count++;

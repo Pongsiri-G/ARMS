@@ -4,7 +4,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import ku.cs.models.Admin;
-import ku.cs.models.Advisor;
 import ku.cs.models.User;
 import ku.cs.models.UserList;
 import ku.cs.services.*;
@@ -12,9 +11,6 @@ import ku.cs.services.*;
 import javafx.fxml.FXML;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 public class LoginController {
     @FXML
@@ -41,14 +37,12 @@ public class LoginController {
 
     public void initialize() {
         errorLabel.setText("");
-        System.out.println("Loaded users: " + this.userList.getAllUsers());
     }
 
     public void userLogin() throws IOException {
         try {
             String adminPassword = password.getText().trim();
 
-            System.out.println(admin.getPassword());
             if ((username.getText().trim().equals("Admin")) && (admin.validatePassword(adminPassword))) {
                 FXRouter.goTo("dashboard");
             }

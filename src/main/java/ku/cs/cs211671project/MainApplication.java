@@ -12,10 +12,6 @@ public class MainApplication extends Application {
         FXRouter.bind(this, stage, "CS211 Project", 1440, 1024);
         configRoutes();
         FXRouter.goTo("login");
-
-
-
-
     }
 
     private void configRoutes() {

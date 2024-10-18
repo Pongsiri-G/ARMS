@@ -6,20 +6,17 @@ public class FacultyOfficer extends User implements Officer {
     private Faculty faculty;
     private String defaultPassword;
 
-    // Begin Constructor
     public FacultyOfficer(String username, String password, String name, Faculty faculty, boolean isHashed, boolean suspended) {
         super(username, password, name, isHashed, suspended);
         this.faculty = faculty;
         this.defaultPassword = password;
     }
 
-    // ใข้ไปก่อนเดี๋ยวแก้ที่หลัง
     public FacultyOfficer(String username, String password, String name, String faculty, boolean isHashed, boolean suspended) {
         super(username, password, name, isHashed, suspended);
         this.faculty = new Faculty(faculty);
         this.defaultPassword = password;
     }
-    // End Constructor
 
     @Override
     public void loadRequestManage(ArrayList<RequestHandlingOfficer> approvers) {
@@ -58,7 +55,7 @@ public class FacultyOfficer extends User implements Officer {
         return faculty.getRequestHandlingOfficers();
     }
 
-    //เรียกดูรายการคำร้องที่ต้องดำเนินการของเจ้าหน้าที่คณะ
+    
     public ArrayList<Request> getRequestsByFaculty(RequestList requests) {
         ArrayList<Request> facultyRequests = new ArrayList<>();
         for (Request request : requests.getRequests()) {
@@ -90,7 +87,7 @@ public class FacultyOfficer extends User implements Officer {
         this.faculty = faculty;
     }
 
-    // End Handle Request Manager
+    
     public Faculty getFaculty() {
         return faculty;
     }

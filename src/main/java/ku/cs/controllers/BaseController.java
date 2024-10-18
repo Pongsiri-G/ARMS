@@ -9,7 +9,6 @@ import javafx.scene.shape.Circle;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -51,7 +50,7 @@ public class BaseController {
     @FXML
     public void setProfilePicture(Circle profilePictureDisplay, String profilePath) {
         try {
-            // โหลดรูปจาก profilePath
+            
             Image profileImage;
             if (profilePath == null) {
                 profileImage = new Image(getClass().getResource("/images/profile.jpg").toExternalForm());

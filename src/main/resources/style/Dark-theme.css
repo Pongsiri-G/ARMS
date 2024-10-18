@@ -10,29 +10,7 @@
     font-weight: bold;
 }
 
-@font-face {
-    font-family: 'Noto Sans Thai Looped';
-    src: url('../fonts/NotoSansThaiLooped-Regular.ttf') format('truetype');
-    font-weight: normal;
-}
 
-@font-face {
-    font-family: 'Noto Sans Thai Looped';
-    src: url('../fonts/NotoSansThaiLooped-SemiBold.ttf') format('truetype');
-    font-weight: bold;
-}
-
-@font-face {
-    font-family: 'Bai Jamjuree';
-    src: url('../fonts/BaiJamjuree-Regular.ttf') format('truetype');
-    font-weight: normal;
-}
-
-@font-face {
-    font-family: 'Bai Jamjuree';
-    src: url('../fonts/BaiJamjuree-Bold.ttf') format('truetype');
-    font-weight: bold;
-}
 
 * {
     -fx-primary-color: #006664;

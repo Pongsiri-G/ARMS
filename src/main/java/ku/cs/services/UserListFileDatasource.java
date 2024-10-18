@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 public class UserListFileDatasource implements Datasource<UserList> {
     private String directoryName;
-    private String fileName;
     private StudentListFileDatasource studentDatasource;
     private AdvOffListFileDatasource advisorDatasource;
     private FacultyOfficerListFileDatasource facultyOfficerDatasource;
@@ -24,10 +23,9 @@ public class UserListFileDatasource implements Datasource<UserList> {
         this.departmentOfficerDatasource = new DepartmentOfficerListFileDatasource(directoryName, departmentOfficerListFileName);
         checkFileIsExisted();
     }
-    // ping : all user table view
+    
     public UserListFileDatasource(String directoryName, String userListFileName) {
         this.directoryName = directoryName;
-        this.fileName = userListFileName;
         checkFileIsExisted();
     }
 
@@ -49,12 +47,12 @@ public class UserListFileDatasource implements Datasource<UserList> {
 
         users.setFacultyList(facultyList);
 
-        // Add advisors from advisor.csv
+        
         for (Advisor advisor : advisorList) {
             users.addUser(advisor);
         }
 
-        // Add students from studentlist.csv
+        
         for (Student student : studentList) {
             users.addUser(student);
         }
@@ -66,11 +64,6 @@ public class UserListFileDatasource implements Datasource<UserList> {
         for (DepartmentOfficer departmentOfficer : departmentOfficers){
             users.addUser(departmentOfficer);
         }
-
-        System.out.println("Loaded " + studentList.size() + " students");
-        System.out.println("Loaded " + advisorList.size() + " advisors");
-        System.out.println("Loaded " + facultyOfficers.size() + " faculty officers");
-        System.out.println("Loaded " + departmentOfficers.size() + " department officers");
 
         return users;
     }
@@ -85,7 +78,6 @@ public class UserListFileDatasource implements Datasource<UserList> {
 
         for (User user : users.getAllUsers()) {
             if (user instanceof Student) {
-                System.out.println("Adding student to file: " + ((Student) user).getStudentID());
                 studentList.add((Student) user);
             } else if (user instanceof Advisor) {
                 advisorList.add((Advisor) user);

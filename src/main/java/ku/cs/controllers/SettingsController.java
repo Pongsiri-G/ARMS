@@ -3,16 +3,12 @@ package ku.cs.controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import ku.cs.models.*;
 import ku.cs.services.FXRouter;
@@ -30,7 +26,6 @@ public class SettingsController extends BaseController {
     @FXML private Label roleLabel;
 
     @FXML private Label nameLabel;
-
 
     @FXML private Circle profilePictureDisplay;
 
@@ -69,7 +64,7 @@ public class SettingsController extends BaseController {
         setProfilePicture(profilePictureDisplay, user.getProfilePicturePath());
 
         themeChoiceBox.getItems().addAll("Light", "Dark", "Autumn", "Coffee", "Fallen");
-        fontFamilyChoiceBox.getItems().addAll("Noto Sans Thai", "Noto Sans Thai Looped", "Bai Jamjuree");
+        fontFamilyChoiceBox.getItems().addAll("Noto Sans Thai", "System");
         fontSizeChoiceBox.getItems().addAll("Small", "Medium", "Large");
 
         userPaneInitialize();
@@ -81,7 +76,7 @@ public class SettingsController extends BaseController {
         applyThemeAndFont(rootPane, user.getPreferences().getTheme(), user.getPreferences().getFontFamily(), user.getPreferences().getFontSize());
         preferencesListFileDatasource.writeData();
 
-        // Add listeners for immediate change on selection
+        
         themeChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             user.getPreferences().setTheme(newValue);
             applyThemeAndFont(rootPane, user.getPreferences().getTheme(), user.getPreferences().getFontFamily(), user.getPreferences().getFontSize());
@@ -137,7 +132,7 @@ public class SettingsController extends BaseController {
 
     private void setProfilePicture(String profilePath) {
         try {
-            // โหลดรูปจาก profilePath
+            
             Image profileImage = new Image("file:" + profilePath);
 
             profilePictureDisplay.setFill(new ImagePattern(profileImage));
@@ -160,40 +155,40 @@ public class SettingsController extends BaseController {
 
     @FXML
     public void uploadProfilePictureButton(MouseEvent event) throws IOException {
-        // Create a FileChooser to select an image file
+        
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose Profile Picture");
 
-        // Filter to show only image files (JPG, PNG)
+        
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png")
         );
 
-        // Show open file dialog
+        
         uploadedPicture = fileChooser.showOpenDialog(rootPane.getScene().getWindow());
 
         if (uploadedPicture != null) {
-            // Set the file label to the name of the uploaded picture
+            
 
-            // Save the uploaded file to a directory (you can modify the directory path as needed)
+            
             String directory = "data" + File.separator + "user-profile-picture" + File.separator;
 
-            // Ensure the directory exists
+            
             File dir = new File(directory);
             if (!dir.exists()) {
-                dir.mkdirs(); // Create the directory if it doesn't exist
+                dir.mkdirs(); 
             }
 
-            String extension = uploadedPicture.getName().substring(uploadedPicture.getName().lastIndexOf(".")); //ตัวบอกว่าไฟล์ที่อัพไปมีนามสกุลอะไร
+            String extension = uploadedPicture.getName().substring(uploadedPicture.getName().lastIndexOf(".")); 
             String filePath = directory + user.getUsername() + extension;
 
             FileStorage.saveFileToDirectory(uploadedPicture, filePath);
-            user.setProfilePicturePath(filePath);  // Set the profile picture path for the user
+            user.setProfilePicturePath(filePath);  
 
-            // Update the Circle profile picture display
+            
             setProfilePicture(filePath);
 
-            // Save changes (if necessary) and update the data source
+            
             datasource.writeData(userList);
         }
     }
@@ -221,9 +216,9 @@ public class SettingsController extends BaseController {
 
     @FXML
     public void changeProfileToDefaultButton(MouseEvent event) throws IOException {
-        user.setProfilePicturePath(null);  // Set the profile picture path for the user
-        // Update the Circle profile picture display
-        // Save changes (if necessary) and update the data source
+        user.setProfilePicturePath(null);  
+        
+        
         datasource.writeData(userList);
         Image profileImage = new Image(getClass().getResource("/images/profile.jpg").toExternalForm());
         profilePictureDisplay.setFill(new ImagePattern(profileImage));

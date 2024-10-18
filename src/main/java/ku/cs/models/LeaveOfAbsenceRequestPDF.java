@@ -23,73 +23,62 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class LeaveOfAbsenceRequestPDF {
-    private static final String imagePath = "src/main/resources/images/KU.png";
-    private static final String thaiFontPath = "src/main/resources/style/THSarabunNew.ttf";
 
     public static void createRequest(String requestsDirectory, LeaveOfAbsenceRequest request) throws IOException {
         Student student = request.getRequester();
-        // Create PDF document
+        
         File file = new File(requestsDirectory);
         file.getParentFile().mkdirs();
         PdfWriter writer = new PdfWriter(requestsDirectory);
         PdfDocument pdfDoc = new PdfDocument(writer);
         Document document = new Document(pdfDoc, PageSize.A4);
 
-        // Load image from resources (ensure it's in src/main/resources/images/KU.png)
+        
         InputStream imageStream = SickLeaveRequestPDF.class.getResourceAsStream("/images/KU.png");
         if (imageStream == null) {
             throw new RuntimeException("Image file not found in resources");
         }
 
-        // Load font from resources (ensure it's in src/main/resources/style/THSarabunNew.ttf)
+        
         InputStream fontStream = SickLeaveRequestPDF.class.getResourceAsStream("/style/THSarabunNew.ttf");
         if (fontStream == null) {
             throw new RuntimeException("Font file not found in resources");
         }
-        // Use InputStream to load the font directly
+        
         PdfFont thaiFont = PdfFontFactory.createFont(fontStream.readAllBytes(), "Identity-H" , PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
 
-
-
-        // Get PageSize
-        Rectangle pageSize = pdfDoc.getDefaultPageSize();
-        float width = pageSize.getWidth() - document.getLeftMargin() - document.getRightMargin();
-        float height = pageSize.getHeight() - document.getTopMargin() - document.getBottomMargin();
-
-        // Create a Div to contain Element
         Div div = new Div();
 
-        // Adding the image to the top left of the document
         ImageData imageData = ImageDataFactory.create(imageStream.readAllBytes());
         Image image = new Image(imageData);
         image.setHeight(70);
         image.setWidth(70);
 
-        // Create Header next to Image
+        
         Paragraph textHeader = new Paragraph()
                 .setFixedLeading(14)
                 .add(new Paragraph().add("มหาวิทยาลัยเกษตรศาสตร์\n").setFont(thaiFont).setFontSize(24).setBold().setTextAlignment(TextAlignment.LEFT))
                 .add(new Paragraph().add("ใบขอลาพักการศึกษา /Request for Leave of Absence Request").setFont(thaiFont).setFontSize(18).setTextAlignment(TextAlignment.LEFT));
 
-        //div.setHorizontalAlignment(HorizontalAlignment.LEFT); // Align elements horizontally to the left
+        
 
-        // Create a table with 2 columns
+        
         Table headerTable = new Table(2)
                 .addCell(new Cell().add(image).setBorder(Border.NO_BORDER))
-                .addCell(new Cell().add(textHeader).setBorder(Border.NO_BORDER).setPaddingLeft(10).setPaddingTop(15)); // Adjust the number of columns as needed d the image to the div
-        div.add(headerTable);    // Add the header to the div
+                .addCell(new Cell().add(textHeader).setBorder(Border.NO_BORDER).setPaddingLeft(10).setPaddingTop(15)); 
+        div.add(headerTable);    
 
-        // Use a layout strategy to align them side by side
-        div.setMarginBottom(20); // Add some margin below the div if needed
+        
+        div.setMarginBottom(20); 
 
-        // Date
+        
         Paragraph textDateRight = new Paragraph(
                 "วันที่ " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yy")) + "\n" +
                         "Date               DD/MM/YY")
                 .setPaddingTop(-20)
                 .setFixedLeading(14)
                 .setTextAlignment(TextAlignment.RIGHT)
-                //.setHorizontalAlignment(HorizontalAlignment.RIGHT)
+                
                 .setFont(thaiFont)
                 .setFontSize(14);
         div.add(textDateRight);
@@ -120,9 +109,9 @@ public class LeaveOfAbsenceRequestPDF {
                 .add(new Paragraph("รหัสประจำตัว: " + student.getStudentID()).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
                 .add(new Tab())
                 .addTabStops(new TabStop(225, TabAlignment.LEFT))
-                //.add(new Paragraph("ชั้นปีที่").setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
-                //.add(new Tab())
-                //.addTabStops(new TabStop(350, TabAlignment.LEFT))
+                
+                
+                
                 .add(new Paragraph("คณะ: " + student.getEnrolledFaculty().getFacultyName()).setFont(thaiFont).setFontSize(14).setTextAlignment(TextAlignment.LEFT))
                 .add("\n")
                 .add(new Paragraph("Student ID Number").setFont(thaiFont).setFontSize(10).setTextAlignment(TextAlignment.LEFT))
@@ -179,7 +168,7 @@ public class LeaveOfAbsenceRequestPDF {
         Paragraph studentDigitalSignature = new Paragraph()
                 .setTextAlignment(TextAlignment.RIGHT)
                 .setFixedLeading(10)
-                .add(new Paragraph("ลายมือชื่อดิจิทัลนี้ถูกลงชื่อจากระบบคำร้อง\nโดย " + request.getRequester().getName() + " เมื่อวันที่ " + request.getTimestamp() ).setFont(thaiFont).setFontSize(10).setFixedLeading(10)); //ลายเซ็นนิสิต
+                .add(new Paragraph("ลายมือชื่อดิจิทัลนี้ถูกลงชื่อจากระบบคำร้อง\nโดย " + request.getRequester().getName() + " เมื่อวันที่ " + request.getTimestamp() ).setFont(thaiFont).setFontSize(10).setFixedLeading(10)); 
 
         Paragraph studentSignature = new Paragraph()
                 .setTextAlignment(TextAlignment.RIGHT)
@@ -280,10 +269,10 @@ public class LeaveOfAbsenceRequestPDF {
         div.add(studentDigitalSignature);
         div.add(studentSignature);
         div.add(approvalTable);
-        // Add the div to the document
+        
         document.add(div);
 
-        // Close the document
+        
         document.close();
     }
 }

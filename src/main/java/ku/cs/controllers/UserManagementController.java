@@ -8,7 +8,6 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -24,8 +23,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 import javafx.util.Callback;
-import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
 
@@ -67,7 +64,7 @@ public class UserManagementController extends BaseController{
 
         showTable(userList);
 
-        // เพิ่ม Listener ให้กับ TextField เพื่อค้นหาทันทีที่มีการเปลี่ยนแปลงข้อความ
+        
         searchTextField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -77,17 +74,17 @@ public class UserManagementController extends BaseController{
     }
 
     private void filterTableByRole(String role) {
-        // Create a FilteredList from the original ObservableList
+        
         ObservableList<User> observableUserList = FXCollections.observableArrayList(userList.getAllUsers());
         FilteredList<User> filteredList = new FilteredList<>(observableUserList, user -> {
-            // Filter based on the selected role
+            
             if (role.equals("ทั้งหมด")) {
                 try {
                     FXRouter.goTo("user-management");
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                return true; // Show all users
+                return true; 
             } else if (role.equals("นิสิต") && user instanceof Student) {
                 return true;
             } else if (role.equals("อาจารย์") && user instanceof Advisor) {
@@ -100,49 +97,49 @@ public class UserManagementController extends BaseController{
             return false;
         });
 
-        // Wrap FilteredList with a SortedList and bind the comparator to the TableView's comparator
+        
         SortedList<User> sortedList = new SortedList<>(filteredList);
         sortedList.comparatorProperty().bind(userManagementTableView.comparatorProperty());
 
-        // Set the items of the TableView to the SortedList
+        
         userManagementTableView.setItems(sortedList);
     }
 
     private void filterUsersBySearch(String searchQuery) {
         searchQuery = searchQuery.toLowerCase();
         if (searchQuery.isEmpty()) {
-            showTable(userList);  // ถ้าไม่มีข้อความค้นหาให้แสดงผู้ใช้ทั้งหมด
+            showTable(userList);  
             return;
         }
 
-        // สร้าง UserList ใหม่เพื่อเก็บผลลัพธ์ที่กรอง
+        
         UserList filteredUserList = new UserList();
 
         for (User user : userList.getAllUsers()) {
-            // ตรวจสอบชื่อหรือชื่อผู้ใช้ที่ตรงกับคำค้นหา
+            
             if (user.getName().toLowerCase().contains(searchQuery) ||
                     user.getUsername().toLowerCase().contains(searchQuery)) {
 
-                // เพิ่มผู้ใช้โดยตรงลงใน List โดยไม่ต้องผ่าน addUser
+                
                 filteredUserList.getAllUsers().add(user);
             }
         }
 
-        // แสดงผลผู้ใช้ที่กรองแล้วใน TableView
+        
         showTable(filteredUserList);
     }
 
     @FXML
     private void showTable(UserList filteredUserList) {
-        // Column for image
+        
         TableColumn<User, Image> pictureColumn = new TableColumn<>("รูปภาพ");
         pictureColumn.setCellValueFactory(cellData -> {
             String imagePath = cellData.getValue().getProfilePicturePath();
             Image image;
             if (imagePath != null) {
-                image = new Image("file:" + imagePath, 120, 160, true, true); // กำหนดขนาดตามต้องการ
+                image = new Image("file:" + imagePath, 120, 160, true, true); 
             } else {
-                // ใช้รูปภาพเริ่มต้นถ้าไม่พบไฟล์
+                
                 image = new Image(getClass().getResourceAsStream("/images/profile.jpg"), 120, 160, true, true);
             }
             return new SimpleObjectProperty<>(image);
@@ -163,15 +160,15 @@ public class UserManagementController extends BaseController{
             }
         });
 
-        // Column for username
+        
         TableColumn<User, String> usernameColumn = new TableColumn<>("ชื่อผู้ใช้ระบบ");
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
 
-        // Column for name
+        
         TableColumn<User, String> nameColumn = new TableColumn<>("ชื่อ");
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-        // Column for login time
+        
         TableColumn<User, String> timeColumn = new TableColumn<>("เวลาที่เข้าใช้ล่าสุด");
         timeColumn.setCellValueFactory(cellData -> {
             User user = cellData.getValue();
@@ -181,7 +178,7 @@ public class UserManagementController extends BaseController{
             return new SimpleStringProperty("ไม่เคยเข้าใช้งาน");
         });
 
-        // Column for suspend status
+        
         TableColumn<User, Void> suspendColumn = new TableColumn<>("สถานะการระงับสิทธิ");
         Callback<TableColumn<User, Void>, TableCell<User, Void>> cellFactory = new Callback<TableColumn<User, Void>, TableCell<User, Void>>() {
             @Override
@@ -208,8 +205,8 @@ public class UserManagementController extends BaseController{
                             setGraphic(null);
                         } else {
                             User user = getTableView().getItems().get(getIndex());
-                            updateButtonStyle(btnSuspend, user); // เรียกใช้ updateButtonStyle เพื่ออัปเดตปุ่มตามสถานะ
-                            setGraphic(btnSuspend); // แสดงปุ่ม
+                            updateButtonStyle(btnSuspend, user); 
+                            setGraphic(btnSuspend); 
                         }
                     }
 
@@ -231,35 +228,35 @@ public class UserManagementController extends BaseController{
         userManagementTableView.getColumns().clear();
         userManagementTableView.getColumns().addAll(pictureColumn, usernameColumn, nameColumn, timeColumn, suspendColumn);
 
-        // สร้าง ObservableList จาก userList
+        
         ObservableList<User> observableUserList = FXCollections.observableArrayList(filteredUserList.getAllUsers());
 
-        // สร้าง SortedList และกำหนด Comparator
+        
         SortedList<User> sortedList = new SortedList<>(observableUserList, new Comparator<User>() {
             @Override
             public int compare(User u1, User u2) {
                 if (u1.getLastLogin() == null && u2.getLastLogin() == null) {
                     return 0;
                 } else if (u1.getLastLogin() == null) {
-                    return 1; // u1 ไม่มีการเข้าสู่ระบบล่าสุด, จัดหลัง
+                    return 1; 
                 } else if (u2.getLastLogin() == null) {
-                    return -1; // u2 ไม่มีการเข้าสู่ระบบล่าสุด, จัดหลัง
+                    return -1; 
                 } else {
-                    return u2.getLastLogin().compareTo(u1.getLastLogin()); // เรียง descending
+                    return u2.getLastLogin().compareTo(u1.getLastLogin()); 
                 }
             }
         });
 
-        // ตั้งค่า SortedList ให้กับ TableView
+        
         userManagementTableView.setItems(sortedList);
 
-        // ตั้งค่าการเรียงลำดับเริ่มต้น
+        
         userManagementTableView.getSortOrder().clear();
         userManagementTableView.getSortOrder().add(timeColumn);
         timeColumn.setSortType(TableColumn.SortType.DESCENDING);
         userManagementTableView.sort();
 
-        // กำหนดความกว้างคอลัมน์
+        
         pictureColumn.setPrefWidth(220);
         usernameColumn.setPrefWidth(220);
         nameColumn.setPrefWidth(220);

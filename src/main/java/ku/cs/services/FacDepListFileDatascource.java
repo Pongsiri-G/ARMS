@@ -18,12 +18,12 @@ public class FacDepListFileDatascource implements Datasource<FacultyList> {
     }
 
     private void checkFileIsExisted() {
-        // check directory
+        
         File file = new File(directoryName);
         if (!file.exists()) {
             file.mkdirs();
         }
-        // check file
+        
         String filePath = directoryName + File.separator + fileName;
         file = new File(filePath);
         if (!file.exists()) {
@@ -41,7 +41,7 @@ public class FacDepListFileDatascource implements Datasource<FacultyList> {
         String filePath = directoryName + File.separator + fileName;
         File file = new File(filePath);
 
-        //Object preparing
+        
         FileInputStream fis = null;
 
         try {
@@ -55,15 +55,15 @@ public class FacDepListFileDatascource implements Datasource<FacultyList> {
 
         String line = "";
         try {
-            // Looping read data for each line
+            
             while ((line = br.readLine()) != null) {
-                // Skip empty line
+                
                 if (line.equals("")) continue;
 
-                // split ", "
+                
                 String[] data = line.split(",");
 
-                // Read data from index and manage type
+                
                 String fac = data[0].trim();
                 String facID = data[1].trim();
                 String dep = data[2].trim();
@@ -84,7 +84,7 @@ public class FacDepListFileDatascource implements Datasource<FacultyList> {
         String filePath = directoryName + File.separator + fileName;
         File file = new File(filePath);
 
-        // object preparasion for write file
+        
         FileOutputStream fos = null;
 
         try {
@@ -98,13 +98,13 @@ public class FacDepListFileDatascource implements Datasource<FacultyList> {
 
         try {
             for (Faculty fac : faculties.getFaculties()) {
-                // Put เพิ่ม ลูปอีกชั้นเพื่อ ดึงค่า Department ทั้งหมดที่อยู่ใน Faculty นั้น (ไม้ต้องใช้  fac.getDepartmentName() + ", " + fac.getDepartmentId() แล้ว)
+                
                 for (Department dep : fac.getDepartments()) {
                     String line = fac.getFacultyName() + "," + fac.getFacultyId() + "," + dep.getDepartmentName() + "," + dep.getDepartmentID();
                     bw.append(line);
                     bw.append("\n");
                 }
-                // String line = fac.getFacultyName() + ", " + fac.getFacultyId() + ", " + fac.getDepartmentName() + ", " + fac.getDepartmentId(); ping เดิม
+                
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

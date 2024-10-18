@@ -8,11 +8,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import ku.cs.services.FXRouter;
 
-import ku.cs.models.*; //Add for testing only
+import ku.cs.models.*; 
 import ku.cs.services.UserListFileDatasource;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import java.io.IOException;
 

@@ -13,12 +13,10 @@ public abstract class User {
     private String profilePicturePath;
     private UserPreferences preferences;
 
-    // Constructor for new users (password is hashed)
     public User(String username, String password, String name) {
         this(username, password, name, false, false);
     }
-
-    // Constructor for cases when only the name is provided (when creating a temporary user)
+    
     public User(String name) {
         this.username = null;
         this.password = null;
@@ -27,39 +25,37 @@ public abstract class User {
         this.lastLogin = null;
     }
 
-    // Constructor for users loaded from a file (password is either hashed or plaintext)
     public User(String username, String password, String name, boolean isHashed, boolean suspended) {
         this.username = username;
         if (password != null) {
             if (isHashed) {
-                this.password = password; // Use the hashed password as is
+                this.password = password; 
             } else {
-                this.password = BCrypt.withDefaults().hashToString(12, password.toCharArray()); // Hash if not already hashed
+                this.password = BCrypt.withDefaults().hashToString(12, password.toCharArray()); 
             }
         } else {
-            this.password = null; // Handle case where password is null
+            this.password = null; 
         }
         this.name = name;
         this.suspended = suspended;
         this.lastLogin = null;
         this.preferences = new UserPreferences();
     }
-
-    // Check if the username matches
+    
     public boolean isUsername(String username) {
         return this.username != null && this.username.equals(username);
     }
 
-    // Setters for fields
+    
     public void setUsername(String username) {
         this.username = username;
     }
 
     public void setPassword(String password, boolean isHashed) {
         if (isHashed) {
-            this.password = password; // Use the hashed password directly
+            this.password = password; 
         } else {
-            this.password = BCrypt.withDefaults().hashToString(12, password.toCharArray()); // Hash the password
+            this.password = BCrypt.withDefaults().hashToString(12, password.toCharArray()); 
         }
     }
 

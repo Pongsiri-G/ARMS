@@ -144,7 +144,7 @@ public class AdvisorRequestController extends BaseController {
     private void showTable(ArrayList<Request> requests){
         tableRequest.getItems().clear();
         name.setCellValueFactory(request ->
-                new SimpleStringProperty(request.getValue().getRequester().getName())//ใช้ SimpleStringProperty ในการดึง method ที่่ return เป็น string
+                new SimpleStringProperty(request.getValue().getRequester().getName())
         );
         type.setCellValueFactory(new PropertyValueFactory<>("requestType"));
         status.setCellValueFactory(new PropertyValueFactory<>("recentStatusLog"));
@@ -180,7 +180,7 @@ public class AdvisorRequestController extends BaseController {
         });
         time.setCellValueFactory(new PropertyValueFactory<>("timestamp"));
 
-        // ล้าง column เดิมทั้งหมดที่มีอยู่ใน table แล้วเพิ่ม column ใหม่
+        
         tableRequest.getColumns().clear();
         tableRequest.getColumns().add(name);
         tableRequest.getColumns().add(type);
@@ -188,7 +188,7 @@ public class AdvisorRequestController extends BaseController {
         tableRequest.getColumns().add(time);
 
 
-        // ใส่ข้อมูล Student ทั้งหมดจาก studentList ไปแสดงใน TableView
+        
         tableRequest.getItems().addAll(requests);
     }
 

@@ -16,9 +16,6 @@ public class Admin extends User {
     private Map<String, Integer> facultyUserCount = new HashMap<>();
     private Map<String, Integer> departmentUserCount = new HashMap<>();
 
-    private Map<String, Integer> facultyApprovedRequests = new HashMap<>();
-    private Map<String, Integer> departmentApprovedRequests = new HashMap<>();
-
     public Admin(String password, boolean isHashed, boolean suspended) {
         super(null, password, null, isHashed, suspended);
     }
