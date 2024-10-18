@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -309,14 +311,11 @@ public class FacultyOfficerController extends BaseController{
         selectedFile = fileChooser.showOpenDialog(requestDetailPane.getScene().getWindow());
 
         if (selectedFile != null) {
-            selectedRequest.setPdfFilePath(selectedFile.getAbsolutePath());
             fileLabel.setText(selectedFile.getName());
             fileLabel.setVisible(true);
-
             setShowPDF(selectedFile.getAbsolutePath(), requestDetailScrollPane);
         }
     }
-
     @FXML
     public void downloadButtonClick(MouseEvent event) throws IOException {
         FileChooser fileChooser = new FileChooser();
@@ -374,13 +373,22 @@ public class FacultyOfficerController extends BaseController{
     }
 
     public void updateRequest() throws IOException {
-        
-        fileLabel.setText(selectedFile.getName());
-        String filePath = FileStorage.replaceFileWithTimestamp(selectedFile, selectedRequest.getPdfFilePath()); 
-        selectedRequest.setPdfFilePath(filePath); 
+        String oldFilePath = selectedRequest.getPdfFilePath();
+        if (selectedFile != null) {
+            String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
+            String newFileName = selectedRequest.getRequester().getStudentID() + selectedRequest.getRequestType() + "-" + timeStamp + ".pdf";
+            File newFile = new File("data" + File.separator + "students_requests" + File.separator + selectedRequest.getRequester().getStudentID() + File.separator +  newFileName);
 
-        
+            File oldFile = new File(oldFilePath);
+            if (oldFile.exists()) {
+                oldFile.delete();
+            }
+            Files.copy(selectedFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+            selectedRequest.setPdfFilePath(newFile.getAbsolutePath());
+        }
         requestDatasource.writeData(requestList);
+
     }
 
     public boolean checkValid(String approver, boolean isUseFile){
