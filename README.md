@@ -2,7 +2,7 @@
 # Academic Request Management System (ARMS)
 
 A desktop-based academic request management system developed as part of the course
-**01418471: Software Design and Development** at Kasetsart University.
+**01418211: Software Construction** at Kasetsart University.
 
 This project provides a centralized system for managing academic-related requests between students, advisors, and faculty officers, covering the full request lifecycle from submission to approval.
 
